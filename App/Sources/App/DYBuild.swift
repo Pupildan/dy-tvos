@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v38"
-    static let changes = "v38: U-S2 闭环——签名器接DYFeedClient直连feed,WebView泵退役,翻页/无感刷新全原生"
+    static let version = "v39"
+    static let changes = "v39: 修编译（raw 重复声明 + url 多余强拆）"
 }

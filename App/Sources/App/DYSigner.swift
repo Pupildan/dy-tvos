@@ -68,9 +68,6 @@ final class DYSigner {
 
         // 8) 冒烟测试（对齐 myDV）
         let smoke = ctx.evaluateScript("(function(){ try { return getABogus('aid=6383&device_platform=webapp', ''); } catch(e) { return JSON.stringify({ok:false,error:String(e)}); } })()")
-        let raw = smoke?.toString() ?? "nil"
-        DYLog.shared.log("SIGNER smoke=\(String(raw.prefix(140)))")
-
         // getABogus 返回的是 JSON 字符串（不是 JS 对象），必须先解析字符串再取字段。
         let raw = smoke?.toString() ?? ""
         DYLog.shared.log("SIGNER smoke=\(String(raw.prefix(140)))")

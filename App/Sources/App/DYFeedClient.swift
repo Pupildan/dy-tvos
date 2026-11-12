@@ -47,7 +47,7 @@ final class DYFeedClient {
         req.timeoutInterval = 15
         session.dataTask(with: req) { [weak self] _, resp, err in
             if let err { DYLog.shared.log("FEED bootstrap err: \(err.localizedDescription)") }
-            let ck = HTTPCookieStorage.shared.cookies(for: url!)
+            let ck = HTTPCookieStorage.shared.cookies(for: url)
             let names = ck.map { $0.name }.joined(separator: ",")
             DYLog.shared.log("FEED cookies: \(ck.count) [\(String(names.prefix(120)))]")
             self?.fetchPage(initial: true)
