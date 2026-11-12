@@ -19,6 +19,7 @@ final class DYLog: NSObject {
     static let collectorPort: UInt16 = 9988
     private var pushConn: NWConnection?
     private var pushReady = false
+    private var pushAttempts = 0
 
     private override init() {
         super.init()
@@ -35,16 +36,17 @@ final class DYLog: NSObject {
         NSLog("%@", line) // 兜底进系统日志
     }
 
-    /// 出站推送一行到开发机收集器（raw TCP）。连接懒建立、断了重建。
+    /// 出站推送一行到开发机收集器（raw TCP）。连接懒建立；若始终未 ready，定期拆掉重建（自愈）。
     private func push(_ line: String) {
         if pushConn == nil {
+            pushAttempts = 0
             let c = NWConnection(host: NWEndpoint.Host(Self.collectorHost),
                                  port: NWEndpoint.Port(rawValue: Self.collectorPort)!,
                                  using: .tcp)
             c.stateUpdateHandler = { [weak self] state in
                 switch state {
                 case .ready:
-                    self?.queue.async { self?.pushReady = true }
+                    self?.queue.async { self?.pushReady = true; self?.pushAttempts = 0 }
                 case .failed, .cancelled:
                     self?.queue.async { self?.pushReady = false; self?.pushConn = nil }
                 default:
@@ -54,7 +56,15 @@ final class DYLog: NSObject {
             c.start(queue: queue)
             pushConn = c
         }
-        guard let conn = pushConn, pushReady else { return }
+        guard let conn = pushConn, pushReady else {
+            // 未 ready：累计尝试次数，超过阈值拆掉重连（解 .waiting 卡死）
+            pushAttempts += 1
+            if pushAttempts > 8, let stale = pushConn {
+                stale.cancel()
+                pushConn = nil
+            }
+            return
+        }
         let payload = Data((line + "\n").utf8)
         conn.send(content: payload, completion: .contentProcessed { _ in })
     }
