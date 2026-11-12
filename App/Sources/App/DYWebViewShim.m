@@ -98,6 +98,7 @@ static NSString * const DYFetchHookJS =
 @"   this.addEventListener('readystatechange',function(){ if(s.readyState===4){ try{ scan(s.responseText, s.__u);}catch(e){} } });"
 @"   return os.apply(this,arguments); };"
 @" setInterval(flush, 2000);"
+@" setInterval(function(){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(e){} }, 2500);"
 @" post('HOOK_INSTALLED');"
 @"})();";
 
