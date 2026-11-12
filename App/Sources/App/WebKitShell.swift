@@ -3,10 +3,8 @@ import UIKit
 import SwiftUI
 import ObjectiveC.runtime
 
-/// 运行时动态构建一个极简 ObjC 类充当 WKNavigationDelegate。
-/// Swift 不可用 NSInvocation，且 Unmanaged 不能装箱 Swift 闭包；
-/// 故 delegate 方法为空实现（仅让 WKWebView 的 respondsToSelector 通过），
-/// 真正的加载完成信号由 WebKitShellViewController 的 isLoading 轮询提供。
+/// 运行时动态构建极简 ObjC 类充当 WKNavigationDelegate（空实现，仅让 respondsToSelector 通过）。
+/// 加载完成信号由 isLoading 轮询提供。
 enum WebKitDelegateFactory {
     private static let commitIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
     private static let finishIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
@@ -21,11 +19,14 @@ enum WebKitDelegateFactory {
         class_addMethod(cls, NSSelectorFromString("webView:didFailNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
         class_addMethod(cls, NSSelectorFromString("webView:didFailProvisionalNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
         objc_registerClassPair(pair)
-        return (cls as! NSObject.Type).init()
+        // 分配未初始化实例，随后用 initWithFrame: 单次初始化（不走 Swift init()，避免二次 init 陷阱）
+        let obj = NSAllocateObject(cls, 0, nil) as! NSObject
+        return obj
     }
 }
 
 /// A 路线外壳：运行时实例化私有 WKWebView，加载抖音桌面版。
+/// 关键：CGRect 结构体参数不能走 perform（会按对象传递导致闪退），必须走 objc_msgSend 按 C 约定传 struct。
 /// 焦点意图：本 VC 内无 Button；登录走手机扫码，不依赖遥控器操作网页。
 final class WebKitShellViewController: UIViewController {
     private var status: ((String) -> Void)?
@@ -53,8 +54,17 @@ final class WebKitShellViewController: UIViewController {
             return
         }
 
-        let config = (ConfigCls as! NSObject.Type).init()
-        config.setValue(WebKitShellViewController.desktopUA, forKey: "customUserAgent")
+        // config = [[WKWebViewConfiguration alloc] initWith... ] -> 分配 + init (无 struct 参数, msgSend 安全)
+        let configRaw = NSAllocateObject(ConfigCls, 0, nil) as! NSObject
+        let initSel = NSSelectorFromString("init")
+        typealias InitFn = @convention(c) (NSObject, Selector) -> NSObject
+        let callInit = unsafeBitCast(objc_msgSend, to: InitFn.self)
+        let config = callInit(configRaw, initSel)
+
+        // customUserAgent：先探测 setter 是否存在再 KVC，避免 unknown key 抛异常
+        if config.responds(to: NSSelectorFromString("setCustomUserAgent:")) {
+            config.setValue(WebKitShellViewController.desktopUA, forKey: "customUserAgent")
+        }
 
         let navBar = UILabel()
         navBar.text = "douyin.com (desktop UA)"
@@ -63,9 +73,18 @@ final class WebKitShellViewController: UIViewController {
         navBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(navBar)
 
-        let wvObj = (WKWebViewCls as! NSObject.Type).init()
-        wvObj.perform(NSSelectorFromString("initWithFrame:configuration:"),
-                      with: NSValue(cgRect: .zero), with: config)
+        // webView = [[WKWebView alloc] initWithFrame:view.bounds]; configuration 经 setter 注入
+        // initWithFrame: 的 CGRect 必须经 msgSend 按 C 约定传 struct（perform 会当对象传 -> 闪退）
+        let wvRaw = NSAllocateObject(WKWebViewCls, 0, nil) as! NSObject
+        let frameSel = NSSelectorFromString("initWithFrame:")
+        typealias FrameFn = @convention(c) (NSObject, Selector, CGRect) -> NSObject
+        let callFrame = unsafeBitCast(objc_msgSend, to: FrameFn.self)
+        let wvObj = callFrame(wvRaw, frameSel, view.bounds)
+
+        if wvObj.responds(to: NSSelectorFromString("setConfiguration:")) {
+            wvObj.setValue(config, forKey: "configuration")
+        }
+
         guard let wvView = wvObj as? UIView else {
             status?("FAIL: WKWebView 实例无法转为 UIView")
             return
@@ -87,6 +106,7 @@ final class WebKitShellViewController: UIViewController {
         objc_setAssociatedObject(wvView, &WebKitShellViewController.delegateKey, delegate,
                                  .OBJC_ASSOCIATION_RETAIN)
 
+        // loadRequest: 参数是对象，可安全走 perform
         let url = URL(string: "https://www.douyin.com/")!
         wvView.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: url))
         status?("loading douyin.com ...")
