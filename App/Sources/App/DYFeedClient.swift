@@ -232,6 +232,6 @@ final class DYFeedClient {
     }
 
     private func randomDigits(_ n: Int) -> String {
-        String((0..<n).map { _ in Character("0123456789".randomElement()!) })
+        String((0..<n).map { _ in "0123456789".randomElement()! })
     }
 }
