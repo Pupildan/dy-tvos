@@ -38,6 +38,28 @@ final class DYLog: NSObject {
         queue.sync { lines.joined(separator: "\n") }
     }
 
+    /// 有界快照：只取末 N 行、每行截断，保证 /log 响应小而稳定（避免大响应重置连接）。
+    private func boundedSnapshot(maxLines: Int = 50, maxLineLen: Int = 160) -> String {
+        queue.sync {
+            let tail = lines.suffix(maxLines)
+            let trimmed = tail.map { $0.count > maxLineLen ? String($0.prefix(maxLineLen)) + "…" : $0 }
+            let omitted = max(0, lines.count - maxLines)
+            let head = omitted > 0 ? "…(\(omitted) earlier lines omitted)\n" : ""
+            return head + trimmed.joined(separator: "\n")
+        }
+    }
+
+    /// 极小统计（/stat 专用，始终可读）：总行数 + 含视频直链标记的行数 + 最近一条直链。
+    private func stats() -> String {
+        queue.sync {
+            let total = lines.count
+            let videoLines = lines.filter { $0.contains(".mp4") || $0.contains(".m3u8") || $0.contains("douyinvod") }
+            let lastVideo = videoLines.last ?? "(none)"
+            let trimmedLast = lastVideo.count > 200 ? String(lastVideo.prefix(200)) + "…" : lastVideo
+            return "total_lines=\(total)\nvideo_link_lines=\(videoLines.count)\nlast_video=\(trimmedLast)"
+        }
+    }
+
     /// 启动监听 + Bonjour 广播。幂等。
     func start() {
         queue.async { self._start() }
@@ -111,7 +133,10 @@ final class DYLog: NSObject {
         switch path {
         case "/log":
             status = "200 OK"
-            body = snapshot() + "\n"
+            body = boundedSnapshot() + "\n"
+        case "/stat":
+            status = "200 OK"
+            body = stats() + "\n"
         case "/ping":
             status = "200 OK"
             body = "ok\n"
@@ -121,7 +146,7 @@ final class DYLog: NSObject {
             body = "cleared\n"
         default:
             status = "404 Not Found"
-            body = "endpoints: /log /ping /clear\n"
+            body = "endpoints: /log /stat /ping /clear\n"
         }
         let payload = Data(("HTTP/1.1 \(status)\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\nContent-Length: \(body.utf8.count)\r\n\r\n" + body).utf8)
         // 分块发送，仅最后一处理完才关连接：

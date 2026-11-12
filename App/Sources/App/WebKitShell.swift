@@ -38,6 +38,8 @@ final class WebKitShellViewController: UIViewController {
 
     private var captured: [String] = []
     private var seen = Set<String>()
+    private var loggedFirstVideo = false
+    private var tick = 0
 
     func setStatusHandler(_ handler: @escaping (String) -> Void) {
         status = handler
@@ -89,15 +91,27 @@ final class WebKitShellViewController: UIViewController {
             // 消费 hook 回传的最新一条
             if let msg = DYLastHookMessage() {
                 DYClearHookMessage()
-                DYLog.shared.log("HOOK: \(msg)")
                 if msg == "HOOK_INSTALLED" {
+                    DYLog.shared.log("HOOK installed, awaiting feed API")
                     self.status?("hook installed, waiting for feed API ...")
                 } else if !self.seen.contains(msg) {
                     self.seen.insert(msg)
                     self.captured.insert(msg, at: 0)
                     if self.captured.count > 40 { self.captured.removeLast() }
+                    // 有界日志：只在首次抓到视频直链时打一条 + 周期性打计数，避免刷屏
+                    let isVideo = msg.contains(".mp4") || msg.contains(".m3u8") || msg.contains("douyinvod")
+                    if isVideo && !self.loggedFirstVideo {
+                        self.loggedFirstVideo = true
+                        DYLog.shared.log("FIRST_VIDEO_LINK: \(msg)")
+                    }
                     self.status?(self.summary())
                 }
+            }
+            // 每 ~2s 打一次运行计数（0.4s×5）
+            self.tick += 1
+            if self.tick % 5 == 0 {
+                let vids = self.captured.filter { $0.contains(".mp4") || $0.contains(".m3u8") || $0.contains("douyinvod") }
+                DYLog.shared.log("STAT captured=\(self.captured.count) videoLinks=\(vids.count)")
             }
         }
     }
