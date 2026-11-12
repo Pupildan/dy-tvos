@@ -21,4 +21,8 @@ FOUNDATION_EXPORT NSString * _Nullable DYLastHookMessage(void);
 /// Clear the latest hook message (call after consuming, to detect the next).
 FOUNDATION_EXPORT void DYClearHookMessage(void);
 
+/// Evaluate a JS string on the page (main thread). Used by native to trigger
+/// the page's own scroll / pagination (window.__dyyScroll / __dyyMore).
+FOUNDATION_EXPORT void DYEvalJS(id webView, NSString *js);
+
 NS_ASSUME_NONNULL_END

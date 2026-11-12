@@ -62,13 +62,13 @@ final class WebKitShellViewController: UIViewController {
         DYLog.shared.log("SHELL webview created OK")
         webView = wvView
         wvView.translatesAutoresizingMaskIntoConstraints = false
-        wvView.alpha = 0.35 // 探测期半透明，确认它在跑但不抢焦点
+        wvView.alpha = 0.02 // 藏在原生播放器后，用户看不到，但 JS/滚动/翻页照常跑
         view.addSubview(wvView)
         NSLayoutConstraint.activate([
-            wvView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            wvView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            wvView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            wvView.heightAnchor.constraint(equalToConstant: 225),
+            wvView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            wvView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            wvView.topAnchor.constraint(equalTo: view.topAnchor),
+            wvView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
 
         let delegate = WebKitDelegateFactory.makeDelegate()
@@ -78,6 +78,16 @@ final class WebKitShellViewController: UIViewController {
 
         // 注入 fetch/XHR hook（documentStart），抓 Feed API 里的视频直链
         DYInstallFetchHook(wvView)
+
+        // 接近末尾 → 触发页面滚动翻页；过期/连续失败 → 触发页面重拉
+        PlaybackEngine.shared.onNeedMore = { [weak self] in
+            guard let wv = self?.webView else { return }
+            DYEvalJS(wv, "window.__dyyScroll && window.__dyyScroll(); window.__dyyScroll && window.__dyyScroll();")
+        }
+        PlaybackEngine.shared.onRefresh = { [weak self] in
+            guard let wv = self?.webView else { return }
+            DYEvalJS(wv, "window.__dyyMore && window.__dyyMore(); window.__dyyMore && window.__dyyMore();")
+        }
 
         let url = URL(string: "https://www.douyin.com/")!
         wvView.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: url))
@@ -119,19 +129,18 @@ final class WebKitShellViewController: UIViewController {
                     DYLog.shared.log("VIDEOS batch(\(lines.count)):")
                     for l in lines {
                         DYLog.shared.log("  \(l)")
-                        if !self.seen.contains(l) {
-                            self.seen.insert(l)
-                            self.allVideoLines.insert(l)
-                        }
+                        self.allVideoLines.insert(l)
                     }
-                    // 有新直链就重排并喂给原生播放引擎
-                    let ordered = PlaybackEngine.extractOrderedURLs(from: Array(self.allVideoLines))
-                    if !ordered.isEmpty {
+                    // 重排并喂给原生播放引擎（只保留 douyinvod 直链，丢弃 403 的 /play/）
+                    let extracted = PlaybackEngine.extract(from: Array(self.allVideoLines))
+                    if !extracted.urls.isEmpty {
                         let hadURLs = !PlaybackEngine.shared.urls.isEmpty
-                        PlaybackEngine.shared.setURLs(ordered)
-                        if !hadURLs { self.status?("原生播放就绪：\(ordered.count) 条直链") }
+                        // 首批：isNewBatch 自动播 index0；翻页追加：保持当前 index 不重播
+                        PlaybackEngine.shared.setURLs(extracted.urls, awemeIds: extracted.awemeIds,
+                                                      isNewBatch: !hadURLs, isRefresh: false)
+                        if !hadURLs { self.status?("原生播放就绪：\(extracted.urls.count) 条直链") }
                     }
-                    if !self.loggedFirstVideo {
+                    if !self.loggedFirstVideo, !extracted.urls.isEmpty {
                         self.loggedFirstVideo = true
                         self.status?(self.summary())
                     }

@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v29"
-    static let changes = "v29: 原生Loading动画+首批自动播index0+真实scroll/touch事件触发抖音翻页(混合模式)"
+    static let version = "v30"
+    static let changes = "v30: 自动播首条+接近末尾触发翻页+过期/连续失败重拉(解无限刷/上键过期/手动切)"
 }

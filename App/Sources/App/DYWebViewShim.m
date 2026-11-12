@@ -119,6 +119,8 @@ static NSString * const DYFetchHookJS =
 @"     fetch(u,{credentials:'include'}).then(function(r){return r.text();}).then(function(t){ scan(t,u); flush(); }).catch(function(e){ post('MORE_ERR '+e); });"
 @"   }catch(e){ post('MORE_ERR '+e); }"
 @" };"
+@" window.__dyyScroll = dyyScrollOnce;"
+@" window.__dyyMore = window.__dyyMore;"
 @" setInterval(function(){ dyyScrollOnce(); }, 2000);"
 @" setInterval(function(){ window.__dyyMore(); }, 7000);"
 @" post('HOOK_INSTALLED');"
@@ -161,4 +163,14 @@ NSString * _Nullable DYLastHookMessage(void)
 void DYClearHookMessage(void)
 {
     _dyLastHookMessage = nil;
+}
+
+void DYEvalJS(id webView, NSString *js)
+{
+    if (!webView || !js) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [(NSObject *)webView performSelector:NSSelectorFromString("evaluateJavaScript:completionHandler:")
+                                  withObject:js
+                                  withObject:nil];
+    });
 }

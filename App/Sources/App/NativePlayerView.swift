@@ -60,7 +60,8 @@ final class DYPlayerViewController: AVPlayerViewController {
         guard let item = object as? AVPlayerItem else { return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context) }
         if keyPath == "status", item.status == .failed {
             let idx = preloadCache.first(where: { $0.value == item })?.key ?? -1
-            DYLog.shared.log("PLAYER item FAILED index=\(idx) err=\(item.error?.localizedDescription ?? "?"), skip")
+            DYLog.shared.log("PLAYER item FAILED index=\(idx) err=\(item.error?.localizedDescription ?? "?")")
+            PlaybackEngine.shared.reportFailure() // 连续失败/过期 → 触发页面重拉新直链
             if item == player?.currentItem { advance() }
         }
     }
