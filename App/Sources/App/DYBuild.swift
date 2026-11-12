@@ -5,5 +5,5 @@ import Foundation
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
     static let version = "v56"
-    static let changes = "v56: 修头竞态(首请求早于头入库被拒)+fetchNativePage入口日志+移除回放探针"
+    static let changes = "v56: 泵导航?recommend=1(myDV主源tab/feed)+双端点模板捕获+签名uri动态化+头竞态修复+入口日志"
 }

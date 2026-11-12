@@ -99,9 +99,10 @@ final class DYFeedClient {
         items.removeAll { $0.name == "a_bogus" }
         comps.queryItems = items
         guard let base = comps.url, let query = base.query else { return }
-
-        guard let sr = DYSigner.shared.sign(query: query, data: "", uri: feedPath) else {
-            DYLog.shared.log("FEED sign fail (page \(idx))")
+        // 签名 uri 用模板实际路径（tab/feed 或 module/feed 皆可）
+        let signUri = base.path
+        guard let sr = DYSigner.shared.sign(query: query, data: "", uri: signUri) else {
+            DYLog.shared.log("FEED sign fail (page \(idx) path=\(signUri))")
             PlaybackEngine.shared.reportFailure()
             return
         }

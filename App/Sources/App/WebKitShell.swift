@@ -89,7 +89,8 @@ final class WebKitShellViewController: UIViewController {
             DYEvalJS(wv, "window.__dyyMore && window.__dyyMore(); window.__dyyMore && window.__dyyMore();")
         }
 
-        let url = URL(string: "https://www.douyin.com/")!
+        // 导航到推荐页（myDV 同源）：页面自己发 /aweme/v1/web/tab/feed/（无限推荐流）
+        let url = URL(string: "https://www.douyin.com/?recommend=1")!
         wvView.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: url))
         status?("loading + hooking douyin.com ...")
 
@@ -146,9 +147,9 @@ final class WebKitShellViewController: UIViewController {
                         DYLog.shared.log("REQS(\(reqs.count)):")
                         for l in reqs {
                             DYLog.shared.log("  \(l)")
-                            // 捕获完整 feed 请求模板（含全部正确参数）→ 原生直连回放用
+                            // 捕获完整 feed 请求模板（两种端点都认：tab/feed=主推荐流, module/feed=频道流）
                             // 注意剥离日志行前缀（时间戳+空格），只留 https:// 起始的 URL 本体
-                            if l.contains("/aweme/v2/web/module/feed/") && DYFeedClient.shared.templateURL == nil {
+                            if (l.contains("/aweme/v1/web/tab/feed/") || l.contains("/aweme/v2/web/module/feed/")) && DYFeedClient.shared.templateURL == nil {
                                 if let r = l.range(of: "https://") {
                                     DYFeedClient.shared.templateURL = String(l[r.lowerBound...])
                                     DYLog.shared.log("TEMPLATE captured len=\(l[r.lowerBound...].count)")
@@ -163,7 +164,7 @@ final class WebKitShellViewController: UIViewController {
                             DYLog.shared.log("  \(h)")
                             // H 行格式: "H <URL片段> | Name=Value" —— module/feed 的头交给原生直连复刻
                             let seg = h.split(separator: "|", maxSplits: 1).map { String($0).trimmingCharacters(in: .whitespaces) }
-                            if seg.count == 2, seg[0].contains("/aweme/v2/web/module/feed/") {
+                            if seg.count == 2, seg[0].contains("/aweme/v2/web/module/feed/") || seg[0].contains("/aweme/v1/web/tab/feed/") {
                                 let kv = seg[1].split(separator: "=", maxSplits: 1).map { String($0) }
                                 if kv.count == 2 {
                                     DYFeedClient.shared.setPageHeader(name: kv[0], value: kv[1])
