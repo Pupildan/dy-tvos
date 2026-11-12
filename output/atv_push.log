@@ -4283,3 +4283,366 @@
 05:39:04  [05:39:04] STAT captured=0 videoLinks=0
 05:39:05  [05:39:05] FEEDPARSED FEEDPARSED videos=12 awemes=4
 05:39:06  [05:39:06] STAT captured=0 videoLinks=0
+05:43:56  [05:43:56] DYTV v55 launched
+05:43:56  [05:43:56] LOGSRV ready on port 8765
+05:43:56  [05:43:56] SIGNER init start
+05:43:56  [05:43:56] SIGNER load shim ok
+05:43:56  [05:43:56] SIGNER load abogus ok
+05:43:56  [05:43:56] LOGSRV advertising as DYTV-861
+05:43:56  [05:43:56] SIGNER load sign ok
+05:43:57  [05:43:56] SHELL viewDidLoad
+05:43:57  [05:43:56] SHELL webview created OK
+05:43:57  [05:43:57] SIGNER load abogus_dy ok
+05:43:57  [05:43:57] SIGNER extras sign=true dy=true
+05:43:57  [05:43:57] SIGNER bdms=yes
+05:43:57  [05:43:57] SIGNER initABogus=true
+05:43:57  [05:43:57] SIGNER fns=AB (期望 AB)
+05:43:57  [05:43:57] SIGNER smoke={"ok":true,"value":"df8ZBdwXDDIpXDyf5XILfY3qVW33Yslg0SVkMDhezVfP1y39HMTt9exEvKJvwiyeF4/JIe8jy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+05:43:57  [05:43:57] SIGNER READY a_bogus len=172
+05:43:57  [05:43:57] PLAYER viewDidLoad
+05:43:57  [05:43:57] PLAYER no url at index=0 (will retry)
+05:43:57  [05:43:57] ROOT auto-start v55
+05:43:57  [05:43:57] PLAYER no url at index=0 (will retry)
+05:43:57  [05:43:57] PLAYER no url at index=0 (will retry)
+05:43:57  [05:43:57] LOGSRV Bonjour published: DYTV-861
+05:43:58  [05:43:58] HOOK installed, awaiting feed API
+05:43:59  [05:43:59] STAT captured=0 videoLinks=0
+05:44:00  [05:44:00] REQS(61):
+05:44:00  [05:44:00]   chrome-extension://kckmfllnpncljamnlfnaoplpmlbgjeal/icons/icon48.png
+05:44:00  [05:44:00]   chrome-extension://pdjpejnkgiobincbjjkcbfmamomipphp/icon-48.png
+05:44:00  [05:44:00]   chrome-extension://ioadaikpljilagoddljnamloiebcoopb/static/img/icon128.png
+05:44:00  [05:44:00]   https://mcs.zijieapi.com/webid?aid=6383&sdk_version=5.1.24_dy
+05:44:00  [05:44:00]   chrome-extension://knbeilbpfnelpbeoofhnkfbfcldpfehn/icon/128.png
+05:44:00  [05:44:00]   chrome-extension://kcihaacmobnfpcellccakhmbhkjdlkbf/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://iponikghooaamlcbcffeedaamigfjmbg/icons/icon.png
+05:44:00  [05:44:00]   https://mon.zijieapi.com/monitor_web/settings/browser-settings?bid=verify_center_cn&store=1
+05:44:00  [05:44:00]   https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241
+05:44:00  [05:44:00]   chrome-extension://nkffbmomkmgaoogcenpadgmclfnjjfbk/icon.png
+05:44:00  [05:44:00]   chrome-extension://kciedmbjjemohpojhlegnjfjcjcnjcbf/manifest.json
+05:44:00  [05:44:00]   chrome-extension://fpfgcbhicmindbcebidgnedelibhnhpo/manifest.json
+05:44:00  [05:44:00]   chrome-extension://bgppnpjeamnalgmnckghppndfnlgbkod/manifest.json
+05:44:00  [05:44:00]   chrome-extension://lppaannpfhbfkolfkahgdmafcabmbnla/manifest.json
+05:44:00  [05:44:00]   chrome-extension://nnmjdepboiliidofhaikkdgedgpoddgp/manifest.json
+05:44:00  [05:44:00]   chrome-extension://bhdbhcfkpjbffhnhobhjpcfcchfpield/manifest.json
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/img/website/logo.png
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icon.png
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/img/website/close.png
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icons/icon48.png
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icon.png
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icon.png
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icons/icon48.png
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/img/icon.png
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icons/icon48.png
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/images/icon48.png
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/js/injectedXhr.js
+05:44:00  [05:44:00]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/js/injectedXhr.js
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/img/website/logo.png
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/img/website/close.png
+05:44:00  [05:44:00]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/js/injectedXhr.js
+05:44:00  [05:44:00]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/img/website/logo.png
+05:44:00  [05:44:00]   chrome-extension://ldllbcnpihgljdgpjgdopgeejenhnabf/icon-256.png
+05:44:00  [05:44:00]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/img/website/close.png
+05:44:00  [05:44:00]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/js/injectedXhr.js
+05:44:00  [05:44:00]   chrome-extension://jlknbjboeobdnibieepdfbnlppgegilj/icons/128.png
+05:44:00  [05:44:00]   chrome-extension://kjekjdmhcoddchkbdgkmmpfnholfpojf/images/icon128.png
+05:44:00  [05:44:00]   chrome-extension://fflknhbkebnngcdbbngaigcgjcijanhd/icons/logo.png
+05:44:00  [05:44:00]   chrome-extension://comjihpdlemlbaedhdbdnefjnakhmaoa/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://fhfigihmbogicaejckmlemhdelbjgppp/icons/128.png
+05:44:00  [05:44:00]   chrome-extension://fmfpakpchhlddjjpknbjimfblbefbldh/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://cmgncmbhkoghpdikiakodgfoimfhabae/icon128.png
+05:44:00  [05:44:00]   chrome-extension://mbjhaeldagndekjpbpcikdfhnjdecbkj/image/128.png
+05:44:00  [05:44:00]   chrome-extension://inhjianejcbcoefggchkndocohbbhjfb/icons/128.png
+05:44:00  [05:44:00]   chrome-extension://faehamkoggbocedcjadcciknaecdaeim/icon128.plasmo.3c1ed2d2.png
+05:44:00  [05:44:00]   chrome-extension://hilfahbmfiglhfbgiapjfhicmkpbeoil/bitmaps/logo-128-nooutline.png
+05:44:00  [05:44:00]   chrome-extension://oadaehcdkefofimacfffdahiejjkhbkj/icon/icon128.png
+05:44:00  [05:44:00]   chrome-extension://aiejgmhiikcdcjajgiemgcodpedfdnlb/icon/128.png
+05:44:00  [05:44:00]   chrome-extension://afajmhdalamaiijklldgeodgiimnofof/src/assets/icons/icon512.png
+05:44:00  [05:44:00]   chrome-extension://fefcliabdkllgfbhmfhjmpphjhbcjjal/images/icon.png
+05:44:00  [05:44:00]   chrome-extension://cjplbkllillihikceoghhkefdobbelpo/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://diljhaaoboocicoahikimidednlajhek/icon/128x128.png
+05:44:00  [05:44:00]   chrome-extension://ihclbgfnkclacfkbedkdnbpmkcdaccje/images/icon128.png
+05:44:00  [05:44:00]   chrome-extension://amdkmjhdjonbhjihnpdenbfcnhkogcdn/assets/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://iecafjejbggeoldcjiehgoolokaebpdf/icon/128.png
+05:44:00  [05:44:00]   chrome-extension://gbhbibhafgjmolaeffkalddjhdcafkge/img/v128.png
+05:44:00  [05:44:00]   chrome-extension://ifdgmmhiamkipfpdmokmkhnpnefdahdd/icons/icon128.png
+05:44:00  [05:44:00]   chrome-extension://ojepopegbajboliolpifoiinabdobpnb/images/icon-128.png
+05:44:00  [05:44:00] HDS(3) — 页面真实请求头:
+05:44:00  [05:44:00]   H https://mcs.zijieapi.com/webid?aid=6383&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:00  [05:44:00]   H https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241 | Content-Type=application/json
+05:44:00  [05:44:00]   H https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241 | X-Setting-Flag=1
+05:44:01  [05:44:01] STAT captured=0 videoLinks=0
+05:44:02  [05:44:02] SHELL page finished, cookies transferring
+05:44:02  [05:44:02] REQS(2):
+05:44:02  [05:44:02]   https://mon.zijieapi.com/monitor_web/settings/browser-settings?bid=douyin_web&store=1
+05:44:02  [05:44:02]   https://mcs.zijieapi.com/webid?aid=3722&sdk_version=5.1.24_dy
+05:44:02  [05:44:02] HDS(2) — 页面真实请求头:
+05:44:02  [05:44:02]   H https://mon.zijieapi.com/monitor_web/settings/browser-settings?bid=douyin_web&store=1 | Content-Type=application/json
+05:44:02  [05:44:02]   H https://mcs.zijieapi.com/webid?aid=3722&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:03  [05:44:03] STAT captured=0 videoLinks=0
+05:44:04  [05:44:04] FEEDPARSED FEEDPARSED videos=9 awemes=3
+05:44:04  [05:44:04] REQS(18):
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source=6&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Yv-nfFSwdx8VadKS8ccJHbZlnzgMNs8yeaTKWGBPSxzBL7zbT8Ny8xaIJoFksTORQuphkq37uneMYEdcqUXkpFnpLmpDSwGWYt5cnU6LZHkkGPvhnrD0CTGPKJBa%2FbYEz5lUx%2FfUlts9XEeliN5sA2Oy7A0iQ%2FYMFqN6DlzyyEW6DWukk93wO9g2Ygkqbj%3D%3D
+05:44:04  [05:44:04]   https://live.douyin.com/webcast/web/live/watermark/?watermark_key_list=%5B%7B%22watermark_uniq_idx%22%3A%22v4u%22%2C%22watermark_key%22%3A%22u_3454044254768585%22%2C%22algorithm%22%3A%22v4u%22%7D%2C%7B%22watermark_uniq_idx%22%3A%22v5p%22%2C%22watermark_key%22%3A%22u_3454044254768585%22%2C%22algorithm%22%3A%22v5p%22%7D%5D&device_info=%7B%22DeviceType%22%3A%22%22%2C%22OsType%22%3A%22Mac+OS%22%2C%22OsVersion%22%3A%2210.15.7%22%2C%22BrowserType%22%3A%22WebKit%22%2C%22BrowserVersion%22%3A%22605.1.15%22%2C%22ScreenModel%22%3A%221920*1080%22%7D&ignoreToast=true&device_platform=web&aid=6383&channel=channel_pc_web&live_id=1&app_name=douyin_web&language=zh-CN&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=dflcfFUyQNQfadMtmOcGHj2UOeIArPSyz-T%2FRt3TexuWLXlT0RPj8NC6GozD4TQR%2FYBskK37wneMbDncpUUkpoHpLmkkSphyut5InWfL0HpvGsvhVHDkCEbTLJBaAbmEsAlGxMXlXts9XEelwqVzAZK9SA0i5uYMBNPjD1z9eEAgfSWkwn3kOHDhN6Gqif%3D%3D
+05:44:04  [05:44:04]   https://mcs.zijieapi.com/list
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=1&refer_id=&refer_type=10&pull_type=0&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&use_lite_type=2&pre_log_id=&pre_item_ids=7676800542269558031%2C7674115533704269110%2C7696103860762381610%2C7688570877050391854%2C7675884394049031470%2C7702267698582949130&pre_room_ids=&pre_item_from=sati&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=xvl56H7wmqRcadFbYCntHbZUwz6MrT8yNMioRuVPtOPjL70YsRNS8EK6GFzDsTcR%2FSpwkqI7KnSVbDfOZUALpq9kFmkkuE4R8z5In60L%2FHZDTTih9qDkCTGTwJBaAbbET51JxMflAts9hdllhH50A%2FK99AMEQubMBNPWDlz9SEA6DCuki9-iOHkpOLNeUb5S
+05:44:04  [05:44:04] FEED native pipeline armed (template captured)
+05:44:04  [05:44:04] TEMPLATE captured len=1679
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&channel=channel_pc_web&tab_id=screen_course_page&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=OjBnfeyLQNRVFd%2FG8CnGHjZlXML%2FrTWyMaT2RwZTePTqyHlGz8Pj8NeIGozD4PQROYBikq3HLntMYddcZsUzpo9pzmkkSKvymt5InUsLMHhfTPvhINm0CYSTqJBaAbYE05ltx%2FfUXtsqhdFlwN5TA%2FOyCAMJ5KmMPrP6Dlzy7EWXfSSkw9-zOHDpO6rK0rOW
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_subtab&app_id=6383&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=QyMn6F7JYd8ccd%2FSYOn4HbZUI0yANTWylFiobLpT7NPWL7zGzRNW8xC6noFk4PcRQSpkkF3HKneMYDncZ4UhporpqmkDS8ifuTVAnXmogHZfGsvhIHm0CEGTzJBaARmEs5lXx%2FvlItsqXdFlwNV0AMF9CAMiQ%2FYMMNNjDIuy9EAXfWSkho-zOCDkTgpGU9A6
+05:44:04  [05:44:04]   https://live.douyin.com/webcast/setting/?device_platform=web&aid=6383&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Y7B56eULEZRVOVFG8KnGHbpld0glNs8ySFTdSPaTtOPVy1ebsmPW8NC6nozk4P5R%2FYpkkKIHFneAYdVcN4UTpqHkwmpfuBvWuT59nWmo2HZvGBvhnHDhCTGTFJsOA5YE0A1txZXUAtsHXEllkN5sA2KySA0jQ8bMMrNSDlT9SEAhDSWkio-kOHkDxgaG0Iny
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Dj-bfFy7DqRVFVFtYKnGHbpUaMVArsuy-FTdbb9PtNPzL7zYT8P68ae6Gozk4BcRKSpzkq17wnt%2FYxVcZUXzpoHpFmpfuhkbuTVInXXLhHpkTBkhnqDhCitTLJBO%2FbRE0%2FlXx%2FvUUtBoXEFlhqViAMP97A0JQKmMMHPSDIu9yEAXDSukwx3hOekkigJqkf%3D%3D
+05:44:04  [05:44:04]   https://lf3-static.bytednsdoc.com/obj/eden-cn/666eh7nuhfvhpebd/douyin_web/index-ad-22.js
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=2&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=OjMjXtSED2%2FVOdMtuKcGHbdUDedlNPSyF-TdRJrTtNPHLH0bTWPj8nc6coFvsPcRQSBkkFI7wntMYDxcZ4UspFrkFmkvuPXb8T55nW8LgHhkGsJhINmwCESTKJBOAbYEsQlXxZXlXtBHhdFlkN50AZK9SAME5umMPqN6DAzy9EA6fW8kin-hOCgdigPtUe%2FU
+05:44:04  [05:44:04]   https://mcs.zijieapi.com/webid?aid=7497&sdk_version=5.1.24_dy
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Q6BjvFSJOdAjFdKGmOcGHjll9F6%2FNs8y-PT%2FbbnPCNPSy1UYmSNb8qZ6bqFvsPQRQYBikF17wnthbdnOp46zpF9komkkS2TbmG5cnXXLMHpfTsvh9NDwCYSPwJsaARmEz%2Fl7xMXU6tBHhEFliqVzAZOy9A0iQ8YMBHPbDlu9HEAgDCWkkn-wO9gDTgsq
+05:44:04  [05:44:04]   https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy
+05:44:04  [05:44:04]   https://www.douyin.com/service/2/abtest_config/
+05:44:04  [05:44:04]   https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy
+05:44:04  [05:44:04]   https://tnc0-aliec2.zijieapi.com/get_domains/v5/?tnc_js_sdk_version=2.3.15.0&device_platform=pc&aid=6383&device_id=7707221858722842150&user_id=3454044254768585&web_service=
+05:44:04  [05:44:04]   https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Oj-R67WjxomjeVFbucc4HjAUwed%2FNs8y2Pi2bTKTHNOxLHFYmYPS8rCIbozksBOROYBTkq1HqneMbExcN0XwpFnkLmpfSDwbmz5VnWvo0HkvGBihIHDiCEbPwJsaAbbETAlvx26UItsqXEFlir5iA2FyCA0E5%2FmMPNPWDlzyCEAgfCSkwo3zOCkBT6JqCE%3D%3D
+05:44:04  [05:44:04]   https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy
+05:44:04  [05:44:04] HDS(35) — 页面真实请求头:
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://live.douyin.com/webcast/web/live/watermark/?watermark_key_list=%5B%7B%22watermark_uniq_idx%22%3A%22v4u | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04] FEED page header stored: Accept=application/json, text/plain, */* (1 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:04  [05:44:04] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (2 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (3 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:04  [05:44:04] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&cha | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&cha | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_s | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_s | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://live.douyin.com/webcast/setting/?device_platform=web&aid=6383&update_version_code=170400&pc_client_typ | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | x-secsdk-csrf-token=DOWNGRADE
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:04  [05:44:04] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:04  [05:44:04] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/webid?aid=7497&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | x-secsdk-csrf-token=DOWNGRADE
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+05:44:04  [05:44:04]   H https://www.douyin.com/service/2/abtest_config/ | Content-Type=application/json; charset=utf-8
+05:44:04  [05:44:04]   H https://www.douyin.com/service/2/abtest_config/ | x-secsdk-csrf-token=DOWNGRADE
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web& | Accept=application/json, text/plain, */*
+05:44:04  [05:44:04]   H https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web& | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+05:44:04  [05:44:04]   H https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+05:44:04  [05:44:04] VIDS(9)
+05:44:04  [05:44:04] ENGINE merge total=3 index=0 replace=false auto=true
+05:44:04  [05:44:04] PLAYER play index=0 url=https://v26-web.douyinvod.com/c039865f09b73e55773444b61b700a46/6af65fe7/video/to
+05:44:04  [05:44:04] REPLAY code=404 len=23 aweme_list=false body_head=Unsupported path(Janus)
+05:44:04  [05:44:04] FEED REPLAY_PROBE result=REJECTED(头/Cookie层差异)
+05:44:04  [05:44:04] FEED native GET page=1 initial=true refresh=false bogus_len=172 presented=25 sec_headers=0
+05:44:04  [05:44:04] FEED parse fail (page 1) body=Unsupported path(Janus)
+05:44:05  [05:44:05] STAT captured=0 videoLinks=0
+05:44:05  [05:44:05] FEEDPARSED FEEDPARSED videos=6 awemes=2
+05:44:06  [05:44:06] FEEDPARSED FEEDPARSED videos=6 awemes=2
+05:44:07  [05:44:07] STAT captured=0 videoLinks=0
+05:44:07  [05:44:07] ENGINE needMore (index=0 count=3)
+05:44:07  [05:44:07] ENGINE next -> index=1
+05:44:07  [05:44:07] PLAYER play index=1 url=https://v26-web.douyinvod.com/8b1832d343f4c19203cd3d08478ad8ca/6af661e6/video/to
+05:44:07  [05:44:07] ENGINE next -> index=2
+05:44:07  [05:44:07] PLAYER play index=2 url=https://v11-weba.douyinvod.com/cef5755d41a92abc671280118ba9aa07/6af65ebf/video/t
+05:44:07  [05:44:07] FEEDPARSED FEEDPARSED videos=6 awemes=2
+05:44:08  [05:44:08] REQS(3):
+05:44:08  [05:44:08]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=4&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=xX-jX7UiYomVcdFbucnXHj9UxFoANPuyX-ixbKVPCNzkLHUGKRPj8Pc6GoFD4T5ROSpwkKV7ontMbExcpsUkpq9kLmpfukGyuG5AnU6LgHpkGPvhnqDhCYSTFJBPAbmE0Q1txZfl1tBHhDelhHVkAMF9eA0i5%2FmMMHNjDlTytEWXDSWkwo30OeDhTLTqRD%3D%3D
+05:44:08  [05:44:08]   https://mssdk.bytedance.com/web/r/token?ms_appid=6383
+05:44:08  [05:44:08]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=5&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=D7lbftXiddWjCVKbmOcGHjZUx%2FdMrsSyJaTxSceTCNOtLHFYTRNjmna6JoFkssORQbBTkFVHqntMbdncqUUTpoHkwmkvSNJS8tVcnXvoZHkDGTJhIHmhCiGPzJBPARRE0AlGx%2FflWtBHXDFlkq5kAZP97AMEQ%2FbMBrNWD1Ty7EW6DSukix3wOChQTLiq9j%3D%3D
+05:44:08  [05:44:08] HDS(8) — 页面真实请求头:
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:08  [05:44:08] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:08  [05:44:08] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:08  [05:44:08] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:08  [05:44:08] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:08  [05:44:08] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:08  [05:44:08] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:08  [05:44:08] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:08  [05:44:08]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:08  [05:44:08] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:08  [05:44:08] VIDS(12)
+05:44:08  [05:44:08] ENGINE merge total=7 index=2 replace=false auto=false
+05:44:08  [05:44:08] ENGINE next -> index=3
+05:44:08  [05:44:08] PLAYER play index=3 url=https://v26-web.douyinvod.com/6b3306a1ae04c312a79f45a6b0d8686f/6af66784/video/to
+05:44:08  [05:44:08] ENGINE next -> index=4
+05:44:09  [05:44:08] PLAYER play index=4 url=https://v26-web.douyinvod.com/4ec758032d38a0b01b8a7c3dec17a214/6af65e57/video/to
+05:44:09  [05:44:09] FEEDPARSED FEEDPARSED videos=12 awemes=4
+05:44:09  [05:44:09] STAT captured=0 videoLinks=0
+05:44:10  [05:44:10] FEEDPARSED FEEDPARSED videos=6 awemes=2
+05:44:10  [05:44:10] ENGINE next -> index=5
+05:44:10  [05:44:10] PLAYER play index=5 url=https://v26-web.douyinvod.com/c132e56c411ec5e0b6206c8328741184/6af66309/video/to
+05:44:10  [05:44:10] REQS(9):
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&detail_list=1&source=6&main_billboard_count=5&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=m6M56z7wOpWjKdFbYCc7Hj-UM8DMNs8y2Mi2R91TH5cCy1Fb8YPjmraIboFv4scRQYphkF37untAbDVcZUXkpKrkumkvSYzW8T59n6fo2HZvTPJhIqmkCYGToJsaAbREz%2F1Xx2XlUts9hdelkHVhA%2FK9eA0JQKmMPrPRDlT9CEWXDSSkho-zOHhdwgRw
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_web&os=1&client_type=1&scene=admin_pc_push&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=DyBcvq7JYom5FVKGYCnJHbVltCIMNPWyseTxW7nPyxK8L7MYmRNjmNeIjozk4B5RKbBzkFVHoneMbEncp0Xipq9kzmkDuLhymTVAn66ohHkkGBJh9HDiCYGPKJBOAcbEsQ1Jx2XUltB9XEMlhr5hAZOy7A0EQ%2FbMFHPWDlz9yEAgDA8kho3iOCgDPyGq1E%3D%3D
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=Qflj6HUwYpWjFVFbmOcUHbVlCWLlrTuyF-iORKnTexzsyHMTuRPWmNaIGozf4sOR%2FuphkK3HoneAYxVcZUUTponkumpvuLz6mtVVn6fo2HkkGBJhVHDzCTGPzJsPARmEzA1tx%2FflWtBHXxeliqVwAMPyeA0E58RMMHPbDAuyyEA6DWWkh9-TOCkZPyJqpE%3D%3D
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=dJ-fX7y7QdAnPdFtmKn7HjVlA%2Fo%2FNPSyBBTdRo9TexF4L1lTuWPfmxc6Gozv4sORQbBTkKI7KneAYxxcZsXipFHpwmpDu8JymG55n68o2HhkTTJhVHDiCEGTwJBcAbmET%2F1vx%2F6lUtsoXxelhNVkA2O97AME5KYMBHNjDITytEWgDS8khn3hOCkkN6JKUW2f
+05:44:10  [05:44:10]   https://api.feelgood.cn/athena/survey/platform/action/report/
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=673&publish_video_strategy_type=2&app_id=10001&entrance=IM6383-3586&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=OyMcvetLEZ5Vad%2FtYOnJHb1lwCV%2FNsSyWei2beMPSOKQLHlTYWNRmre6jozk4sQRObB0kq17wne%2FbddcqUXTpK9pwmkDSD7ymG5nnW6oZHkfGTkhVNDzCitPLJsa%2F5REz%2F1Ux%2FfU6tsohDMliNViA%2FFy9A0JQ8RMMNNRDlz97EA6DSSkhx-iOCgsY6iqXj%3D%3D
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=6&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=EJBcvFWimp8bPVFt8CcXHbPUt%2FgMNs8yN-TOWz2P7xYiyH0YPuNRmNcIjozvsTQRQSpzko37FneMYxxcZsUzpKnpzmkDuokSuG59nUXo0HpDGTJhVqmzCTbTzJBaA5mEz%2F1vx%2FfUXts9hdMlwN5zAZK9eA0JQ%2FRMPHPRDlz9CEA6fCukwn-iOHgpPgGqTf%3D%3D
+05:44:10  [05:44:10]   https://api.feelgood.cn/athena/survey/platform/task/show/
+05:44:10  [05:44:10]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=7&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=d6BbfqUid2Q5Pd%2FS8OnGHJeU%2FA6%2FrPSyT-idWeNTCPYKyHlG%2FuNymPcIGozk4TOROupskq17oneMYdncN0UspFnpLmpDumUbmtV5n68L8HhDGsihnrDhCTGTLJBcARYEs51Jx2flWtBHhDFlhN5TAZKytAMj58bMFrN6D1Y9HEWhfA8kwo3wO9kDNLPO0ICv
+05:44:10  [05:44:10] HDS(29) — 页面真实请求头:
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&de | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&de | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_ | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_ | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | Content-Type=application/json;charset=utf-8
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-feelgood-api-version=v2
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-fg-report-id=62cd57b3-1890-4c35-b5fc-ee3c59e13d26
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-fg-tea-id=7707221858722842150%2C7707403984466953766%2C7707221858722842150
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | x-secsdk-csrf-token=DOWNGRADE
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:10  [05:44:10] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:10  [05:44:10] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | Content-Type=application/json;charset=utf-8
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | x-fg-report-id=62cd57b3-1890-4c35-b5fc-ee3c59e13d26
+05:44:10  [05:44:10]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | x-fg-tea-id=7707221858722842150%2C7707403984466953766%2C7707221858722842150
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:10  [05:44:10] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:10  [05:44:10] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:10  [05:44:10] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:10  [05:44:10]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:10  [05:44:10] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:10  [05:44:10] VIDS(18)
+05:44:10  [05:44:10] ENGINE merge total=13 index=5 replace=false auto=false
+05:44:10  [05:44:10] ENGINE next -> index=6
+05:44:10  [05:44:10] PLAYER play index=6 url=https://v26-web.douyinvod.com/99c49e2a9da1a24fac55159244c860c0/6af65e1f/video/to
+05:44:11  [05:44:11] STAT captured=0 videoLinks=0
+05:44:11  [05:44:11] FEEDPARSED FEEDPARSED videos=12 awemes=4
+05:44:12  [05:44:12] REQS(1):
+05:44:12  [05:44:12]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=8&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=EXl56z6yYpmbOVMtucn7HnZlctylNTWytPTObcBTtPYRLHlGw8NW8xcIaozk4s5RQbpwkq37KneMYxxcqsXipFnpompvS27S8TVVn6vo%2FHpfTPihnrDzCTSTzJsa%2FRYET51Jx2Xl1tBHXxMlwrVkAZOyyA0jQKRMBHPRDAz9tEAXDW8kw9-wOCkkO6GqLf%3D%3D
+05:44:12  [05:44:12] HDS(4) — 页面真实请求头:
+05:44:12  [05:44:12]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:12  [05:44:12] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:12  [05:44:12]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:12  [05:44:12] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:12  [05:44:12]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:12  [05:44:12] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:12  [05:44:12]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:12  [05:44:12] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:12  [05:44:12] VIDS(12)
+05:44:12  [05:44:12] ENGINE merge total=17 index=6 replace=false auto=false
+05:44:13  [05:44:13] FEEDPARSED FEEDPARSED videos=9 awemes=3
+05:44:13  [05:44:13] STAT captured=0 videoLinks=0
+05:44:14  [05:44:14] FEEDPARSED FEEDPARSED videos=3 awemes=1
+05:44:14  [05:44:14] ENGINE next -> index=7
+05:44:14  [05:44:14] PLAYER play index=7 url=https://v11-weba.douyinvod.com/952f4b7c8801f992733e81b45abfc229/6af65e98/video/t
+05:44:14  [05:44:14] ENGINE next -> index=8
+05:44:14  [05:44:14] PLAYER play index=8 url=https://v26-web.douyinvod.com/91b32fd301cf493aeb1a0e1400110c22/6af660f2/video/to
+05:44:14  [05:44:14] ENGINE next -> index=9
+05:44:14  [05:44:14] PLAYER play index=9 url=https://v26-web.douyinvod.com/aef5e8def8a37e4802d8e366235b754c/6af65ef0/video/to
+05:44:14  [05:44:14] ENGINE next -> index=10
+05:44:14  [05:44:14] PLAYER play index=10 url=https://v11-weba.douyinvod.com/b8271f9d11efa00f62c87a825fb462bc/6af65f42/video/t
+05:44:14  [05:44:14] REQS(1):
+05:44:14  [05:44:14]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=9&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D&a_bogus=Y6lV67WEEq8ROVKtuKcUHcVUnzEArPuyUMTdSSHTHxTRLHlGDWN68nC6coFD4P5RQSpikoVHune%2FYEncqsUiporkompvShT6mzV9nXvLhHkvGPJhnrDhCYtPoJBO%2F5YEzAlJx2XUAtsqXEelhrVkA2FySA0E58bMFrN6DIT99EW6fC8kh9-sOHhgEgiqqE%3D%3D
+05:44:14  [05:44:14] HDS(4) — 页面真实请求头:
+05:44:14  [05:44:14]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+05:44:14  [05:44:14] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+05:44:14  [05:44:14]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+05:44:14  [05:44:14] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+05:44:14  [05:44:14]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:14  [05:44:14] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+05:44:14  [05:44:14]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+05:44:14  [05:44:14] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+05:44:14  [05:44:14] VIDS(12)
+05:44:14  [05:44:14] ENGINE merge total=21 index=10 replace=false auto=false
+05:44:15  [05:44:15] STAT captured=0 videoLinks=0
+05:44:16  [05:44:16] REQS(1):
+05:44:16  [05:44:16]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=d8J6RWoZdb48EZHJ__liqpAw40fzTRJIvmAmgyB34LMPrhhqsxIy_ljLzafKfj-piMnYFNP3JIc22A23m5a7NnuQPHyleAzk-fVVODq0S1jLRf3BdGUlIEB-3cVUfbfdHS9jO0NM705uupcUUqwcW0HMCTNjBWvnd6k%3D
+05:44:16  [05:44:16] ENGINE next -> index=11
+05:44:17  [05:44:16] PLAYER play index=11 url=https://v26-web.douyinvod.com/fd6bdcc2eae3970ea3c33c8817362e3c/6af65e44/video/to
+05:44:17  [05:44:17] STAT captured=0 videoLinks=0
+05:44:17  [05:44:17] ENGINE next -> index=12
+05:44:17  [05:44:17] PLAYER play index=12 url=https://v11-weba.douyinvod.com/c49f9d33af0d9b2a097ea856f1cdb038/6af66076/video/t
+05:44:18  [05:44:18] ENGINE next -> index=13
+05:44:18  [05:44:18] PLAYER play index=13 url=https://v11-weba.douyinvod.com/45ea4cdac007525bf92a08a329ca6693/6af66183/video/t
+05:44:19  [05:44:19] STAT captured=0 videoLinks=0
+05:44:20  [05:44:20] ENGINE next -> index=14
+05:44:20  [05:44:20] PLAYER play index=14 url=https://v11-weba.douyinvod.com/374a2c63e84e7a38a95d991ab25aeb59/6af66131/video/t
+05:44:20  [05:44:20] ENGINE needMore (index=14 count=21)
+05:44:20  [05:44:20] ENGINE next -> index=15
+05:44:20  [05:44:20] PLAYER play index=15 url=https://v11-weba.douyinvod.com/9d529624bb63d16b901aa2892f77ea82/6af6633b/video/t
+05:44:21  [05:44:21] STAT captured=0 videoLinks=0
+05:44:21  [05:44:21] ENGINE next -> index=16
+05:44:21  [05:44:21] PLAYER play index=16 url=https://v26-web.douyinvod.com/d2f7d9b27ed15a7c230973e7428d73d0/6af65f0b/video/to
+05:44:23  [05:44:22] STAT captured=0 videoLinks=0
+05:44:23  [05:44:23] ENGINE next -> index=17
+05:44:23  [05:44:23] PLAYER play index=17 url=https://v11-weba.douyinvod.com/ee05caef6d7bff15379186635923276c/6af65e59/video/t
+05:44:23  [05:44:23] ENGINE next -> index=18
+05:44:23  [05:44:23] PLAYER play index=18 url=https://v11-weba.douyinvod.com/c3afc1e5de0359ad66c07a2fe05a5036/6af65e42/video/t
+05:44:24  [05:44:24] ENGINE next -> index=19
+05:44:24  [05:44:24] PLAYER play index=19 url=https://v11-weba.douyinvod.com/7566f7717f8b71b08df15f86c1bd4502/6af660e1/video/t
+05:44:25  [05:44:24] ENGINE next -> index=20
+05:44:25  [05:44:24] PLAYER play index=20 url=https://v26-web.douyinvod.com/4fe8ccdf02a5728a3eda8fdf5b7388cf/6af65e1e/video/to
+05:44:25  [05:44:25] STAT captured=0 videoLinks=0
+05:44:27  [05:44:27] STAT captured=0 videoLinks=0
+05:44:27  [05:44:27] ENGINE needMore (index=20 count=21)
+05:44:29  [05:44:29] STAT captured=0 videoLinks=0
+05:44:31  [05:44:30] STAT captured=0 videoLinks=0
+05:44:33  [05:44:32] STAT captured=0 videoLinks=0
+05:44:35  [05:44:34] STAT captured=0 videoLinks=0
+05:44:37  [05:44:37] STAT captured=0 videoLinks=0
+05:44:39  [05:44:38] STAT captured=0 videoLinks=0
+05:44:40  [05:44:40] ENGINE needMore (index=20 count=21)
+05:44:40  [05:44:40] REQS(1):
+05:44:40  [05:44:40]   https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=d6dD4Wltz3eDBi-Zl_SkApFRydG1niM36KM8-x-wzVQJGAO8hOixJuzB3WK1m7NOYtgXAppVguIP67UwfyiOjSOdNbBJ4B5ztJ5MKotmTrMX08gZ7hezVFrJtZJwZvgRecwQdrb5c2cdLD-9v3W4ulWiyH9NamlFZkT70sr7-9lHs33zfyXvmA%3D%3D&a_bogus=df-RXF7yxqRnOd%2FSYcn4HJeURq2%2FrPSyGFTORPBP9POKy1tTKYNjuOc4nowksPI6%2FuBzkF3HLneMYDdcN4XTpKHkKmkfuzGSmG5AnXmohHhvTsvhVqDiCTtTKJsc%2F5mEz5l7x2vUXtsHhEFlwN5kAZP99AMJQ%2FbMBrNjDAu97EAXfSWkhn3wOHhkOgJeUy2S
+05:44:40  [05:44:40] HDS(2) — 页面真实请求头:
+05:44:40  [05:44:40]   H https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&upda | Accept=application/json, text/plain, */*
+05:44:40  [05:44:40]   H https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&upda | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+05:44:41  [05:44:40] STAT captured=0 videoLinks=0
+05:44:41  [05:44:41] ENGINE prev -> index=19
+05:44:41  [05:44:41] PLAYER play index=19 url=https://v11-weba.douyinvod.com/7566f7717f8b71b08df15f86c1bd4502/6af660e1/video/t
+05:44:42  [05:44:42] ENGINE next -> index=20
+05:44:42  [05:44:42] PLAYER play index=20 url=https://v26-web.douyinvod.com/4fe8ccdf02a5728a3eda8fdf5b7388cf/6af65e1e/video/to
+05:44:43  [05:44:42] STAT captured=0 videoLinks=0
+05:44:45  [05:44:44] STAT captured=0 videoLinks=0
+05:44:47  [05:44:47] STAT captured=0 videoLinks=0
+05:44:49  [05:44:49] STAT captured=0 videoLinks=0
+05:44:51  [05:44:51] STAT captured=0 videoLinks=0
+05:44:53  [05:44:53] STAT captured=0 videoLinks=0
+05:44:55  [05:44:55] STAT captured=0 videoLinks=0
+05:44:57  [05:44:57] STAT captured=0 videoLinks=0
+05:44:59  [05:44:59] STAT captured=0 videoLinks=0
+05:45:01  [05:45:01] STAT captured=0 videoLinks=0
