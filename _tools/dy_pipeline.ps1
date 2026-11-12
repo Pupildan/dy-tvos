@@ -66,7 +66,7 @@ for ($i = 0; $i -lt 90; $i++) {
 if (-not $run -or $run.status -ne 'completed') { Write-Output 'CI did not complete in time'; exit 1 }
 if ($run.conclusion -ne 'success') {
     Write-Output ("CI FAILED (conclusion=" + $run.conclusion + "). fetch errors:")
-    & powershell -NoProfile -ExecutionPolicy Bypass -File 'C:\Nbeetok\dy-tvos\_tools\fetch_ci_errors.ps1' -RunId $run.id
+    & powershell -NoProfile -ExecutionPolicy Bypass -File 'C:\Nbeetok\dy-tvos\_tools\dy_fetch_errors.ps1' -RunId $run.id
     exit 1
 }
 

@@ -8,7 +8,7 @@ enum WebKitProbe {
     struct Result {
         let dylibLoaded: Bool
         let dylibPath: String?
-        let wkWebViewClass: String?   // 类名，拿到即非 nil
+        let wkWebViewClass: String?
         let instanceCreated: Bool
         let error: String?
 
@@ -24,38 +24,33 @@ enum WebKitProbe {
     }
 
     static func run() -> Result {
-        // 1) 运行时加载私有 WebKit.framework（tvOS 真机上应存在）
         let path = "/System/Library/Frameworks/WebKit.framework/WebKit"
         guard dlopen(path, RTLD_LAZY) != nil else {
             return Result(dylibLoaded: false, dylibPath: nil, wkWebViewClass: nil,
                           instanceCreated: false,
                           error: "dlopen failed: \(String(cString: dlerror()))")
         }
-
-        // 2) 取 WKWebView 类（框架已加载，类应已注册到 runtime）
         guard let cls: AnyClass = NSClassFromString("WKWebView") else {
             return Result(dylibLoaded: true, dylibPath: path, wkWebViewClass: nil,
                           instanceCreated: false, error: "WKWebView class not found")
         }
-
-        // 3) 尝试 alloc + initWithFrame:configuration: 实例化（纯 runtime，不引用类型）
+        // AnyClass -> NSObject.Type 需强转 as!（条件 as? 不编译）
+        let nsCls = cls as! NSObject.Type
         var instanceOK = false
         var err: String? = nil
-        if let obj = (cls as NSObject.Type).alloc() as? NSObject {
-            let sel = NSSelectorFromString("initWithFrame:configuration:")
-            if obj.responds(to: sel) {
-                let frame = NSValue(cgRect: .zero)
-                if let configBase = NSClassFromString("WKWebViewConfiguration") {
-                    let config = (configBase as NSObject.Type).alloc()
-                    config.perform(NSSelectorFromString("init"))
-                    let result = obj.perform(sel, with: frame, with: config)
-                    instanceOK = (result != nil)
-                } else {
-                    err = "WKWebViewConfiguration class not found"
-                }
+        let obj = nsCls.alloc()
+        let sel = NSSelectorFromString("initWithFrame:configuration:")
+        if obj.responds(to: sel) {
+            if let configCls: AnyClass = NSClassFromString("WKWebViewConfiguration") {
+                let config = (configCls as! NSObject.Type).alloc()
+                config.perform(NSSelectorFromString("init"))
+                let result = obj.perform(sel, with: NSValue(cgRect: .zero), with: config)
+                instanceOK = (result != nil)
             } else {
-                err = "initWithFrame:configuration: not found"
+                err = "WKWebViewConfiguration class not found"
             }
+        } else {
+            err = "initWithFrame:configuration: not found"
         }
         return Result(dylibLoaded: true, dylibPath: path,
                       wkWebViewClass: NSStringFromClass(cls),
