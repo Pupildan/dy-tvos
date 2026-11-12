@@ -3,8 +3,8 @@ import AVKit
 import SwiftUI
 import Combine
 
-/// 原生播放器（前景）：继承 AVPlayerViewController（tvOS 原生路径，Menu 键干净退出）。
-/// 视频重力 = resizeAspect（居中、不裁切），letterbox 区透明露出容器背后的模糊背景。
+/// 原生播放器：继承 AVPlayerViewController（tvOS 原生路径，Menu 键干净退出）。
+/// 视频重力 = resizeAspect（居中、不裁切、周围留白——满足原始约束，不拉伸全屏）。
 /// 上/下遥控键覆盖为 prev/next；左/右仍走原生 seek。
 /// 关键：监听 item 失败/播完自动跳下一条（解卡永久黑屏）；预加载前后各 2 条。
 /// 焦点意图：播放器传输控件参与焦点；上/下被本类拦截改语义。
@@ -18,11 +18,11 @@ final class DYPlayerViewController: AVPlayerViewController {
         super.viewDidLoad()
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         try? AVAudioSession.sharedInstance().setActive(true)
-        // 前景：居中、不裁切（约束要求），letterbox 透明露出背后模糊背景
+        // 居中、不裁切、周围留白（原始约束：不拉伸全屏、不锁比例）
         videoGravity = .resizeAspect
-        view.backgroundColor = .clear
+        view.backgroundColor = .black
         player = AVPlayer()
-        DYLog.shared.log("PLAYER foreground viewDidLoad")
+        DYLog.shared.log("PLAYER viewDidLoad")
 
         PlaybackEngine.shared.$index
             .receive(on: DispatchQueue.main)
@@ -109,54 +109,10 @@ final class DYPlayerViewController: AVPlayerViewController {
     }
 }
 
-/// 容器：背后一层"同一视频 aspectFill + 高斯模糊"填满 16:9，前景内嵌 AVPlayerViewController 居中清晰视频。
-/// 两层共用同一个 AVPlayer（由 DYPlayerViewController 创建），天然同步。
-final class DYPlayerContainerViewController: UIViewController {
-    private let bgVideoLayer = AVPlayerLayer()
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
-    private var playerVC: DYPlayerViewController!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .black
-        DYLog.shared.log("CONTAINER viewDidLoad")
-
-        // 背景视频层：aspectFill 铺满，随后被 blur 覆盖成模糊背景（填满黑边区域）
-        let bgView = UIView()
-        bgVideoLayer.videoGravity = .resizeAspectFill
-        bgView.layer.addSublayer(bgVideoLayer)
-        bgView.frame = view.bounds
-        bgView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(bgView)
-
-        blurView.frame = view.bounds
-        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurView)
-
-        // 前景 AVPlayerViewController：居中清晰、不裁切、背景透明
-        playerVC = DYPlayerViewController()
-        addChild(playerVC)
-        playerVC.view.frame = view.bounds
-        playerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(playerVC.view)
-        playerVC.didMove(toParent: self)
-
-        // 背景层绑定到前景同一个 AVPlayer（child 在 viewDidLoad 创建 player，此处取到）
-        DispatchQueue.main.async { [weak self] in
-            self?.bgVideoLayer.player = self?.playerVC.player
-        }
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        bgVideoLayer.frame = view.bounds
-    }
-}
-
-/// SwiftUI 包装：全屏原生播放器（模糊背景 + 居中清晰竖版视频）。
+/// SwiftUI 包装：全屏原生播放器（居中、不裁切、周围留白）。
 struct NativePlayerView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> DYPlayerContainerViewController {
-        DYPlayerContainerViewController()
+    func makeUIViewController(context: Context) -> DYPlayerViewController {
+        DYPlayerViewController()
     }
-    func updateUIViewController(_ uiViewController: DYPlayerContainerViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: DYPlayerViewController, context: Context) {}
 }

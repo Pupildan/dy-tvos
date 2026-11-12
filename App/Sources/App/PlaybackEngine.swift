@@ -35,17 +35,19 @@ final class PlaybackEngine: ObservableObject {
         DYLog.shared.log("ENGINE prev -> index=\(index)")
     }
 
-    /// 从 hook 回传的 "aweme_ID >> url" 行里提取 url，按 aweme 顺序去重（每个 aweme 取第一条 douyinvod 优先）。
+    /// 从 hook 回传的 "aweme_ID >> url" 行里提取 url，按 aweme 顺序去重。
+    /// 关键：只保留 douyinvod CDN 直链（.mp4，可播），丢弃必失败的 /aweme/v1/play/ 端点（403 no-permission，会黑屏）。
     static func extractOrderedURLs(from videoLines: [String]) -> [URL] {
         var byAweme: [String: URL] = [:]
         var order: [String] = []
         for line in videoLines {
-            // 行格式: "aweme_123 >> https://..."
             let parts = line.components(separatedBy: " >> ")
-            guard parts.count == 2, let url = URL(string: parts[1].trimmingCharacters(in: .whitespaces)) else { continue }
+            guard parts.count == 2 else { continue }
+            let raw = parts[1].trimmingCharacters(in: .whitespaces)
+            // 丢弃 /aweme/v1/play/ 端点（真机实测 403 no-permission，必然黑屏）
+            guard !raw.contains("/aweme/v1/play/"), let url = URL(string: raw) else { continue }
             let key = parts[0].trimmingCharacters(in: .whitespaces)
             if byAweme[key] == nil {
-                // 每个 aweme 只取第一次出现的（hook 顺序里 douyinvod .mp4 在前）
                 byAweme[key] = url
                 order.append(key)
             }
