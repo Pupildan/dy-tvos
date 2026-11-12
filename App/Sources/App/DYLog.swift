@@ -4,7 +4,7 @@ import Network
 /// 极简局域网日志服务器：ATV 监听 TCP，Bonjour 广播，开发机 curl 拉日志。
 /// 用途：P2 探测/抓链/播放诊断不再依赖屏上小字，开发机直接 `curl http://<ATV-IP>:8765/log`。
 /// 待真机验证：tvOS App Sandbox 是否允许免费 sideload 监听入站 TCP（无法静态保证）。
-final class DYLog {
+final class DYLog: NSObject {
     static let shared = DYLog()
     static let port: UInt16 = 8765
 
