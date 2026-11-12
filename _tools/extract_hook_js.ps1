@@ -9,7 +9,7 @@ $block = $src.Substring($i, $j - $i)
 $parts = New-Object System.Collections.Generic.List[string]
 $lines = $block -split "`r?`n"
 foreach ($line in $lines) {
-    if ($line -match '@"(.*)"\s*$') {
+    if ($line -match '@"(.*)";?\s*$') {
         $content = $Matches[1]
         # ObjC 转义链：源码 -> C 字符串。\\\\(4)->\\(C级2)，\\(2)->\(C级1)，\"->"
         $content = $content.Replace('\\\\', "`u0001`u0001")

@@ -128,16 +128,19 @@ final class WebKitShellViewController: UIViewController {
                     self.status?("已 dump feed 响应体 \(body.count) 字符，看收集器")
                     self.sawReqs = true
                 } else if msg.hasPrefix("BATCH\n") {
-                    // 合并批（单条消息防覆盖）：REQS 段=完整请求 URL（进收集器），VIDS 段=直链（进引擎）
+                    // 合并批（单条消息防覆盖）：REQS=完整请求 URL、VIDS=直链、HDS=页面真实请求头
                     let lines = msg.split(separator: "\n").dropFirst().map(String.init)
                     var mode = ""
                     var reqs: [String] = []
                     var vids: [String] = []
+                    var heads: [String] = []
                     for l in lines {
                         if l == "REQS" { mode = "R" }
                         else if l == "VIDS" { mode = "V" }
+                        else if l == "HDS" { mode = "H" }
                         else if mode == "R" { reqs.append(l) }
                         else if mode == "V" { vids.append(l) }
+                        else if mode == "H" { heads.append(l) }
                     }
                     if !reqs.isEmpty {
                         DYLog.shared.log("REQS(\(reqs.count)):")
@@ -153,6 +156,10 @@ final class WebKitShellViewController: UIViewController {
                             }
                         }
                         if !self.sawReqs { self.sawReqs = true; self.status?("捕获 \(reqs.count) 个请求 URL") }
+                    }
+                    if !heads.isEmpty {
+                        DYLog.shared.log("HDS(\(heads.count)) — 页面真实请求头:")
+                        for h in heads { DYLog.shared.log("  \(h)") }
                     }
                     if !vids.isEmpty {
                         DYLog.shared.log("VIDS(\(vids.count))")

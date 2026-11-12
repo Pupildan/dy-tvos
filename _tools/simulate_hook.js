@@ -2,7 +2,8 @@
 const fs = require('fs');
 const vm = require('vm');
 
-const code = fs.readFileSync('C:/Nbeetok/dy-tvos/_tmp/hook_from_binary.js', 'utf8');
+const file = process.argv[2] || 'C:/Nbeetok/dy-tvos/_tmp/hook_from_binary.js';
+const code = fs.readFileSync(file, 'utf8');
 
 // ---- 收集断言结果 ----
 const posted = [];
