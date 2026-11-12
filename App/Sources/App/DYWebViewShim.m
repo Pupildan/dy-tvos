@@ -23,7 +23,7 @@ id DYCreateWebViewWithFrame(CGRect frame, NSString * __nullable userAgent)
 
     // initWithFrame: carries a CGRect struct -> must go through objc_msgSend (C convention)
     SEL frameSel = @selector(initWithFrame:);
-    id raw = [(NSObject *)WKWebViewCls alloc];
+    id raw = ((id(*)(id, SEL))objc_msgSend)((id)WKWebViewCls, @selector(alloc));
     if (![raw respondsToSelector:frameSel]) return nil;
     id wv = ((id(*)(id, SEL, CGRect))objc_msgSend)(raw, frameSel, frame);
     if (!wv) return nil;
