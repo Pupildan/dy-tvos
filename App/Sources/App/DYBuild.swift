@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v57"
-    static let changes = "v57: 页面视频静音但播放(不pause)——feed播放进度驱动自我推进,解决翻页停滞"
+    static let version = "v58"
+    static let changes = "v58: 彻底转 myDV 移动端 /aweme/v2/feed/ 直连(4 参签名+安卓 UA+refresh_index 游标),删除全部 WebView 泵/网页 module/feed 逻辑"
 }

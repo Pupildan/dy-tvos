@@ -8,9 +8,10 @@ struct DYTVApp: App {
         DYLog.shared.log("DYTV \(DYBuild.version) launched")
         DYLog.shared.start()
 
-        // 原生直连管线（泵捕获模板 → DYSigner 签名 → URLSession 直连 → 引擎合并）：
+        // 原生直连管线（myDV 移动端）：DYSigner 签名(4 参含 UA) → URLSession 直连 aweme.snssdk.com
+        //   → 解析 aweme_list → 引擎合并 → AVPlayer。零 WebView。
         PlaybackEngine.shared.onNeedMore = {
-            DYFeedClient.shared.fetchNativePage(initial: false)
+            DYFeedClient.shared.fetchPage()
         }
         PlaybackEngine.shared.onRefresh = {
             DYFeedClient.shared.refetchCurrent()

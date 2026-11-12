@@ -8,10 +8,12 @@
     g.frames = g;
 
     // ---------- navigator ----------
+    // 默认 UA = myDV 移动端 UA（u11.p0()）。sign() 每次签名前还会用实际请求 UA 覆盖一次，
+    // 保证 navigator.userAgent / getABogus 第 4 参 / HTTP 请求头三者一致。
     g.navigator = {
-        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-        appVersion: '5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-        platform: 'MacIntel',
+        userAgent: 'com.ss.android.ugc.aweme/391000 (Linux; U; Android 16; zh_CN; Pixel 10 Pro)',
+        appVersion: '5.0 (Linux; U; Android 16; zh_CN)',
+        platform: 'Linux armv8l',
         vendor: 'Google Inc.',
         language: 'zh-CN',
         languages: ['zh-CN', 'zh', 'en'],

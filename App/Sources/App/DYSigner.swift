@@ -4,7 +4,9 @@ import JavaScriptCore
 /// 本地 a_bogus 签名器：JavaScriptCore 运行 myDV 验证过的签名 JS。
 /// 架构（对齐 myDV ABogusSigner/QuickJS）：
 ///   browser shim → abogus.js(XHR 捕获) → bdms.js(字节安全 SDK) → sign.js → abogus_dy.js
-///   → initABogus() → getABogus(query, data, uri) 返回 JSON {ok, value}
+///   → initABogus() → getABogus(query, data, path, ua) 返回 JSON {ok, value}
+/// myDV 移动端签名是 4 参（j.java:68）：第 4 参 ua 必须与 HTTP 请求 UA 一致，
+/// 且签名前把 JS 环境 navigator.userAgent 同步成同一 UA（三者一致）。
 /// 纯原生方案，替代隐藏 WebView 泵。JS 资产来自 myDV v2.3.45（GPL-3.0 个人学习用途，见 NOTICE.txt）。
 /// 线程模型：JSContext 非线程安全，全部操作串行在 signer 队列。
 final class DYSigner {
@@ -105,9 +107,11 @@ final class DYSigner {
         let headers: [String: String]
     }
 
-    /// 计算 a_bogus。query 不含 '?'；data=POST body 字符串（GET 传 ''）；uri=API 路径（可空）。
-    /// 返回签名+安全头，或 nil（未就绪/签名失败）。串行队列内执行。
-    func sign(query: String, data: String, uri: String) -> SignResult? {
+    /// 计算 a_bogus。query 不含 '?'；data=POST body 字符串（GET 传 ''）；path=API 路径（可空）；ua=请求 UA。
+    /// myDV 移动端是 4 参签名：getABogus(query, data, path, ua)（j.java:68 逐字符核对）。
+    /// 第 4 参 ua 必须与实际请求 UA 一致（a_bogus 算法绑定 UA）——移动端传 p0() 安卓 UA。
+    /// 返回签名，或 nil（未就绪/签名失败）。串行队列内执行。
+    func sign(query: String, data: String, path: String, ua: String) -> SignResult? {
         // JSContext 非线程安全：经队列同步执行
         var result: SignResult?
         queue.sync {
@@ -115,7 +119,10 @@ final class DYSigner {
                 result = nil
                 return
             }
-            guard let out = fn.call(withArguments: [query, data, uri])?.toString() else {
+            // 关键一致性：把 JS 环境的 navigator.userAgent 同步成这次请求的 UA，
+            // 保证 a_bogus 算法读到的环境 UA 与第 4 参 ua 与实际 HTTP 请求 UA 三者一致。
+            ctx.evaluateScript("if (typeof navigator !== 'undefined') { navigator.userAgent = \(jsString(ua)); }")
+            guard let out = fn.call(withArguments: [query, data, path, ua])?.toString() else {
                 result = nil
                 return
             }
@@ -135,5 +142,15 @@ final class DYSigner {
             result = SignResult(value: value, headers: headers)
         }
         return result
+    }
+
+    /// 把 Swift 字符串安全转成 JS 字符串字面量（含引号），防转义/注入。
+    private func jsString(_ s: String) -> String {
+        let escaped = s
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "\\r")
+        return "'\(escaped)'"
     }
 }

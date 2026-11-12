@@ -5001,3 +5001,1016 @@
 06:01:05  [06:01:05] STAT captured=0 videoLinks=0
 06:01:07  [06:01:07] STAT captured=0 videoLinks=0
 06:01:09  [06:01:09] STAT captured=0 videoLinks=0
+06:10:28  [06:10:28] DYTV v57 launched
+06:10:28  [06:10:28] SIGNER init start
+06:10:28  [06:10:28] LOGSRV ready on port 8765
+06:10:28  [06:10:28] LOGSRV advertising as DYTV-801
+06:10:28  [06:10:28] SIGNER load shim ok
+06:10:28  [06:10:28] SIGNER load abogus ok
+06:10:28  [06:10:28] SIGNER load sign ok
+06:10:28  [06:10:28] SIGNER load abogus_dy ok
+06:10:28  [06:10:28] SIGNER extras sign=true dy=true
+06:10:28  [06:10:28] SIGNER bdms=yes
+06:10:28  [06:10:28] SIGNER initABogus=true
+06:10:28  [06:10:28] SIGNER fns=AB (期望 AB)
+06:10:28  [06:10:28] SIGNER smoke={"ok":true,"value":"OyW0BRhvdE2s6f6f5XILfY3qVW33YsAS0SVkMDhezVfPky39HMOz9exEvTvvrbueF4/JIe8jy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+06:10:28  [06:10:28] SIGNER READY a_bogus len=172
+06:10:28  [06:10:28] SHELL viewDidLoad
+06:10:28  [06:10:28] SHELL webview created OK
+06:10:28  [06:10:28] PLAYER viewDidLoad
+06:10:28  [06:10:28] PLAYER no url at index=0 (will retry)
+06:10:28  [06:10:28] ROOT auto-start v57
+06:10:28  [06:10:28] PLAYER no url at index=0 (will retry)
+06:10:28  [06:10:28] PLAYER no url at index=0 (will retry)
+06:10:28  [06:10:28] LOGSRV Bonjour published: DYTV-801
+06:10:29  [06:10:29] HOOK installed, awaiting feed API
+06:10:30  [06:10:30] STAT captured=0 videoLinks=0
+06:10:31  [06:10:31] REQS(62):
+06:10:31  [06:10:31]   chrome-extension://kckmfllnpncljamnlfnaoplpmlbgjeal/icons/icon48.png
+06:10:31  [06:10:31]   chrome-extension://pdjpejnkgiobincbjjkcbfmamomipphp/icon-48.png
+06:10:31  [06:10:31]   chrome-extension://ioadaikpljilagoddljnamloiebcoopb/static/img/icon128.png
+06:10:31  [06:10:31]   https://mcs.zijieapi.com/webid?aid=6383&sdk_version=5.1.24_dy
+06:10:31  [06:10:31]   chrome-extension://knbeilbpfnelpbeoofhnkfbfcldpfehn/icon/128.png
+06:10:31  [06:10:31]   chrome-extension://kcihaacmobnfpcellccakhmbhkjdlkbf/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://iponikghooaamlcbcffeedaamigfjmbg/icons/icon.png
+06:10:31  [06:10:31]   https://mon.zijieapi.com/monitor_web/settings/browser-settings?bid=verify_center_cn&store=1
+06:10:31  [06:10:31]   https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241
+06:10:31  [06:10:31]   chrome-extension://nkffbmomkmgaoogcenpadgmclfnjjfbk/icon.png
+06:10:31  [06:10:31]   chrome-extension://kciedmbjjemohpojhlegnjfjcjcnjcbf/manifest.json
+06:10:31  [06:10:31]   chrome-extension://fpfgcbhicmindbcebidgnedelibhnhpo/manifest.json
+06:10:31  [06:10:31]   chrome-extension://bgppnpjeamnalgmnckghppndfnlgbkod/manifest.json
+06:10:31  [06:10:31]   chrome-extension://lppaannpfhbfkolfkahgdmafcabmbnla/manifest.json
+06:10:31  [06:10:31]   chrome-extension://nnmjdepboiliidofhaikkdgedgpoddgp/manifest.json
+06:10:31  [06:10:31]   chrome-extension://bhdbhcfkpjbffhnhobhjpcfcchfpield/manifest.json
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/img/website/logo.png
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icon.png
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/img/website/close.png
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icons/icon48.png
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icon.png
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icon.png
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icons/icon48.png
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/img/icon.png
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icons/icon48.png
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/images/icon48.png
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://aaobabmlkdkmdeokofgnijgegajffena/js/injectedXhr.js
+06:10:31  [06:10:31]   chrome-extension://alajkhhkechnoipdnpiblpohepgpijgi/js/injectedXhr.js
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/img/website/logo.png
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/img/website/close.png
+06:10:31  [06:10:31]   chrome-extension://fikfodpcneimjgfaegnmiaamkihnnjjj/js/injectedXhr.js
+06:10:31  [06:10:31]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/img/website/logo.png
+06:10:31  [06:10:31]   chrome-extension://ldllbcnpihgljdgpjgdopgeejenhnabf/icon-256.png
+06:10:31  [06:10:31]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/img/website/close.png
+06:10:31  [06:10:31]   chrome-extension://gcpmionijkkgeohemkebnkjnblhmpjck/js/injectedXhr.js
+06:10:31  [06:10:31]   chrome-extension://jlknbjboeobdnibieepdfbnlppgegilj/icons/128.png
+06:10:31  [06:10:31]   chrome-extension://kjekjdmhcoddchkbdgkmmpfnholfpojf/images/icon128.png
+06:10:31  [06:10:31]   chrome-extension://fflknhbkebnngcdbbngaigcgjcijanhd/icons/logo.png
+06:10:31  [06:10:31]   chrome-extension://comjihpdlemlbaedhdbdnefjnakhmaoa/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://fhfigihmbogicaejckmlemhdelbjgppp/icons/128.png
+06:10:31  [06:10:31]   chrome-extension://fmfpakpchhlddjjpknbjimfblbefbldh/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://cmgncmbhkoghpdikiakodgfoimfhabae/icon128.png
+06:10:31  [06:10:31]   chrome-extension://mbjhaeldagndekjpbpcikdfhnjdecbkj/image/128.png
+06:10:31  [06:10:31]   chrome-extension://inhjianejcbcoefggchkndocohbbhjfb/icons/128.png
+06:10:31  [06:10:31]   chrome-extension://faehamkoggbocedcjadcciknaecdaeim/icon128.plasmo.3c1ed2d2.png
+06:10:31  [06:10:31]   chrome-extension://hilfahbmfiglhfbgiapjfhicmkpbeoil/bitmaps/logo-128-nooutline.png
+06:10:31  [06:10:31]   chrome-extension://oadaehcdkefofimacfffdahiejjkhbkj/icon/icon128.png
+06:10:31  [06:10:31]   chrome-extension://aiejgmhiikcdcjajgiemgcodpedfdnlb/icon/128.png
+06:10:31  [06:10:31]   chrome-extension://afajmhdalamaiijklldgeodgiimnofof/src/assets/icons/icon512.png
+06:10:31  [06:10:31]   chrome-extension://fefcliabdkllgfbhmfhjmpphjhbcjjal/images/icon.png
+06:10:31  [06:10:31]   chrome-extension://cjplbkllillihikceoghhkefdobbelpo/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://diljhaaoboocicoahikimidednlajhek/icon/128x128.png
+06:10:31  [06:10:31]   chrome-extension://ihclbgfnkclacfkbedkdnbpmkcdaccje/images/icon128.png
+06:10:31  [06:10:31]   chrome-extension://amdkmjhdjonbhjihnpdenbfcnhkogcdn/assets/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://iecafjejbggeoldcjiehgoolokaebpdf/icon/128.png
+06:10:31  [06:10:31]   chrome-extension://gbhbibhafgjmolaeffkalddjhdcafkge/img/v128.png
+06:10:31  [06:10:31]   chrome-extension://ifdgmmhiamkipfpdmokmkhnpnefdahdd/icons/icon128.png
+06:10:31  [06:10:31]   chrome-extension://ojepopegbajboliolpifoiinabdobpnb/images/icon-128.png
+06:10:31  [06:10:31]   https://mcs.zijieapi.com/webid?aid=3722&sdk_version=5.1.24_dy
+06:10:31  [06:10:31] HDS(4) — 页面真实请求头:
+06:10:31  [06:10:31]   H https://mcs.zijieapi.com/webid?aid=6383&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:31  [06:10:31]   H https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241 | Content-Type=application/json
+06:10:31  [06:10:31]   H https://vcs.zijieapi.com/vc/setting?aid=6383&pageId=6241 | X-Setting-Flag=1
+06:10:31  [06:10:31]   H https://mcs.zijieapi.com/webid?aid=3722&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:32  [06:10:32] STAT captured=0 videoLinks=0
+06:10:33  [06:10:33] FEEDPARSED FEEDPARSED videos=12 awemes=4
+06:10:33  [06:10:33] REQS(18):
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source=6&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=xfBVXF7ydom5Cd%2FGmCnXH72lzq9MrPuyeeToWJMTyxz5y7zbtmPSuPCrGxwfsMoSOYBkkoIHwne%2FbxVcZ0UkpKrpwmpDSEGjmz5CnUvL0HkDGBJhnrDkCEbPKJsaAbbEz5ltx%2FXl6ts9Xdeliq5hA%2FFy9A0iQ8bMPqPbDAuyeEWgfAWkhn-sO9hQOgJqbD%3D%3D
+06:10:33  [06:10:33]   https://live.douyin.com/webcast/web/live/watermark/?watermark_key_list=%5B%7B%22watermark_uniq_idx%22%3A%22v4u%22%2C%22watermark_key%22%3A%22u_3454044254768585%22%2C%22algorithm%22%3A%22v4u%22%7D%2C%7B%22watermark_uniq_idx%22%3A%22v5p%22%2C%22watermark_key%22%3A%22u_3454044254768585%22%2C%22algorithm%22%3A%22v5p%22%7D%5D&device_info=%7B%22DeviceType%22%3A%22%22%2C%22OsType%22%3A%22Mac+OS%22%2C%22OsVersion%22%3A%2210.15.7%22%2C%22BrowserType%22%3A%22WebKit%22%2C%22BrowserVersion%22%3A%22605.1.15%22%2C%22ScreenModel%22%3A%221920*1080%22%7D&ignoreToast=true&device_platform=web&aid=6383&channel=channel_pc_web&live_id=1&app_name=douyin_web&language=zh-CN&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=EXlbfq7EmomRcdMGmOctHSplihI%2FNsSy0lT2RyITexKWL1lT4WN6uNeraxqv4z2SKbBskqVHune%2FYDVcNUXTpq9pFmkfSNJR8t5VnUmogHZvGPvh9HmTCYbPzJBPAcREz%2FltxMXl6tB9XxelwHVTAZO9tAMiQ%2FYMPqNRDlYyeEA6fSukkx-hOHkpx6NcU7VS
+06:10:33  [06:10:33]   https://mcs.zijieapi.com/list
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=1&refer_id=&refer_type=10&pull_type=0&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&use_lite_type=2&pre_log_id=&pre_item_ids=7703228477280996659%2C7677898472729090030%2C7706121265144220955%2C7700705460227247414%2C7683473327297531136%2C7697101947353992498&pre_room_ids=&pre_item_from=sati&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=DjMnvqWyYqQVad%2FSYCnUH7dUAZgMrPSyxeToRJCTSOzVyXFYGRPfuu-rjOwk4M2S%2FSpTkqIHoneVYDdPZ4lJBKnpwmkvS%2FiS8t5VnXso%2FHZDTPihnqmwCitPLJBcA5mE0QlJx2fU1ts9XxeliNVzAZFytA0EQ8YMPHPWDAz9tEWXDCuki9-zOekkTLrG0a%2F6
+06:10:33  [06:10:33] FEED native pipeline armed (template captured)
+06:10:33  [06:10:33] FEED native fetch called initial=true refresh=false hasTemplate=true signerReady=true
+06:10:33  [06:10:33] FEED native GET page=1 initial=true refresh=false bogus_len=172 presented=0 sec_headers=0
+06:10:33  [06:10:33] TEMPLATE captured len=1683
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&channel=channel_pc_web&tab_id=screen_course_page&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=mfl56wUwEomcFd%2FbYOcUHtpl8ZoANP8yFeixRw2T7PTHL7MGG8PRuOeJbxwksMISQbBikq1Hone%2FYExcqUUipqrpwmkvumJymGVVn68o0HhvTskhVHmTCESPuJsP%2FbRET%2F1Gx2flUtBHhxlliH5hA2O9tA0E5ubMBrNbDIu99EWgfAukwx-wOHhdE6Tn0nnj
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_subtab&app_id=6383&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=EX-cvwWEYpARcdFtucnGH72l0h9%2FrBuyaFixbupPCNP8yX0GGRNbuNCrcxqfszISKuBwkqI7KntlbdncNUXspF9pumkvuQkf8GV5n6moMHhDTPih9rDTCYSTuJsOARRET51JxZvl6tsqhEeliN5wA%2FK9SA0j5uRMPHPbDAz9yEAhfC8kwn3wOCgDPgazUIAf
+06:10:33  [06:10:33]   https://live.douyin.com/webcast/setting/?device_platform=web&aid=6383&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Ej-V6tXyQo5bCd%2FGYCn7H7dlSwnMNsuybPiOSxcPHOT3yHebUmPyucaJcxwf4z9SOSpwkFI7untAYEncp4X0po9kKmpvu2sfmzVVnWXLgHkkTBkhVrmhCTtPKJBOAbREz5l7xMXU1tBHXxMlirVwA2K9tAMiQKmMPNPWDlTyCEWhDW8kko-kO9khNLiqGE%3D%3D
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=OvMcfz6ixoAfKdMSuOnUH7plxqd%2FNPWyeeTdbJnT9NPtyXUYUmPSuaeJGxwDszoSQuBikoIHone%2FYDVcZUXiponkumpvSNGSmG59nUXL8HkkTskhVHD0CEGToJBcARREs%2F1txZfU1tBHXdFlwqVhAZKytAMEQ8RMFrNjDAz9eEAhfA8kin-TOehQEgiqBE%3D%3D
+06:10:33  [06:10:33]   https://lf3-static.bytednsdoc.com/obj/eden-cn/666eh7nuhfvhpebd/douyin_web/index-ad-22.js
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=2&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=E7-fXet7QpAVad%2FGmOnGH75UeX6lrTWyBBTQRG9T9NTHL70bbYNRuPcrnxwvszISKupikKI7unt%2FbdVcZ4UzpKHpumkku20RYGVIn6XoMHkfTPkhnNDhCTGTqJsP%2FRRET%2FltxMfUItsqhEeliq5iAZO9tA0EQ%2FRMMHN6DIzySEWXDCSkio-zOChgN6Tq5j%3D%3D
+06:10:33  [06:10:33]   https://mcs.zijieapi.com/webid?aid=7497&sdk_version=5.1.24_dy
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=OflbvqWJdx5nKdMGmCnvHSAl3q2MrPWyaPi2bGHPeNPzLHzYbuNyuwBraOwf40ISObBikK37qneqbdncqsIGpKnpFmkDSM4SmtV9n6mL0HZDTTkhnrmkCTbTFJsOAbmETAl7xMflWtBHXxFlkHV0AZPytA0EQubMMHNyD1T9eEAgfSSkix-iOHDpOgrFUeC6
+06:10:33  [06:10:33]   https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy
+06:10:33  [06:10:33]   https://www.douyin.com/service/2/abtest_config/
+06:10:33  [06:10:33]   https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy
+06:10:33  [06:10:33]   https://tnc0-aliec2.zijieapi.com/get_domains/v5/?tnc_js_sdk_version=2.3.15.0&device_platform=pc&aid=6383&device_id=7707221858722842150&user_id=3454044254768585&web_service=
+06:10:33  [06:10:33]   https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy
+06:10:33  [06:10:33]   https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=DJ-56qy7Op8VOVMbmCcJHt1lj79%2FrT8yoPiQbTKPSNONyXFYbRNyuxcJrxqv409S%2FbBikq17one%2FYxdcqUXTpo9pzmkDuohSmT5cnW6LhHkkGTvhVqm0CEGToJsPA5RET5lUxZfUWtBqhdelhqVwAZF9CA0iQ8bMPHNjDlz9HEAXDCukhn-wO9gpT6GqbD%3D%3D
+06:10:33  [06:10:33] HDS(35) — 页面真实请求头:
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/social/count?device_platform=webapp&aid=6383&channel=channel_pc_web&source | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://live.douyin.com/webcast/web/live/watermark/?watermark_key_list=%5B%7B%22watermark_uniq_idx%22%3A%22v4u | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33] FEED page header stored: Accept=application/json, text/plain, */* (1 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:33  [06:10:33] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (2 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (3 total)
+06:10:33  [06:10:33] FEED headers ready, fire native page with headers
+06:10:33  [06:10:33] FEED native fetch called initial=false refresh=false hasTemplate=true signerReady=true
+06:10:33  [06:10:33] FEED native GET page=2 initial=false refresh=false bogus_len=172 presented=0 sec_headers=0
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:33  [06:10:33] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&cha | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/douyin/select/tab/course/catagory/tag/?device_platform=webapp&aid=6383&cha | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_s | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/solution/resource/list/?spot_keys=7359502129541449780_douyin_pc_discover_s | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://live.douyin.com/webcast/setting/?device_platform=web&aid=6383&update_version_code=170400&pc_client_typ | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/page/turn/offline?device_platform=webapp&aid=6383&channel=channel_pc_web&p | x-secsdk-csrf-token=DOWNGRADE
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:33  [06:10:33] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:33  [06:10:33] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/webid?aid=7497&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/multi/aweme/detail/?device_platform=webapp&aid=6383&channel=channel_pc_web | x-secsdk-csrf-token=DOWNGRADE
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=3722&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+06:10:33  [06:10:33]   H https://www.douyin.com/service/2/abtest_config/ | Content-Type=application/json; charset=utf-8
+06:10:33  [06:10:33]   H https://www.douyin.com/service/2/abtest_config/ | x-secsdk-csrf-token=DOWNGRADE
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy | Content-Type=application/json; charset=utf-8
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=7497&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web& | Accept=application/json, text/plain, */*
+06:10:33  [06:10:33]   H https://www.douyin.com/aweme/v1/web/get/user/settings/?device_platform=webapp&aid=6383&channel=channel_pc_web& | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:33  [06:10:33]   H https://mcs.zijieapi.com/list?aid=6383&sdk_version=5.1.24_dy | X-MCS-AppKey=566f58151b0ed37e
+06:10:33  [06:10:33] VIDS(12)
+06:10:33  [06:10:33] ENGINE merge total=4 index=0 replace=false auto=true
+06:10:33  [06:10:33] PLAYER play index=0 url=https://v26-web.douyinvod.com/2b76ff268b706e8627c2ce4f1de837d2/6af6654d/video/to
+06:10:34  [06:10:33] FEED parse fail (page 1) body=Unsupported path(Janus)
+06:10:34  [06:10:34] FEED parse fail (page 2) body=Unsupported path(Janus)
+06:10:34  [06:10:34] ENGINE refresh (stale=false)
+06:10:34  [06:10:34] FEEDPARSED FEEDPARSED videos=15 awemes=5
+06:10:34  [06:10:34] STAT captured=0 videoLinks=0
+06:10:35  [06:10:35] REQS(3):
+06:10:35  [06:10:35]   https://www.douyin.com/aweme/v1/web/solution/resource/list/?app_id=6383&spot_keys=7359502129541449780_douyin_pc_banner&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Dv-VX7UJOq5nad%2FtmOnJHy3lv72%2FNsuyjeTQWoHP7PzBLHzTSWPjuPcrrxwf4M9S%2FYpskKIHqneAYDVcq0XipFHkKmkfuMhRmTVAnU8L8HZkTsvhVNmTCYbPzJsO%2FRYE0Qltx%2FfUAtB9XDFliq5TAZKyyAMjQ%2FmMPNNbD1TytEW6DW8kio3zOHkkYyJCUrQt
+06:10:35  [06:10:35]   https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default
+06:10:35  [06:10:35]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=3&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=QJB56HX7dpm5FdFbuOnvH7KURZVMNs8yiMT2S9%2FTtOuoy1tYaYNSurCJGxwDsMIS%2FuBkkKV7ontAbxxcq0XwpKHpwmkDSFibutVInUmoMHhvTBkhnHmzCitPKJBaAbRETAlvx%2FXUXtBHhdMliq5sA%2FOy9AMJ5KRMPqP6DIz97EW6DCSkkn3sOCkkEgJTUtob
+06:10:35  [06:10:35] HDS(6) — 页面真实请求头:
+06:10:35  [06:10:35]   H https://www.douyin.com/aweme/v1/web/solution/resource/list/?app_id=6383&spot_keys=7359502129541449780_douyin_p | Accept=application/json, text/plain, */*
+06:10:35  [06:10:35]   H https://lf3-config.bytetcc.com/obj/tcc-config-web/tcc-v2-data-douyin.pc.web-default | Accept=application/json, text/plain, */*
+06:10:35  [06:10:35]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:35  [06:10:35] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:35  [06:10:35]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:35  [06:10:35] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:35  [06:10:35]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:35  [06:10:35] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:35  [06:10:35]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:35  [06:10:35] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:35  [06:10:35] VIDS(15)
+06:10:35  [06:10:35] ENGINE merge total=9 index=0 replace=false auto=false
+06:10:36  [06:10:36] FEEDPARSED FEEDPARSED videos=15 awemes=5
+06:10:36  [06:10:36] STAT captured=0 videoLinks=0
+06:10:37  [06:10:37] FEEDPARSED FEEDPARSED videos=3 awemes=1
+06:10:37  [06:10:37] REQS(2):
+06:10:37  [06:10:37]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=4&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=mj-b67ywExWVedFt8ccGHSHU8wgANs8y7lTKboITtNzDLHzG5mPWuxCJbxwD40oSKuphkoV7FntlYDncqsUipFHpKmkfuQ4WYTVAnWXLZHhvTsvhVHmiCiSPFJBa%2FRbET%2F1tx%2FflXtsHhdFlwqVzAZF9HAMEQ8YMPqPRDlY97EWhfWukkn3sOCDdKgfB
+06:10:37  [06:10:37]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=5&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=m7lnXtUjEx8ncVFS8Cn7HtplBydANTWydeiQRqCTtNP%2FyXebU8N6YrCrJxqf4M9SQYpikqIHqntAYxncq4XTpq9kompvSswRuT5nnU0L0HZvGBkhINmsCibToJBa%2FbRE0Q1Xx26UIts9hdllkNVzAZPytA0j5ubMBHPWDAY9eEWgfCSki93sOCDdNyTnU9dv
+06:10:37  [06:10:37] HDS(8) — 页面真实请求头:
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:37  [06:10:37] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:37  [06:10:37] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:37  [06:10:37] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:37  [06:10:37] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:37  [06:10:37] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:37  [06:10:37] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:37  [06:10:37] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:37  [06:10:37]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:37  [06:10:37] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:37  [06:10:37] VIDS(18)
+06:10:37  [06:10:37] ENGINE merge total=15 index=0 replace=false auto=false
+06:10:38  [06:10:38] ENGINE next -> index=1
+06:10:38  [06:10:38] PLAYER play index=1 url=https://v11-weba.douyinvod.com/9907088c72b5d2edbaa3c58a011f5ac8/6af66644/video/t
+06:10:38  [06:10:38] FEEDPARSED FEEDPARSED videos=6 awemes=2
+06:10:38  [06:10:38] STAT captured=0 videoLinks=0
+06:10:39  [06:10:39] REQS(7):
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&detail_list=1&source=6&main_billboard_count=5&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=djBjvFtLx2WjOV%2FtucnUHyVU9Io%2FNTSyoBTQb7APCOzEyHzbWWPSYNaJcxwf4F2S%2FbpikqVHzne%2FbxncqsUkpFrkqmkkS2UyuTV5nX6LhHpvGBJhVHmkCYbPwJBaARbET51Gx%2Fvl6ts9XdlliNVkAZKyCA0J5%2FbMMHPRDlu9CEWhDCSkwx3kOCkDO6GqgD%3D%3D
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_web&os=1&client_type=1&scene=admin_pc_push&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=OflVXe6idqmncdMtmKc7H7VlCL9%2FNPWyLlidSKOTCPP8yXeTS8PjYOcrnxwfs09SQupskq37KneAbDdcZ0UzpKnkLmpkug4fut55nXvLgHkkGPJhVrD0CiSPLJsaAcYE0Ql4xMXUltsHhDFlkHVhAMPytAMJ5KmMBqPbD1zyHEW6DCukwn30OChZiLiq6D%3D%3D
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=mj-56HyLmNmbaV%2FGuCc4HyVUTo6ArTWyKPTQbrlTHPu2LHUYS8NWYNcJbxwksFoS%2FupikFV7qnelbdxcpUXhpqrpqmkDSkGbmzVnnXXogHkkGTvhVrDkCYSTuJsPA5bEz%2F1UxMvUWtBqXdFlwH5hAMP97AMJ58RMMrPWDITyCEW6DA8kkn-sOCDZELGqfj%3D%3D
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=d6MbvtX7OZWjOVKS8KnGHyVlfIIArsuyQPToba5PtPKIyX0YbRP6YxarGxwDsFoSQbBikq17qneMYDxcNsXhponpFmpvuzzb8tVAnWsL%2FHZfGBJhVHDTCTSTzJsOARmETQlXx2fUWtB9hxllhr5iA%2FPy7AMJQ8YMMHNbDlT9eEAhDW8kin-kOekkNgJaUcCU
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=673&publish_video_strategy_type=2&app_id=10001&entrance=IM6383-3586&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Yj-fXH7Jmp%2FROd%2FS8CcJHSVlHyEANPSyfPT2WONPHxYFLHFbSRPWYcerGxwvsF2S%2FSpwkK37wnelbDncpsUspqrpzmkfSgXfmt5In66LMHpfGskh9HmiCYGTwJsO%2F5mE0514x%2FXl1tBqhEMlir5iA%2FP9tAMJQubMBqN6Dlzy9EAgfAWkkn-wOCkZO6JqBf%3D%3D
+06:10:39  [06:10:39]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=6&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&a_bogus=Qy-b6HXyd25VOd%2FtYKnvH7OUSojlrBWydFT%2FRiMPexPnLHFbauPyYrarGxqvsF2SKSpikF1HFnt%2FbDdcp0XspKrpwmpkSg4j8TVIn6XL8HkvTBih9Nm0CTSPqJBaAcYET51GxZ6lAts9hEllir50A%2FPyCA0i5uYMBqPjDAu9HEW6DA8kho-sOHhDYgTq-E%3D%3D
+06:10:39  [06:10:39]   https://mssdk.bytedance.com/web/r/token?ms_appid=6383
+06:10:39  [06:10:39] HDS(16) — 页面真实请求头:
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&de | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/hot/search/list/?device_platform=webapp&aid=6383&channel=channel_pc_web&de | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_ | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/external/notification/?device_platform=webapp&aid=6383&channel=channel_pc_ | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/get/user/risklevel/?device_platform=webapp&aid=6383&channel=channel_pc_web | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/query/user/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v1/web/im/get/online_feedback/entrance/?device_platform=webapp&aid=6383&channel=6 | x-secsdk-csrf-token=DOWNGRADE
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:39  [06:10:39] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:39  [06:10:39] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:39  [06:10:39] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:39  [06:10:39]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:39  [06:10:39] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:39  [06:10:39] VIDS(6)
+06:10:39  [06:10:39] ENGINE merge total=17 index=1 replace=false auto=false
+06:10:40  [06:10:40] FEEDPARSED FEEDPARSED videos=15 awemes=5
+06:10:40  [06:10:40] STAT captured=0 videoLinks=0
+06:10:41  [06:10:41] FEEDPARSED FEEDPARSED videos=12 awemes=4
+06:10:41  [06:10:41] REQS(1):
+06:10:41  [06:10:41]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=7&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=k9zzSGjyNUmgqoueNkNS-xP_v1wiebkqaqmnRDUeJXS0f9_0BdcvfReo3zA4cPsqXx10ACb-TMyD1GtGL_vwot5G-j6cirt6eXwSfrZ3pxdHtd1Bo6cugJjjDgLdXY8utEv8pj_OzQCEcIWlBD8rZs75arii-3K6qY8%3D&a_bogus=xXBnfF6LQd8fPdKGmKn7HSrUCoVlNBuyJlTObb2PeOOZL7zbcmNbYrerJxqkszISObBikqI7LntMbxVcp0U0pFHpLmkkSg4buz5cn6Xo%2FHpkTTvhINmwCitTLJBaA5RE0%2F1JxMfU1tBqhxMlwH5TA%2FKySA0iQ%2FYMMqNjDIYy7EA6fWuki9-sOChDYgsqCD%3D%3D
+06:10:41  [06:10:41] HDS(4) — 页面真实请求头:
+06:10:41  [06:10:41]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:10:41  [06:10:41] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:10:41  [06:10:41]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:10:41  [06:10:41] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:10:41  [06:10:41]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:10:41  [06:10:41] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:10:41  [06:10:41]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:10:41  [06:10:41] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:10:41  [06:10:41] VIDS(27)
+06:10:41  [06:10:41] ENGINE merge total=26 index=1 replace=false auto=false
+06:10:42  [06:10:42] ENGINE next -> index=2
+06:10:42  [06:10:42] PLAYER play index=2 url=https://v11-weba.douyinvod.com/a394616ede25630a31cf9cce7ad01d66/6af66442/video/t
+06:10:42  [06:10:42] STAT captured=0 videoLinks=0
+06:10:44  [06:10:44] STAT captured=0 videoLinks=0
+06:10:46  [06:10:46] ENGINE next -> index=3
+06:10:46  [06:10:46] PLAYER play index=3 url=https://v26-web.douyinvod.com/db7e766a9d4d5390c61551dbdaed03af/6af66427/video/to
+06:10:46  [06:10:46] STAT captured=0 videoLinks=0
+06:10:47  [06:10:47] REQS(1):
+06:10:47  [06:10:47]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=k9zzSGjyNUmgqoueNkNS-xP_v1wiebkqaqmnRDUeJXS0f9_0BdcvfReo3zA4cPsqXx10ACb-TMyD1GtGL_vwot5G-j6cirt6eXwSfrZ3pxdHtd1Bo6cugJjjDgLdXY8utEv8pj_OzQCEcIWlBD8rZs75arii-3K6qY8%3D
+06:10:48  [06:10:48] STAT captured=0 videoLinks=0
+06:10:48  [06:10:48] ENGINE next -> index=4
+06:10:49  [06:10:48] PLAYER play index=4 url=https://v11-weba.douyinvod.com/7041d13a4098215f1245c7506338f38e/6af6653d/video/t
+06:10:50  [06:10:50] STAT captured=0 videoLinks=0
+06:10:52  [06:10:52] STAT captured=0 videoLinks=0
+06:10:53  [06:10:53] ENGINE next -> index=5
+06:10:53  [06:10:53] PLAYER play index=5 url=https://v26-web.douyinvod.com/18f4591990d35fa4a8b743720ba40843/6af664a6/video/to
+06:10:54  [06:10:54] STAT captured=0 videoLinks=0
+06:10:55  [06:10:55] ENGINE next -> index=6
+06:10:55  [06:10:55] PLAYER play index=6 url=https://v11-weba.douyinvod.com/fa1f35797b8ede584ae42fda95860b5d/6af66573/video/t
+06:10:56  [06:10:56] STAT captured=0 videoLinks=0
+06:10:57  [06:10:57] ENGINE next -> index=7
+06:10:57  [06:10:57] PLAYER play index=7 url=https://v26-web.douyinvod.com/2de4249324e88159a5e72e588699532e/6af664cf/video/to
+06:10:58  [06:10:58] STAT captured=0 videoLinks=0
+06:11:00  [06:11:00] ENGINE next -> index=8
+06:11:00  [06:11:00] PLAYER play index=8 url=https://v26-web.douyinvod.com/ff4aaa7799f306e0f9675dc56a2f0d80/6af664d8/video/to
+06:11:00  [06:11:00] STAT captured=0 videoLinks=0
+06:11:02  [06:11:02] STAT captured=0 videoLinks=0
+06:11:02  [06:11:02] ENGINE next -> index=9
+06:11:02  [06:11:02] PLAYER play index=9 url=https://v11-weba.douyinvod.com/63f72c7f82650159aafd54fa7d1a8811/6af66411/video/t
+06:11:04  [06:11:04] STAT captured=0 videoLinks=0
+06:11:05  [06:11:05] ENGINE next -> index=10
+06:11:06  [06:11:05] PLAYER play index=10 url=https://v26-web.douyinvod.com/248edacc68f64c931272cd3141c4fcc9/6af6673f/video/to
+06:11:06  [06:11:06] STAT captured=0 videoLinks=0
+06:11:08  [06:11:08] STAT captured=0 videoLinks=0
+06:11:09  [06:11:09] REQS(1):
+06:11:09  [06:11:09]   https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=eB_56iUNN0Wlua9ZVSSs6TLPmg_Xw8d66tNr_Rck_MnVOHIqZ4EpVvPzwnsL3sMut2qik57re1capkjGbF6O_M-hQ3n0SoSe0vrFKmJTlrhar7qeNPBww2hTkj8yJTmkzKWKVOa4RPykdKGoE17S4sgAJiSgAhcGSHG2Tr4-Lrti9NnuhssvTA%3D%3D&a_bogus=Ev-nvqWwDqmnCV%2FtYCntH7clvly%2FNPSyyBixbJrT7xu0LHzG5SNW8PaJbxqvsFoSKYB0kFV7uneAYxxcN4XkpqHkumpDuFUjmG5Vn6mohHZkGTJhINDiCTSPqJBO%2FbREzAlJx%2Ffl6tsqXxllkNV0A2K9yAME5ubMPqNSDIY9eEA6fAWkw9-kO9gkEyiY0yQv
+06:11:09  [06:11:09] HDS(2) — 页面真实请求头:
+06:11:09  [06:11:09]   H https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&upda | Accept=application/json, text/plain, */*
+06:11:09  [06:11:09]   H https://www.douyin.com/aweme/v1/web/app/installed/?device_platform=webapp&aid=6383&channel=channel_pc_web&upda | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:11:10  [06:11:10] STAT captured=0 videoLinks=0
+06:11:11  [06:11:11] ENGINE next -> index=11
+06:11:11  [06:11:11] PLAYER play index=11 url=https://v11-weba.douyinvod.com/5a5fb47229d0323c7f5cb4bea04ea6b5/6af66921/video/t
+06:11:12  [06:11:12] STAT captured=0 videoLinks=0
+06:11:14  [06:11:14] STAT captured=0 videoLinks=0
+06:11:16  [06:11:16] STAT captured=0 videoLinks=0
+06:11:17  [06:11:17] ENGINE next -> index=12
+06:11:17  [06:11:17] PLAYER play index=12 url=https://v11-weba.douyinvod.com/871ec88d2af51920aab8fd949b87ed50/6af6671a/video/t
+06:11:18  [06:11:18] STAT captured=0 videoLinks=0
+06:11:19  [06:11:19] ENGINE next -> index=13
+06:11:19  [06:11:19] PLAYER play index=13 url=https://v26-web.douyinvod.com/21754579d986cc494c8c1cf2247fb5fc/6af66447/video/to
+06:11:20  [06:11:20] STAT captured=0 videoLinks=0
+06:11:22  [06:11:22] STAT captured=0 videoLinks=0
+06:11:24  [06:11:24] ENGINE next -> index=14
+06:11:24  [06:11:24] PLAYER play index=14 url=https://v11-weba.douyinvod.com/3b3bf39de5ed67091f56e2a05bb4d62d/6af6650b/video/t
+06:11:24  [06:11:24] STAT captured=0 videoLinks=0
+06:11:26  [06:11:26] STAT captured=0 videoLinks=0
+06:11:27  [06:11:27] ENGINE next -> index=15
+06:11:27  [06:11:27] PLAYER play index=15 url=https://v26-web.douyinvod.com/dc81f41722b0bd3573396f3b77b9608b/6af66514/video/to
+06:11:28  [06:11:28] STAT captured=0 videoLinks=0
+06:11:30  [06:11:30] ENGINE next -> index=16
+06:11:30  [06:11:30] PLAYER play index=16 url=https://v26-web.douyinvod.com/c34efa39b538fd90692027ba179cc7be/6af665d6/video/to
+06:11:30  [06:11:30] STAT captured=0 videoLinks=0
+06:11:32  [06:11:32] STAT captured=0 videoLinks=0
+06:11:32  [06:11:32] ENGINE next -> index=17
+06:11:32  [06:11:32] PLAYER play index=17 url=https://v11-weba.douyinvod.com/76713becaacc4cda2742853292d9cfe7/6af6660b/video/t
+06:11:34  [06:11:34] STAT captured=0 videoLinks=0
+06:11:35  [06:11:35] ENGINE next -> index=18
+06:11:35  [06:11:35] PLAYER play index=18 url=https://v11-weba.douyinvod.com/d251eb61197d6369997a9d84301efc7e/6af66567/video/t
+06:11:36  [06:11:36] STAT captured=0 videoLinks=0
+06:11:38  [06:11:38] STAT captured=0 videoLinks=0
+06:11:39  [06:11:39] ENGINE next -> index=19
+06:11:39  [06:11:39] PLAYER play index=19 url=https://v26-web.douyinvod.com/b6af1443b2cb9f455325f475ca446b9a/6af6658c/video/to
+06:11:40  [06:11:40] STAT captured=0 videoLinks=0
+06:11:41  [06:11:41] ENGINE needMore (index=19 count=26)
+06:11:41  [06:11:41] ENGINE next -> index=20
+06:11:41  [06:11:41] PLAYER play index=20 url=https://v11-weba.douyinvod.com/d3e27a718781ba7a71b92a36b66420ad/6af6645b/video/t
+06:11:42  [06:11:42] STAT captured=0 videoLinks=0
+06:11:43  [06:11:43] ENGINE next -> index=21
+06:11:43  [06:11:43] PLAYER play index=21 url=https://v26-web.douyinvod.com/2407368ef13c8bd6bce7b971f370503a/6af6648c/video/to
+06:11:44  [06:11:44] STAT captured=0 videoLinks=0
+06:11:45  [06:11:45] SHELL page finished, cookies transferring
+06:11:45  [06:11:45] REQS(1):
+06:11:45  [06:11:45]   https://api.feelgood.cn/athena/survey/platform/action/report/
+06:11:45  [06:11:45] HDS(5) — 页面真实请求头:
+06:11:45  [06:11:45]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | Accept=application/json, text/plain, */*
+06:11:45  [06:11:45]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | Content-Type=application/json;charset=utf-8
+06:11:45  [06:11:45]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-feelgood-api-version=v2
+06:11:45  [06:11:45]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-fg-report-id=9a45386b-613d-42ae-9e8c-79a9f4d2e610
+06:11:45  [06:11:45]   H https://api.feelgood.cn/athena/survey/platform/action/report/ | x-fg-tea-id=7707221858722842150%2C7707410806023325210%2C7707221858722842150
+06:11:46  [06:11:46] ENGINE next -> index=22
+06:11:46  [06:11:46] PLAYER play index=22 url=https://v26-web.douyinvod.com/35b868c48193dbb26b34cc373ce89cc1/6af66580/video/to
+06:11:46  [06:11:46] STAT captured=0 videoLinks=0
+06:11:47  [06:11:47] REQS(1):
+06:11:47  [06:11:47]   https://api.feelgood.cn/athena/survey/platform/task/show/
+06:11:47  [06:11:47] HDS(4) — 页面真实请求头:
+06:11:47  [06:11:47]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | Accept=application/json, text/plain, */*
+06:11:47  [06:11:47]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | Content-Type=application/json;charset=utf-8
+06:11:47  [06:11:47]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | x-fg-report-id=9a45386b-613d-42ae-9e8c-79a9f4d2e610
+06:11:47  [06:11:47]   H https://api.feelgood.cn/athena/survey/platform/task/show/ | x-fg-tea-id=7707221858722842150%2C7707410806023325210%2C7707221858722842150
+06:11:48  [06:11:48] STAT captured=0 videoLinks=0
+06:11:50  [06:11:50] ENGINE needMore (index=22 count=26)
+06:11:50  [06:11:50] ENGINE next -> index=23
+06:11:50  [06:11:50] PLAYER play index=23 url=https://v11-weba.douyinvod.com/ca75d4139c283ec373915b1a104dfdbc/6af6669d/video/t
+06:11:50  [06:11:50] STAT captured=0 videoLinks=0
+06:11:52  [06:11:52] STAT captured=0 videoLinks=0
+06:11:52  [06:11:52] ENGINE next -> index=24
+06:11:52  [06:11:52] PLAYER play index=24 url=https://v26-web.douyinvod.com/72ceca0f0e981032e719414e48bd6f17/6af664d3/video/to
+06:11:54  [06:11:54] STAT captured=0 videoLinks=0
+06:11:55  [06:11:55] ENGINE next -> index=25
+06:11:55  [06:11:55] PLAYER play index=25 url=https://v11-weba.douyinvod.com/243c9a58675f8b90d4e548f106f4dfcf/6af66485/video/t
+06:11:56  [06:11:56] STAT captured=0 videoLinks=0
+06:11:58  [06:11:58] ENGINE needMore (index=25 count=26)
+06:11:58  [06:11:58] STAT captured=0 videoLinks=0
+06:12:00  [06:12:00] STAT captured=0 videoLinks=0
+06:12:02  [06:12:02] STAT captured=0 videoLinks=0
+06:12:03  [06:12:03] ENGINE needMore (index=25 count=26)
+06:12:04  [06:12:04] STAT captured=0 videoLinks=0
+06:12:06  [06:12:06] STAT captured=0 videoLinks=0
+06:12:08  [06:12:08] STAT captured=0 videoLinks=0
+06:12:10  [06:12:10] STAT captured=0 videoLinks=0
+06:12:12  [06:12:12] STAT captured=0 videoLinks=0
+06:12:14  [06:12:14] STAT captured=0 videoLinks=0
+06:12:16  [06:12:16] STAT captured=0 videoLinks=0
+06:12:18  [06:12:18] STAT captured=0 videoLinks=0
+06:12:20  [06:12:20] STAT captured=0 videoLinks=0
+06:12:22  [06:12:22] STAT captured=0 videoLinks=0
+06:12:24  [06:12:24] STAT captured=0 videoLinks=0
+06:12:26  [06:12:26] STAT captured=0 videoLinks=0
+06:12:28  [06:12:28] STAT captured=0 videoLinks=0
+06:12:30  [06:12:30] STAT captured=0 videoLinks=0
+06:12:32  [06:12:32] STAT captured=0 videoLinks=0
+06:12:34  [06:12:34] STAT captured=0 videoLinks=0
+06:12:36  [06:12:36] STAT captured=0 videoLinks=0
+06:12:38  [06:12:38] STAT captured=0 videoLinks=0
+06:12:40  [06:12:40] STAT captured=0 videoLinks=0
+06:12:42  [06:12:42] STAT captured=0 videoLinks=0
+06:12:44  [06:12:44] STAT captured=0 videoLinks=0
+06:12:46  [06:12:46] STAT captured=0 videoLinks=0
+06:12:48  [06:12:48] STAT captured=0 videoLinks=0
+06:12:50  [06:12:50] STAT captured=0 videoLinks=0
+06:12:52  [06:12:52] STAT captured=0 videoLinks=0
+06:12:54  [06:12:54] STAT captured=0 videoLinks=0
+06:12:56  [06:12:56] STAT captured=0 videoLinks=0
+06:12:58  [06:12:58] STAT captured=0 videoLinks=0
+06:13:00  [06:13:00] STAT captured=0 videoLinks=0
+06:13:02  [06:13:02] STAT captured=0 videoLinks=0
+06:13:04  [06:13:04] STAT captured=0 videoLinks=0
+06:13:06  [06:13:06] STAT captured=0 videoLinks=0
+06:13:08  [06:13:08] STAT captured=0 videoLinks=0
+06:13:10  [06:13:10] STAT captured=0 videoLinks=0
+06:13:12  [06:13:12] STAT captured=0 videoLinks=0
+06:13:14  [06:13:14] STAT captured=0 videoLinks=0
+06:13:16  [06:13:16] STAT captured=0 videoLinks=0
+06:13:18  [06:13:18] STAT captured=0 videoLinks=0
+06:13:20  [06:13:20] STAT captured=0 videoLinks=0
+06:13:22  [06:13:22] STAT captured=0 videoLinks=0
+06:13:24  [06:13:24] STAT captured=0 videoLinks=0
+06:13:26  [06:13:26] STAT captured=0 videoLinks=0
+06:13:28  [06:13:28] STAT captured=0 videoLinks=0
+06:13:30  [06:13:30] STAT captured=0 videoLinks=0
+06:13:32  [06:13:32] STAT captured=0 videoLinks=0
+06:13:34  [06:13:34] REQS(1):
+06:13:34  [06:13:34]   https://tnc0-alisc1.zijieapi.com/get_domains/v5/?tnc_js_sdk_version=2.3.15.0&device_platform=pc&aid=6383&device_id=7707221858722842150&user_id=3454044254768585&web_service=
+06:13:34  [06:13:34] STAT captured=0 videoLinks=0
+06:13:36  [06:13:36] STAT captured=0 videoLinks=0
+06:13:38  [06:13:38] STAT captured=0 videoLinks=0
+06:13:40  [06:13:40] STAT captured=0 videoLinks=0
+06:13:42  [06:13:42] STAT captured=0 videoLinks=0
+06:13:44  [06:13:44] STAT captured=0 videoLinks=0
+06:13:46  [06:13:46] STAT captured=0 videoLinks=0
+06:13:48  [06:13:48] STAT captured=0 videoLinks=0
+06:13:50  [06:13:50] STAT captured=0 videoLinks=0
+06:13:52  [06:13:52] STAT captured=0 videoLinks=0
+06:13:54  [06:13:54] STAT captured=0 videoLinks=0
+06:13:56  [06:13:56] STAT captured=0 videoLinks=0
+06:13:58  [06:13:58] STAT captured=0 videoLinks=0
+06:14:00  [06:14:00] STAT captured=0 videoLinks=0
+06:14:02  [06:14:02] STAT captured=0 videoLinks=0
+06:14:04  [06:14:04] STAT captured=0 videoLinks=0
+06:14:06  [06:14:06] STAT captured=0 videoLinks=0
+06:14:08  [06:14:08] STAT captured=0 videoLinks=0
+06:14:10  [06:14:10] STAT captured=0 videoLinks=0
+06:14:12  [06:14:12] STAT captured=0 videoLinks=0
+06:14:14  [06:14:14] STAT captured=0 videoLinks=0
+06:14:16  [06:14:16] STAT captured=0 videoLinks=0
+06:14:18  [06:14:18] STAT captured=0 videoLinks=0
+06:14:20  [06:14:20] STAT captured=0 videoLinks=0
+06:14:22  [06:14:22] STAT captured=0 videoLinks=0
+06:14:24  [06:14:24] STAT captured=0 videoLinks=0
+06:14:26  [06:14:26] STAT captured=0 videoLinks=0
+06:14:28  [06:14:28] STAT captured=0 videoLinks=0
+06:14:30  [06:14:30] STAT captured=0 videoLinks=0
+06:14:32  [06:14:32] STAT captured=0 videoLinks=0
+06:14:34  [06:14:34] STAT captured=0 videoLinks=0
+06:14:36  [06:14:36] STAT captured=0 videoLinks=0
+06:14:38  [06:14:38] STAT captured=0 videoLinks=0
+06:14:40  [06:14:40] STAT captured=0 videoLinks=0
+06:14:42  [06:14:42] STAT captured=0 videoLinks=0
+06:14:44  [06:14:44] STAT captured=0 videoLinks=0
+06:14:46  [06:14:46] STAT captured=0 videoLinks=0
+06:14:48  [06:14:48] STAT captured=0 videoLinks=0
+06:14:50  [06:14:50] STAT captured=0 videoLinks=0
+06:14:52  [06:14:52] STAT captured=0 videoLinks=0
+06:14:54  [06:14:54] STAT captured=0 videoLinks=0
+06:14:56  [06:14:56] STAT captured=0 videoLinks=0
+06:14:58  [06:14:58] STAT captured=0 videoLinks=0
+06:15:00  [06:15:00] STAT captured=0 videoLinks=0
+06:15:02  [06:15:02] STAT captured=0 videoLinks=0
+06:15:04  [06:15:04] STAT captured=0 videoLinks=0
+06:15:06  [06:15:06] STAT captured=0 videoLinks=0
+06:15:08  [06:15:08] STAT captured=0 videoLinks=0
+06:15:10  [06:15:10] STAT captured=0 videoLinks=0
+06:15:12  [06:15:12] STAT captured=0 videoLinks=0
+06:15:14  [06:15:14] STAT captured=0 videoLinks=0
+06:15:16  [06:15:16] STAT captured=0 videoLinks=0
+06:15:18  [06:15:18] STAT captured=0 videoLinks=0
+06:15:20  [06:15:20] STAT captured=0 videoLinks=0
+06:15:22  [06:15:22] STAT captured=0 videoLinks=0
+06:15:24  [06:15:24] STAT captured=0 videoLinks=0
+06:15:26  [06:15:26] STAT captured=0 videoLinks=0
+06:15:28  [06:15:28] STAT captured=0 videoLinks=0
+06:15:30  [06:15:30] STAT captured=0 videoLinks=0
+06:15:32  [06:15:32] REQS(1):
+06:15:32  [06:15:32]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=eB_56iUNN0Wlua9ZVSSs6TLPmg_Xw8d66tNr_Rck_MnVOHIqZ4EpVvPzwnsL3sMut2qik57re1capkjGbF6O_M-hQ3n0SoSe0vrFKmJTlrhar7qeNPBww2hTkj8yJTmkzKWKVOa4RPykdKGoE17S4sgAJiSgAhcGSHG2Tr4-Lrti9NnuhssvTA%3D%3D
+06:15:32  [06:15:32] STAT captured=0 videoLinks=0
+06:15:34  [06:15:34] STAT captured=0 videoLinks=0
+06:15:36  [06:15:36] STAT captured=0 videoLinks=0
+06:15:38  [06:15:38] STAT captured=0 videoLinks=0
+06:15:40  [06:15:40] STAT captured=0 videoLinks=0
+06:15:42  [06:15:42] STAT captured=0 videoLinks=0
+06:15:44  [06:15:44] STAT captured=0 videoLinks=0
+06:15:46  [06:15:46] STAT captured=0 videoLinks=0
+06:15:48  [06:15:48] STAT captured=0 videoLinks=0
+06:15:50  [06:15:50] STAT captured=0 videoLinks=0
+06:15:52  [06:15:52] STAT captured=0 videoLinks=0
+06:15:54  [06:15:54] STAT captured=0 videoLinks=0
+06:15:56  [06:15:56] STAT captured=0 videoLinks=0
+06:15:58  [06:15:58] STAT captured=0 videoLinks=0
+06:16:00  [06:16:00] STAT captured=0 videoLinks=0
+06:16:02  [06:16:02] STAT captured=0 videoLinks=0
+06:16:04  [06:16:04] PLAYER item ended index=25, auto-next
+06:16:04  [06:16:04] ENGINE needMore (index=25 count=26)
+06:16:04  [06:16:04] STAT captured=0 videoLinks=0
+06:16:06  [06:16:06] STAT captured=0 videoLinks=0
+06:16:08  [06:16:08] STAT captured=0 videoLinks=0
+06:16:10  [06:16:10] STAT captured=0 videoLinks=0
+06:16:12  [06:16:12] STAT captured=0 videoLinks=0
+06:16:14  [06:16:14] STAT captured=0 videoLinks=0
+06:16:16  [06:16:16] STAT captured=0 videoLinks=0
+06:16:18  [06:16:18] STAT captured=0 videoLinks=0
+06:16:20  [06:16:20] STAT captured=0 videoLinks=0
+06:16:22  [06:16:22] STAT captured=0 videoLinks=0
+06:16:24  [06:16:24] STAT captured=0 videoLinks=0
+06:16:26  [06:16:26] STAT captured=0 videoLinks=0
+06:16:28  [06:16:28] STAT captured=0 videoLinks=0
+06:16:30  [06:16:30] STAT captured=0 videoLinks=0
+06:16:32  [06:16:32] STAT captured=0 videoLinks=0
+06:16:34  [06:16:34] STAT captured=0 videoLinks=0
+06:16:36  [06:16:36] STAT captured=0 videoLinks=0
+06:16:38  [06:16:38] STAT captured=0 videoLinks=0
+06:16:40  [06:16:40] STAT captured=0 videoLinks=0
+06:16:42  [06:16:42] STAT captured=0 videoLinks=0
+06:16:44  [06:16:44] STAT captured=0 videoLinks=0
+06:16:46  [06:16:46] STAT captured=0 videoLinks=0
+06:16:48  [06:16:48] STAT captured=0 videoLinks=0
+06:16:50  [06:16:50] STAT captured=0 videoLinks=0
+06:16:52  [06:16:52] STAT captured=0 videoLinks=0
+06:16:54  [06:16:54] STAT captured=0 videoLinks=0
+06:16:56  [06:16:56] STAT captured=0 videoLinks=0
+06:16:58  [06:16:58] STAT captured=0 videoLinks=0
+06:17:00  [06:17:00] STAT captured=0 videoLinks=0
+06:17:02  [06:17:02] STAT captured=0 videoLinks=0
+06:17:04  [06:17:04] STAT captured=0 videoLinks=0
+06:17:06  [06:17:06] STAT captured=0 videoLinks=0
+06:17:08  [06:17:08] STAT captured=0 videoLinks=0
+06:17:10  [06:17:10] STAT captured=0 videoLinks=0
+06:17:12  [06:17:12] STAT captured=0 videoLinks=0
+06:17:14  [06:17:14] STAT captured=0 videoLinks=0
+06:17:16  [06:17:16] STAT captured=0 videoLinks=0
+06:17:18  [06:17:18] STAT captured=0 videoLinks=0
+06:17:20  [06:17:20] STAT captured=0 videoLinks=0
+06:17:22  [06:17:22] STAT captured=0 videoLinks=0
+06:17:24  [06:17:24] STAT captured=0 videoLinks=0
+06:17:26  [06:17:26] STAT captured=0 videoLinks=0
+06:17:28  [06:17:28] STAT captured=0 videoLinks=0
+06:17:30  [06:17:30] STAT captured=0 videoLinks=0
+06:17:32  [06:17:32] STAT captured=0 videoLinks=0
+06:17:34  [06:17:34] STAT captured=0 videoLinks=0
+06:17:36  [06:17:36] STAT captured=0 videoLinks=0
+06:17:38  [06:17:38] STAT captured=0 videoLinks=0
+06:17:40  [06:17:40] STAT captured=0 videoLinks=0
+06:17:42  [06:17:42] STAT captured=0 videoLinks=0
+06:17:44  [06:17:44] STAT captured=0 videoLinks=0
+06:17:46  [06:17:46] STAT captured=0 videoLinks=0
+06:17:48  [06:17:48] STAT captured=0 videoLinks=0
+06:17:50  [06:17:50] STAT captured=0 videoLinks=0
+06:17:52  [06:17:52] STAT captured=0 videoLinks=0
+06:17:54  [06:17:54] STAT captured=0 videoLinks=0
+06:17:56  [06:17:56] STAT captured=0 videoLinks=0
+06:17:58  [06:17:58] STAT captured=0 videoLinks=0
+06:18:00  [06:18:00] STAT captured=0 videoLinks=0
+06:18:02  [06:18:02] STAT captured=0 videoLinks=0
+06:18:04  [06:18:04] STAT captured=0 videoLinks=0
+06:18:06  [06:18:06] STAT captured=0 videoLinks=0
+06:18:08  [06:18:08] STAT captured=0 videoLinks=0
+06:18:10  [06:18:10] STAT captured=0 videoLinks=0
+06:18:12  [06:18:12] STAT captured=0 videoLinks=0
+06:18:14  [06:18:14] STAT captured=0 videoLinks=0
+06:18:16  [06:18:16] STAT captured=0 videoLinks=0
+06:18:18  [06:18:18] STAT captured=0 videoLinks=0
+06:18:20  [06:18:20] STAT captured=0 videoLinks=0
+06:18:22  [06:18:22] STAT captured=0 videoLinks=0
+06:18:24  [06:18:24] STAT captured=0 videoLinks=0
+06:18:26  [06:18:26] STAT captured=0 videoLinks=0
+06:18:28  [06:18:28] STAT captured=0 videoLinks=0
+06:18:30  [06:18:30] STAT captured=0 videoLinks=0
+06:18:32  [06:18:32] STAT captured=0 videoLinks=0
+06:18:34  [06:18:34] STAT captured=0 videoLinks=0
+06:18:36  [06:18:36] STAT captured=0 videoLinks=0
+06:18:38  [06:18:38] STAT captured=0 videoLinks=0
+06:18:40  [06:18:40] STAT captured=0 videoLinks=0
+06:18:42  [06:18:42] STAT captured=0 videoLinks=0
+06:18:44  [06:18:44] STAT captured=0 videoLinks=0
+06:18:46  [06:18:46] STAT captured=0 videoLinks=0
+06:18:48  [06:18:48] STAT captured=0 videoLinks=0
+06:18:50  [06:18:50] STAT captured=0 videoLinks=0
+06:18:52  [06:18:52] STAT captured=0 videoLinks=0
+06:18:54  [06:18:54] STAT captured=0 videoLinks=0
+06:18:56  [06:18:56] STAT captured=0 videoLinks=0
+06:18:58  [06:18:58] STAT captured=0 videoLinks=0
+06:19:00  [06:19:00] STAT captured=0 videoLinks=0
+06:19:02  [06:19:02] STAT captured=0 videoLinks=0
+06:19:04  [06:19:04] STAT captured=0 videoLinks=0
+06:19:06  [06:19:06] STAT captured=0 videoLinks=0
+06:19:08  [06:19:08] STAT captured=0 videoLinks=0
+06:19:10  [06:19:10] STAT captured=0 videoLinks=0
+06:19:12  [06:19:12] STAT captured=0 videoLinks=0
+06:19:14  [06:19:14] STAT captured=0 videoLinks=0
+06:19:16  [06:19:16] STAT captured=0 videoLinks=0
+06:19:18  [06:19:18] STAT captured=0 videoLinks=0
+06:19:20  [06:19:20] STAT captured=0 videoLinks=0
+06:19:22  [06:19:22] STAT captured=0 videoLinks=0
+06:19:24  [06:19:24] STAT captured=0 videoLinks=0
+06:19:26  [06:19:26] STAT captured=0 videoLinks=0
+06:19:28  [06:19:28] STAT captured=0 videoLinks=0
+06:19:30  [06:19:30] STAT captured=0 videoLinks=0
+06:19:32  [06:19:32] STAT captured=0 videoLinks=0
+06:19:34  [06:19:34] STAT captured=0 videoLinks=0
+06:19:36  [06:19:36] STAT captured=0 videoLinks=0
+06:19:38  [06:19:38] STAT captured=0 videoLinks=0
+06:19:40  [06:19:40] STAT captured=0 videoLinks=0
+06:19:42  [06:19:42] STAT captured=0 videoLinks=0
+06:19:44  [06:19:44] STAT captured=0 videoLinks=0
+06:19:46  [06:19:46] STAT captured=0 videoLinks=0
+06:19:48  [06:19:48] STAT captured=0 videoLinks=0
+06:19:50  [06:19:50] STAT captured=0 videoLinks=0
+06:19:52  [06:19:52] STAT captured=0 videoLinks=0
+06:19:54  [06:19:54] STAT captured=0 videoLinks=0
+06:19:56  [06:19:56] STAT captured=0 videoLinks=0
+06:19:58  [06:19:58] STAT captured=0 videoLinks=0
+06:20:00  [06:20:00] STAT captured=0 videoLinks=0
+06:20:02  [06:20:02] STAT captured=0 videoLinks=0
+06:20:04  [06:20:04] STAT captured=0 videoLinks=0
+06:20:06  [06:20:06] STAT captured=0 videoLinks=0
+06:20:08  [06:20:08] STAT captured=0 videoLinks=0
+06:20:10  [06:20:10] STAT captured=0 videoLinks=0
+06:20:12  [06:20:12] STAT captured=0 videoLinks=0
+06:20:14  [06:20:14] STAT captured=0 videoLinks=0
+06:20:16  [06:20:16] STAT captured=0 videoLinks=0
+06:20:18  [06:20:18] STAT captured=0 videoLinks=0
+06:20:20  [06:20:20] STAT captured=0 videoLinks=0
+06:20:22  [06:20:22] STAT captured=0 videoLinks=0
+06:20:24  [06:20:24] STAT captured=0 videoLinks=0
+06:20:26  [06:20:26] STAT captured=0 videoLinks=0
+06:20:28  [06:20:28] STAT captured=0 videoLinks=0
+06:20:30  [06:20:30] REQS(1):
+06:20:30  [06:20:30]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=ki94JBpvRvTUmxQx3lS6LFZ1O6LccT5Dx4uF7xNB_CU-j1KfCDFDFJdKP3Zzwrd6HIa_FB6rZhufNGDmWVwKAaqUfD1mqvrWeoPJd5CCCJsSu5RHZpFthvLs9e-ICV0cCpWMxakcNGyiUeRJa2EX6AbZoMsYQdI0w1FpRpFOjRrQBFE2OQT7fw%3D%3D
+06:20:30  [06:20:30] STAT captured=0 videoLinks=0
+06:20:32  [06:20:32] STAT captured=0 videoLinks=0
+06:20:34  [06:20:34] REQS(1):
+06:20:34  [06:20:34]   https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&web_id=7707221858722842150&order=2&effect_time_type=1&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=7ekTmkgwvSnJ7PmMeXomHgK0xeLG8Fi8c9dlOW7K-GrLOQ8xgPGE174mXzvlzERjFckArEWOwGWf7h9q-TTn6HRImMRzbZj8YJbeQNiyOMnHmNKZUSNz0D2z72eFVRO3Aq8bkBUttto8pazr6n-i_OTO79FFZNIQPS_YJrlpwJ1j046yCRNT8Q%3D%3D&a_bogus=YvBjv7S7YxAVFdFb8cnJHCCU0qflNsSy4MTQWcZTH-cgy1MbnYNSuaaccxqfsFxyKbBhkK1HFneMYxVcNsXipKHpqmkvSO7y8T55nU8o8HZvGsihIrmsCiGTzJBa%2F5RETAlXxZflWts9hEelwr50A%2FKyCA0j58RMFrPyDIz9eEAXDSSkko3iO9DdYLPO0R9S
+06:20:34  [06:20:34] HDS(2) — 页面真实请求头:
+06:20:34  [06:20:34]   H https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&we | Accept=application/json, text/plain, */*
+06:20:34  [06:20:34]   H https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&we | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:20:34  [06:20:34] STAT captured=0 videoLinks=0
+06:20:36  [06:20:36] STAT captured=0 videoLinks=0
+06:20:38  [06:20:38] STAT captured=0 videoLinks=0
+06:20:40  [06:20:40] STAT captured=0 videoLinks=0
+06:20:42  [06:20:42] STAT captured=0 videoLinks=0
+06:20:44  [06:20:44] STAT captured=0 videoLinks=0
+06:20:46  [06:20:46] STAT captured=0 videoLinks=0
+06:20:48  [06:20:48] STAT captured=0 videoLinks=0
+06:20:50  [06:20:50] STAT captured=0 videoLinks=0
+06:20:52  [06:20:52] STAT captured=0 videoLinks=0
+06:20:54  [06:20:54] STAT captured=0 videoLinks=0
+06:20:56  [06:20:56] STAT captured=0 videoLinks=0
+06:20:58  [06:20:58] STAT captured=0 videoLinks=0
+06:21:00  [06:21:00] STAT captured=0 videoLinks=0
+06:21:02  [06:21:02] STAT captured=0 videoLinks=0
+06:21:04  [06:21:04] STAT captured=0 videoLinks=0
+06:21:06  [06:21:06] STAT captured=0 videoLinks=0
+06:21:08  [06:21:08] STAT captured=0 videoLinks=0
+06:21:10  [06:21:10] STAT captured=0 videoLinks=0
+06:21:12  [06:21:12] STAT captured=0 videoLinks=0
+06:21:14  [06:21:14] STAT captured=0 videoLinks=0
+06:21:16  [06:21:16] STAT captured=0 videoLinks=0
+06:21:18  [06:21:18] STAT captured=0 videoLinks=0
+06:21:20  [06:21:20] STAT captured=0 videoLinks=0
+06:21:22  [06:21:22] STAT captured=0 videoLinks=0
+06:21:24  [06:21:24] STAT captured=0 videoLinks=0
+06:21:26  [06:21:26] STAT captured=0 videoLinks=0
+06:21:28  [06:21:28] STAT captured=0 videoLinks=0
+06:21:30  [06:21:30] STAT captured=0 videoLinks=0
+06:21:32  [06:21:32] STAT captured=0 videoLinks=0
+06:21:34  [06:21:34] STAT captured=0 videoLinks=0
+06:21:36  [06:21:36] STAT captured=0 videoLinks=0
+06:21:38  [06:21:38] STAT captured=0 videoLinks=0
+06:21:40  [06:21:40] STAT captured=0 videoLinks=0
+06:21:42  [06:21:42] STAT captured=0 videoLinks=0
+06:21:44  [06:21:44] STAT captured=0 videoLinks=0
+06:21:46  [06:21:46] STAT captured=0 videoLinks=0
+06:21:48  [06:21:48] STAT captured=0 videoLinks=0
+06:21:50  [06:21:50] STAT captured=0 videoLinks=0
+06:21:52  [06:21:52] STAT captured=0 videoLinks=0
+06:21:54  [06:21:54] STAT captured=0 videoLinks=0
+06:21:56  [06:21:56] STAT captured=0 videoLinks=0
+06:21:58  [06:21:58] STAT captured=0 videoLinks=0
+06:22:00  [06:22:00] STAT captured=0 videoLinks=0
+06:22:02  [06:22:02] STAT captured=0 videoLinks=0
+06:22:04  [06:22:04] STAT captured=0 videoLinks=0
+06:22:06  [06:22:06] STAT captured=0 videoLinks=0
+06:22:08  [06:22:08] STAT captured=0 videoLinks=0
+06:22:10  [06:22:10] STAT captured=0 videoLinks=0
+06:22:12  [06:22:12] STAT captured=0 videoLinks=0
+06:22:14  [06:22:14] STAT captured=0 videoLinks=0
+06:22:16  [06:22:16] STAT captured=0 videoLinks=0
+06:22:18  [06:22:18] STAT captured=0 videoLinks=0
+06:22:20  [06:22:20] STAT captured=0 videoLinks=0
+06:22:22  [06:22:22] STAT captured=0 videoLinks=0
+06:22:24  [06:22:24] STAT captured=0 videoLinks=0
+06:22:26  [06:22:26] STAT captured=0 videoLinks=0
+06:22:28  [06:22:28] STAT captured=0 videoLinks=0
+06:22:30  [06:22:30] STAT captured=0 videoLinks=0
+06:22:32  [06:22:32] STAT captured=0 videoLinks=0
+06:22:34  [06:22:34] STAT captured=0 videoLinks=0
+06:22:36  [06:22:36] STAT captured=0 videoLinks=0
+06:22:38  [06:22:38] STAT captured=0 videoLinks=0
+06:22:40  [06:22:40] STAT captured=0 videoLinks=0
+06:22:42  [06:22:42] STAT captured=0 videoLinks=0
+06:22:44  [06:22:44] STAT captured=0 videoLinks=0
+06:22:46  [06:22:46] STAT captured=0 videoLinks=0
+06:22:48  [06:22:48] STAT captured=0 videoLinks=0
+06:22:50  [06:22:50] STAT captured=0 videoLinks=0
+06:22:52  [06:22:52] STAT captured=0 videoLinks=0
+06:22:54  [06:22:54] STAT captured=0 videoLinks=0
+06:22:56  [06:22:56] STAT captured=0 videoLinks=0
+06:22:58  [06:22:58] STAT captured=0 videoLinks=0
+06:23:00  [06:23:00] STAT captured=0 videoLinks=0
+06:23:02  [06:23:02] STAT captured=0 videoLinks=0
+06:23:04  [06:23:04] STAT captured=0 videoLinks=0
+06:23:06  [06:23:06] STAT captured=0 videoLinks=0
+06:23:08  [06:23:08] STAT captured=0 videoLinks=0
+06:23:10  [06:23:10] STAT captured=0 videoLinks=0
+06:23:12  [06:23:12] STAT captured=0 videoLinks=0
+06:23:14  [06:23:14] STAT captured=0 videoLinks=0
+06:23:16  [06:23:16] STAT captured=0 videoLinks=0
+06:23:18  [06:23:18] STAT captured=0 videoLinks=0
+06:23:20  [06:23:20] STAT captured=0 videoLinks=0
+06:23:22  [06:23:22] STAT captured=0 videoLinks=0
+06:23:24  [06:23:24] STAT captured=0 videoLinks=0
+06:23:26  [06:23:26] STAT captured=0 videoLinks=0
+06:23:28  [06:23:28] STAT captured=0 videoLinks=0
+06:23:30  [06:23:30] STAT captured=0 videoLinks=0
+06:23:32  [06:23:32] STAT captured=0 videoLinks=0
+06:23:34  [06:23:34] STAT captured=0 videoLinks=0
+06:23:36  [06:23:36] STAT captured=0 videoLinks=0
+06:23:38  [06:23:38] STAT captured=0 videoLinks=0
+06:23:40  [06:23:40] STAT captured=0 videoLinks=0
+06:23:42  [06:23:42] STAT captured=0 videoLinks=0
+06:23:44  [06:23:44] STAT captured=0 videoLinks=0
+06:23:46  [06:23:46] STAT captured=0 videoLinks=0
+06:23:48  [06:23:48] STAT captured=0 videoLinks=0
+06:23:50  [06:23:50] STAT captured=0 videoLinks=0
+06:23:52  [06:23:52] STAT captured=0 videoLinks=0
+06:23:54  [06:23:54] STAT captured=0 videoLinks=0
+06:23:56  [06:23:56] STAT captured=0 videoLinks=0
+06:23:58  [06:23:58] STAT captured=0 videoLinks=0
+06:24:00  [06:24:00] STAT captured=0 videoLinks=0
+06:24:02  [06:24:02] STAT captured=0 videoLinks=0
+06:24:04  [06:24:04] STAT captured=0 videoLinks=0
+06:24:06  [06:24:06] STAT captured=0 videoLinks=0
+06:24:08  [06:24:08] STAT captured=0 videoLinks=0
+06:24:10  [06:24:10] STAT captured=0 videoLinks=0
+06:24:12  [06:24:12] STAT captured=0 videoLinks=0
+06:24:14  [06:24:14] STAT captured=0 videoLinks=0
+06:24:16  [06:24:16] STAT captured=0 videoLinks=0
+06:24:18  [06:24:18] STAT captured=0 videoLinks=0
+06:24:20  [06:24:20] STAT captured=0 videoLinks=0
+06:24:22  [06:24:22] STAT captured=0 videoLinks=0
+06:24:24  [06:24:24] STAT captured=0 videoLinks=0
+06:24:26  [06:24:26] STAT captured=0 videoLinks=0
+06:24:28  [06:24:28] STAT captured=0 videoLinks=0
+06:24:30  [06:24:30] STAT captured=0 videoLinks=0
+06:24:32  [06:24:32] STAT captured=0 videoLinks=0
+06:24:34  [06:24:34] STAT captured=0 videoLinks=0
+06:24:36  [06:24:36] STAT captured=0 videoLinks=0
+06:24:38  [06:24:38] STAT captured=0 videoLinks=0
+06:24:40  [06:24:40] STAT captured=0 videoLinks=0
+06:24:42  [06:24:42] STAT captured=0 videoLinks=0
+06:24:44  [06:24:44] STAT captured=0 videoLinks=0
+06:24:46  [06:24:46] STAT captured=0 videoLinks=0
+06:24:48  [06:24:48] STAT captured=0 videoLinks=0
+06:24:50  [06:24:50] STAT captured=0 videoLinks=0
+06:24:52  [06:24:52] STAT captured=0 videoLinks=0
+06:24:54  [06:24:54] STAT captured=0 videoLinks=0
+06:24:56  [06:24:56] STAT captured=0 videoLinks=0
+06:24:58  [06:24:58] STAT captured=0 videoLinks=0
+06:25:00  [06:25:00] STAT captured=0 videoLinks=0
+06:25:02  [06:25:02] STAT captured=0 videoLinks=0
+06:25:04  [06:25:04] STAT captured=0 videoLinks=0
+06:25:06  [06:25:06] STAT captured=0 videoLinks=0
+06:25:08  [06:25:08] STAT captured=0 videoLinks=0
+06:25:10  [06:25:10] STAT captured=0 videoLinks=0
+06:25:12  [06:25:12] STAT captured=0 videoLinks=0
+06:25:14  [06:25:14] STAT captured=0 videoLinks=0
+06:25:16  [06:25:16] STAT captured=0 videoLinks=0
+06:25:18  [06:25:18] STAT captured=0 videoLinks=0
+06:25:20  [06:25:20] STAT captured=0 videoLinks=0
+06:25:22  [06:25:22] STAT captured=0 videoLinks=0
+06:25:24  [06:25:24] STAT captured=0 videoLinks=0
+06:25:26  [06:25:26] STAT captured=0 videoLinks=0
+06:25:28  [06:25:28] STAT captured=0 videoLinks=0
+06:25:30  [06:25:30] REQS(1):
+06:25:30  [06:25:30]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=7ekTmkgwvSnJ7PmMeXomHgK0xeLG8Fi8c9dlOW7K-GrLOQ8xgPGE174mXzvlzERjFckArEWOwGWf7h9q-TTn6HRImMRzbZj8YJbeQNiyOMnHmNKZUSNz0D2z72eFVRO3Aq8bkBUttto8pazr6n-i_OTO79FFZNIQPS_YJrlpwJ1j046yCRNT8Q%3D%3D
+06:25:30  [06:25:30] STAT captured=0 videoLinks=0
+06:25:32  [06:25:32] STAT captured=0 videoLinks=0
+06:25:34  [06:25:34] STAT captured=0 videoLinks=0
+06:25:36  [06:25:36] STAT captured=0 videoLinks=0
+06:25:38  [06:25:38] STAT captured=0 videoLinks=0
+06:25:40  [06:25:40] STAT captured=0 videoLinks=0
+06:25:42  [06:25:42] STAT captured=0 videoLinks=0
+06:25:44  [06:25:44] STAT captured=0 videoLinks=0
+06:25:46  [06:25:46] STAT captured=0 videoLinks=0
+06:25:48  [06:25:48] STAT captured=0 videoLinks=0
+06:25:50  [06:25:50] STAT captured=0 videoLinks=0
+06:25:52  [06:25:52] STAT captured=0 videoLinks=0
+06:25:54  [06:25:54] STAT captured=0 videoLinks=0
+06:25:56  [06:25:56] STAT captured=0 videoLinks=0
+06:25:58  [06:25:58] STAT captured=0 videoLinks=0
+06:26:00  [06:26:00] STAT captured=0 videoLinks=0
+06:26:02  [06:26:02] STAT captured=0 videoLinks=0
+06:26:04  [06:26:04] STAT captured=0 videoLinks=0
+06:26:06  [06:26:06] STAT captured=0 videoLinks=0
+06:26:08  [06:26:08] STAT captured=0 videoLinks=0
+06:26:10  [06:26:10] STAT captured=0 videoLinks=0
+06:26:12  [06:26:12] STAT captured=0 videoLinks=0
+06:26:14  [06:26:14] STAT captured=0 videoLinks=0
+06:26:16  [06:26:16] STAT captured=0 videoLinks=0
+06:26:18  [06:26:18] STAT captured=0 videoLinks=0
+06:26:20  [06:26:20] STAT captured=0 videoLinks=0
+06:26:22  [06:26:22] STAT captured=0 videoLinks=0
+06:26:24  [06:26:24] STAT captured=0 videoLinks=0
+06:26:26  [06:26:26] STAT captured=0 videoLinks=0
+06:26:28  [06:26:28] STAT captured=0 videoLinks=0
+06:26:30  [06:26:30] STAT captured=0 videoLinks=0
+06:26:32  [06:26:32] STAT captured=0 videoLinks=0
+06:26:34  [06:26:34] STAT captured=0 videoLinks=0
+06:26:36  [06:26:36] STAT captured=0 videoLinks=0
+06:26:38  [06:26:38] STAT captured=0 videoLinks=0
+06:26:40  [06:26:40] STAT captured=0 videoLinks=0
+06:26:42  [06:26:42] STAT captured=0 videoLinks=0
+06:26:44  [06:26:44] STAT captured=0 videoLinks=0
+06:26:46  [06:26:46] STAT captured=0 videoLinks=0
+06:26:48  [06:26:48] STAT captured=0 videoLinks=0
+06:26:50  [06:26:50] STAT captured=0 videoLinks=0
+06:26:52  [06:26:52] STAT captured=0 videoLinks=0
+06:26:54  [06:26:54] STAT captured=0 videoLinks=0
+06:26:56  [06:26:56] STAT captured=0 videoLinks=0
+06:26:58  [06:26:58] STAT captured=0 videoLinks=0
+06:27:00  [06:27:00] STAT captured=0 videoLinks=0
+06:27:02  [06:27:02] STAT captured=0 videoLinks=0
+06:27:04  [06:27:04] STAT captured=0 videoLinks=0
+06:27:06  [06:27:06] STAT captured=0 videoLinks=0
+06:27:08  [06:27:08] STAT captured=0 videoLinks=0
+06:27:10  [06:27:10] STAT captured=0 videoLinks=0
+06:27:12  [06:27:12] STAT captured=0 videoLinks=0
+06:27:14  [06:27:14] STAT captured=0 videoLinks=0
+06:27:16  [06:27:16] STAT captured=0 videoLinks=0
+06:27:18  [06:27:18] STAT captured=0 videoLinks=0
+06:27:20  [06:27:20] STAT captured=0 videoLinks=0
+06:27:22  [06:27:22] STAT captured=0 videoLinks=0
+06:27:24  [06:27:24] STAT captured=0 videoLinks=0
+06:27:26  [06:27:26] STAT captured=0 videoLinks=0
+06:27:28  [06:27:28] STAT captured=0 videoLinks=0
+06:27:30  [06:27:30] STAT captured=0 videoLinks=0
+06:27:32  [06:27:32] STAT captured=0 videoLinks=0
+06:27:34  [06:27:34] STAT captured=0 videoLinks=0
+06:27:36  [06:27:36] STAT captured=0 videoLinks=0
+06:27:38  [06:27:38] STAT captured=0 videoLinks=0
+06:27:40  [06:27:40] STAT captured=0 videoLinks=0
+06:27:42  [06:27:42] STAT captured=0 videoLinks=0
+06:27:44  [06:27:44] STAT captured=0 videoLinks=0
+06:27:46  [06:27:46] STAT captured=0 videoLinks=0
+06:27:48  [06:27:48] STAT captured=0 videoLinks=0
+06:27:50  [06:27:50] STAT captured=0 videoLinks=0
+06:27:52  [06:27:52] STAT captured=0 videoLinks=0
+06:27:54  [06:27:54] STAT captured=0 videoLinks=0
+06:27:56  [06:27:56] STAT captured=0 videoLinks=0
+06:27:58  [06:27:58] STAT captured=0 videoLinks=0
+06:28:00  [06:28:00] STAT captured=0 videoLinks=0
+06:28:02  [06:28:02] STAT captured=0 videoLinks=0
+06:28:04  [06:28:04] STAT captured=0 videoLinks=0
+06:28:06  [06:28:06] STAT captured=0 videoLinks=0
+06:28:08  [06:28:08] STAT captured=0 videoLinks=0
+06:28:10  [06:28:10] STAT captured=0 videoLinks=0
+06:28:12  [06:28:12] STAT captured=0 videoLinks=0
+06:28:14  [06:28:14] STAT captured=0 videoLinks=0
+06:28:16  [06:28:16] STAT captured=0 videoLinks=0
+06:28:18  [06:28:18] STAT captured=0 videoLinks=0
+06:28:20  [06:28:20] STAT captured=0 videoLinks=0
+06:28:22  [06:28:22] STAT captured=0 videoLinks=0
+06:28:24  [06:28:24] STAT captured=0 videoLinks=0
+06:28:26  [06:28:26] STAT captured=0 videoLinks=0
+06:28:28  [06:28:28] STAT captured=0 videoLinks=0
+06:28:30  [06:28:30] STAT captured=0 videoLinks=0
+06:28:32  [06:28:32] STAT captured=0 videoLinks=0
+06:28:34  [06:28:34] STAT captured=0 videoLinks=0
+06:28:36  [06:28:36] STAT captured=0 videoLinks=0
+06:28:38  [06:28:38] STAT captured=0 videoLinks=0
+06:28:40  [06:28:40] STAT captured=0 videoLinks=0
+06:28:42  [06:28:42] STAT captured=0 videoLinks=0
+06:28:44  [06:28:44] STAT captured=0 videoLinks=0
+06:28:46  [06:28:46] STAT captured=0 videoLinks=0
+06:28:48  [06:28:48] STAT captured=0 videoLinks=0
+06:28:50  [06:28:50] STAT captured=0 videoLinks=0
+06:28:52  [06:28:52] STAT captured=0 videoLinks=0
+06:28:54  [06:28:54] STAT captured=0 videoLinks=0
+06:28:56  [06:28:56] STAT captured=0 videoLinks=0
+06:28:58  [06:28:58] STAT captured=0 videoLinks=0
+06:29:00  [06:29:00] STAT captured=0 videoLinks=0
+06:29:02  [06:29:02] STAT captured=0 videoLinks=0
+06:29:04  [06:29:04] STAT captured=0 videoLinks=0
+06:29:06  [06:29:06] STAT captured=0 videoLinks=0
+06:29:08  [06:29:08] STAT captured=0 videoLinks=0
+06:29:10  [06:29:10] STAT captured=0 videoLinks=0
+06:29:12  [06:29:12] STAT captured=0 videoLinks=0
+06:29:14  [06:29:14] STAT captured=0 videoLinks=0
+06:29:16  [06:29:16] STAT captured=0 videoLinks=0
+06:29:18  [06:29:18] STAT captured=0 videoLinks=0
+06:29:20  [06:29:20] STAT captured=0 videoLinks=0
+06:29:22  [06:29:22] STAT captured=0 videoLinks=0
+06:29:24  [06:29:24] STAT captured=0 videoLinks=0
+06:29:26  [06:29:26] STAT captured=0 videoLinks=0
+06:29:28  [06:29:28] STAT captured=0 videoLinks=0
+06:29:30  [06:29:30] STAT captured=0 videoLinks=0
+06:29:32  [06:29:32] STAT captured=0 videoLinks=0
+06:29:34  [06:29:34] STAT captured=0 videoLinks=0
+06:29:36  [06:29:36] STAT captured=0 videoLinks=0
+06:29:38  [06:29:38] STAT captured=0 videoLinks=0
+06:29:40  [06:29:40] STAT captured=0 videoLinks=0
+06:29:42  [06:29:42] STAT captured=0 videoLinks=0
+06:29:44  [06:29:44] STAT captured=0 videoLinks=0
+06:29:46  [06:29:46] STAT captured=0 videoLinks=0
+06:29:48  [06:29:48] STAT captured=0 videoLinks=0
+06:29:50  [06:29:50] STAT captured=0 videoLinks=0
+06:29:52  [06:29:52] STAT captured=0 videoLinks=0
+06:29:54  [06:29:54] STAT captured=0 videoLinks=0
+06:29:56  [06:29:56] STAT captured=0 videoLinks=0
+06:29:58  [06:29:58] STAT captured=0 videoLinks=0
+06:30:00  [06:30:00] STAT captured=0 videoLinks=0
+06:30:02  [06:30:02] STAT captured=0 videoLinks=0
+06:30:04  [06:30:04] STAT captured=0 videoLinks=0
+06:30:06  [06:30:06] STAT captured=0 videoLinks=0
+06:30:08  [06:30:08] STAT captured=0 videoLinks=0
+06:30:10  [06:30:10] STAT captured=0 videoLinks=0
+06:30:12  [06:30:12] STAT captured=0 videoLinks=0
+06:30:14  [06:30:14] STAT captured=0 videoLinks=0
+06:30:16  [06:30:16] STAT captured=0 videoLinks=0
+06:30:18  [06:30:18] STAT captured=0 videoLinks=0
+06:30:20  [06:30:20] STAT captured=0 videoLinks=0
+06:30:22  [06:30:22] STAT captured=0 videoLinks=0
+06:30:24  [06:30:24] STAT captured=0 videoLinks=0
+06:30:26  [06:30:26] STAT captured=0 videoLinks=0
+06:30:28  [06:30:28] STAT captured=0 videoLinks=0
+06:30:30  [06:30:30] REQS(1):
+06:30:30  [06:30:30]   https://mssdk.bytedance.com/web/common?ms_appid=6383&msToken=mI6PhBPNdhyZGmN4kw4qGONy9VTeF3t14o37Gkk_Rya8rCZFjiFTjyDyGeEUUSVncj5GfxubQrOl5yGENRm1mdkoX2tuc_6Jt6RG7oxqMITeYkfogAMF2kzdil8wb2J_5FAinZmJ7XINrHiQXhevOZYCt76BWvUxW16hSpDjD9rFANYcl4jFTw%3D%3D
+06:30:30  [06:30:30] STAT captured=0 videoLinks=0
+06:30:32  [06:30:32] STAT captured=0 videoLinks=0
+06:30:34  [06:30:34] REQS(1):
+06:30:34  [06:30:34]   https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&web_id=7707221858722842150&order=2&effect_time_type=1&update_version_code=170400&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=FMJik0W4sezNsiPalnRMGMrNqTr-0khAWRSGG6Z-HaJF5d0lg060HF13aX61T1CDZT5IAPNNGxyAylpXZ75rD1ooIPi7Ryt-emUezyjWtT5bS2zwm_DkQkdQ2Px37bTCyaY3PR9oXfwkRHpgzkef4Xyy5w1gqhRXNtlS7EIDfw3H8reAjTx3SA%3D%3D&a_bogus=EX-nve77xqm5ed%2Ft8ccvHGlUzgj%2FNP8y1-ToRoNTSOOKy70bmuN6YaekaxFf48AWKbpkkKV7KntAbDncpUUhpq9kumpfSxJfYz5CnUmLhHZDGsJhVNmwCYbPqJBP%2F5RE0A1txMvlAtBqhxFlkqVwA%2FFyyAMJQumMMqNfDlz99EWgfSWkko-wO9hpP6Nr07ny
+06:30:34  [06:30:34] HDS(2) — 页面真实请求头:
+06:30:34  [06:30:34]   H https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&we | Accept=application/json, text/plain, */*
+06:30:34  [06:30:34]   H https://www.douyin.com/aweme/v1/web/query/globalwid/?device_platform=webapp&aid=6383&channel=channel_pc_web&we | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:30:34  [06:30:34] STAT captured=0 videoLinks=0
+06:30:36  [06:30:36] STAT captured=0 videoLinks=0
+06:30:38  [06:30:38] STAT captured=0 videoLinks=0
+06:30:40  [06:30:40] STAT captured=0 videoLinks=0
+06:30:42  [06:30:42] STAT captured=0 videoLinks=0
+06:30:44  [06:30:44] STAT captured=0 videoLinks=0
+06:30:46  [06:30:46] STAT captured=0 videoLinks=0
+06:30:48  [06:30:48] STAT captured=0 videoLinks=0
+06:30:50  [06:30:50] STAT captured=0 videoLinks=0
+06:30:52  [06:30:52] STAT captured=0 videoLinks=0
+06:30:54  [06:30:54] STAT captured=0 videoLinks=0
+06:30:56  [06:30:56] STAT captured=0 videoLinks=0
+06:30:58  [06:30:58] STAT captured=0 videoLinks=0
+06:31:00  [06:31:00] STAT captured=0 videoLinks=0
+06:31:02  [06:31:02] STAT captured=0 videoLinks=0
+06:31:04  [06:31:04] STAT captured=0 videoLinks=0
+06:31:06  [06:31:06] STAT captured=0 videoLinks=0
+06:31:08  [06:31:08] STAT captured=0 videoLinks=0
+06:31:10  [06:31:10] STAT captured=0 videoLinks=0
+06:31:11  [06:31:11] REQS(1):
+06:31:11  [06:31:11]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=8&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=FMJik0W4sezNsiPalnRMGMrNqTr-0khAWRSGG6Z-HaJF5d0lg060HF13aX61T1CDZT5IAPNNGxyAylpXZ75rD1ooIPi7Ryt-emUezyjWtT5bS2zwm_DkQkdQ2Px37bTCyaY3PR9oXfwkRHpgzkef4Xyy5w1gqhRXNtlS7EIDfw3H8reAjTx3SA%3D%3D&a_bogus=DJ-cvwS7Qp5RadKb8Oc4HaKUCzyANsSyj-i%2FSHKTCVG6yHeTNbP68xCpjxFD4uAWQbpikoI7qntAbdncZ0Uwpo9pKmkfSosfuT5nn6vogHpDGBihINDkCEbTuJBPA5YE05lvx2fUltB9XEelhN5hAMK9CAMJQumMFrNfDAuyyEAgfA8khx3hOHhhTLiqzf%3D%3D
+06:31:11  [06:31:11] HDS(4) — 页面真实请求头:
+06:31:11  [06:31:11]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:31:11  [06:31:11] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:31:11  [06:31:11]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:31:11  [06:31:11] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:31:11  [06:31:11]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:31:11  [06:31:11] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:31:11  [06:31:11]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:31:11  [06:31:11] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:31:12  [06:31:12] STAT captured=0 videoLinks=0
+06:31:12  [06:31:12] FEEDPARSED FEEDPARSED videos=15 awemes=5
+06:31:14  [06:31:14] STAT captured=0 videoLinks=0
+06:31:15  [06:31:14] VIDS(15)
+06:31:15  [06:31:14] ENGINE merge total=31 index=25 replace=false auto=false
+06:31:16  [06:31:16] STAT captured=0 videoLinks=0
+06:31:18  [06:31:18] STAT captured=0 videoLinks=0
+06:31:20  [06:31:20] STAT captured=0 videoLinks=0
+06:31:22  [06:31:22] STAT captured=0 videoLinks=0
+06:31:23  [06:31:23] REQS(1):
+06:31:23  [06:31:23]   https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refresh_index=9&refer_id=&refer_type=10&pull_type=2&awemePcRecRawData=%7B%22is_xigua_user%22%3A0%2C%22danmaku_switch_status%22%3A0%2C%22is_client%22%3Afalse%7D&Seo-Flag=0&install_time=1794477438&tag_id=&active_id=&is_active_tab=false&use_lite_type=0&xigua_user=0&pc_client_type=1&pc_libra_divert=Mac&update_version_code=170400&support_h265=0&support_dash=0&version_code=170400&version_name=17.4.0&cookie_enabled=true&screen_width=1920&screen_height=1080&browser_language=zh-CN&browser_platform=MacIntel&browser_name=WebKit&browser_version=605.1.15&browser_online=true&engine_name=WebKit&engine_version=605.1.15&os_name=Mac+OS&os_version=10.15.7&cpu_core_num=4&device_memory=&platform=PC&webid=7707221858722842150&uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4fdd23c0dfbf8464b5fd116e8113a4d3051c2660f098e1403e06de3b83ac4a&verifyFp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&fp=verify_mwddjaw2_Wk4FZt0x_LX0U_4yql_9JON_CKN3QpBxxt2c&msToken=FMJik0W4sezNsiPalnRMGMrNqTr-0khAWRSGG6Z-HaJF5d0lg060HF13aX61T1CDZT5IAPNNGxyAylpXZ75rD1ooIPi7Ryt-emUezyjWtT5bS2zwm_DkQkdQ2Px37bTCyaY3PR9oXfwkRHpgzkef4Xyy5w1gqhRXNtlS7EIDfw3H8reAjTx3SA%3D%3D&a_bogus=dJ-cvtywQpQcadMGuKc7Ht1lBL6lNs8y8BixbC2T9PuYLXMTRmP6YNeDjxzf485WOYBwkFVHFntMYEncZ4UspqnpumkvuBGRuTVcnX8oMHZkTTkhnqDTCEbPuJsOAbYE0A1Gx26UltB9hxFlhq50AZF9eAMEQ8mMMqPjDlz9eEA6DS8kio-0OegdiyTS012j
+06:31:23  [06:31:23] HDS(4) — 页面真实请求头:
+06:31:23  [06:31:23]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Accept=application/json, text/plain, */*
+06:31:23  [06:31:23] FEED page header stored: Accept=application/json, text/plain, */* (4 total)
+06:31:23  [06:31:23]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | Content-Type=application/x-www-form-urlencoded; charset=UTF-8
+06:31:23  [06:31:23] FEED page header stored: Content-Type=application/x-www-form-urlencoded; chars (4 total)
+06:31:23  [06:31:23]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | uifid=345cfe00e97530433c091849566232757dfe3c107e9002aabfe9f3224b4e5347512c663f1f0094e5bc43390ae9504cf45e52e55978769b481ab843c5a3dc4155b6cb1407ce1eb56e4df4d8ed04b20bbdc94688cf53921bd3ab1cb918b2b3796ddd52cabcbe69d85605ed485347bf96e3fec5cd37c50f3819ea6603e4a5a63d3f7b4f
+06:31:23  [06:31:23] FEED page header stored: uifid=345cfe00e97530433c091849566232757dfe3c10 (4 total)
+06:31:23  [06:31:23]   H https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module | x-secsdk-csrf-token=DOWNGRADE
+06:31:23  [06:31:23] FEED page header stored: x-secsdk-csrf-token=DOWNGRADE (4 total)
+06:31:24  [06:31:24] STAT captured=0 videoLinks=0
+06:31:25  [06:31:24] FEEDPARSED FEEDPARSED videos=12 awemes=4
+06:31:26  [06:31:26] STAT captured=0 videoLinks=0
+06:31:27  [06:31:26] VIDS(12)
+06:31:27  [06:31:26] ENGINE merge total=35 index=25 replace=false auto=false

@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// 顶层视图。纯原生闭环：DYFeedClient(签名直连) → PlaybackEngine → AVPlayer。
-/// WebView 泵已退役（myDV 数据层方案接管：JSContext 本地签名 + URLSession 直连）。
+/// 顶层视图。纯原生闭环：DYFeedClient(移动端签名直连) → PlaybackEngine → AVPlayer。
+/// 零 WebView：数据层由 myDV 移动端接口接管（JSContext 本地签名 + URLSession 直连），
+/// 播放流程不出现任何 WebView（WebView 仅用于以后的扫码登录，不在本视图）。
 /// 加载态：首批直链未到时显示原生 Loading 动画，一到即自动播 index 0。
 /// 焦点意图：原生播放器持有焦点（上/下切视频，左/右 seek，Menu 干净退出）。
 struct RootView: View {
@@ -10,12 +11,6 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
-            // 临时探针泵：只为抓取抖音真实完整 feed 请求 URL（v45 一次性），下版移除
-            WebKitShellView(statusText: .constant(""))
-                .frame(width: 800, height: 450)
-                .opacity(0.02)
-                .accessibilityHidden(true)
-
             // 原生播放器全屏（居中、不裁切、周围留白——原始约束）
             NativePlayerView()
                 .ignoresSafeArea()

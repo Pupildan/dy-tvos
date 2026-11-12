@@ -2,8 +2,9 @@ import Foundation
 import Combine
 
 /// 原生播放引擎：持有有序视频直链 + 当前索引，驱动 AVPlayer。
-/// 数据源：隐藏 WebView 的 hook 抽到 play_addr.url_list 后经 WebKitShell 注入。
-/// 无限刷：接近末尾自动回调 onNeedMore 让页面翻页；整批过期/连续失败回调 onRefresh 重拉。
+/// 数据源：DYFeedClient（myDV 移动端 /aweme/v2/feed/ 直连）解析 aweme_list 后 merge 进来。
+/// 无限刷：接近末尾自动回调 onNeedMore 让 DYFeedClient 翻页（refresh_index 递增）；
+///         整批过期/连续失败回调 onRefresh 重拉当前页。回调由 DYTVApp 接线，不经任何 WebView。
 /// 焦点意图：本类无 UI；上/下键切 prev/next 在 DYPlayerViewController 处理。
 final class PlaybackEngine: ObservableObject {
     static let shared = PlaybackEngine()
@@ -17,9 +18,9 @@ final class PlaybackEngine: ObservableObject {
     private var awemeOrder: [String] = []
     private var currentAwemeId: String = ""
 
-    /// 页面翻页回调（接近末尾时触发，由 WebKitShell 注入）
+    /// 翻页回调（接近末尾时触发，由 DYTVApp 接到 DYFeedClient.fetchPage）
     var onNeedMore: (() -> Void)?
-    /// 整批过期/连续失败回调（由 WebKitShell 注入，触发页面重拉全批）
+    /// 整批过期/连续失败回调（触发重拉当前页，由 DYTVApp 接到 DYFeedClient.refetchCurrent）
     var onRefresh: (() -> Void)?
 
     private var lastNeedMoreAt: Date = .distantPast
