@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v40"
-    static let changes = "v40: 修编译（cookies(for:) 可选返回解包）"
+    static let version = "v41"
+    static let changes = "v41: 请求UA与shim一致(签名绑定UA校验)+msToken注入+错误体日志+抖音logo图标"
 }

@@ -17,14 +17,18 @@ final class DYFeedClient {
 
     private let host = "https://www.douyin.com"
     private let feedPath = "/aweme/v2/web/module/feed/"
-    private let baseQuery = "device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refer_id=&refer_type=10&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&video_type_select=1&filter_warn=0&need_fix_st=0&web_page_type=0&os=mac&pull_type=2&is_follow_live=0&poi_data=0&whale_cut_token=&globalId=tobid&msToken="
+    private let baseQuery = "device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&filterGids=&presented_ids=&refer_id=&refer_type=10&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&video_type_select=1&filter_warn=0&need_fix_st=0&web_page_type=0&os=mac&pull_type=2&is_follow_live=0&poi_data=0&whale_cut_token=&globalId=tobid"
+
+    /// 关键：请求 UA 必须与 shim 的 navigator.userAgent 一致（a_bogus 签名绑定 UA，不匹配即拒）。
+    /// 与 dy_browser_shim.js 中 Chrome/147 Windows UA 保持一致。
+    static let requestUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
 
     private init() {
         let cfg = URLSessionConfiguration.default
         cfg.httpShouldSetCookies = true
         cfg.httpAdditionalHeaders = [
             "Referer": "https://www.douyin.com/",
-            "User-Agent": WebKitShellViewController.desktopUA,
+            "User-Agent": DYFeedClient.requestUA,
         ]
         session = URLSession(configuration: cfg)
     }
@@ -50,7 +54,7 @@ final class DYFeedClient {
             // cookies(for:) 返回 [HTTPCookie]?（可选），需解包
             let ck = HTTPCookieStorage.shared.cookies(for: url) ?? []
             let names = ck.map { $0.name }.joined(separator: ",")
-            DYLog.shared.log("FEED cookies: \(ck.count) [\(String(names.prefix(120)))]")
+            DYLog.shared.log("FEED cookies \(ck.count): \(names)")
             self?.fetchPage(initial: true)
         }.resume()
     }
@@ -64,15 +68,20 @@ final class DYFeedClient {
         }
         if initial || refresh { /* 保持当前页码 */ } else { refreshIndex += 1 }
         let idx = max(1, refreshIndex == 0 ? 1 : refreshIndex)
+        // msToken：若 cookie 里有就用真实值（空 msToken 常被 API 拒）
+        let douyinURL = URL(string: host + "/")!
+        let msToken = (HTTPCookieStorage.shared.cookies(for: douyinURL) ?? [])
+            .first(where: { $0.name == "msToken" })?.value ?? ""
         let query = baseQuery + "&refresh_index=\(idx)"
-        guard let bogus = DYSigner.shared.sign(query: query, data: "", uri: feedPath) else {
+        let signedQuery = query + "&msToken=" + msToken
+        guard let bogus = DYSigner.shared.sign(query: signedQuery, data: "", uri: feedPath) else {
             DYLog.shared.log("FEED sign fail (page \(idx))")
             PlaybackEngine.shared.reportFailure()
             return
         }
-        let urlString = host + feedPath + "?" + query + "&a_bogus=" + bogus
+        let urlString = host + feedPath + "?" + signedQuery + "&a_bogus=" + bogus
         guard let url = URL(string: urlString) else { return }
-        DYLog.shared.log("FEED GET page=\(idx) refresh=\(refresh) bogus_len=\(bogus.count)")
+        DYLog.shared.log("FEED GET page=\(idx) refresh=\(refresh) bogus_len=\(bogus.count) msToken_len=\(msToken.count)")
 
         var req = URLRequest(url: url)
         req.timeoutInterval = 15
@@ -92,7 +101,10 @@ final class DYFeedClient {
     private func parse(data: Data, page: Int, initial: Bool, refresh: Bool) {
         guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let list = (obj["aweme_list"] as? [[String: Any]]) ?? (obj["awemes"] as? [[String: Any]]) else {
-            DYLog.shared.log("FEED parse fail (page \(page), \(data.count)B)")
+            // 小响应几乎必为错误 JSON（如 status_code），完整打出便于定位
+            let body = String(data: data, encoding: .utf8) ?? "<binary \(data.count)B>"
+            DYLog.shared.log("FEED parse fail (page \(page)) body=\(String(body.prefix(200)))")
+            PlaybackEngine.shared.reportFailure()
             return
         }
         var added = 0
