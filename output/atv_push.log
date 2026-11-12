@@ -6350,3 +6350,72 @@
 07:39:38  [07:39:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
 07:39:38  [07:39:38] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=66
 07:39:38  [07:39:38] ENGINE merge total=61 index=49 replace=false auto=false
+07:49:09  [07:49:09] DYTV v61 launched
+07:49:09  [07:49:09] SIGNER init start
+07:49:09  [07:49:09] LOGSRV ready on port 8765
+07:49:09  [07:49:09] SIGNER load shim ok
+07:49:09  [07:49:09] SIGNER load abogus ok
+07:49:09  [07:49:09] LOGSRV advertising as DYTV-510
+07:49:09  [07:49:09] SIGNER load sign ok
+07:49:09  [07:49:09] SIGNER load abogus_dy ok
+07:49:09  [07:49:09] SIGNER extras sign=true dy=true
+07:49:09  [07:49:09] SIGNER bdms=yes
+07:49:09  [07:49:09] SIGNER initABogus=true
+07:49:09  [07:49:09] SIGNER fns=AB (期望 AB)
+07:49:09  [07:49:09] PLAYER viewDidLoad
+07:49:09  [07:49:09] PLAYER no url at index=0 (will retry)
+07:49:09  [07:49:09] SIGNER smoke={"ok":true,"value":"Q6mwQfukDi6pfDSg5X5LfY3qVW33YsU40SVkMDhezVfPF639HMY19exEv1hvUMbeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+07:49:09  [07:49:09] SIGNER READY a_bogus len=180
+07:49:09  [07:49:09] ROOT auto-start v61
+07:49:09  [07:49:09] PLAYER no url at index=0 (will retry)
+07:49:09  [07:49:09] PLAYER no url at index=0 (will retry)
+07:49:09  [07:49:09] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+07:49:09  [07:49:09] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+07:49:10  [07:49:10] LOGSRV Bonjour published: DYTV-510
+07:49:11  [07:49:11] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+07:49:11  [07:49:11] FEED PROTOTREE[7706831524766797075]: 1:str="7706831524766797075" 2:bytes[376] 3:int=1794394800 4:msg{1:str="109503124106" 2:str="1875810034" 3:bytes[6] 5:bytes[266] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_ed66d642c0f5502507ceeea3193115b8" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_ed66d642c0" 2:str="https://p26.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_ed66d642c" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_ed66d642c0" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_ed66d642c0f5502507ceeea3193115b8" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_ed66d642c0f5" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_ed66d642c0f" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_ed66d642c0f5" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_ed66d642c0f5502507ceeea3193115b8" 2:str="https://p11.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_ed66d642c0f" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_ed66d642c0f" 2:str="https://p11.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_ed66d642c0f" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="woshiliaozhi" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:str="fbad00026ace0a4d3e91" 2:str="https://p96-sign.douyinpic.com/obj/fbad0002
+07:49:11  [07:49:11] FEED mobile page refresh_index=1: awemes=6 usable=0 total_seen=0
+07:49:11  [07:49:11] FEED proto parsed 0 usable videos (refresh_index=1) — 检查 video/play_addr 字段号
+07:49:11  [07:49:11] ENGINE refresh (stale=true)
+07:49:11  [07:49:11] FEED mobile GET refresh_index=1 cold=0 count=10 bogus_len=180 seen=0
+07:49:13  [07:49:13] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+07:49:13  [07:49:13] FEED PROTOTREE[7706509875039865562]: 1:str="7706509875039865562" 2:bytes[49] 3:int=1794311655 4:msg{1:str="73695578428" 2:str="126102803" 3:bytes[14] 5:bytes[129] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_9484847516ccc0c4ae72e9f5d062d438" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_9484847516" 2:str="https://p11.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_948484751" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_9484847516" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_9484847516ccc0c4ae72e9f5d062d438" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_9484847516cc" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_9484847516c" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_9484847516cc" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_9484847516ccc0c4ae72e9f5d062d438" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_9484847516cc" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_9484847516c" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_9484847516cc" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="JIANPENG1030" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:str="46bd0006b16915d43dcb" 2:str="https://p96-sign.douyinpic.com/obj/46bd0006b1
+07:49:13  [07:49:13] FEED mobile page refresh_index=1: awemes=6 usable=0 total_seen=0
+07:49:13  [07:49:13] FEED proto parsed 0 usable videos (refresh_index=1) — 检查 video/play_addr 字段号
+07:49:18  [07:49:17] ENGINE needMore (index=0 count=0)
+07:49:18  [07:49:18] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=0
+07:49:18  [07:49:18] PLAYER no url at index=0 (will retry)
+07:49:18  [07:49:18] PLAYER no url at index=0 (will retry)
+07:49:18  [07:49:18] PLAYER no url at index=0 (will retry)
+07:49:18  [07:49:18] PLAYER no url at index=0 (will retry)
+07:49:20  [07:49:20] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+07:49:20  [07:49:20] FEED PROTOTREE[7698182208888029305]: 1:str="7698182208888029305" 2:msg{} 3:int=1792372721 4:msg{1:str="101106125445" 2:str="1110843892" 3:bytes[9] 5:bytes[110] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_47d6e506b9e1ff30e4cea7fe59f975ba" 2:str="https://p26.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_47d6e506b" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_47d6e506b9" 2:str="https://p26.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_47d6e506b" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_47d6e506b9e1ff30e4cea7fe59f975ba" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_47d6e506b9e" 2:str="https://p11.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_47d6e506b9e" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_47d6e506b9e" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_47d6e506b9e1ff30e4cea7fe59f975ba" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_47d6e506b9e" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_47d6e506b9e1" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_47d6e506b9e" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="wangmm99" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:str="93c000038cd4bcb68459" 2:str="https://p5-ex-gddgtc-sign.douyinpic.com/obj/93c00003
+07:49:20  [07:49:20] FEED mobile page refresh_index=2: awemes=6 usable=0 total_seen=0
+07:49:20  [07:49:20] FEED proto parsed 0 usable videos (refresh_index=2) — 检查 video/play_addr 字段号
+07:49:20  [07:49:20] ENGINE refresh (stale=true)
+07:49:20  [07:49:20] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=0
+07:49:22  [07:49:22] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+07:49:22  [07:49:22] FEED PROTOTREE[7703716498355168463]: 1:str="7703716498355168463" 2:bytes[99] 3:int=1793661273 4:msg{1:str="99184064851" 2:str="40221717014" 3:bytes[15] 5:bytes[264] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_126a81907edb3db5372d38a40d0637d6" 2:str="https://p11.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_126a81907" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_126a81907e" 2:str="https://p11.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_126a81907" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_126a81907edb3db5372d38a40d0637d6" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_126a81907edb" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_126a81907ed" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_126a81907edb" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_126a81907edb3db5372d38a40d0637d6" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_126a81907edb" 2:str="https://p11.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_126a81907ed" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_126a81907edb" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="40221717014" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:msg{} 3:int=720 4:int=720} 10:msg{} 11:msg{}} 54:int=0 55:int=1 58:msg{} 59:in
+07:49:22  [07:49:22] FEED mobile page refresh_index=2: awemes=6 usable=0 total_seen=0
+07:49:22  [07:49:22] FEED proto parsed 0 usable videos (refresh_index=2) — 检查 video/play_addr 字段号
+07:49:24  [07:49:24] PLAYER no url at index=0 (will retry)
+07:49:25  [07:49:25] ENGINE needMore (index=0 count=0)
+07:49:25  [07:49:25] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=0
+07:49:25  [07:49:25] PLAYER no url at index=0 (will retry)
+07:49:25  [07:49:25] PLAYER no url at index=0 (will retry)
+07:49:25  [07:49:25] PLAYER no url at index=0 (will retry)
+07:49:25  [07:49:25] PLAYER no url at index=0 (will retry)
+07:49:25  [07:49:25] PLAYER no url at index=0 (will retry)
+07:49:27  [07:49:27] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+07:49:27  [07:49:27] FEED PROTOTREE[7704901598002794217]: 1:str="7704901598002794217" 2:bytes[55] 3:int=1793937199 4:msg{1:str="1034018793733086" 2:str="26848807571" 3:bytes[18] 5:bytes[172] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_d0ba339176cda7ea41b62d5b6e1016cb" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_d0ba339176" 2:str="https://p26.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_d0ba33917" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_d0ba339176" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_d0ba339176cda7ea41b62d5b6e1016cb" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_d0ba339176cd" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_d0ba339176c" 2:str="https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_d0ba339176cd" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_d0ba339176cda7ea41b62d5b6e1016cb" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_d0ba339176c" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_d0ba339176cd" 2:str="https://p26.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_d0ba339176c" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="Yao520Qing" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:msg{} 3:int=720 4:int=720} 10:msg{} 11:msg{}} 54:int=0 55:int=1 58:msg{} 5
+07:49:27  [07:49:27] FEED mobile page refresh_index=3: awemes=6 usable=0 total_seen=0
+07:49:27  [07:49:27] FEED proto parsed 0 usable videos (refresh_index=3) — 检查 video/play_addr 字段号
+07:49:27  [07:49:27] ENGINE refresh (stale=true)
+07:49:27  [07:49:27] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=0
+07:49:27  [07:49:27] PLAYER no url at index=0 (will retry)
+07:49:28  [07:49:28] PLAYER no url at index=0 (will retry)
+07:49:28  [07:49:28] PLAYER no url at index=0 (will retry)
+07:49:29  [07:49:29] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+07:49:29  [07:49:29] FEED PROTOTREE[7704594390983096767]: 1:str="7704594390983096767" 2:bytes[35] 3:int=1793865671 4:msg{1:str="7693078006798500921" 2:str="98408665305" 3:bytes[12] 5:bytes[103] 6:msg{1:str="1080x1080/aweme-avatar/tos-cn-avt-0015_7bcdb38f586e401513a22c9c4566d262" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_7bcdb38f58" 2:str="https://p26.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_7bcdb38f5" 2:str="https://p3.douyinpic.com/aweme/1080x1080/aweme-avatar/tos-cn-avt-0015_7bcdb38f58" 3:int=720 4:int=720} 7:msg{1:str="100x100/aweme-avatar/tos-cn-avt-0015_7bcdb38f586e401513a22c9c4566d262" 2:str="https://p11.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_7bcdb38f586" 2:str="https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_7bcdb38f586" 2:str="https://p11.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_7bcdb38f586" 3:int=720 4:int=720} 8:msg{1:str="720x720/aweme-avatar/tos-cn-avt-0015_7bcdb38f586e401513a22c9c4566d262" 2:str="https://p11.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_7bcdb38f586" 2:str="https://p3.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_7bcdb38f586e" 2:str="https://p11.douyinpic.com/aweme/720x720/aweme-avatar/tos-cn-avt-0015_7bcdb38f586" 3:int=720 4:int=720} 10:int=1 12:int=0 13:int=0 15:int=0 18:int=0 22:msg{} 23:int=0 25:msg{} 26:str="LqL198888lql" 35:int=0 43:int=0 45:int=0 46:msg{} 53:msg{1:msg{} 2:msg{} 3:msg{} 4:msg{} 5:msg{1:msg{} 3:int=720 4:int=720} 10:msg{} 11:msg{}} 54:int=0 55:int=1 58:ms
+07:49:29  [07:49:29] FEED mobile page refresh_index=3: awemes=6 usable=0 total_seen=0
+07:49:29  [07:49:29] FEED proto parsed 0 usable videos (refresh_index=3) — 检查 video/play_addr 字段号

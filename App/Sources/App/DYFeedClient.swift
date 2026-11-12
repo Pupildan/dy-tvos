@@ -169,10 +169,10 @@ final class DYFeedClient {
         for entry in awemeEntries {
             guard let aweme = Proto.parse(entry) else { continue }
             guard let id = aweme.string(1) ?? aweme.string(2), !id.isEmpty else { continue }
-            // 诊断：dump 首个 aweme 的完整嵌套 proto 树，定位 url_list 真实字段号
+            // 诊断：先 dump aweme 顶层字段骨架（字段号:类型:长度），定位 video 在第几号
             if !dumped {
                 dumped = true
-                DYLog.shared.log("FEED PROTOTREE[\(id)]: \(Proto.dump(aweme, depth: 0, maxDepth: 4).prefix(1500))")
+                DYLog.shared.log("FEED TOPFIELDS[\(id)]: \(Proto.topSkeleton(aweme))")
             }
             // video = aweme field 7/8；play_addr = video field 1/9；url_list = play_addr field 1/9
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
@@ -366,5 +366,25 @@ struct Proto {
     private static func isPrintable(_ s: String) -> Bool {
         guard !s.isEmpty else { return false }
         return s.allSatisfy { ($0.isASCII && !$0.isNewline && $0.unicodeScalars.allSatisfy { $0.value >= 32 }) }
+    }
+
+    /// 只列顶层字段骨架（诊断用）：字段号:类型:字节长度[:字符串前 40]。
+    static func topSkeleton(_ msg: Proto) -> String {
+        var out: [String] = []
+        for key in msg.fields.keys.sorted() {
+            for v in msg.fields[key] ?? [] {
+                switch v {
+                case .varint(let n):
+                    out.append("\(key):int=\(n)")
+                case .bytes(let b):
+                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
+                        out.append("\(key):str[\(b.count)]=\"\(s.prefix(40))\"")
+                    } else {
+                        out.append("\(key):bytes[\(b.count)]")
+                    }
+                }
+            }
+        }
+        return out.joined(separator: " ")
     }
 }
