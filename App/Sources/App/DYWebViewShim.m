@@ -217,3 +217,40 @@ void DYEvalJS(id webView, NSString *js)
         msgSend(webView, @selector(evaluateJavaScript:completionHandler:), js, ^(id r, NSError *e) {});
     });
 }
+
+// 把 WKWebView 自己 cookie 罐里的 cookie 全量同步到 HTTPCookieStorage.shared，
+// 原生 URLSession 请求由此带上页面级 cookie（msToken 等——URLSession 引导请求拿不到的）。
+// 全程经 objc_msgSend 调 WKWebsiteDataStore/WKHTTPCookieStore（私有类，无头文件）。
+void DYTransferWebViewCookies(void)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            Class WKStoreCls = NSClassFromString(@"WKWebsiteDataStore");
+            if (!WKStoreCls) return;
+            id store = ((id(*)(id, SEL))objc_msgSend)((id)WKStoreCls, @selector(defaultWebsiteDataStore));
+            if (!store) return;
+            id cookieStore = ((id(*)(id, SEL))objc_msgSend)(store, @selector(httpCookieStore));
+            if (!cookieStore) return;
+
+            id shared = ((id(*)(id, SEL))objc_msgSend)((id)NSClassFromString(@"HTTPCookieStorage"),
+                                                       @selector(sharedHTTPCookieStorage));
+            if (!shared) return;
+
+            // getAllCookies 的回调块：逐 cookie setCookie 到共享罐
+            void (^onCookies)(NSArray *) = ^(NSArray *cookies) {
+                NSInteger n = 0;
+                for (id ck in cookies) {
+                    if (!ck) continue;
+                    ((void(*)(id, SEL, id))objc_msgSend)(shared, @selector(setCookie:), ck);
+                    n++;
+                }
+                // 回写一条日志（经 DYLog 同款 NSLog 兜底即可，避免循环依赖）
+                NSLog(@"DYCOOKIE transfer done: %ld", (long)n);
+            };
+            ((void(*)(id, SEL, void (^)(NSArray *)))objc_msgSend)
+                (cookieStore, @selector(getAllCookies:), onCookies);
+        } @catch (NSException *e) {
+            NSLog(@"DYCOOKIE transfer ERR: %@", e.reason);
+        }
+    });
+}

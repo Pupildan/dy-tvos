@@ -27,9 +27,17 @@ final class DYFeedClient {
     private init() {
         let cfg = URLSessionConfiguration.default
         cfg.httpShouldSetCookies = true
+        // 对齐页面 XHR 的请求头（dex 实证 myDV 同款）——网关校验的一部分
         cfg.httpAdditionalHeaders = [
             "Referer": "https://www.douyin.com/",
             "User-Agent": DYFeedClient.requestUA,
+            "Accept": "application/json, text/plain, */*",
+            "Accept-Language": "zh-CN,zh;q=0.9",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
         ]
         session = URLSession(configuration: cfg)
     }
@@ -86,6 +94,8 @@ final class DYFeedClient {
         }
         if !initial && !refresh { pageIndex += 1 }
         let idx = max(1, pageIndex)
+        // 先把 WebView cookie 罐（msToken 等页面级 cookie）同步进共享罐，原生请求才能带上
+        DYTransferWebViewCookies()
 
         guard var comps = URLComponents(string: tpl) else {
             DYLog.shared.log("FEED template parse fail")

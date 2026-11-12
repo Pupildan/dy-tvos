@@ -31,4 +31,8 @@ FOUNDATION_EXPORT void DYSetPageCookie(NSString *cookie);
 /// Latest captured page cookie (nil if none yet).
 FOUNDATION_EXPORT NSString * _Nullable DYGetPageCookie(void);
 
+/// Transfer the WebView's own cookie jar (msToken etc.) into HTTPCookieStorage.shared,
+/// so native URLSession requests carry the page's full cookie context.
+FOUNDATION_EXPORT void DYTransferWebViewCookies(void);
+
 NS_ASSUME_NONNULL_END

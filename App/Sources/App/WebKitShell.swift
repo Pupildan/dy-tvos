@@ -100,7 +100,16 @@ final class WebKitShellViewController: UIViewController {
         lastLoading = false
         pollTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { [weak self] _ in
             guard let self else { return }
-            // 消费 hook 回传的最新一条（可能是批量：REQS/VIDEOS 多行）
+            // 页面加载完成 → 把 WebView cookie 罐同步给原生 URLSession（msToken 等页面级 cookie）
+            if let wv = self.webView {
+                let loading = (wv.value(forKey: "isLoading") as? Bool) ?? false
+                if self.lastLoading && !loading {
+                    DYTransferWebViewCookies()
+                    DYLog.shared.log("SHELL page finished, cookies transferring")
+                }
+                self.lastLoading = loading
+            }
+            // 消费 hook 回传的最新一条（可能是批量：REQS/VIDS 多行）
             if let msg = DYLastHookMessage() {
                 DYClearHookMessage()
                 if msg == "HOOK_INSTALLED" {

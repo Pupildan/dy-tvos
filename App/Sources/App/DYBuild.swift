@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v52"
-    static let changes = "v52: 字节级原样回放探针——判定网关拒绝在URL层还是头/Cookie层"
+    static let version = "v53"
+    static let changes = "v53: WebView cookie 罐全量同步到 URLSession(msToken 等页面级)+页面同款请求头"
 }
