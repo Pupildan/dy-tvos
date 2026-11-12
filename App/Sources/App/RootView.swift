@@ -10,6 +10,12 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
+            // 临时探针泵：只为抓取抖音真实完整 feed 请求 URL（v45 一次性），下版移除
+            WebKitShellView(statusText: .constant(""))
+                .frame(width: 800, height: 450)
+                .opacity(0.02)
+                .accessibilityHidden(true)
+
             // 原生播放器全屏（居中、不裁切、周围留白——原始约束）
             NativePlayerView()
                 .ignoresSafeArea()

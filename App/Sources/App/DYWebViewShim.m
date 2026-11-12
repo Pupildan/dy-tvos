@@ -64,7 +64,7 @@ static NSString * const DYFetchHookJS =
 @"   if(reqBatch.length){ post('REQS\\n'+reqBatch.join('\\n')); reqBatch=[]; }"
 @"   if(videoBatch.length){ post('VIDEOS\\n'+videoBatch.join('\\n')); videoBatch=[]; }"
 @" }"
-@" function addReq(u){ if(!u) return; u=String(u); if(u.length>200)u=u.slice(0,200); if(reqSeen[u])return; reqSeen[u]=1; reqBatch.push(u); }"
+@" function addReq(u){ if(!u) return; u=String(u); if(u.length>2000)u=u.slice(0,2000); if(reqSeen[u])return; reqSeen[u]=1; reqBatch.push(u); }"
 @" function addVideo(u,src){ var line=(src||'')+' >> '+u; if(videoSeen[line])return; videoSeen[line]=1; videoBatch.push(line); }"
 @" function post(s){ try{ window.webkit.messageHandlers.dyyHook.postMessage(s);}catch(e){} }"
 @" function looksVideo(u){ return /\\.mp4|\\.m3u8|douyinvod|\\/play\\/|video_id=|playAddr|play_addr/i.test(u); }"
