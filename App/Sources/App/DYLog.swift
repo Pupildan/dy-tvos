@@ -123,9 +123,27 @@ final class DYLog: NSObject {
             status = "404 Not Found"
             body = "endpoints: /log /ping /clear\n"
         }
-        let payload = "HTTP/1.1 \(status)\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\nContent-Length: \(body.utf8.count)\r\n\r\n\(body)"
-        conn.send(content: payload.data(using: .utf8), completion: .contentProcessed { _ in
+        let payload = Data(("HTTP/1.1 \(status)\r\nContent-Type: text/plain; charset=utf-8\r\nConnection: close\r\nContent-Length: \(body.utf8.count)\r\n\r\n" + body).utf8)
+        // 分块发送，仅最后一处理完才关连接：
+        // .contentProcessed 只代表"已交给协议栈"，大响应立即 cancel 会截断（curl 56）。
+        sendChunked(conn, data: payload)
+    }
+
+    private func sendChunked(_ conn: NWConnection, data: Data, offset: Int = 0) {
+        let chunk = 16384
+        if offset >= data.count {
             conn.cancel()
+            return
+        }
+        let end = min(offset + chunk, data.count)
+        let slice = data.subdata(in: offset..<end)
+        let isLast = (end >= data.count)
+        conn.send(content: slice, completion: .contentProcessed { [weak self] _ in
+            if isLast {
+                conn.cancel()
+            } else {
+                self?.sendChunked(conn, data: data, offset: end)
+            }
         })
     }
 }
