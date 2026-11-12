@@ -34,16 +34,15 @@ enum WebKitProbe {
             return Result(dylibLoaded: true, dylibPath: path, wkWebViewClass: nil,
                           instanceCreated: false, error: "WKWebView class not found")
         }
-        // AnyClass -> NSObject.Type 需强转 as!（条件 as? 不编译）
+        // Swift 中 .alloc() 不可用，用 .init()。AnyClass -> NSObject.Type 需强转 as!。
         let nsCls = cls as! NSObject.Type
+        let obj = nsCls.init()
         var instanceOK = false
         var err: String? = nil
-        let obj = nsCls.alloc()
         let sel = NSSelectorFromString("initWithFrame:configuration:")
         if obj.responds(to: sel) {
             if let configCls: AnyClass = NSClassFromString("WKWebViewConfiguration") {
-                let config = (configCls as! NSObject.Type).alloc()
-                config.perform(NSSelectorFromString("init"))
+                let config = (configCls as! NSObject.Type).init()
                 let result = obj.perform(sel, with: NSValue(cgRect: .zero), with: config)
                 instanceOK = (result != nil)
             } else {

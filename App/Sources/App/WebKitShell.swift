@@ -3,58 +3,25 @@ import UIKit
 import SwiftUI
 import ObjectiveC.runtime
 
-/// 运行时动态构建一个 ObjC 类作为 WKNavigationDelegate。
-/// Swift 不可用 NSInvocation/forwardInvocation，故用 objc_allocateClassPair + class_addMethod 真建类。
+/// 运行时动态构建一个极简 ObjC 类充当 WKNavigationDelegate。
+/// Swift 不可用 NSInvocation，且 Unmanaged 不能装箱 Swift 闭包；
+/// 故 delegate 方法为空实现（仅让 WKWebView 的 respondsToSelector 通过），
+/// 真正的加载完成信号由 WebKitShellViewController 的 isLoading 轮询提供。
 enum WebKitDelegateFactory {
-    typealias Commit = () -> Void
-    typealias Finish = () -> Void
-    typealias Fail = (String) -> Void
-
-    struct Handlers {
-        let onCommit: Commit
-        let onFinish: Finish
-        let onFail: Fail
-    }
-
-    // IMP 三段跳板：匹配 webView:xxx: 系列签名 (id,self,_cmd,arg)
     private static let commitIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
     private static let finishIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
     private static let failIMP:   @convention(c) (NSObject, Selector, NSObject, NSObject, NSObject) -> Void = { _,_,_,_,_ in }
 
-    private static var handlersKey: UInt8 = 0
-
-    static func makeDelegate(_ h: Handlers) -> NSObject {
+    static func makeDelegate() -> NSObject {
         let className = "DYWKNavDelegate_\(UUID().uuidString.replacingOccurrences(of: "-", with: ""))"
-        let superCls: AnyClass = NSObject.self
-        let pair = objc_allocateClassPair(superCls, className, 0)!
+        let pair = objc_allocateClassPair(NSObject.self, className, 0)!
         let cls: AnyClass = pair
-
-        // 用 info 指针把 Swift 闭包带进 IMP
-        let commitBox = Unmanaged.passRetained(h.onCommit).toOpaque()
-        let finishBox = Unmanaged.passRetained(h.onFinish).toOpaque()
-        let failBox   = Unmanaged.passRetained({ (e: String) in h.onFail(e) }).toOpaque()
-
         class_addMethod(cls, NSSelectorFromString("webView:didCommitNavigation:"), unsafeBitCast(commitIMP, to: IMP.self), "v@:@@")
         class_addMethod(cls, NSSelectorFromString("webView:didFinishNavigation:"), unsafeBitCast(finishIMP, to: IMP.self), "v@:@@")
         class_addMethod(cls, NSSelectorFromString("webView:didFailNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
         class_addMethod(cls, NSSelectorFromString("webView:didFailProvisionalNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
-
         objc_registerClassPair(pair)
-
-        let instance = (cls as! NSObject.Type).alloc()
-        objc_setAssociatedObject(instance, &handlersKey,
-                                 HandlersBox(onCommit: h.onCommit, onFinish: h.onFinish, onFail: h.onFail),
-                                 .OBJC_ASSOCIATION_RETAIN)
-        return instance
-    }
-
-    private final class HandlersBox {
-        let onCommit: Commit
-        let onFinish: Finish
-        let onFail: Fail
-        init(onCommit: @escaping Commit, onFinish: @escaping Finish, onFail: @escaping Fail) {
-            self.onCommit = onCommit; self.onFinish = onFinish; self.onFail = onFail
-        }
+        return (cls as! NSObject.Type).init()
     }
 }
 
@@ -64,6 +31,7 @@ final class WebKitShellViewController: UIViewController {
     private var status: ((String) -> Void)?
     private var pollTimer: Timer?
     private var lastLoading = false
+    private weak var webView: UIView?
     private static var delegateKey: UInt8 = 0
 
     static let desktopUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
@@ -85,8 +53,7 @@ final class WebKitShellViewController: UIViewController {
             return
         }
 
-        let config = (ConfigCls as! NSObject.Type).alloc()
-        config.perform(NSSelectorFromString("init"))
+        let config = (ConfigCls as! NSObject.Type).init()
         config.setValue(WebKitShellViewController.desktopUA, forKey: "customUserAgent")
 
         let navBar = UILabel()
@@ -96,13 +63,14 @@ final class WebKitShellViewController: UIViewController {
         navBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(navBar)
 
-        let wvObj = (WKWebViewCls as! NSObject.Type).alloc()
+        let wvObj = (WKWebViewCls as! NSObject.Type).init()
         wvObj.perform(NSSelectorFromString("initWithFrame:configuration:"),
                       with: NSValue(cgRect: .zero), with: config)
         guard let wvView = wvObj as? UIView else {
             status?("FAIL: WKWebView 实例无法转为 UIView")
             return
         }
+        webView = wvView
         wvView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(wvView)
         NSLayoutConstraint.activate([
@@ -114,12 +82,7 @@ final class WebKitShellViewController: UIViewController {
             wvView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
 
-        // 挂运行时构建的 navigation delegate
-        let delegate = WebKitDelegateFactory.makeDelegate(.init(
-            onCommit: { [weak self] in self?.status?("commit: 开始加载") },
-            onFinish: { [weak self] in self?.status?("finish: 加载完成 (二维码应已显示, 手机扫码登录)") },
-            onFail:   { [weak self] e in self?.status?("fail: 加载失败 \(e)") }
-        ))
+        let delegate = WebKitDelegateFactory.makeDelegate()
         wvView.setValue(delegate, forKey: "navigationDelegate")
         objc_setAssociatedObject(wvView, &WebKitShellViewController.delegateKey, delegate,
                                  .OBJC_ASSOCIATION_RETAIN)
@@ -128,14 +91,13 @@ final class WebKitShellViewController: UIViewController {
         wvView.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: url))
         status?("loading douyin.com ...")
 
-        // 轮询 isLoading 作为加载完成的兜底信号（delegate 若失效也能显示 finish）
-        startPolling(wvView)
+        startPolling()
     }
 
-    private func startPolling(_ wv: UIView) {
+    private func startPolling() {
         lastLoading = false
         pollTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            guard let self, let wv = self.view.subviews.last(where: { $0.responds(to: NSSelectorFromString("isLoading")) }) else { return }
+            guard let self, let wv = self.webView else { return }
             let loading = (wv.value(forKey: "isLoading") as? Bool) ?? false
             if loading != self.lastLoading {
                 self.lastLoading = loading
