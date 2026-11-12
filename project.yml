@@ -1,0 +1,44 @@
+# XcodeGen 配置 —— 抖音 tvOS 客户端
+# CI 上执行 `xcodegen generate` 生成 DYTV.xcodeproj，再 xcodebuild 编译。
+# 本文件是唯一项目结构来源：改 target / 依赖 / Info.plist / 资源都在这里改，
+# 不手编 project.pbxproj（你在 Windows 无法编辑二进制 pbxproj）。
+name: DYTV
+options:
+  bundleIdPrefix: tv.dy
+  # 不生成测试 target —— 硬约束：CI 不跑任何测试
+  createIntermediateGroups: true
+  deploymentTarget:
+    tvOS: "16.0"
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    # 公共构建设置：Swift 版本、关闭签名（签名由本地 AltStore/SideStore 完成）
+    SWIFT_VERSION: "5.9"
+    CODE_SIGNING_ALLOWED: "NO"
+    CODE_SIGN_IDENTITY: ""
+    ENABLE_BITCODE: "NO"
+    TVOS_DEPLOYMENT_TARGET: "16.0"
+
+targets:
+  DYTV:
+    type: application
+    platform: tvOS
+    sources:
+      - path: App/Sources
+      - path: App/Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: tv.dy.client
+        PRODUCT_NAME: DYTV
+        # 让 xcodebuild 用 target settings 合成 Info.plist，避免维护可能漂移的 plist 文件。
+        # 下方 INFOPLIST_KEY_* 会被并进合成后的 Info.plist。
+        GENERATE_INFOPLIST_FILE: "YES"
+        CURRENT_PROJECT_VERSION: "1"
+        MARKETING_VERSION: "1.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        INFOPLIST_KEY_CFBundleDisplayName: DYTV
+        # tvOS：无启动 storyboard（全屏黑屏启动即可），无状态栏
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+    # 明确不链接任何测试 framework，不生成 test target

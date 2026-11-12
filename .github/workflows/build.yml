@@ -1,0 +1,62 @@
+name: Build tvOS
+
+# 唯一 CI 职责：编译出未签名 ipa，上传 artifact。
+# 不跑测试，不签名，不 archive/export，不依赖任何证书/profile/Keychain/Secret。
+# 交付物对接飞牛流水线：watch_by_sha / parallel_get_artifact / build_and_deliver 按 artifact id + ipa 名取件。
+
+on:
+  push:
+    branches: [main]
+
+# macOS 托管 runner 免费但不限量；GitHub Free 并发上限 5，避免同时触发多个 macOS workflow。
+concurrency:
+  group: build-tvos
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 项目结构由 project.yml 唯一驱动，CI 上现场生成 .xcodeproj，避免二进制 pbxproj 漂移
+      - name: Generate Xcode project (XcodeGen)
+        run: |
+          brew install xcodegen
+          xcodegen generate
+
+      # 设备 SDK + 关闭签名：产出 arm64 真机可用的 .app，签名由本地 AltStore/SideStore 完成
+      - name: Build (unsigned, device SDK)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project DYTV.xcodeproj \
+            -scheme DYTV \
+            -configuration Release \
+            -sdk appletvos \
+            -destination 'generic/platform=tvOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build | tee build.log
+
+      # 路线 A：把 .app 按 Payload/<App>.app 结构打包成未签名 ipa，供 AltStore/SideStore 本地重签
+      - name: Package unsigned ipa
+        run: |
+          APP_PATH=$(find build/Build/Products -name "DYTV.app" -type d | head -n 1)
+          echo "APP_PATH=$APP_PATH"
+          test -n "$APP_PATH" || { echo "::error::DYTV.app not found"; exit 1; }
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/DYTV.app
+          zip -qry DYTV-tvos-unsigned.ipa Payload
+          unzip -l DYTV-tvos-unsigned.ipa | head
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DYTV-tvos-unsigned
+          path: DYTV-tvos-unsigned.ipa
+          retention-days: 7
+          if-no-files-found: error
