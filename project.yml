@@ -41,4 +41,6 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: DYTV
         # tvOS：无启动 storyboard（全屏黑屏启动即可），无状态栏
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        # ObjC shim 桥接头：私有 WebKit 的 CGRect/objc_msgSend 调用只能在 ObjC 里做，Swift 经此访问
+        SWIFT_OBJC_BRIDGING_HEADER: "App/Sources/App/DYTV-Bridging-Header.h"
     # 明确不链接任何测试 framework，不生成 test target

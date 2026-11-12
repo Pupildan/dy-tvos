@@ -19,14 +19,11 @@ enum WebKitDelegateFactory {
         class_addMethod(cls, NSSelectorFromString("webView:didFailNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
         class_addMethod(cls, NSSelectorFromString("webView:didFailProvisionalNavigation:withError:"), unsafeBitCast(failIMP, to: IMP.self), "v@:@@@")
         objc_registerClassPair(pair)
-        // 分配未初始化实例，随后用 initWithFrame: 单次初始化（不走 Swift init()，避免二次 init 陷阱）
-        let obj = NSAllocateObject(cls, 0, nil) as! NSObject
-        return obj
+        return (cls as! NSObject.Type).init()
     }
 }
 
-/// A 路线外壳：运行时实例化私有 WKWebView，加载抖音桌面版。
-/// 关键：CGRect 结构体参数不能走 perform（会按对象传递导致闪退），必须走 objc_msgSend 按 C 约定传 struct。
+/// A 路线外壳：经 ObjC shim 实例化私有 WKWebView（CGRect/objc_msgSend 都在 .m 里），加载抖音桌面版。
 /// 焦点意图：本 VC 内无 Button；登录走手机扫码，不依赖遥控器操作网页。
 final class WebKitShellViewController: UIViewController {
     private var status: ((String) -> Void)?
@@ -34,9 +31,6 @@ final class WebKitShellViewController: UIViewController {
     private var lastLoading = false
     private weak var webView: UIView?
     private static var delegateKey: UInt8 = 0
-
-    static let desktopUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
-        "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
 
     func setStatusHandler(_ handler: @escaping (String) -> Void) {
         status = handler
@@ -46,24 +40,10 @@ final class WebKitShellViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 
-        guard dlopen("/System/Library/Frameworks/WebKit.framework/WebKit", RTLD_LAZY) != nil,
-              let WKWebViewCls: AnyClass = NSClassFromString("WKWebView"),
-              let ConfigCls: AnyClass = NSClassFromString("WKWebViewConfiguration")
-        else {
+        // WKWebView 实例化（含 CGRect frame + desktop UA）全部在 ObjC shim 内完成
+        guard let wvView = DYCreateWebViewWithFrame(view.bounds, WebKitShellViewController.desktopUA) as? UIView else {
             status?("FAIL: 无法加载私有 WebKit / WKWebView")
             return
-        }
-
-        // config = [[WKWebViewConfiguration alloc] initWith... ] -> 分配 + init (无 struct 参数, msgSend 安全)
-        let configRaw = NSAllocateObject(ConfigCls, 0, nil) as! NSObject
-        let initSel = NSSelectorFromString("init")
-        typealias InitFn = @convention(c) (NSObject, Selector) -> NSObject
-        let callInit = unsafeBitCast(objc_msgSend, to: InitFn.self)
-        let config = callInit(configRaw, initSel)
-
-        // customUserAgent：先探测 setter 是否存在再 KVC，避免 unknown key 抛异常
-        if config.responds(to: NSSelectorFromString("setCustomUserAgent:")) {
-            config.setValue(WebKitShellViewController.desktopUA, forKey: "customUserAgent")
         }
 
         let navBar = UILabel()
@@ -73,22 +53,6 @@ final class WebKitShellViewController: UIViewController {
         navBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(navBar)
 
-        // webView = [[WKWebView alloc] initWithFrame:view.bounds]; configuration 经 setter 注入
-        // initWithFrame: 的 CGRect 必须经 msgSend 按 C 约定传 struct（perform 会当对象传 -> 闪退）
-        let wvRaw = NSAllocateObject(WKWebViewCls, 0, nil) as! NSObject
-        let frameSel = NSSelectorFromString("initWithFrame:")
-        typealias FrameFn = @convention(c) (NSObject, Selector, CGRect) -> NSObject
-        let callFrame = unsafeBitCast(objc_msgSend, to: FrameFn.self)
-        let wvObj = callFrame(wvRaw, frameSel, view.bounds)
-
-        if wvObj.responds(to: NSSelectorFromString("setConfiguration:")) {
-            wvObj.setValue(config, forKey: "configuration")
-        }
-
-        guard let wvView = wvObj as? UIView else {
-            status?("FAIL: WKWebView 实例无法转为 UIView")
-            return
-        }
         webView = wvView
         wvView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(wvView)
