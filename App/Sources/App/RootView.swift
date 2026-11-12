@@ -24,11 +24,17 @@ struct RootView: View {
 
             if showShell {
                 WebKitShellView(statusText: $shellStatus)
-                    .frame(width: 800, height: 450)
+                    .frame(width: 640, height: 360)
                     .cornerRadius(12)
-                Text(shellStatus)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                ScrollView {
+                    Text(shellStatus)
+                        .font(.system(size: 20, design: .monospaced))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(width: 1000, height: 280)
+                .background(.quaternary)
+                .cornerRadius(12)
+                // 焦点意图：ScrollView 内是纯 Text（不可聚焦），焦点不会被长文本劫持
             } else {
                 Text(probeResult)
                     .font(.system(.body, design: .monospaced))

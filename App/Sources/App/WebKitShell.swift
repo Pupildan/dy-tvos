@@ -4,7 +4,7 @@ import SwiftUI
 import ObjectiveC.runtime
 
 /// 运行时动态构建极简 ObjC 类充当 WKNavigationDelegate（空实现，仅让 respondsToSelector 通过）。
-/// 加载完成信号由 isLoading 轮询提供。
+/// 抓链接靠 fetch hook + scriptMessageHandler，不经此 delegate。
 enum WebKitDelegateFactory {
     private static let commitIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
     private static let finishIMP: @convention(c) (NSObject, Selector, NSObject, NSObject) -> Void = { _,_,_,_ in }
@@ -23,8 +23,9 @@ enum WebKitDelegateFactory {
     }
 }
 
-/// A 路线外壳：经 ObjC shim 实例化私有 WKWebView（CGRect/objc_msgSend 都在 .m 里），加载抖音桌面版。
-/// 焦点意图：本 VC 内无 Button；登录走手机扫码，不依赖遥控器操作网页。
+/// P2 探测外壳：隐藏式 WebView 加载抖音桌面版，注入 fetch/XHR hook 抓 Feed API 视频直链。
+/// 目标：确认抖音是 API 下发直链（.mp4/.m3u8）还是纯 Blob 分片。
+/// 焦点意图：本屏无 Button；抓到的链接用纯 Text 展示（不可聚焦），遥控器焦点不会被劫持。
 final class WebKitShellViewController: UIViewController {
     private var status: ((String) -> Void)?
     private var pollTimer: Timer?
@@ -35,37 +36,32 @@ final class WebKitShellViewController: UIViewController {
     static let desktopUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
         "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
 
+    private var captured: [String] = []
+    private var seen = Set<String>()
+
     func setStatusHandler(_ handler: @escaping (String) -> Void) {
         status = handler
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .black
 
-        // WKWebView 实例化（含 CGRect frame + desktop UA）全部在 ObjC shim 内完成
-        guard let wvView = DYCreateWebViewWithFrame(view.bounds, WebKitShellViewController.desktopUA) as? UIView else {
+        // WebView 缩小置底（probe 阶段仍渲染以便抖音自己跑 JS，但不占主视觉）
+        guard let wvView = DYCreateWebViewWithFrame(CGRect(x: 0, y: 0, width: 400, height: 225),
+                                                    WebKitShellViewController.desktopUA) as? UIView else {
             status?("FAIL: 无法加载私有 WebKit / WKWebView")
             return
         }
-
-        let navBar = UILabel()
-        navBar.text = "douyin.com (desktop UA)"
-        navBar.textColor = .black
-        navBar.font = .systemFont(ofSize: 20, weight: .semibold)
-        navBar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(navBar)
-
         webView = wvView
         wvView.translatesAutoresizingMaskIntoConstraints = false
+        wvView.alpha = 0.35 // 探测期半透明，确认它在跑但不抢焦点
         view.addSubview(wvView)
         NSLayoutConstraint.activate([
-            navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            navBar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            wvView.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 8),
             wvView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             wvView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             wvView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            wvView.heightAnchor.constraint(equalToConstant: 225),
         ])
 
         let delegate = WebKitDelegateFactory.makeDelegate()
@@ -73,24 +69,39 @@ final class WebKitShellViewController: UIViewController {
         objc_setAssociatedObject(wvView, &WebKitShellViewController.delegateKey, delegate,
                                  .OBJC_ASSOCIATION_RETAIN)
 
-        // loadRequest: 参数是对象，可安全走 perform
+        // 注入 fetch/XHR hook（documentStart），抓 Feed API 里的视频直链
+        DYInstallFetchHook(wvView)
+
         let url = URL(string: "https://www.douyin.com/")!
         wvView.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: url))
-        status?("loading douyin.com ...")
+        status?("loading + hooking douyin.com ...")
 
         startPolling()
     }
 
     private func startPolling() {
         lastLoading = false
-        pollTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            guard let self, let wv = self.webView else { return }
-            let loading = (wv.value(forKey: "isLoading") as? Bool) ?? false
-            if loading != self.lastLoading {
-                self.lastLoading = loading
-                if !loading { self.status?("poll: 加载完成 (二维码应已显示, 手机扫码登录)") }
+        pollTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            // 消费 hook 回传的最新一条
+            if let msg = DYLastHookMessage() {
+                DYClearHookMessage()
+                if msg == "HOOK_INSTALLED" {
+                    self.status?("hook installed, waiting for feed API ...")
+                } else if !self.seen.contains(msg) {
+                    self.seen.insert(msg)
+                    self.captured.insert(msg, at: 0)
+                    if self.captured.count > 40 { self.captured.removeLast() }
+                    self.status?(self.summary())
+                }
             }
         }
+    }
+
+    private func summary() -> String {
+        let n = captured.count
+        let head = captured.prefix(6).joined(separator: "\n")
+        return "捕获视频直链 \(n) 条 (P2 可行: API 下发直链)\n---\n\(head)"
     }
 
     override func viewDidDisappear(_ animated: Bool) {

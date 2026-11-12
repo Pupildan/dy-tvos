@@ -9,4 +9,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// All struct-parameter ObjC messaging lives here (ObjC may call objc_msgSend freely).
 FOUNDATION_EXPORT id _Nullable DYCreateWebViewWithFrame(CGRect frame, NSString * _Nullable userAgent);
 
+/// Inject a documentStart fetch/XHR hook that captures video direct-links
+/// (.mp4/.m3u8/douyinvod/play_addr) from Douyin feed API responses and forwards
+/// each hit to the native side via the "dyyHook" script-message handler.
+FOUNDATION_EXPORT void DYInstallFetchHook(id webView);
+
+/// Latest message posted from the injected hook (one captured URL per post, or
+/// a diagnostic line). Returns nil if nothing new since DYClearHookMessage.
+FOUNDATION_EXPORT NSString * _Nullable DYLastHookMessage(void);
+
+/// Clear the latest hook message (call after consuming, to detect the next).
+FOUNDATION_EXPORT void DYClearHookMessage(void);
+
 NS_ASSUME_NONNULL_END
