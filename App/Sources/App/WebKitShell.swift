@@ -38,6 +38,7 @@ final class WebKitShellViewController: UIViewController {
 
     private var captured: [String] = []
     private var seen = Set<String>()
+    private var allVideoLines = Set<String>()
     private var loggedFirstVideo = false
     private var sawReqs = false
     private var tick = 0
@@ -114,16 +115,22 @@ final class WebKitShellViewController: UIViewController {
                     for l in lines { DYLog.shared.log("  \(l)") }
                     if !self.sawReqs { self.sawReqs = true; self.status?("捕获到 \(lines.count) 个请求 URL，看收集器日志") }
                 } else if msg.hasPrefix("VIDEOS\n") {
-                    let lines = msg.split(separator: "\n").dropFirst()
+                    let lines = msg.split(separator: "\n").dropFirst().map(String.init)
                     DYLog.shared.log("VIDEOS batch(\(lines.count)):")
                     for l in lines {
                         DYLog.shared.log("  \(l)")
-                        if !self.seen.contains(String(l)) {
-                            self.seen.insert(String(l))
-                            self.captured.insert(String(l), at: 0)
+                        if !self.seen.contains(l) {
+                            self.seen.insert(l)
+                            self.allVideoLines.insert(l)
                         }
                     }
-                    if self.captured.count > 40 { self.captured.removeLast(self.captured.count - 40) }
+                    // 有新直链就重排并喂给原生播放引擎
+                    let ordered = PlaybackEngine.extractOrderedURLs(from: Array(self.allVideoLines))
+                    if !ordered.isEmpty {
+                        let hadURLs = !PlaybackEngine.shared.urls.isEmpty
+                        PlaybackEngine.shared.setURLs(ordered)
+                        if !hadURLs { self.status?("原生播放就绪：\(ordered.count) 条直链") }
+                    }
                     if !self.loggedFirstVideo {
                         self.loggedFirstVideo = true
                         self.status?(self.summary())
