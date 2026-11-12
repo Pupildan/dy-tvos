@@ -46,13 +46,16 @@ final class WebKitShellViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
+        DYLog.shared.log("SHELL viewDidLoad")
 
         // WebView 缩小置底（probe 阶段仍渲染以便抖音自己跑 JS，但不占主视觉）
         guard let wvView = DYCreateWebViewWithFrame(CGRect(x: 0, y: 0, width: 400, height: 225),
                                                     WebKitShellViewController.desktopUA) as? UIView else {
             status?("FAIL: 无法加载私有 WebKit / WKWebView")
+            DYLog.shared.log("SHELL FAIL: create webview returned nil")
             return
         }
+        DYLog.shared.log("SHELL webview created OK")
         webView = wvView
         wvView.translatesAutoresizingMaskIntoConstraints = false
         wvView.alpha = 0.35 // 探测期半透明，确认它在跑但不抢焦点
@@ -86,6 +89,7 @@ final class WebKitShellViewController: UIViewController {
             // 消费 hook 回传的最新一条
             if let msg = DYLastHookMessage() {
                 DYClearHookMessage()
+                DYLog.shared.log("HOOK: \(msg)")
                 if msg == "HOOK_INSTALLED" {
                     self.status?("hook installed, waiting for feed API ...")
                 } else if !self.seen.contains(msg) {

@@ -23,18 +23,25 @@ struct RootView: View {
             .font(.title3)
 
             if showShell {
+                // WebView 必须在场才会加载抖音并触发 Feed API（JS 才跑）；缩小置底，不抢视觉
                 WebKitShellView(statusText: $shellStatus)
-                    .frame(width: 640, height: 360)
-                    .cornerRadius(12)
+                    .frame(width: 480, height: 270)
+                    .cornerRadius(8)
+                    .opacity(0.5)
+                // 屏上诊断面板（LAN 日志不可用时的兜底）：亮白大字，TV 上可读
                 ScrollView {
-                    Text(shellStatus)
-                        .font(.system(size: 20, design: .monospaced))
+                    Text(shellStatus.isEmpty ? "..." : shellStatus)
+                        .font(.system(size: 26, weight: .medium, design: .monospaced))
+                        .foregroundStyle(.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(width: 1000, height: 280)
-                .background(.quaternary)
+                .frame(width: 1100, height: 400)
+                .background(Color(white: 0.12))
                 .cornerRadius(12)
                 // 焦点意图：ScrollView 内是纯 Text（不可聚焦），焦点不会被长文本劫持
+                Text("日志也可 curl http://<ATV-IP>:8765/log")
+                    .font(.caption)
+                    .foregroundStyle(.green)
             } else {
                 Text(probeResult)
                     .font(.system(.body, design: .monospaced))
