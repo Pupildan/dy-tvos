@@ -81,11 +81,13 @@ final class DYPlayerViewController: AVPlayerViewController {
     private func reloadIfNeeded() {
         let engine = PlaybackEngine.shared
         guard engine.index != currentIndex else { return }
-        currentIndex = engine.index
-        guard let it = item(at: currentIndex) else {
-            DYLog.shared.log("PLAYER no url at index=\(engine.index)")
+        guard let it = item(at: engine.index) else {
+            // 关键：取不到 item 时【不提交】currentIndex，等 setURLs 到达后自动重试播 index 0。
+            // （否则 currentIndex 提前=0，之后 0!=0 恒假，首条永远播不出 → 只能手动切。）
+            DYLog.shared.log("PLAYER no url at index=\(engine.index) (will retry)")
             return
         }
+        currentIndex = engine.index
         DYLog.shared.log("PLAYER play index=\(currentIndex) url=\((it.asset as? AVURLAsset)?.url.absoluteString.prefix(80) ?? "?")")
         player?.replaceCurrentItem(with: it)
         player?.play()

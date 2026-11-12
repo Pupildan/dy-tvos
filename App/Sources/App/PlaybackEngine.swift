@@ -26,7 +26,7 @@ final class PlaybackEngine: ObservableObject {
     private var lastRefreshAt: Date = .distantPast
     private var consecutiveFailures = 0
     private let staleInterval: TimeInterval = 240      // 4 分钟视为整批过期
-    private let needMoreThreshold = 3                   // 剩余 ≤3 条时翻页
+    private let needMoreThreshold = 7                   // 剩余 ≤7 条时提前翻页（第 35/41 条即触发，无缝衔接）
     private let refreshCooldown: TimeInterval = 5       // 刷新/翻页冷却，防刷屏
 
     var currentURL: URL? {
