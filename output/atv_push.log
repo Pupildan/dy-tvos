@@ -6114,3 +6114,239 @@
 07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
 07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
 07:29:09  [07:29:09] FEED parse fail (refresh_index=4) body=<binary 340326B>
+07:38:56  [07:38:56] DYTV v60 launched
+07:38:56  [07:38:56] SIGNER init start
+07:38:56  [07:38:56] LOGSRV ready on port 8765
+07:38:56  [07:38:56] SIGNER load shim ok
+07:38:56  [07:38:56] LOGSRV advertising as DYTV-619
+07:38:56  [07:38:56] SIGNER load abogus ok
+07:38:56  [07:38:56] SIGNER load sign ok
+07:38:56  [07:38:56] PLAYER viewDidLoad
+07:38:56  [07:38:56] PLAYER no url at index=0 (will retry)
+07:38:56  [07:38:56] ROOT auto-start v60
+07:38:56  [07:38:56] SIGNER load abogus_dy ok
+07:38:56  [07:38:56] SIGNER extras sign=true dy=true
+07:38:56  [07:38:56] SIGNER bdms=yes
+07:38:56  [07:38:56] SIGNER initABogus=true
+07:38:56  [07:38:56] SIGNER fns=AB (期望 AB)
+07:38:56  [07:38:56] PLAYER no url at index=0 (will retry)
+07:38:56  [07:38:56] PLAYER no url at index=0 (will retry)
+07:38:56  [07:38:56] SIGNER smoke={"ok":true,"value":"DJWh/DL6diDNhDyX5X5LfY3qVW33YsU30SVkMDhezVfPkL39HMOc9exEv1zvrYmeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+07:38:56  [07:38:56] SIGNER READY a_bogus len=180
+07:38:56  [07:38:56] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+07:38:56  [07:38:56] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+07:38:57  [07:38:57] LOGSRV Bonjour published: DYTV-619
+07:38:58  [07:38:58] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+07:38:58  [07:38:58] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+07:38:58  [07:38:58] ENGINE merge total=6 index=0 replace=false auto=true
+07:38:58  [07:38:58] PLAYER play index=0 url=v0d00fg10000dbq3utvog65ri54irvkg
+07:38:58  [07:38:58] PLAYER item FAILED index=0 err=unsupported URL
+07:38:58  [07:38:58] ENGINE needMore (index=0 count=6)
+07:38:58  [07:38:58] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+07:38:58  [07:38:58] ENGINE next -> index=1
+07:38:58  [07:38:58] PLAYER play index=1 url=v0d00fg10000dblfq67og65nq4fcbphg
+07:38:58  [07:38:58] PLAYER item FAILED index=1 err=unsupported URL
+07:38:58  [07:38:58] ENGINE refresh (stale=false)
+07:38:58  [07:38:58] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+07:38:58  [07:38:58] ENGINE next -> index=2
+07:38:58  [07:38:58] PLAYER play index=2 url=v0d00fg10000dbqs1pvog65qng6qd0o0
+07:38:58  [07:38:58] PLAYER item FAILED index=2 err=unsupported URL
+07:38:58  [07:38:58] ENGINE next -> index=3
+07:38:58  [07:38:58] PLAYER play index=3 url=v0200fg10000dbdcg8vog65mb5vfsm8g
+07:38:58  [07:38:58] PLAYER item FAILED index=3 err=unsupported URL
+07:38:58  [07:38:58] ENGINE next -> index=4
+07:38:58  [07:38:58] PLAYER play index=4 url=v0300fg10000dbq7ufnog65jub2e3v90
+07:38:58  [07:38:58] PLAYER item FAILED index=4 err=unsupported URL
+07:38:58  [07:38:58] ENGINE next -> index=5
+07:38:58  [07:38:58] PLAYER play index=5 url=v0200fg10000dblka7fog65pgr26s87g
+07:38:59  [07:38:58] PLAYER item FAILED index=5 err=unsupported URL
+07:39:00  [07:39:00] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+07:39:00  [07:39:00] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+07:39:00  [07:39:00] ENGINE merge total=12 index=5 replace=false auto=false
+07:39:01  [07:39:00] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+07:39:01  [07:39:00] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=18
+07:39:01  [07:39:00] ENGINE merge total=15 index=5 replace=false auto=false
+07:39:06  [07:39:06] ENGINE next -> index=6
+07:39:06  [07:39:06] PLAYER play index=6 url=v0300fg10000dblao27og65li1mo8as0
+07:39:06  [07:39:06] PLAYER item FAILED index=6 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=7
+07:39:06  [07:39:06] PLAYER play index=7 url=v0300fg10000dbmjgj7og65pbfoj3fbg
+07:39:06  [07:39:06] PLAYER item FAILED index=7 err=unsupported URL
+07:39:06  [07:39:06] ENGINE refresh (stale=false)
+07:39:06  [07:39:06] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=18
+07:39:06  [07:39:06] ENGINE next -> index=8
+07:39:06  [07:39:06] PLAYER play index=8 url=v0200fg10000dbqs59vog65nadtiuh5g
+07:39:06  [07:39:06] PLAYER item FAILED index=8 err=unsupported URL
+07:39:06  [07:39:06] ENGINE needMore (index=8 count=15)
+07:39:06  [07:39:06] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=18
+07:39:06  [07:39:06] ENGINE next -> index=9
+07:39:06  [07:39:06] PLAYER play index=9 url=v0d00fg10000dbe7i97og65mq3b573qg
+07:39:06  [07:39:06] PLAYER item FAILED index=9 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=10
+07:39:06  [07:39:06] PLAYER play index=10 url=v0d00fg10000dbqsf0fog65nlfo91420
+07:39:06  [07:39:06] PLAYER item FAILED index=10 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=11
+07:39:06  [07:39:06] PLAYER play index=11 url=v0200fg10000dbmt1i7og65gtsg32kd0
+07:39:06  [07:39:06] PLAYER item FAILED index=11 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=12
+07:39:06  [07:39:06] PLAYER play index=12 url=v0d00fg10000dbooemnog65pk4dtqfm0
+07:39:06  [07:39:06] PLAYER item FAILED index=12 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=13
+07:39:06  [07:39:06] PLAYER play index=13 url=v0200fg10000dbqjb6vog65j74ophk10
+07:39:06  [07:39:06] PLAYER item FAILED index=13 err=unsupported URL
+07:39:06  [07:39:06] ENGINE next -> index=14
+07:39:06  [07:39:06] PLAYER play index=14 url=v0200fg10000dbk63pvog65k8tohb2g0
+07:39:06  [07:39:06] PLAYER item FAILED index=14 err=unsupported URL
+07:39:08  [07:39:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+07:39:08  [07:39:08] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=24
+07:39:08  [07:39:08] ENGINE merge total=21 index=14 replace=false auto=false
+07:39:08  [07:39:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+07:39:08  [07:39:08] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=30
+07:39:08  [07:39:08] ENGINE merge total=27 index=14 replace=false auto=false
+07:39:08  [07:39:08] ENGINE next -> index=15
+07:39:08  [07:39:08] PLAYER play index=15 url=v0d00fg10000dbqoe2vog65g2hjli8ag
+07:39:08  [07:39:08] PLAYER item FAILED index=15 err=unsupported URL
+07:39:08  [07:39:08] ENGINE next -> index=16
+07:39:08  [07:39:08] PLAYER play index=16 url=v2800fgi0000dbq3t1vog65k4tadlkdg
+07:39:08  [07:39:08] PLAYER item FAILED index=16 err=unsupported URL
+07:39:08  [07:39:08] ENGINE next -> index=17
+07:39:08  [07:39:08] PLAYER play index=17 url=v1e00fgi0000dbfjoifog65k7pqq0k50
+07:39:09  [07:39:08] PLAYER item FAILED index=17 err=unsupported URL
+07:39:09  [07:39:08] ENGINE next -> index=18
+07:39:09  [07:39:08] PLAYER play index=18 url=v0d00fg10000dbpa8v7og65pmgfmfb6g
+07:39:09  [07:39:08] PLAYER item FAILED index=18 err=unsupported URL
+07:39:09  [07:39:08] ENGINE next -> index=19
+07:39:09  [07:39:08] PLAYER play index=19 url=v0d00fg10000dbm4hhnog65gs6fqgo30
+07:39:09  [07:39:08] ENGINE next -> index=20
+07:39:09  [07:39:08] PLAYER play index=20 url=v2700fgi0000dbnjtfvog65htv3o4g4g
+07:39:09  [07:39:08] PLAYER item FAILED index=19 err=unsupported URL
+07:39:09  [07:39:08] PLAYER item FAILED index=20 err=unsupported URL
+07:39:09  [07:39:08] ENGINE next -> index=21
+07:39:09  [07:39:08] PLAYER play index=21 url=v0300fg10000dbm67tnog65qddncp5l0
+07:39:09  [07:39:09] PLAYER item FAILED index=21 err=unsupported URL
+07:39:09  [07:39:09] ENGINE next -> index=22
+07:39:09  [07:39:09] PLAYER play index=22 url=v0200fg10000dbo6co7og65k53gvuk30
+07:39:09  [07:39:09] PLAYER item FAILED index=22 err=unsupported URL
+07:39:09  [07:39:09] ENGINE next -> index=23
+07:39:09  [07:39:09] PLAYER play index=23 url=v2800fgi0000dbprqgfog65h7oa2h9q0
+07:39:09  [07:39:09] PLAYER item FAILED index=23 err=unsupported URL
+07:39:09  [07:39:09] ENGINE next -> index=24
+07:39:09  [07:39:09] PLAYER play index=24 url=v0200fg10000dbq8n3vog65iv1dg04cg
+07:39:09  [07:39:09] PLAYER item FAILED index=24 err=unsupported URL
+07:39:09  [07:39:09] ENGINE next -> index=25
+07:39:09  [07:39:09] PLAYER play index=25 url=v0300fg10000dbqsqn7og65mu8qdhbqg
+07:39:09  [07:39:09] PLAYER item FAILED index=25 err=unsupported URL
+07:39:09  [07:39:09] ENGINE next -> index=26
+07:39:09  [07:39:09] PLAYER play index=26 url=v0d00fg10000dbd1iuvog65vs0qcsc90
+07:39:09  [07:39:09] PLAYER item FAILED index=26 err=unsupported URL
+07:39:11  [07:39:11] ENGINE prev -> index=25
+07:39:11  [07:39:11] PLAYER play index=25 url=v0300fg10000dbqsqn7og65mu8qdhbqg
+07:39:12  [07:39:12] ENGINE needMore (index=25 count=27)
+07:39:12  [07:39:12] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=30
+07:39:12  [07:39:12] ENGINE next -> index=26
+07:39:12  [07:39:12] PLAYER play index=26 url=v0d00fg10000dbd1iuvog65vs0qcsc90
+07:39:14  [07:39:14] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+07:39:14  [07:39:14] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=36
+07:39:14  [07:39:14] ENGINE merge total=33 index=26 replace=false auto=false
+07:39:22  [07:39:22] ENGINE prev -> index=25
+07:39:22  [07:39:22] PLAYER play index=25 url=v0300fg10000dbqsqn7og65mu8qdhbqg
+07:39:22  [07:39:22] ENGINE next -> index=26
+07:39:22  [07:39:22] PLAYER play index=26 url=v0d00fg10000dbd1iuvog65vs0qcsc90
+07:39:26  [07:39:26] ENGINE needMore (index=26 count=33)
+07:39:26  [07:39:26] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=36
+07:39:26  [07:39:26] ENGINE next -> index=27
+07:39:26  [07:39:26] PLAYER play index=27 url=v2800fgi0000dbgodivog65lmddoveng
+07:39:26  [07:39:26] PLAYER item FAILED index=27 err=unsupported URL
+07:39:26  [07:39:26] ENGINE next -> index=28
+07:39:26  [07:39:26] PLAYER play index=28 url=v2800fgi0000dbqh3ufog65q4qglav4g
+07:39:26  [07:39:26] PLAYER item FAILED index=28 err=unsupported URL
+07:39:26  [07:39:26] ENGINE refresh (stale=false)
+07:39:26  [07:39:26] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=36
+07:39:26  [07:39:26] ENGINE next -> index=29
+07:39:26  [07:39:26] PLAYER play index=29 url=v2700fgi0000dbo3jtfog65skdjku81g
+07:39:26  [07:39:26] PLAYER item FAILED index=29 err=unsupported URL
+07:39:26  [07:39:26] ENGINE next -> index=30
+07:39:26  [07:39:26] PLAYER play index=30 url=v0300fg10000db4cic7og65jds01bieg
+07:39:26  [07:39:26] PLAYER item FAILED index=30 err=unsupported URL
+07:39:26  [07:39:26] ENGINE next -> index=31
+07:39:26  [07:39:26] PLAYER play index=31 url=v0200fg10000dbqlkdvog65rh5ea50mg
+07:39:26  [07:39:26] PLAYER item FAILED index=31 err=unsupported URL
+07:39:26  [07:39:26] ENGINE next -> index=32
+07:39:26  [07:39:26] PLAYER play index=32 url=v0300fg10000dbmle47og65ocvb0vnvg
+07:39:26  [07:39:26] PLAYER item FAILED index=32 err=unsupported URL
+07:39:28  [07:39:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+07:39:28  [07:39:28] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=42
+07:39:28  [07:39:28] ENGINE merge total=39 index=32 replace=false auto=false
+07:39:28  [07:39:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+07:39:28  [07:39:28] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=48
+07:39:28  [07:39:28] ENGINE merge total=44 index=32 replace=false auto=false
+07:39:29  [07:39:28] ENGINE next -> index=33
+07:39:29  [07:39:28] PLAYER play index=33 url=v0200fg10000dbbvluvog65o6ij5s1qg
+07:39:29  [07:39:29] PLAYER item FAILED index=33 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=34
+07:39:29  [07:39:29] PLAYER play index=34 url=v0d00fg10000dbfdrhfog65ndd314020
+07:39:29  [07:39:29] PLAYER item FAILED index=34 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=35
+07:39:29  [07:39:29] PLAYER play index=35 url=v2700fgi0000dbmolq7og65mt82vjej0
+07:39:29  [07:39:29] PLAYER item FAILED index=35 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=36
+07:39:29  [07:39:29] PLAYER play index=36 url=v0200fg10000dbm3fpnog65ib68mk52g
+07:39:29  [07:39:29] ENGINE next -> index=37
+07:39:29  [07:39:29] PLAYER play index=37 url=v0d00fg10000dbq3e57og65tvefb2jf0
+07:39:29  [07:39:29] PLAYER item FAILED index=36 err=unsupported URL
+07:39:29  [07:39:29] PLAYER item FAILED index=37 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=38
+07:39:29  [07:39:29] PLAYER play index=38 url=v0d00fg10000dbfg10vog65le7njd5hg
+07:39:29  [07:39:29] PLAYER item FAILED index=38 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=39
+07:39:29  [07:39:29] PLAYER play index=39 url=v0300fg10000dbqo2j7og65ib09sua8g
+07:39:29  [07:39:29] PLAYER item FAILED index=39 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=40
+07:39:29  [07:39:29] PLAYER play index=40 url=v0200fg10000dbg8sr7og65p041j5hb0
+07:39:29  [07:39:29] PLAYER item FAILED index=40 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=41
+07:39:29  [07:39:29] PLAYER play index=41 url=v1e00fgi0000dbosgmfog65vcq1ct65g
+07:39:29  [07:39:29] PLAYER item FAILED index=41 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=42
+07:39:29  [07:39:29] PLAYER play index=42 url=v0200fg10000dbjbsafog65rfnlu56o0
+07:39:29  [07:39:29] PLAYER item FAILED index=42 err=unsupported URL
+07:39:29  [07:39:29] ENGINE next -> index=43
+07:39:29  [07:39:29] PLAYER play index=43 url=v0d00fg10000dbkjp5vog65l4v63duug
+07:39:29  [07:39:29] PLAYER item FAILED index=43 err=unsupported URL
+07:39:31  [07:39:31] ENGINE needMore (index=43 count=44)
+07:39:31  [07:39:31] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=48
+07:39:31  [07:39:31] ENGINE prev -> index=42
+07:39:31  [07:39:31] PLAYER play index=42 url=v0200fg10000dbjbsafog65rfnlu56o0
+07:39:33  [07:39:33] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+07:39:33  [07:39:33] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=54
+07:39:33  [07:39:33] ENGINE merge total=50 index=42 replace=false auto=false
+07:39:35  [07:39:35] ENGINE next -> index=43
+07:39:35  [07:39:35] PLAYER play index=43 url=v0d00fg10000dbkjp5vog65l4v63duug
+07:39:35  [07:39:35] ENGINE next -> index=44
+07:39:35  [07:39:35] PLAYER play index=44 url=v2800fgi0000dbmav4vog65paiidfvq0
+07:39:35  [07:39:35] PLAYER item FAILED index=44 err=unsupported URL
+07:39:35  [07:39:35] ENGINE next -> index=45
+07:39:35  [07:39:35] PLAYER play index=45 url=v0300fg10000dbjdcjfog65nl04a90l0
+07:39:35  [07:39:35] PLAYER item FAILED index=45 err=unsupported URL
+07:39:35  [07:39:35] ENGINE refresh (stale=false)
+07:39:35  [07:39:35] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=54
+07:39:35  [07:39:35] ENGINE next -> index=46
+07:39:35  [07:39:35] PLAYER play index=46 url=v1e00fgi0000dbqq5qvog65rcdc9ojf0
+07:39:35  [07:39:35] PLAYER item FAILED index=46 err=unsupported URL
+07:39:35  [07:39:35] ENGINE next -> index=47
+07:39:35  [07:39:35] PLAYER play index=47 url=v0300fg10000dbnekbfog65gq7qqqdeg
+07:39:35  [07:39:35] PLAYER item FAILED index=47 err=unsupported URL
+07:39:35  [07:39:35] ENGINE next -> index=48
+07:39:35  [07:39:35] PLAYER play index=48 url=v2800fgi0000dbq14pfog65gm8dl87u0
+07:39:35  [07:39:35] PLAYER item FAILED index=48 err=unsupported URL
+07:39:35  [07:39:35] ENGINE next -> index=49
+07:39:35  [07:39:35] PLAYER play index=49 url=v0200fg10000db8dlq7og65nc9aql8u0
+07:39:35  [07:39:35] PLAYER item FAILED index=49 err=unsupported URL
+07:39:36  [07:39:36] ENGINE needMore (index=49 count=50)
+07:39:36  [07:39:36] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=54
+07:39:38  [07:39:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+07:39:38  [07:39:38] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=60
+07:39:38  [07:39:38] ENGINE merge total=56 index=49 replace=false auto=false
+07:39:38  [07:39:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+07:39:38  [07:39:38] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=66
+07:39:38  [07:39:38] ENGINE merge total=61 index=49 replace=false auto=false

@@ -165,9 +165,15 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
+        var dumped = false
         for entry in awemeEntries {
             guard let aweme = Proto.parse(entry) else { continue }
             guard let id = aweme.string(1) ?? aweme.string(2), !id.isEmpty else { continue }
+            // 诊断：dump 首个 aweme 的完整嵌套 proto 树，定位 url_list 真实字段号
+            if !dumped {
+                dumped = true
+                DYLog.shared.log("FEED PROTOTREE[\(id)]: \(Proto.dump(aweme, depth: 0, maxDepth: 4).prefix(1500))")
+            }
             // video = aweme field 7/8；play_addr = video field 1/9；url_list = play_addr field 1/9
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { continue }
@@ -177,12 +183,16 @@ final class DYFeedClient {
             }
             guard let pa = playAddr else { continue }
             let candidates = pa.strings(1) + pa.strings(9)
+            // 优先挑完整 http(s) URL；uri 不可直接播
+            var chosen: URL? = nil
             for raw in candidates {
                 var u = raw
                 if u.hasPrefix("//") { u = "https:" + u }
+                guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
                 if u.contains("/aweme/v1/play/") { continue }
-                if let url = URL(string: u) { ids.append(id); urls.append(url); break }
+                if let url = URL(string: u) { chosen = url; break }
             }
+            if let url = chosen { ids.append(id); urls.append(url) }
         }
         consumedIds.append(contentsOf: ids)
         DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) total_seen=\(consumedIds.count)")
@@ -328,4 +338,33 @@ struct Proto {
         bytesFields(n).compactMap { String(data: Data($0), encoding: .utf8) }
     }
     func string(_ n: Int) -> String? { strings(n).first }
+
+    /// 递归 dump proto 树（诊断用）：字段号 + wire 类型 + 字符串/嵌套结构。
+    static func dump(_ msg: Proto, depth: Int, maxDepth: Int) -> String {
+        guard depth <= maxDepth else { return "…" }
+        var out: [String] = []
+        for key in msg.fields.keys.sorted() {
+            for v in msg.fields[key] ?? [] {
+                switch v {
+                case .varint(let n):
+                    out.append("\(key):int=\(n)")
+                case .bytes(let b):
+                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
+                        out.append("\(key):str=\"\(s.prefix(80))\"")
+                    } else if let nested = parse(b) {
+                        let child = dump(nested, depth: depth + 1, maxDepth: maxDepth)
+                        out.append("\(key):msg{\(child)}")
+                    } else {
+                        out.append("\(key):bytes[\(b.count)]")
+                    }
+                }
+            }
+        }
+        return out.joined(separator: " ")
+    }
+
+    private static func isPrintable(_ s: String) -> Bool {
+        guard !s.isEmpty else { return false }
+        return s.allSatisfy { ($0.isASCII && !$0.isNewline && $0.unicodeScalars.allSatisfy { $0.value >= 32 }) }
+    }
 }
