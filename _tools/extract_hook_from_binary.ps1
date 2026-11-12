@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$z = [System.IO.Compression.ZipFile]::OpenRead('C:\Nbeetok\dy-tvos\output\DYTV-tvos-unsigned-v45.ipa')
+$z = [System.IO.Compression.ZipFile]::OpenRead('C:\Nbeetok\dy-tvos\output\DYTV-tvos-unsigned-v46.ipa')
 $e = $z.Entries | Where-Object { $_.FullName -eq 'Payload/DYTV.app/DYTV' }
 $s = $e.Open()
 $ms = New-Object IO.MemoryStream

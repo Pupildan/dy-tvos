@@ -118,6 +118,33 @@ final class WebKitShellViewController: UIViewController {
                     DYLog.shared.log(body)
                     self.status?("已 dump feed 响应体 \(body.count) 字符，看收集器")
                     self.sawReqs = true
+                } else if msg.hasPrefix("BATCH\n") {
+                    // 合并批（单条消息防覆盖）：REQS 段=完整请求 URL（进收集器），VIDS 段=直链（进引擎）
+                    let lines = msg.split(separator: "\n").dropFirst().map(String.init)
+                    var mode = ""
+                    var reqs: [String] = []
+                    var vids: [String] = []
+                    for l in lines {
+                        if l == "REQS" { mode = "R" }
+                        else if l == "VIDS" { mode = "V" }
+                        else if mode == "R" { reqs.append(l) }
+                        else if mode == "V" { vids.append(l) }
+                    }
+                    if !reqs.isEmpty {
+                        DYLog.shared.log("REQS(\(reqs.count)):")
+                        for l in reqs { DYLog.shared.log("  \(l)") }
+                        if !self.sawReqs { self.sawReqs = true; self.status?("捕获 \(reqs.count) 个请求 URL") }
+                    }
+                    if !vids.isEmpty {
+                        DYLog.shared.log("VIDS(\(vids.count))")
+                        for v in vids { self.allVideoLines.insert(v) }
+                        let extracted = PlaybackEngine.extract(from: Array(self.allVideoLines))
+                        if !extracted.urls.isEmpty {
+                            let hadURLs = !PlaybackEngine.shared.urls.isEmpty
+                            PlaybackEngine.shared.setURLs(extracted.urls, awemeIds: extracted.awemeIds,
+                                                          isNewBatch: !hadURLs, isRefresh: false)
+                        }
+                    }
                 } else if msg.hasPrefix("REQS\n") {
                     // 方向 A：抖音实际发起的请求 URL 批量，逐行进收集器日志
                     let lines = msg.split(separator: "\n").dropFirst()

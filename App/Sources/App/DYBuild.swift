@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v46"
-    static let changes = "v46: 删除单行脚本中的4条//注释(吞掉后续全部代码的总根因,Node前缀扫描定位)"
+    static let version = "v47"
+    static let changes = "v47: flush 合并单条 BATCH 消息(REQS+VIDS 不再互相覆盖,可捕获完整 feed URL)"
 }
