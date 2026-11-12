@@ -24,6 +24,14 @@ final class DYFeedClient {
     /// 与 shim navigator.userAgent 一致（a_bogus 签名绑定 UA）
     static let requestUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
 
+    /// 页面真实请求头（HDS 捕获，module/feed 关联）——原生请求逐个复刻
+    private var pageHeaders: [String: String] = [:]
+
+    func setPageHeader(name: String, value: String) {
+        pageHeaders[name] = value
+        DYLog.shared.log("FEED page header stored: \(name)=\(String(value.prefix(40))) (\(pageHeaders.count) total)")
+    }
+
     private init() {
         let cfg = URLSessionConfiguration.default
         cfg.httpShouldSetCookies = true
@@ -129,7 +137,11 @@ final class DYFeedClient {
 
         var req = URLRequest(url: url)
         req.timeoutInterval = 15
-        // bdms 注入的安全头（x-secsdk-web-signature 等）——网关校验必需
+        // 页面真实请求头（Content-Type/uifid/x-secsdk-csrf-token 等）——网关路由校验所需
+        for (k, v) in pageHeaders {
+            req.setValue(v, forHTTPHeaderField: k)
+        }
+        // bdms 注入的安全头（x-secsdk-web-signature 等）——签名流程捕获到的也带上
         for (k, v) in sr.headers {
             req.setValue(v, forHTTPHeaderField: k)
         }

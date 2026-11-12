@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$z = [System.IO.Compression.ZipFile]::OpenRead('C:\Nbeetok\dy-tvos\output\DYTV-tvos-unsigned-v47.ipa')
+$z = [System.IO.Compression.ZipFile]::OpenRead('C:\Nbeetok\dy-tvos\output\DYTV-tvos-unsigned-v54.ipa')
 $e = $z.Entries | Where-Object { $_.FullName -eq 'Payload/DYTV.app/DYTV' }
 $s = $e.Open()
 $ms = New-Object IO.MemoryStream
@@ -23,4 +23,5 @@ $js = $text.Substring($start, $len)
 $js = ($js.ToCharArray() | Where-Object { [int]$_ -ge 32 -or [int]$_ -eq 10 }) -join ''
 [System.IO.File]::WriteAllText('C:\Nbeetok\dy-tvos\_tmp\hook_from_binary.js', $js)
 Write-Output ('chars=' + $js.Length)
+
 

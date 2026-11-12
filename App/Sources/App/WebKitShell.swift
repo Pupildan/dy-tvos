@@ -159,7 +159,17 @@ final class WebKitShellViewController: UIViewController {
                     }
                     if !heads.isEmpty {
                         DYLog.shared.log("HDS(\(heads.count)) — 页面真实请求头:")
-                        for h in heads { DYLog.shared.log("  \(h)") }
+                        for h in heads {
+                            DYLog.shared.log("  \(h)")
+                            // H 行格式: "H <URL片段> | Name=Value" —— module/feed 的头交给原生直连复刻
+                            let seg = h.split(separator: "|", maxSplits: 1).map { String($0).trimmingCharacters(in: .whitespaces) }
+                            if seg.count == 2, seg[0].contains("/aweme/v2/web/module/feed/") {
+                                let kv = seg[1].split(separator: "=", maxSplits: 1).map { String($0) }
+                                if kv.count == 2 {
+                                    DYFeedClient.shared.setPageHeader(name: kv[0], value: kv[1])
+                                }
+                            }
+                        }
                     }
                     if !vids.isEmpty {
                         DYLog.shared.log("VIDS(\(vids.count))")
