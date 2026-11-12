@@ -32,6 +32,9 @@ final class WebKitShellViewController: UIViewController {
     private weak var webView: UIView?
     private static var delegateKey: UInt8 = 0
 
+    static let desktopUA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
+        "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+
     func setStatusHandler(_ handler: @escaping (String) -> Void) {
         status = handler
     }
