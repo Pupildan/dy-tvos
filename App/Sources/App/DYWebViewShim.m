@@ -19,10 +19,11 @@ static NSString * _Nullable _dyLastHookMessage = nil;
 {
     @try {
         id body = [msg valueForKey:@"body"];
-        if ([body isKindOfClass:[NSString class]]) {
-            _dyLastHookMessage = (NSString *)body;
+        NSString *s = [body isKindOfClass:[NSString class]] ? (NSString *)body : [body description];
+        if ([s hasPrefix:@"COOKIE\n"]) {
+            DYSetPageCookie([s substringFromIndex:7]); // 持久存 cookie 供 AVPlayer 头
         } else {
-            _dyLastHookMessage = [body description];
+            _dyLastHookMessage = s;
         }
     } @catch (NSException *e) {
         _dyLastHookMessage = [NSString stringWithFormat:@"ERR: %@", e.reason];
@@ -124,6 +125,7 @@ static NSString * const DYFetchHookJS =
 @" setInterval(function(){ dyyScrollOnce(); }, 2000);"
 @" setInterval(function(){ window.__dyyMore(); }, 7000);"
 @" post('HOOK_INSTALLED');"
+@" try{ post('COOKIE\\n'+document.cookie); }catch(e){}"
 @"})();";
 
 void DYInstallFetchHook(id webView)
@@ -163,6 +165,19 @@ NSString * _Nullable DYLastHookMessage(void)
 void DYClearHookMessage(void)
 {
     _dyLastHookMessage = nil;
+}
+
+// ---- captured page cookie (for AVPlayer Referer/Cookie headers) ----
+static NSString * _Nullable _dyPageCookie = nil;
+
+void DYSetPageCookie(NSString *cookie)
+{
+    _dyPageCookie = cookie;
+}
+
+NSString * _Nullable DYGetPageCookie(void)
+{
+    return _dyPageCookie;
 }
 
 void DYEvalJS(id webView, NSString *js)

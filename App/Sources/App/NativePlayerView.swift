@@ -40,7 +40,19 @@ final class DYPlayerViewController: AVPlayerViewController {
         guard PlaybackEngine.shared.urls.indices.contains(index) else { return nil }
         let url = PlaybackEngine.shared.urls[index]
         if let cached = preloadCache[index] { return cached }
-        let item = AVPlayerItem(url: url)
+        // 关键：CDN 直链需浏览器请求头（Referer/Cookie/UA），否则 403 no-permission。
+        // 模拟 WebView 的 <video> 请求上下文。
+        var headers: [String: String] = [
+            "Referer": "https://www.douyin.com/",
+            "User-Agent": WebKitShellViewController.desktopUA,
+        ]
+        if let cookie = DYGetPageCookie(), !cookie.isEmpty {
+            headers["Cookie"] = cookie
+        }
+        let asset = AVURLAsset(url: url, options: [
+            "AVURLAssetHTTPHeaderFieldsKey": headers,
+        ])
+        let item = AVPlayerItem(asset: asset)
         preloadCache[index] = item
         observeItem(item, index: index)
         return item

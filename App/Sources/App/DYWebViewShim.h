@@ -25,4 +25,10 @@ FOUNDATION_EXPORT void DYClearHookMessage(void);
 /// the page's own scroll / pagination (window.__dyyScroll / __dyyMore).
 FOUNDATION_EXPORT void DYEvalJS(id webView, NSString *js);
 
+/// Store the page cookie (captured by the hook) for AVPlayer Referer/Cookie headers.
+FOUNDATION_EXPORT void DYSetPageCookie(NSString *cookie);
+
+/// Latest captured page cookie (nil if none yet).
+FOUNDATION_EXPORT NSString * _Nullable DYGetPageCookie(void);
+
 NS_ASSUME_NONNULL_END
