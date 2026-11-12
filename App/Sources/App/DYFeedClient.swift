@@ -47,7 +47,35 @@ final class DYFeedClient {
         guard signerReady, templateURL != nil, !booted else { return }
         booted = true
         DYLog.shared.log("FEED native pipeline armed (template captured)")
-        fetchNativePage(initial: true, refresh: false)
+        // 决定性对照实验：先字节级原样回放页面请求（不改任何字符，含原始 a_bogus）。
+        // 成功 → 修改逻辑有问题；失败 → 头/Cookie 层差异。日志给出明确分叉。
+        exactReplayProbe { ok in
+            DYLog.shared.log("FEED REPLAY_PROBE result=" + (ok ? "ACCEPTED(url层OK,查修改逻辑)" : "REJECTED(头/Cookie层差异)"))
+            self.fetchNativePage(initial: true, refresh: false)
+        }
+    }
+
+    /// 字节级原样回放捕获的模板 URL（含原始 a_bogus），只带 cookie/Referer/UA。
+    private func exactReplayProbe(completion: @escaping (Bool) -> Void) {
+        guard let tpl = templateURL, let url = URL(string: tpl) else {
+            DYLog.shared.log("REPLAY skip: template URL invalid")
+            completion(false)
+            return
+        }
+        var req = URLRequest(url: url)
+        req.timeoutInterval = 15
+        session.dataTask(with: req) { data, resp, err in
+            if let err { DYLog.shared.log("REPLAY err: \(err.localizedDescription)"); completion(false); return }
+            let code = (resp as? HTTPURLResponse)?.statusCode ?? 0
+            guard let data, !data.isEmpty else {
+                DYLog.shared.log("REPLAY code=\(code) empty body")
+                completion(false); return
+            }
+            let body = String(data: data, encoding: .utf8) ?? "<bin>"
+            let looksFeed = body.contains("aweme_list")
+            DYLog.shared.log("REPLAY code=\(code) len=\(data.count) aweme_list=\(looksFeed) body_head=\(String(body.prefix(150)))")
+            completion(looksFeed)
+        }.resume()
     }
 
     /// 基于模板拉一页。initial=首批（自动播）；refresh=过期重拉（对齐原位置）。
