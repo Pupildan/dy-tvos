@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v15"
-    static let changes = "v15: /log 有界化 + /stat 极小统计端点 + 日志防刷屏（探测信号稳定可读）"
+    static let version = "v16"
+    static let changes = "v16: 日志改为出站推送（raw TCP → 开发机收集器 :9988），绕开入站监听不稳"
 }

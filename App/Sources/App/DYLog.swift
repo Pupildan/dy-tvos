@@ -14,18 +14,49 @@ final class DYLog: NSObject {
     private var lines: [String] = []
     private let maxLines = 500
 
+    // 出站推送：ATV 主动连开发机收集器（出站稳，绕开入站监听/ATS 限制）
+    static let collectorHost = "192.168.10.122"
+    static let collectorPort: UInt16 = 9988
+    private var pushConn: NWConnection?
+    private var pushReady = false
+
     private override init() {
         super.init()
     }
 
-    /// 记录一条日志（同时留屏上可读）。
+    /// 记录一条日志（同时留屏上可读 + 推送到开发机收集器）。
     func log(_ msg: String) {
         let line = "[\(Self.ts())] \(msg)"
         queue.async {
             self.lines.append(line)
             if self.lines.count > self.maxLines { self.lines.removeFirst(self.lines.count - self.maxLines) }
+            self.push(line)
         }
         NSLog("%@", line) // 兜底进系统日志
+    }
+
+    /// 出站推送一行到开发机收集器（raw TCP）。连接懒建立、断了重建。
+    private func push(_ line: String) {
+        if pushConn == nil {
+            let c = NWConnection(host: NWEndpoint.Host(Self.collectorHost),
+                                 port: NWEndpoint.Port(rawValue: Self.collectorPort)!,
+                                 using: .tcp)
+            c.stateUpdateHandler = { [weak self] state in
+                switch state {
+                case .ready:
+                    self?.queue.async { self?.pushReady = true }
+                case .failed, .cancelled:
+                    self?.queue.async { self?.pushReady = false; self?.pushConn = nil }
+                default:
+                    break
+                }
+            }
+            c.start(queue: queue)
+            pushConn = c
+        }
+        guard let conn = pushConn, pushReady else { return }
+        let payload = Data((line + "\n").utf8)
+        conn.send(content: payload, completion: .contentProcessed { _ in })
     }
 
     private static func ts() -> String {
