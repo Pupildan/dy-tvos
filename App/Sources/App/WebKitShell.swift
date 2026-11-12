@@ -132,7 +132,14 @@ final class WebKitShellViewController: UIViewController {
                     }
                     if !reqs.isEmpty {
                         DYLog.shared.log("REQS(\(reqs.count)):")
-                        for l in reqs { DYLog.shared.log("  \(l)") }
+                        for l in reqs {
+                            DYLog.shared.log("  \(l)")
+                            // 捕获完整 feed 请求模板（含全部正确参数）→ 原生直连回放用
+                            if l.contains("/aweme/v2/web/module/feed/") && DYFeedClient.shared.templateURL == nil {
+                                DYFeedClient.shared.templateURL = l
+                                DYLog.shared.log("TEMPLATE captured len=\(l.count)")
+                            }
+                        }
                         if !self.sawReqs { self.sawReqs = true; self.status?("捕获 \(reqs.count) 个请求 URL") }
                     }
                     if !vids.isEmpty {
@@ -141,8 +148,9 @@ final class WebKitShellViewController: UIViewController {
                         let extracted = PlaybackEngine.extract(from: Array(self.allVideoLines))
                         if !extracted.urls.isEmpty {
                             let hadURLs = !PlaybackEngine.shared.urls.isEmpty
-                            PlaybackEngine.shared.setURLs(extracted.urls, awemeIds: extracted.awemeIds,
-                                                          isNewBatch: !hadURLs, isRefresh: false)
+                            PlaybackEngine.shared.merge(ids: extracted.awemeIds, urls: extracted.urls,
+                                                        replaceExisting: false,
+                                                        autoPlay: !hadURLs, refresh: false)
                         }
                     }
                 } else if msg.hasPrefix("REQS\n") {
@@ -158,13 +166,12 @@ final class WebKitShellViewController: UIViewController {
                         DYLog.shared.log("  \(l)")
                         self.allVideoLines.insert(l)
                     }
-                    // 重排并喂给原生播放引擎（只保留 douyinvod 直链，丢弃 403 的 /play/）
                     let extracted = PlaybackEngine.extract(from: Array(self.allVideoLines))
                     if !extracted.urls.isEmpty {
                         let hadURLs = !PlaybackEngine.shared.urls.isEmpty
-                        // 首批：isNewBatch 自动播 index0；翻页追加：保持当前 index 不重播
-                        PlaybackEngine.shared.setURLs(extracted.urls, awemeIds: extracted.awemeIds,
-                                                      isNewBatch: !hadURLs, isRefresh: false)
+                        PlaybackEngine.shared.merge(ids: extracted.awemeIds, urls: extracted.urls,
+                                                    replaceExisting: false,
+                                                    autoPlay: !hadURLs, refresh: false)
                         if !hadURLs { self.status?("原生播放就绪：\(extracted.urls.count) 条直链") }
                     }
                     if !self.loggedFirstVideo, !extracted.urls.isEmpty {

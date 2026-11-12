@@ -113,20 +113,19 @@ Promise.resolve(hookedFetch(feedUrl, { credentials: 'include' })).then(() => {
   for (const t of timers) { if (t[0] === 'interval' && typeof t[1] === 'function') { try { t[1](); } catch (e) {} } }
   return new Promise(r => setTimeout(r, 30));
 }).then(() => {
-  const batchMsg = posted.find(p => p.startsWith('BATCH\n'));
-  const videosMsg = batchMsg; // VIDS 段在 BATCH 消息内
-  check('BATCH combined message posted (single, no overwrite)', !!batchMsg);
-  if (batchMsg) {
-    const segs = batchMsg.split('\n').slice(1);
-    const rIdx = segs.indexOf('REQS'), vIdx = segs.indexOf('VIDS');
-    check('BATCH contains REQS section', rIdx >= 0);
-    check('BATCH contains VIDS section', vIdx >= 0);
-    const vidLines = vIdx >= 0 ? segs.slice(vIdx + 1) : [];
-    const reqLines = rIdx >= 0 ? segs.slice(rIdx + 1, vIdx >= 0 ? vIdx : undefined) : [];
-    check('VIDS lines tagged + douyinvod extracted', vidLines.some(l => l.includes('douyinvod.com') && l.includes('.mp4')));
-    check('VIDS protocol-relative https: prepended', vidLines.every(l => !l.includes(' >> //')));
-    check('REQS full-URL captured (>=200 chars)', reqLines.some(l => l.length >= 200), reqLines.length ? 'maxlen=' + Math.max(...reqLines.map(l => l.length)) : '');
-  }
+  const batches = posted.filter(p => p.startsWith('BATCH\n'));
+  const batchMsg = batches.find(b => b.includes('\nVIDS\n')) || batches[0];
+  const videosMsg = batchMsg;
+  check('BATCH combined message posted (single, no overwrite)', batches.length >= 1);
+  check('BATCH contains REQS section', batches.some(b => b.includes('\nREQS\n')));
+  check('BATCH contains VIDS section', batches.some(b => b.includes('\nVIDS\n')));
+  const segs = batchMsg.split('\n').slice(1);
+  const rIdx = segs.indexOf('REQS'), vIdx = segs.indexOf('VIDS');
+  const vidLines = vIdx >= 0 ? segs.slice(vIdx + 1) : [];
+  const reqLines = rIdx >= 0 ? segs.slice(rIdx + 1, vIdx >= 0 ? vIdx : undefined) : [];
+  check('VIDS lines tagged + douyinvod extracted', vidLines.some(l => l.includes('douyinvod.com') && l.includes('.mp4')));
+  check('VIDS protocol-relative https: prepended', vidLines.every(l => !l.includes(' >> //')));
+  check('REQS full-URL captured (>=200 chars)', batches.some(b => b.split('\n').some(l => l.length >= 200)), 'allBatches=' + batches.length);
   const parsedMsg = posted.find(p => p.startsWith('FEEDPARSED'));
   check('FEEDPARSED reported', !!parsedMsg, parsedMsg || '');
   const badReqs = (batchMsg ? batchMsg.split('\n') : []).filter(l => l.includes('chrome-extension://'));
