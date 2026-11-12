@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v19"
-    static let changes = "v19: dump module/feed 接口原始响应体，确认 play_addr 直链结构"
+    static let version = "v20"
+    static let changes = "v20: JS 解析 feed JSON，精准抽 aweme_list[].video.play_addr.url_list 直链"
 }

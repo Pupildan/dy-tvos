@@ -95,6 +95,11 @@ final class WebKitShellViewController: UIViewController {
                 if msg == "HOOK_INSTALLED" {
                     DYLog.shared.log("HOOK installed, awaiting feed API")
                     self.status?("hook installed, waiting for feed API ...")
+                } else if msg.hasPrefix("FEEDPARSED") {
+                    // JS 已解析 feed JSON，报告抽到多少条直链
+                    DYLog.shared.log("FEEDPARSED \(msg)")
+                    self.status?(msg)
+                    self.sawReqs = true
                 } else if msg.hasPrefix("FEEDBODY\n") {
                     // dump feed 接口原始响应体，看 play_addr 结构
                     let body = msg.split(separator: "\n", maxSplits: 1).dropFirst().joined()
