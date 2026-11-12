@@ -49,7 +49,7 @@ final class DYPlayerViewController: AVPlayerViewController {
 
     /// 监听单个 item 的失败/播完 → 自动跳下一条（解"缓冲完仍黑屏不播"）。
     private func observeItem(_ item: AVPlayerItem, index: Int) {
-        NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTime, object: item, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main) { [weak self] _ in
             DYLog.shared.log("PLAYER item ended index=\(index), auto-next")
             self?.advance()
         }
@@ -75,7 +75,7 @@ final class DYPlayerViewController: AVPlayerViewController {
             DYLog.shared.log("PLAYER no url at index=\(engine.index)")
             return
         }
-        DYLog.shared.log("PLAYER play index=\(currentIndex) url=\(it.url?.absoluteString.prefix(80) ?? "?")")
+        DYLog.shared.log("PLAYER play index=\(currentIndex) url=\((it.asset as? AVURLAsset)?.url.absoluteString.prefix(80) ?? "?")")
         player?.replaceCurrentItem(with: it)
         player?.play()
         preloadNeighbors(around: currentIndex)
