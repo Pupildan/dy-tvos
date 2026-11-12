@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v41"
-    static let changes = "v41: 请求UA与shim一致(签名绑定UA校验)+msToken注入+错误体日志+抖音logo图标"
+    static let version = "v42"
+    static let changes = "v42: AppIcon 改 brand-assets 格式(解 unassigned children,Assets.car 生成)"
 }
