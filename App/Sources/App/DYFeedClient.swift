@@ -74,22 +74,27 @@ final class DYFeedClient {
         comps.queryItems = items
         guard let base = comps.url, let query = base.query else { return }
 
-        guard let bogus = DYSigner.shared.sign(query: query, data: "", uri: feedPath) else {
+        guard let sr = DYSigner.shared.sign(query: query, data: "", uri: feedPath) else {
             DYLog.shared.log("FEED sign fail (page \(idx))")
             PlaybackEngine.shared.reportFailure()
             return
         }
         // a_bogus 需与页面一致做百分号编码（+/= → %2B/%3D，/ → %2F）
+        let bogus = sr.value
         let enc = bogus.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~.")) ?? bogus
         let urlString = base.absoluteString + "&a_bogus=" + enc
         guard let url = URL(string: urlString) else {
             DYLog.shared.log("FEED URL parse fail len=\(urlString.count) head=\(String(urlString.prefix(120)))")
             return
         }
-        DYLog.shared.log("FEED native GET page=\(idx) initial=\(initial) refresh=\(refresh) bogus_len=\(bogus.count) presented=\(consumedList.count)")
+        DYLog.shared.log("FEED native GET page=\(idx) initial=\(initial) refresh=\(refresh) bogus_len=\(bogus.count) presented=\(consumedList.count) sec_headers=\(sr.headers.count)")
 
         var req = URLRequest(url: url)
         req.timeoutInterval = 15
+        // bdms 注入的安全头（x-secsdk-web-signature 等）——网关校验必需
+        for (k, v) in sr.headers {
+            req.setValue(v, forHTTPHeaderField: k)
+        }
         session.dataTask(with: req) { [weak self] data, resp, err in
             guard let self else { return }
             if let err { DYLog.shared.log("FEED http err: \(err.localizedDescription)"); return }

@@ -99,11 +99,17 @@ final class DYSigner {
         return true
     }
 
+    /// 签名结果：a_bogus 值 + bdms 注入的安全头（如 x-secsdk-web-signature）。
+    struct SignResult {
+        let value: String
+        let headers: [String: String]
+    }
+
     /// 计算 a_bogus。query 不含 '?'；data=POST body 字符串（GET 传 ''）；uri=API 路径（可空）。
-    /// 返回签名值或 nil（未就绪/签名失败）。串行队列内执行。
-    func sign(query: String, data: String, uri: String) -> String? {
+    /// 返回签名+安全头，或 nil（未就绪/签名失败）。串行队列内执行。
+    func sign(query: String, data: String, uri: String) -> SignResult? {
         // JSContext 非线程安全：经队列同步执行
-        var result: String?
+        var result: SignResult?
         queue.sync {
             guard ready, let ctx = context, let fn = ctx.objectForKeyedSubscript("getABogus") else {
                 result = nil
@@ -113,7 +119,7 @@ final class DYSigner {
                 result = nil
                 return
             }
-            // 返回 JSON 字符串 {"ok":true,"value":"..."} 或 {"ok":false,"error":"..."}
+            // 返回 JSON 字符串 {"ok":true,"value":"...","headers":{...}} 或 {"ok":false,"error":"..."}
             guard let d = out.data(using: .utf8),
                   let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
                   let ok = obj["ok"] as? Bool, ok,
@@ -122,7 +128,11 @@ final class DYSigner {
                 result = nil
                 return
             }
-            result = value
+            var headers: [String: String] = [:]
+            if let hs = obj["headers"] as? [String: Any] {
+                for (k, v) in hs { if let s = v as? String { headers[k] = s } }
+            }
+            result = SignResult(value: value, headers: headers)
         }
         return result
     }

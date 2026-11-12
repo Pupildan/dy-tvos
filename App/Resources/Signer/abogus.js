@@ -85,12 +85,13 @@
         __capture_mode = true;
         __captured_url = null;
 
+        var xhr = null;
         try {
             var hasBody = (typeof data === 'string' && data.length > 0);
             var path = (typeof uri === 'string' && uri.length > 0) ? uri : '/aweme/v1/web/general/search/single/';
             var url = __SYNTHETIC_HOST + path + (query ? ('?' + query) : '');
 
-            var xhr = new XMLHttpRequest();
+            xhr = new XMLHttpRequest();
             xhr.open(hasBody ? 'POST' : 'GET', url);
             if (hasBody) {
                 xhr.send(data);
@@ -106,7 +107,12 @@
         if (__captured_url) {
             var match = __captured_url.match(/[?&]a_bogus=([^&]+)/);
             if (match) {
-                return JSON.stringify({ ok: true, value: decodeURIComponent(match[1]) });
+                // bdms injects a_bogus into the URL AND security headers via
+                // setRequestHeader (the shim's stub stores them in __headers).
+                // Return both so the native request can carry the full security context.
+                var hdrs = {};
+                try { if (xhr && xhr.__headers) { hdrs = xhr.__headers; } } catch (e) {}
+                return JSON.stringify({ ok: true, value: decodeURIComponent(match[1]), headers: hdrs });
             }
         }
         return JSON.stringify({ ok: false, error: 'a_bogus not generated' });
