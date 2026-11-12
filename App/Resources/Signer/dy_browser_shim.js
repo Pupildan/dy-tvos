@@ -256,4 +256,4 @@
     if (typeof g.console === 'undefined') {
         g.console = { log: function(){}, warn: function(){}, error: function(){}, info: function(){}, debug: function(){} };
     }
-})(); 
+})();

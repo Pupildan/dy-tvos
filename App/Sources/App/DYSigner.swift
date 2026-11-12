@@ -29,9 +29,8 @@ final class DYSigner {
             DYLog.shared.log("SIGNER FAIL: JSContext nil")
             return
         }
-        ctx.exceptionHandler = { [weak self] _, exception in
-            DYLog.shared.log("SIGNER js exception: \(exception?.toString().prefix(140) ?? "?")")
-        }
+        // 关键：不设自定义 exceptionHandler —— 有 handler 时 ctx.exception 恒为 nil，
+        // load() 的异常检测会失效（v35 的静默失败根因之一）。用默认行为 + load() 检查。
 
         // 1) browser shim（必须最先；提供 window/navigator/document/XHR/fetch/crypto 等全套仿真）
         guard load(ctx, "dy_browser_shim", log: "shim") else { return }

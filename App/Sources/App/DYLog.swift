@@ -36,6 +36,13 @@ final class DYLog: NSObject {
         NSLog("%@", line) // 兜底进系统日志
     }
 
+    /// 推送就绪时回灌缓冲历史（连接建立前的日志不再丢失——SIGNER 早期行可见）。
+    private func flushBufferedLines() {
+        guard let conn = pushConn, !lines.isEmpty else { return }
+        let payload = lines.joined(separator: "\n") + "\n"
+        conn.send(content: Data(payload.utf8), completion: .contentProcessed { _ in })
+    }
+
     /// 出站推送一行到开发机收集器（raw TCP）。连接懒建立；若始终未 ready，定期拆掉重建（自愈）。
     private func push(_ line: String) {
         if pushConn == nil {
@@ -46,7 +53,11 @@ final class DYLog: NSObject {
             c.stateUpdateHandler = { [weak self] state in
                 switch state {
                 case .ready:
-                    self?.queue.async { self?.pushReady = true; self?.pushAttempts = 0 }
+                    self?.queue.async {
+                        self?.pushReady = true
+                        self?.pushAttempts = 0
+                        self?.flushBufferedLines()
+                    }
                 case .failed, .cancelled:
                     self?.queue.async { self?.pushReady = false; self?.pushConn = nil }
                 default:
