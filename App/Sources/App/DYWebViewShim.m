@@ -160,7 +160,7 @@ static NSString * const DYFetchHookJS =
 @" }"
 @" function dyyMuteVideos(){"
 @"   try{ var vs=document.querySelectorAll('video');"
-@"     for(var i=0;i<vs.length;i++){ try{ vs[i].muted=true; vs[i].pause(); }catch(e){} }"
+@"     for(var i=0;i<vs.length;i++){ try{ vs[i].muted=true; }catch(e){} }"
 @"   }catch(e){}"
 @" }"
 @" window.__dyyScroll = dyyScrollOnce;"

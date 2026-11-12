@@ -1,20 +1,2 @@
-HOOK_START @ 126780
-span 126711 .. 133118 len=6412
-chars=6412
-PARSE_OK length=6412
-PASS  hook evaluated without throw
-PASS  HOOK_START posted
-PASS  HOOK_INSTALLED posted
-PASS  COOKIE posted with ttwid  COOKIE
-ttwid=abc123; msToken=mocktoken123; sessionid=;
-PASS  BATCH combined message posted (single, no overwrite)
-PASS  BATCH contains REQS section
-PASS  BATCH contains VIDS section
-PASS  VIDS lines tagged + douyinvod extracted
-PASS  VIDS protocol-relative https: prepended
-PASS  REQS full-URL captured (>=200 chars)  allBatches=2
-PASS  FEEDPARSED reported  FEEDPARSED videos=3 awemes=2
-PASS  chrome-extension noise filtered by dedup  0 leaked
-
-==== RESULT: PASS=12 FAIL=0 ====
-==== RESULT: PASS=12 FAIL=0 ====
+extracted chars=6398
+first 80: (function(){ try{ window.webkit.messageHandlers.dyyHook.postMessage('HOOK_START'
