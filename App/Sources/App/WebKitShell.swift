@@ -39,6 +39,7 @@ final class WebKitShellViewController: UIViewController {
     private var captured: [String] = []
     private var seen = Set<String>()
     private var loggedFirstVideo = false
+    private var sawReqs = false
     private var tick = 0
 
     func setStatusHandler(_ handler: @escaping (String) -> Void) {
@@ -88,23 +89,33 @@ final class WebKitShellViewController: UIViewController {
         lastLoading = false
         pollTimer = Timer.scheduledTimer(withTimeInterval: 0.4, repeats: true) { [weak self] _ in
             guard let self else { return }
-            // 消费 hook 回传的最新一条
+            // 消费 hook 回传的最新一条（可能是批量：REQS/VIDEOS 多行）
             if let msg = DYLastHookMessage() {
                 DYClearHookMessage()
                 if msg == "HOOK_INSTALLED" {
                     DYLog.shared.log("HOOK installed, awaiting feed API")
                     self.status?("hook installed, waiting for feed API ...")
-                } else if !self.seen.contains(msg) {
-                    self.seen.insert(msg)
-                    self.captured.insert(msg, at: 0)
-                    if self.captured.count > 40 { self.captured.removeLast() }
-                    // 有界日志：只在首次抓到视频直链时打一条 + 周期性打计数，避免刷屏
-                    let isVideo = msg.contains(".mp4") || msg.contains(".m3u8") || msg.contains("douyinvod")
-                    if isVideo && !self.loggedFirstVideo {
-                        self.loggedFirstVideo = true
-                        DYLog.shared.log("FIRST_VIDEO_LINK: \(msg)")
+                } else if msg.hasPrefix("REQS\n") {
+                    // 方向 A：抖音实际发起的请求 URL 批量，逐行进收集器日志
+                    let lines = msg.split(separator: "\n").dropFirst()
+                    DYLog.shared.log("REQS batch(\(lines.count)):")
+                    for l in lines { DYLog.shared.log("  \(l)") }
+                    if !self.sawReqs { self.sawReqs = true; self.status?("捕获到 \(lines.count) 个请求 URL，看收集器日志") }
+                } else if msg.hasPrefix("VIDEOS\n") {
+                    let lines = msg.split(separator: "\n").dropFirst()
+                    DYLog.shared.log("VIDEOS batch(\(lines.count)):")
+                    for l in lines {
+                        DYLog.shared.log("  \(l)")
+                        if !self.seen.contains(String(l)) {
+                            self.seen.insert(String(l))
+                            self.captured.insert(String(l), at: 0)
+                        }
                     }
-                    self.status?(self.summary())
+                    if self.captured.count > 40 { self.captured.removeLast(self.captured.count - 40) }
+                    if !self.loggedFirstVideo {
+                        self.loggedFirstVideo = true
+                        self.status?(self.summary())
+                    }
                 }
             }
             // 每 ~2s 打一次运行计数（0.4s×5）
