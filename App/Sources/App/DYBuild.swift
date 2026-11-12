@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v30"
-    static let changes = "v30: 自动播首条+接近末尾触发翻页+过期/连续失败重拉(解无限刷/上键过期/手动切)"
+    static let version = "v31"
+    static let changes = "v31: 修 DYEvalJS 编译（objc_msgSend+@selector，去裸 C 字符串）"
 }

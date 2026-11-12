@@ -169,8 +169,9 @@ void DYEvalJS(id webView, NSString *js)
 {
     if (!webView || !js) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [(NSObject *)webView performSelector:NSSelectorFromString("evaluateJavaScript:completionHandler:")
-                                  withObject:js
-                                  withObject:nil];
+        // evaluateJavaScript:completionHandler: —— 用 @selector 避免 C 字符串需 @ 前缀的编译错误
+        void (*msgSend)(id, SEL, NSString *, void (^)(id, NSError *)) =
+            (void (*)(id, SEL, NSString *, void (^)(id, NSError *)))objc_msgSend;
+        msgSend(webView, @selector(evaluateJavaScript:completionHandler:), js, ^(id r, NSError *e) {});
     });
 }
