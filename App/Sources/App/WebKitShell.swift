@@ -95,6 +95,13 @@ final class WebKitShellViewController: UIViewController {
                 if msg == "HOOK_INSTALLED" {
                     DYLog.shared.log("HOOK installed, awaiting feed API")
                     self.status?("hook installed, waiting for feed API ...")
+                } else if msg.hasPrefix("FEEDBODY\n") {
+                    // dump feed 接口原始响应体，看 play_addr 结构
+                    let body = msg.split(separator: "\n", maxSplits: 1).dropFirst().joined()
+                    DYLog.shared.log("FEEDBODY(\(body.count) chars):")
+                    DYLog.shared.log(body)
+                    self.status?("已 dump feed 响应体 \(body.count) 字符，看收集器")
+                    self.sawReqs = true
                 } else if msg.hasPrefix("REQS\n") {
                     // 方向 A：抖音实际发起的请求 URL 批量，逐行进收集器日志
                     let lines = msg.split(separator: "\n").dropFirst()
