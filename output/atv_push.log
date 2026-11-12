@@ -6014,3 +6014,103 @@
 06:31:26  [06:31:26] STAT captured=0 videoLinks=0
 06:31:27  [06:31:26] VIDS(12)
 06:31:27  [06:31:26] ENGINE merge total=35 index=25 replace=false auto=false
+07:28:22  [07:28:21] DYTV v59 launched
+07:28:22  [07:28:21] LOGSRV ready on port 8765
+07:28:22  [07:28:21] SIGNER init start
+07:28:22  [07:28:21] LOGSRV advertising as DYTV-736
+07:28:22  [07:28:21] SIGNER load shim ok
+07:28:22  [07:28:21] SIGNER load abogus ok
+07:28:22  [07:28:21] SIGNER load sign ok
+07:28:22  [07:28:22] SIGNER load abogus_dy ok
+07:28:22  [07:28:22] SIGNER extras sign=true dy=true
+07:28:22  [07:28:22] SIGNER bdms=yes
+07:28:22  [07:28:22] SIGNER initABogus=true
+07:28:22  [07:28:22] SIGNER fns=AB (期望 AB)
+07:28:22  [07:28:22] SIGNER smoke={"ok":true,"value":"mjR0/R86dkdkvD6v5X5LfY3qVW33YsUL0SVkMDhezVfPzg39HMTB9exEv6JvlrSeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+07:28:22  [07:28:22] SIGNER READY a_bogus len=180
+07:28:22  [07:28:22] PLAYER viewDidLoad
+07:28:22  [07:28:22] PLAYER no url at index=0 (will retry)
+07:28:22  [07:28:22] ROOT auto-start v59
+07:28:22  [07:28:22] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+07:28:22  [07:28:22] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+07:28:22  [07:28:22] PLAYER no url at index=0 (will retry)
+07:28:22  [07:28:22] PLAYER no url at index=0 (will retry)
+07:28:22  [07:28:22] LOGSRV Bonjour published: DYTV-736
+07:28:24  [07:28:24] FEED parse fail (refresh_index=1) body=<binary 334152B>
+07:28:24  [07:28:24] ENGINE refresh (stale=true)
+07:28:24  [07:28:24] FEED mobile GET refresh_index=1 cold=0 count=10 bogus_len=180 seen=0
+07:28:27  [07:28:27] FEED parse fail (refresh_index=1) body=<binary 330049B>
+07:28:56  [07:28:56] ENGINE needMore (index=0 count=0)
+07:28:56  [07:28:56] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=0
+07:28:56  [07:28:56] PLAYER no url at index=0 (will retry)
+07:28:56  [07:28:56] PLAYER no url at index=0 (will retry)
+07:28:56  [07:28:56] PLAYER no url at index=0 (will retry)
+07:28:57  [07:28:57] PLAYER no url at index=0 (will retry)
+07:28:57  [07:28:57] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] FEED parse fail (refresh_index=2) body=<binary 335317B>
+07:28:58  [07:28:58] ENGINE refresh (stale=true)
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=0
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:58  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:58] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:59] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:59] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:59] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:59] PLAYER no url at index=0 (will retry)
+07:28:59  [07:28:59] PLAYER no url at index=0 (will retry)
+07:29:00  [07:29:00] FEED parse fail (refresh_index=2) body=<binary 315803B>
+07:29:02  [07:29:02] ENGINE needMore (index=0 count=0)
+07:29:02  [07:29:02] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=0
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:02  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:03  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:03  [07:29:02] PLAYER no url at index=0 (will retry)
+07:29:03  [07:29:03] PLAYER no url at index=0 (will retry)
+07:29:03  [07:29:03] PLAYER no url at index=0 (will retry)
+07:29:03  [07:29:03] PLAYER no url at index=0 (will retry)
+07:29:04  [07:29:04] PLAYER no url at index=0 (will retry)
+07:29:04  [07:29:04] PLAYER no url at index=0 (will retry)
+07:29:04  [07:29:04] PLAYER no url at index=0 (will retry)
+07:29:04  [07:29:04] FEED parse fail (refresh_index=3) body=<binary 413521B>
+07:29:04  [07:29:04] ENGINE refresh (stale=true)
+07:29:04  [07:29:04] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=0
+07:29:04  [07:29:04] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:04] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:05  [07:29:05] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:06  [07:29:06] FEED parse fail (refresh_index=3) body=<binary 279891B>
+07:29:06  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:06] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:07] ENGINE needMore (index=0 count=0)
+07:29:07  [07:29:07] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=0
+07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
+07:29:07  [07:29:07] PLAYER no url at index=0 (will retry)
+07:29:09  [07:29:09] FEED parse fail (refresh_index=4) body=<binary 340326B>
