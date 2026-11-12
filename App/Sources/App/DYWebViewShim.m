@@ -98,7 +98,15 @@ static NSString * const DYFetchHookJS =
 @"   this.addEventListener('readystatechange',function(){ if(s.readyState===4){ try{ scan(s.responseText, s.__u);}catch(e){} } });"
 @"   return os.apply(this,arguments); };"
 @" setInterval(flush, 2000);"
-@" setInterval(function(){ try{ window.scrollTo(0, document.body.scrollHeight); }catch(e){} }, 2500);"
+@" window.__dyyRI=1;"
+@" window.__dyyMore=function(){"
+@"   try{ window.__dyyRI++;"
+@"     var u='https://www.douyin.com/aweme/v2/web/module/feed/?device_platform=webapp&aid=6383&channel=channel_pc_web&module_id=3003101&count=20&refresh_index='+window.__dyyRI+'&refer_id=&refer_type=10&pc_client_type=1&pc_libra_divert=Mac&support_h265=0&support_dash=0&cpu_core_num=4&version_code=170400&video_type_select=1&filter_warn=0&need_fix_st=0&web_page_type=0&os=mac&pull_type=2&is_follow_live=0&poi_data=0&whale_cut_token=&globalId=tobid&msToken=&a_bogus=&X-Bogus=';"
+@"     if(window.__dyySeen['M'+window.__dyyRI])return; window.__dyySeen['M'+window.__dyyRI]=1;"
+@"     fetch(u,{credentials:'include'}).then(function(r){return r.text();}).then(function(t){ scan(t,u); flush(); }).catch(function(e){ post('MORE_ERR '+e); });"
+@"   }catch(e){ post('MORE_ERR '+e); }"
+@" };"
+@" setInterval(function(){ window.__dyyMore(); }, 6000);"
 @" post('HOOK_INSTALLED');"
 @"})();";
 
