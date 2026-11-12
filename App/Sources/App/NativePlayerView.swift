@@ -3,16 +3,14 @@ import AVKit
 import SwiftUI
 import Combine
 
-/// 原生播放器：继承 AVPlayerViewController（tvOS 原生路径，Menu 键干净退出）。
-/// 上/下遥控键覆盖为 prev/next 视频；左/右仍交给 AVPlayerViewController 原生 seek。
-/// 关键：监听 AVPlayerItem 错误/结束，失败或播完自动跳下一条（避免卡永久黑屏）。
-/// 焦点意图：播放器自带传输控件参与焦点；上/下被本类拦截改语义，不落到其它视图。
+/// 原生播放器（前景）：继承 AVPlayerViewController（tvOS 原生路径，Menu 键干净退出）。
+/// 视频重力 = resizeAspect（居中、不裁切），letterbox 区透明露出容器背后的模糊背景。
+/// 上/下遥控键覆盖为 prev/next；左/右仍走原生 seek。
+/// 关键：监听 item 失败/播完自动跳下一条（解卡永久黑屏）；预加载前后各 2 条。
+/// 焦点意图：播放器传输控件参与焦点；上/下被本类拦截改语义。
 final class DYPlayerViewController: AVPlayerViewController {
     private var cancellables = Set<AnyCancellable>()
     private var currentIndex: Int = -1
-    private var itemObserver: NSObjectProtocol?
-    private var timeObserver: Any?
-    // 预加载缓存：index -> AVPlayerItem（提前建好，切换即播，减少黑屏）
     private var preloadCache: [Int: AVPlayerItem] = [:]
     private let preloadRadius = 2
 
@@ -20,10 +18,11 @@ final class DYPlayerViewController: AVPlayerViewController {
         super.viewDidLoad()
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         try? AVAudioSession.sharedInstance().setActive(true)
-        // 铺满全屏：竖版视频裁上下填满 16:9（避免窄竖条）。要保比例改 .resizeAspect。
-        videoGravity = .resizeAspectFill
+        // 前景：居中、不裁切（约束要求），letterbox 透明露出背后模糊背景
+        videoGravity = .resizeAspect
+        view.backgroundColor = .clear
         player = AVPlayer()
-        DYLog.shared.log("PLAYER viewDidLoad")
+        DYLog.shared.log("PLAYER foreground viewDidLoad")
 
         PlaybackEngine.shared.$index
             .receive(on: DispatchQueue.main)
@@ -37,9 +36,9 @@ final class DYPlayerViewController: AVPlayerViewController {
         reloadIfNeeded()
     }
 
-    /// 取或建某 index 的 AVPlayerItem（带预加载复用）。
     private func item(at index: Int) -> AVPlayerItem? {
-        guard let url = PlaybackEngine.shared.urls.indices.contains(index) ? PlaybackEngine.shared.urls[index] : nil else { return nil }
+        guard PlaybackEngine.shared.urls.indices.contains(index),
+              let url = PlaybackEngine.shared.urls[index] else { return nil }
         if let cached = preloadCache[index] { return cached }
         let item = AVPlayerItem(url: url)
         preloadCache[index] = item
@@ -47,7 +46,7 @@ final class DYPlayerViewController: AVPlayerViewController {
         return item
     }
 
-    /// 监听单个 item 的失败/播完 → 自动跳下一条（解"缓冲完仍黑屏不播"）。
+    /// 监听 item 失败/播完 → 自动跳下一条（解"缓冲完仍黑屏不播"）。
     private func observeItem(_ item: AVPlayerItem, index: Int) {
         NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main) { [weak self] _ in
             DYLog.shared.log("PLAYER item ended index=\(index), auto-next")
@@ -66,7 +65,6 @@ final class DYPlayerViewController: AVPlayerViewController {
         }
     }
 
-    /// 播引擎当前 index，并预加载前后各 preloadRadius 条。
     private func reloadIfNeeded() {
         let engine = PlaybackEngine.shared
         guard engine.index != currentIndex else { return }
@@ -81,7 +79,6 @@ final class DYPlayerViewController: AVPlayerViewController {
         preloadNeighbors(around: currentIndex)
     }
 
-    /// 预加载当前 index 前后各 preloadRadius 条 item，保证切换流畅。
     private func preloadNeighbors(around index: Int) {
         for offset in -preloadRadius...preloadRadius where offset != 0 {
             let i = index + offset
@@ -94,7 +91,6 @@ final class DYPlayerViewController: AVPlayerViewController {
         reloadIfNeeded()
     }
 
-    // 上/下键 → prev/next 视频（覆盖 AVPlayerViewController 默认 seek 语义）
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
             switch press.type {
@@ -111,17 +107,56 @@ final class DYPlayerViewController: AVPlayerViewController {
         }
         super.pressesBegan(presses, with: event)
     }
+}
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        if let t = timeObserver { player?.removeTimeObserver(t); timeObserver = nil }
+/// 容器：背后一层"同一视频 aspectFill + 高斯模糊"填满 16:9，前景内嵌 AVPlayerViewController 居中清晰视频。
+/// 两层共用同一个 AVPlayer（由 DYPlayerViewController 创建），天然同步。
+final class DYPlayerContainerViewController: UIViewController {
+    private let bgVideoLayer = AVPlayerLayer()
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+    private var playerVC: DYPlayerViewController!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .black
+        DYLog.shared.log("CONTAINER viewDidLoad")
+
+        // 背景视频层：aspectFill 铺满，随后被 blur 覆盖成模糊背景（填满黑边区域）
+        let bgView = UIView()
+        bgVideoLayer.videoGravity = .resizeAspectFill
+        bgView.layer.addSublayer(bgVideoLayer)
+        bgView.frame = view.bounds
+        bgView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(bgView)
+
+        blurView.frame = view.bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(blurView)
+
+        // 前景 AVPlayerViewController：居中清晰、不裁切、背景透明
+        playerVC = DYPlayerViewController()
+        addChild(playerVC)
+        playerVC.view.frame = view.bounds
+        playerVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(playerVC.view)
+        playerVC.didMove(toParent: self)
+
+        // 背景层绑定到前景同一个 AVPlayer（child 在 viewDidLoad 创建 player，此处取到）
+        DispatchQueue.main.async { [weak self] in
+            self?.bgVideoLayer.player = self?.playerVC.player
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        bgVideoLayer.frame = view.bounds
     }
 }
 
-/// SwiftUI 包装：全屏原生播放器。
+/// SwiftUI 包装：全屏原生播放器（模糊背景 + 居中清晰竖版视频）。
 struct NativePlayerView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> DYPlayerViewController {
-        DYPlayerViewController()
+    func makeUIViewController(context: Context) -> DYPlayerContainerViewController {
+        DYPlayerContainerViewController()
     }
-    func updateUIViewController(_ uiViewController: DYPlayerViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: DYPlayerContainerViewController, context: Context) {}
 }
