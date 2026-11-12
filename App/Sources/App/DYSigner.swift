@@ -12,12 +12,23 @@ final class DYSigner {
     private let queue = DispatchQueue(label: "dy.signer")
     private var context: JSContext?
     private(set) var ready = false
+    /// 签名运行时就绪回调（主队列触发；若已就绪则立即触发）。
+    var onReady: (() -> Void)? {
+        didSet { notifyIfReady() }
+    }
 
     private init() {}
 
     /// 初始化签名运行时（幂等）。所有步骤结果写 DYLog，真机可诊断。
     func initialize() {
         queue.async { self._initialize() }
+    }
+
+    private func notifyIfReady() {
+        guard ready else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.onReady?()
+        }
     }
 
     private func _initialize() {
@@ -60,11 +71,16 @@ final class DYSigner {
         let raw = smoke?.toString() ?? "nil"
         DYLog.shared.log("SIGNER smoke=\(String(raw.prefix(140)))")
 
-        if let obj = smoke?.toObject() as? [String: Any],
+        // getABogus 返回的是 JSON 字符串（不是 JS 对象），必须先解析字符串再取字段。
+        let raw = smoke?.toString() ?? ""
+        DYLog.shared.log("SIGNER smoke=\(String(raw.prefix(140)))")
+        if let d = raw.data(using: .utf8),
+           let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
            let ok = obj["ok"] as? Bool, ok,
            let value = obj["value"] as? String, !value.isEmpty {
             ready = true
             DYLog.shared.log("SIGNER READY a_bogus len=\(value.count)")
+            notifyIfReady()
         } else {
             DYLog.shared.log("SIGNER NOT READY")
         }

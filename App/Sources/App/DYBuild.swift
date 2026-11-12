@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v37"
-    static let changes = "v37: 修正加载顺序——去掉独立 bdms.js(与abogus_dy双定义冲突_v[2]undefined)，对齐myDV运行时"
+    static let version = "v38"
+    static let changes = "v38: U-S2 闭环——签名器接DYFeedClient直连feed,WebView泵退役,翻页/无感刷新全原生"
 }
