@@ -14,7 +14,9 @@ final class DYLog: NSObject {
     private var lines: [String] = []
     private let maxLines = 500
 
-    private init() {}
+    private override init() {
+        super.init()
+    }
 
     /// 记录一条日志（同时留屏上可读）。
     func log(_ msg: String) {

@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v12"
-    static let changes = "v12: DYLog 继承 NSObject（NetServiceDelegate 需要）"
+    static let version = "v13"
+    static let changes = "v13: DYLog init 加 override（继承 NSObject）"
 }
