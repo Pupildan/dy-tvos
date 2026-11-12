@@ -135,9 +135,12 @@ final class WebKitShellViewController: UIViewController {
                         for l in reqs {
                             DYLog.shared.log("  \(l)")
                             // 捕获完整 feed 请求模板（含全部正确参数）→ 原生直连回放用
+                            // 注意剥离日志行前缀（时间戳+空格），只留 https:// 起始的 URL 本体
                             if l.contains("/aweme/v2/web/module/feed/") && DYFeedClient.shared.templateURL == nil {
-                                DYFeedClient.shared.templateURL = l
-                                DYLog.shared.log("TEMPLATE captured len=\(l.count)")
+                                if let r = l.range(of: "https://") {
+                                    DYFeedClient.shared.templateURL = String(l[r.lowerBound...])
+                                    DYLog.shared.log("TEMPLATE captured len=\(l[r.lowerBound...].count)")
+                                }
                             }
                         }
                         if !self.sawReqs { self.sawReqs = true; self.status?("捕获 \(reqs.count) 个请求 URL") }

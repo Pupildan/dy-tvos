@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v49"
-    static let changes = "v49: 修编译（merge 参数名遮蔽实例属性）"
+    static let version = "v50"
+    static let changes = "v50: 模板URL剥离日志前缀(含空格致URL(string:)失败静默返回)+解析失败日志"
 }

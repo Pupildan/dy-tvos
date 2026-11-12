@@ -82,7 +82,10 @@ final class DYFeedClient {
         // a_bogus 需与页面一致做百分号编码（+/= → %2B/%3D，/ → %2F）
         let enc = bogus.addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_~.")) ?? bogus
         let urlString = base.absoluteString + "&a_bogus=" + enc
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString) else {
+            DYLog.shared.log("FEED URL parse fail len=\(urlString.count) head=\(String(urlString.prefix(120)))")
+            return
+        }
         DYLog.shared.log("FEED native GET page=\(idx) initial=\(initial) refresh=\(refresh) bogus_len=\(bogus.count) presented=\(consumedList.count)")
 
         var req = URLRequest(url: url)
