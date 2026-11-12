@@ -44,7 +44,7 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool) {
         let previousAwemeId = currentAwemeId
         var mergedIds = awemeOrder
         var mergedUrls = self.urls
@@ -52,15 +52,15 @@ final class PlaybackEngine: ObservableObject {
         for (i, id) in awemeOrder.enumerated() { position[id] = i }
         for (i, id) in ids.enumerated() {
             if let p = position[id] {
-                if replaceExisting { mergedUrls[p] = urls[i] }
+                if replaceExisting { mergedUrls[p] = newUrls[i] }
             } else {
                 position[id] = mergedIds.count
                 mergedIds.append(id)
-                mergedUrls.append(urls[i])
+                mergedUrls.append(newUrls[i])
             }
         }
         awemeOrder = mergedIds
-        urls = mergedUrls
+        self.urls = mergedUrls
         fetchedAt = Date()
         consecutiveFailures = 0
         if refresh, !previousAwemeId.isEmpty, let pos = awemeOrder.firstIndex(of: previousAwemeId) {
@@ -68,7 +68,7 @@ final class PlaybackEngine: ObservableObject {
         } else if autoPlay {
             index = 0
         }
-        DYLog.shared.log("ENGINE merge total=\(urls.count) index=\(index) replace=\(replaceExisting) auto=\(autoPlay)")
+        DYLog.shared.log("ENGINE merge total=\(mergedUrls.count) index=\(index) replace=\(replaceExisting) auto=\(autoPlay)")
     }
 
     /// 注入一批有序直链。isNewBatch=true（首次/翻页新增）时自动播 index 0；
