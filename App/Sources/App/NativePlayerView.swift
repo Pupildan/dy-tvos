@@ -37,8 +37,8 @@ final class DYPlayerViewController: AVPlayerViewController {
     }
 
     private func item(at index: Int) -> AVPlayerItem? {
-        guard PlaybackEngine.shared.urls.indices.contains(index),
-              let url = PlaybackEngine.shared.urls[index] else { return nil }
+        guard PlaybackEngine.shared.urls.indices.contains(index) else { return nil }
+        let url = PlaybackEngine.shared.urls[index]
         if let cached = preloadCache[index] { return cached }
         let item = AVPlayerItem(url: url)
         preloadCache[index] = item
