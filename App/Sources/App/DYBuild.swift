@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v42"
-    static let changes = "v42: AppIcon 改 brand-assets 格式(解 unassigned children,Assets.car 生成)"
+    static let version = "v43"
+    static let changes = "v43: AppIcon 四槽 brand assets 集合(补Top Shelf,解集合不匹配)"
 }

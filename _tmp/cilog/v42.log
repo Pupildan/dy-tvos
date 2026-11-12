@@ -1,0 +1,767 @@
+﻿2026-11-12T18:21:55.5779370Z Current runner version: '2.338.2'
+2026-11-12T18:21:55.5793990Z ##[group]Runner Image Provisioner
+2026-11-12T18:21:55.5794570Z Hosted Compute Agent
+2026-11-12T18:21:55.5794930Z Version: 20261028.624
+2026-11-12T18:21:55.5795320Z Commit: 54898b74c23fde5556c9b3c3a2290865feef0dfe
+2026-11-12T18:21:55.5795780Z Build Date: 2026-10-28T21:51:42Z
+2026-11-12T18:21:55.5796210Z Worker ID: {1ab18d70-b75d-411d-96e5-9a0f5b6ee3ac}
+2026-11-12T18:21:55.5796800Z Region: westus
+2026-11-12T18:21:55.5797610Z Cloud: MacCloud
+2026-11-12T18:21:55.5797990Z ##[endgroup]
+2026-11-12T18:21:55.5799480Z ##[group]Operating System
+2026-11-12T18:21:55.5799910Z macOS
+2026-11-12T18:21:55.5800230Z 26.7.2
+2026-11-12T18:21:55.5800550Z 25G332
+2026-11-12T18:21:55.5800870Z ##[endgroup]
+2026-11-12T18:21:55.5801210Z ##[group]Runner Image
+2026-11-12T18:21:55.5801580Z Image: macos-26-arm64
+2026-11-12T18:21:55.5802000Z Version: 20261102.0473.1
+2026-11-12T18:21:55.5802870Z Included Software: https://github.com/actions/runner-images/blob/macos-26-arm64/20261102.0473/images/macos/macos-26-arm64-Readme.md
+2026-11-12T18:21:55.5803910Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-26-arm64%2F20261102.0473
+2026-11-12T18:21:55.5804560Z ##[endgroup]
+2026-11-12T18:21:55.5805360Z ##[group]GITHUB_TOKEN Permissions
+2026-11-12T18:21:55.5806440Z Contents: read
+2026-11-12T18:21:55.5806780Z Metadata: read
+2026-11-12T18:21:55.5807120Z Packages: read
+2026-11-12T18:21:55.5807460Z ##[endgroup]
+2026-11-12T18:21:55.5808740Z Secret source: Actions
+2026-11-12T18:21:55.5809320Z Cache mode: write
+2026-11-12T18:21:55.5809750Z Prepare workflow directory
+2026-11-12T18:21:55.6083140Z Prepare all required actions
+2026-11-12T18:21:55.6128250Z Getting action download info
+2026-11-12T18:21:55.8052610Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-12T18:21:56.1487430Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-12T18:21:56.7378060Z Complete job name: build
+2026-11-12T18:21:56.8115480Z ##[group]Run actions/checkout@v4
+2026-11-12T18:21:56.8116050Z with:
+2026-11-12T18:21:56.8116380Z   repository: Pupildan/dy-tvos
+2026-11-12T18:21:56.8119230Z   token: ***
+2026-11-12T18:21:56.8119550Z   ssh-strict: true
+2026-11-12T18:21:56.8119870Z   ssh-user: git
+2026-11-12T18:21:56.8120190Z   persist-credentials: true
+2026-11-12T18:21:56.8120640Z   clean: true
+2026-11-12T18:21:56.8121040Z   sparse-checkout-cone-mode: true
+2026-11-12T18:21:56.8121450Z   fetch-depth: 1
+2026-11-12T18:21:56.8121760Z   fetch-tags: false
+2026-11-12T18:21:56.8122090Z   show-progress: true
+2026-11-12T18:21:56.8122410Z   lfs: false
+2026-11-12T18:21:56.8122720Z   submodules: false
+2026-11-12T18:21:56.8123060Z   set-safe-directory: true
+2026-11-12T18:21:56.8123420Z   allow-unsafe-pr-checkout: false
+2026-11-12T18:21:56.8123900Z ##[endgroup]
+2026-11-12T18:21:57.3897240Z Syncing repository: Pupildan/dy-tvos
+2026-11-12T18:21:57.3900290Z ##[group]Getting Git version info
+2026-11-12T18:21:57.3901060Z Working directory is '/Users/runner/work/dy-tvos/dy-tvos'
+2026-11-12T18:21:57.3902130Z [command]/opt/homebrew/bin/git version
+2026-11-12T18:21:57.4472650Z git version 2.56.0
+2026-11-12T18:21:57.4487880Z ##[endgroup]
+2026-11-12T18:21:57.4498890Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/7af9701d-9cc1-40ee-baf4-0d426b3dcfcb/.gitconfig'
+2026-11-12T18:21:57.4503980Z Temporarily overriding HOME='/Users/runner/work/_temp/7af9701d-9cc1-40ee-baf4-0d426b3dcfcb' before making global git config changes
+2026-11-12T18:21:57.4507330Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:21:57.4511150Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:21:57.4660830Z Deleting the contents of '/Users/runner/work/dy-tvos/dy-tvos'
+2026-11-12T18:21:57.4667520Z ##[group]Initializing the repository
+2026-11-12T18:21:57.4671010Z [command]/opt/homebrew/bin/git init /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:21:57.4987160Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-12T18:21:57.4989770Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-12T18:21:57.4990790Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-12T18:21:57.4992380Z hint: call:
+2026-11-12T18:21:57.4993000Z hint:
+2026-11-12T18:21:57.4993450Z hint: 	git config --global init.defaultBranch <name>
+2026-11-12T18:21:57.4994020Z hint:
+2026-11-12T18:21:57.4995020Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-12T18:21:57.4995880Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-12T18:21:57.5012230Z hint:
+2026-11-12T18:21:57.5012840Z hint: 	git branch -m <name>
+2026-11-12T18:21:57.5013280Z hint:
+2026-11-12T18:21:57.5013880Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-12T18:21:57.5015100Z Initialized empty Git repository in /Users/runner/work/dy-tvos/dy-tvos/.git/
+2026-11-12T18:21:57.5019950Z [command]/opt/homebrew/bin/git remote add origin https://github.com/Pupildan/dy-tvos
+2026-11-12T18:21:57.5115940Z ##[endgroup]
+2026-11-12T18:21:57.5116890Z ##[group]Disabling automatic garbage collection
+2026-11-12T18:21:57.5118130Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-11-12T18:21:57.5214130Z ##[endgroup]
+2026-11-12T18:21:57.5216300Z ##[group]Setting up auth
+2026-11-12T18:21:57.5217690Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:21:57.5307220Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:21:57.6659010Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:21:57.6730070Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:21:57.8227510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:21:57.8371820Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:21:57.9986210Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-12T18:21:58.0403680Z ##[endgroup]
+2026-11-12T18:21:58.0503720Z ##[group]Fetching the repository
+2026-11-12T18:21:58.0605440Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7cf3c85b5ff5b5e4a20e34ff9a899e5e6a43468b:refs/remotes/origin/main
+2026-11-12T18:22:01.2294740Z From https://github.com/Pupildan/dy-tvos
+2026-11-12T18:22:01.2302100Z  * [new ref]         7cf3c85b5ff5b5e4a20e34ff9a899e5e6a43468b -> origin/main
+2026-11-12T18:22:01.2310600Z ##[endgroup]
+2026-11-12T18:22:01.2313900Z ##[group]Determining the checkout info
+2026-11-12T18:22:01.2328910Z ##[endgroup]
+2026-11-12T18:22:01.2385830Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-11-12T18:22:01.2499070Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-12T18:22:01.2599530Z ##[group]Checking out the ref
+2026-11-12T18:22:01.2630340Z [command]/opt/homebrew/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-11-12T18:22:01.3087940Z Switched to a new branch 'main'
+2026-11-12T18:22:01.3106950Z branch 'main' set up to track 'origin/main'.
+2026-11-12T18:22:01.3113080Z ##[endgroup]
+2026-11-12T18:22:01.3239520Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-11-12T18:22:01.3325550Z 7cf3c85b5ff5b5e4a20e34ff9a899e5e6a43468b
+2026-11-12T18:22:01.3715600Z ##[group]Run brew install xcodegen
+2026-11-12T18:22:01.3716910Z [36;1mbrew install xcodegen[0m
+2026-11-12T18:22:01.3718740Z [36;1mxcodegen generate[0m
+2026-11-12T18:22:01.3778500Z shell: /bin/bash -e {0}
+2026-11-12T18:22:01.3779600Z ##[endgroup]
+2026-11-12T18:22:04.1053440Z [32m==>[0m [1mDownloading bottle manifests[0m
+2026-11-12T18:22:04.1156280Z ✔︎ Bottle Manifest xcodegen (2.46.0)
+2026-11-12T18:22:04.1195570Z [32m==>[0m [1mFetching downloads for: [32mxcodegen[39m[0m
+2026-11-12T18:22:06.3352870Z ✔︎ Bottle xcodegen (2.46.0)
+2026-11-12T18:22:06.3951550Z [34m==>[0m [1mPouring xcodegen--2.46.0.arm64_tahoe.bottle.1.tar.gz[0m
+2026-11-12T18:22:07.2289800Z 🍺  /opt/homebrew/Cellar/xcodegen/2.46.0: 38 files, 7.4MB
+2026-11-12T18:22:07.2787980Z ⚙️  Generating plists...
+2026-11-12T18:22:07.2789020Z ⚙️  Generating project...
+2026-11-12T18:22:07.2897990Z ⚙️  Writing project...
+2026-11-12T18:22:07.2984240Z Created project at /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:07.3148110Z ##[group]Run set -o pipefail
+2026-11-12T18:22:07.3149160Z [36;1mset -o pipefail[0m
+2026-11-12T18:22:07.3150890Z [36;1mxcodebuild \[0m
+2026-11-12T18:22:07.3151890Z [36;1m  -project DYTV.xcodeproj \[0m
+2026-11-12T18:22:07.3152550Z [36;1m  -scheme DYTV \[0m
+2026-11-12T18:22:07.3153170Z [36;1m  -configuration Release \[0m
+2026-11-12T18:22:07.3154290Z [36;1m  -sdk appletvos \[0m
+2026-11-12T18:22:07.3155130Z [36;1m  -destination 'generic/platform=tvOS' \[0m
+2026-11-12T18:22:07.3155660Z [36;1m  -derivedDataPath build \[0m
+2026-11-12T18:22:07.3156060Z [36;1m  CODE_SIGNING_ALLOWED=NO \[0m
+2026-11-12T18:22:07.3156380Z [36;1m  CODE_SIGN_IDENTITY="" \[0m
+2026-11-12T18:22:07.3157490Z [36;1m  build | tee build.log[0m
+2026-11-12T18:22:07.3212570Z shell: /bin/bash -e {0}
+2026-11-12T18:22:07.3212900Z ##[endgroup]
+2026-11-12T18:22:09.4496780Z Command line invocation:
+2026-11-12T18:22:09.4617160Z     /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/xcodebuild -project DYTV.xcodeproj -scheme DYTV -configuration Release -sdk appletvos -destination generic/platform=tvOS -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY= build
+2026-11-12T18:22:09.4670960Z 
+2026-11-12T18:22:09.4678990Z Build settings from command line:
+2026-11-12T18:22:09.4679510Z     CODE_SIGN_IDENTITY = 
+2026-11-12T18:22:09.4680090Z     CODE_SIGNING_ALLOWED = NO
+2026-11-12T18:22:09.4680670Z     SDKROOT = appletvos26.5
+2026-11-12T18:22:09.4680910Z 
+2026-11-12T18:22:15.6795470Z 2026-11-12 18:22:15.674 xcodebuild[1280:7012] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+2026-11-12T18:22:15.7985180Z note: Using codesigning identity override: 
+2026-11-12T18:22:17.2363230Z ComputePackagePrebuildTargetDependencyGraph
+2026-11-12T18:22:17.3486150Z 
+2026-11-12T18:22:17.3546750Z Prepare packages
+2026-11-12T18:22:17.3563690Z 
+2026-11-12T18:22:17.3622490Z CreateBuildRequest
+2026-11-12T18:22:17.3629580Z 
+2026-11-12T18:22:17.3641860Z SendProjectDescription
+2026-11-12T18:22:17.3756140Z 
+2026-11-12T18:22:17.3760960Z CreateBuildOperation
+2026-11-12T18:22:17.3835060Z 
+2026-11-12T18:22:17.3865280Z ComputeTargetDependencyGraph
+2026-11-12T18:22:17.4080670Z note: Building targets in dependency order
+2026-11-12T18:22:17.4118510Z note: Target dependency graph (1 target)
+2026-11-12T18:22:17.4138070Z     Target 'DYTV' in project 'DYTV' (no dependencies)
+2026-11-12T18:22:17.4138660Z 
+2026-11-12T18:22:17.4139130Z GatherProvisioningInputs
+2026-11-12T18:22:17.4139510Z 
+2026-11-12T18:22:17.4144870Z CreateBuildDescription
+2026-11-12T18:22:17.4573850Z 
+2026-11-12T18:22:17.4615660Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -x objective-c -c /dev/null
+2026-11-12T18:22:17.9458240Z 
+2026-11-12T18:22:17.9460060Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -x c -c /dev/null
+2026-11-12T18:22:17.9465870Z 
+2026-11-12T18:22:17.9579010Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -arch arm64 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -x c -c /dev/null
+2026-11-12T18:22:17.9920030Z 
+2026-11-12T18:22:18.0275490Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets
+2026-11-12T18:22:22.5165050Z 
+2026-11-12T18:22:22.5198700Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/actool --version --output-format xml1
+2026-11-12T18:22:22.5288870Z 
+2026-11-12T18:22:22.5345710Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+2026-11-12T18:22:23.9564710Z 
+2026-11-12T18:22:23.9700920Z ExecuteExternalTool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+2026-11-12T18:22:24.2630930Z 
+2026-11-12T18:22:24.3168210Z Build description signature: a3c2093e5f8de4c514b59c6436820b43
+2026-11-12T18:22:24.3285110Z Build description path: /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/XCBuildData/a3c2093e5f8de4c514b59c6436820b43.xcbuilddata
+2026-11-12T18:22:24.3899910Z ClangStatCache /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache
+2026-11-12T18:22:24.4011820Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:24.4131790Z     /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -o /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache
+2026-11-12T18:22:27.4453270Z 
+2026-11-12T18:22:27.4455320Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products
+2026-11-12T18:22:27.4456720Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4463250Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products
+2026-11-12T18:22:27.4464530Z 
+2026-11-12T18:22:27.4465500Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex
+2026-11-12T18:22:27.4471140Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4479190Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex
+2026-11-12T18:22:27.4480980Z 
+2026-11-12T18:22:27.4484420Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV-3918ca1f864b2822a266165864591df6-VFS-appletvos/all-product-headers.yaml
+2026-11-12T18:22:27.4490680Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4492520Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV-3918ca1f864b2822a266165864591df6-VFS-appletvos/all-product-headers.yaml
+2026-11-12T18:22:27.4493530Z 
+2026-11-12T18:22:27.4494000Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos
+2026-11-12T18:22:27.4494750Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4497380Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos
+2026-11-12T18:22:27.4509740Z 
+2026-11-12T18:22:27.4510180Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+2026-11-12T18:22:27.4510790Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4511570Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+2026-11-12T18:22:27.4512120Z 
+2026-11-12T18:22:27.4512450Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+2026-11-12T18:22:27.4513090Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4513720Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+2026-11-12T18:22:27.4514280Z 
+2026-11-12T18:22:27.4516080Z CreateBuildDirectory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-appletvos
+2026-11-12T18:22:27.4516860Z     cd /Users/runner/work/dy-tvos/dy-tvos/DYTV.xcodeproj
+2026-11-12T18:22:27.4517500Z     builtin-create-build-directory /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-appletvos
+2026-11-12T18:22:27.4518060Z 
+2026-11-12T18:22:27.4518720Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/empty-DYTV.plist (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4519490Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4520210Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/empty-DYTV.plist
+2026-11-12T18:22:27.4520730Z 
+2026-11-12T18:22:27.4521510Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4522640Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4523740Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp
+2026-11-12T18:22:27.4529570Z '-std=gnu11' -fobjc-arc -fobjc-weak -fmodules -gmodules '-fmodules-cache-path=/Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex' -fpascal-strings -Os -fno-common '-DNS_BLOCK_ASSERTIONS=1' '-DOBJC_OLD_DISPATCH_PROTOTYPES=0' -g '-fvisibility=hidden' -iquote /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap -iquote /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/include -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources-normal/arm64 -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/arm64 -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources -F/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos
+2026-11-12T18:22:27.4535110Z 
+2026-11-12T18:22:27.4535880Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_const_extract_protocols.json (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4537040Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4537910Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_const_extract_protocols.json
+2026-11-12T18:22:27.4538540Z 
+2026-11-12T18:22:27.4539820Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4540710Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4541530Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList
+2026-11-12T18:22:27.4542070Z 
+2026-11-12T18:22:27.4543120Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftConstValuesFileList (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4544090Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4544780Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftConstValuesFileList
+2026-11-12T18:22:27.4545460Z 
+2026-11-12T18:22:27.4546090Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.LinkFileList (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4546950Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4547600Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.LinkFileList
+2026-11-12T18:22:27.4548190Z 
+2026-11-12T18:22:27.4548850Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-OutputFileMap.json (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4549700Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4550630Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-OutputFileMap.json
+2026-11-12T18:22:27.4551220Z 
+2026-11-12T18:22:27.4551780Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4552510Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4553260Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.hmap
+2026-11-12T18:22:27.4553740Z 
+2026-11-12T18:22:27.4554410Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyStaticMetadataFileList (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4555290Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4556160Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyStaticMetadataFileList
+2026-11-12T18:22:27.4556960Z 
+2026-11-12T18:22:27.4557590Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyMetadataFileList (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4558490Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4559120Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyMetadataFileList
+2026-11-12T18:22:27.4559700Z 
+2026-11-12T18:22:27.4560330Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4561420Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4562210Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap
+2026-11-12T18:22:27.4562770Z 
+2026-11-12T18:22:27.4563470Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4564210Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4565020Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap
+2026-11-12T18:22:27.4565690Z 
+2026-11-12T18:22:27.4566560Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4567340Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4568080Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap
+2026-11-12T18:22:27.4568730Z 
+2026-11-12T18:22:27.4569270Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4570110Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4570710Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap
+2026-11-12T18:22:27.4571260Z 
+2026-11-12T18:22:27.4571940Z WriteAuxiliaryFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-non-framework-target-headers.hmap (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4572860Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4573790Z     write-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-non-framework-target-headers.hmap
+2026-11-12T18:22:27.4574510Z 
+2026-11-12T18:22:27.4575030Z MkDir /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4575580Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4576100Z     /bin/mkdir -p /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4576440Z 
+2026-11-12T18:22:27.4577130Z MkDir /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/unthinned (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4577980Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4578600Z     /bin/mkdir -p /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/unthinned
+2026-11-12T18:22:27.4579160Z 
+2026-11-12T18:22:27.4579790Z MkDir /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/thinned (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4580620Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4581240Z     /bin/mkdir -p /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/thinned
+2026-11-12T18:22:27.4581800Z 
+2026-11-12T18:22:27.4582200Z GenerateAssetSymbols /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4582750Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4589540Z     /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/actool /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets --compile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_dependencies --output-partial-info-plist /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist --app-icon AppIcon --launch-image LaunchImage --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --leaderboard-identifier-prefix DYTV.game-center.leaderboard. --leaderboard-set-identifier-prefix DYTV.game-center.leaderboard-set. --target-device tv --minimum-deployment-target 16.0 --platform appletvos --bundle-identifier tv.dy.client --generate-swift-asset-symbol-extensions NO --generate-swift-asset-symbols /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols.swift --generate-objc-asset-symbols /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols.h --generate-asset-symbol-index /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+2026-11-12T18:22:27.4602120Z /* com.apple.actool.document.warnings */
+2026-11-12T18:22:27.4604880Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-large.png]: warning: The app icon set "AppIcon" has 2 unassigned children.
+2026-11-12T18:22:27.4607720Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-large.png]: warning: The app icon set "AppIcon" has 2 unassigned children.
+2026-11-12T18:22:27.4608580Z /* com.apple.actool.compilation-results */
+2026-11-12T18:22:27.4609520Z /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols-Index.plist
+2026-11-12T18:22:27.4610680Z /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols.h
+2026-11-12T18:22:27.4611640Z /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols.swift
+2026-11-12T18:22:27.4612220Z 
+2026-11-12T18:22:27.4612220Z 
+2026-11-12T18:22:27.4612880Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/sign.js /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/sign.js (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4613750Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4614760Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/sign.js /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4615650Z 
+2026-11-12T18:22:27.4616290Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/dy_browser_shim.js /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/dy_browser_shim.js (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4619410Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4622040Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/dy_browser_shim.js /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4624520Z 
+2026-11-12T18:22:27.4626170Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/bdms.js /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/bdms.js (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4629310Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4631950Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/bdms.js /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4634420Z 
+2026-11-12T18:22:27.4636530Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/abogus_dy.js /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/abogus_dy.js (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4638410Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4639850Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/abogus_dy.js /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4640740Z 
+2026-11-12T18:22:27.4641470Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/abogus.js /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/abogus.js (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4642310Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4643290Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/abogus.js /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4644060Z 
+2026-11-12T18:22:27.4644720Z CpResource /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/NOTICE.txt /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/NOTICE.txt (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4645580Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4646640Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Signer/NOTICE.txt /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:27.4647490Z 
+2026-11-12T18:22:27.4648160Z CompileAssetCatalogVariant thinned /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4649030Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4652610Z     /Applications/Xcode_26.6.app/Contents/Developer/usr/bin/actool /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets --compile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/thinned --output-format human-readable-text --notices --warnings --export-dependency-info /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_dependencies_thinned --output-partial-info-plist /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist_thinned --app-icon AppIcon --launch-image LaunchImage --accent-color AccentColor --compress-pngs --enable-on-demand-resources YES --development-region en --leaderboard-identifier-prefix DYTV.game-center.leaderboard. --leaderboard-set-identifier-prefix DYTV.game-center.leaderboard-set. --target-device tv --minimum-deployment-target 16.0 --platform appletvos
+2026-11-12T18:22:27.4656280Z /* com.apple.actool.notices */
+2026-11-12T18:22:27.4659140Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets: warning: Accent color ‘AccentColor’ is not present in any asset catalogs.
+2026-11-12T18:22:27.4660150Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets: warning: None of the input catalogs contained a matching App Icon & Top Shelf Image brand assets collection named "AppIcon"
+2026-11-12T18:22:27.4661390Z /* com.apple.actool.document.warnings */
+2026-11-12T18:22:27.4662060Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-large.png]: warning: The app icon set "AppIcon" has 2 unassigned children.
+2026-11-12T18:22:27.4663280Z /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets:./AppIcon.appiconset/(null)[2d][icon-large.png]: warning: The app icon set "AppIcon" has 2 unassigned children.
+2026-11-12T18:22:27.4664060Z /* com.apple.actool.compilation-results */
+2026-11-12T18:22:27.4664710Z /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist_thinned
+2026-11-12T18:22:27.4665240Z 
+2026-11-12T18:22:27.4665460Z 
+2026-11-12T18:22:27.4665920Z LinkAssetCatalog /Users/runner/work/dy-tvos/dy-tvos/App/Resources/Assets.xcassets (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4666430Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4670690Z     builtin-linkAssetCatalog --thinned /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/thinned --thinned-dependencies /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_dependencies_thinned --thinned-info-plist-content /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist_thinned --unthinned /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_output/unthinned --unthinned-dependencies /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_dependencies_unthinned --unthinned-info-plist-content /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist_unthinned --output /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app --plist-output /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist
+2026-11-12T18:22:27.4675000Z 
+2026-11-12T18:22:27.4675840Z ProcessInfoPlistFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/Info.plist /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/empty-DYTV.plist (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4676880Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4679000Z     builtin-infoPlistUtility /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/empty-DYTV.plist -producttype com.apple.product-type.application -genpkginfo /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/PkgInfo -expandbuildsettings -format binary -platform appletvos -additionalcontentfile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/assetcatalog_generated_info.plist -requiredArchitecture arm64 -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/Info.plist
+2026-11-12T18:22:27.4681040Z 
+2026-11-12T18:22:27.4681430Z SwiftDriver DYTV normal arm64 com.apple.xcode.tools.swift.compiler (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:27.4681950Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:27.4694430Z     builtin-SwiftDriver -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name DYTV -O -whole-module-optimization @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -target arm64-apple-tvos16.0 -g -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -F /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache -output-file-map /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/include -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-Swift.h -import-objc-header /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYTV-Bridging-Header.h -working-directory /Users/runner/work/dy-tvos/dy-tvos -no-emit-module-separately-wmo
+2026-11-12T18:22:30.7016690Z 
+2026-11-12T18:22:30.7033720Z SwiftDriver\ Compilation DYTV normal arm64 com.apple.xcode.tools.swift.compiler (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:30.7035280Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:30.7174870Z     builtin-Swift-Compilation -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name DYTV -O -whole-module-optimization @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -target arm64-apple-tvos16.0 -g -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -F /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache -output-file-map /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/include -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-Swift.h -import-objc-header /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYTV-Bridging-Header.h -working-directory /Users/runner/work/dy-tvos/dy-tvos -no-emit-module-separately-wmo
+2026-11-12T18:22:30.7330170Z 
+2026-11-12T18:22:30.7345620Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdbool-2MQ4VAJZJRXPX4892KE4SCFK3.pcm
+2026-11-12T18:22:31.0516790Z 
+2026-11-12T18:22:31.0646420Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftShims-42SOLAB7PPA44BFCQ4WQWB5B.pcm
+2026-11-12T18:22:31.1076850Z 
+2026-11-12T18:22:31.1277540Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/DeveloperToolsSupport-82B1GEXDXYEV9I5G3RVNTXCQ3.pcm
+2026-11-12T18:22:31.1377420Z 
+2026-11-12T18:22:31.1479060Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_float-E5QECA7Y6OBRVB8WV0QMXZMIA.pcm
+2026-11-12T18:22:31.1786430Z 
+2026-11-12T18:22:31.1888480Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stddef-AOCIIMLFNYQRH1Q48N80CEKI4.pcm
+2026-11-12T18:22:31.2904070Z 
+2026-11-12T18:22:31.3035550Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ptrcheck-DZ0UR7FPHY0IJ62NF23KGMMUB.pcm
+2026-11-12T18:22:31.3161140Z 
+2026-11-12T18:22:31.3264850Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_SwiftConcurrencyShims-D2S0D711IFKSQ6UJU2AVWNQXK.pcm
+2026-11-12T18:22:31.3379530Z 
+2026-11-12T18:22:31.3481930Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdarg-7CF0YWLMTRK50H11LZJ6YL14N.pcm
+2026-11-12T18:22:31.3483500Z 
+2026-11-12T18:22:31.3584820Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_AvailabilityInternal-64U4XN1KDZOHM9RXJFJXL2U6J.pcm
+2026-11-12T18:22:31.3636990Z 
+2026-11-12T18:22:31.3638740Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ptrauth-1TWRHKK866B9L5QBSH42DC090.pcm
+2026-11-12T18:22:31.3640290Z 
+2026-11-12T18:22:31.3641560Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation1-2UCA336AJQHRXX6EIV367HS6Z.pcm
+2026-11-12T18:22:31.4382390Z 
+2026-11-12T18:22:31.4392040Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation2-91QJZTEPVJ7SWNJRCZ7CS2U7Z.pcm
+2026-11-12T18:22:31.6201220Z 
+2026-11-12T18:22:31.6327420Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_limits-7966B7K4AXHFBH5YJNRVGPVUH.pcm
+2026-11-12T18:22:31.6452410Z 
+2026-11-12T18:22:31.6574280Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_tgmath-4DFMRLT69563Q1N7NXSCG8NRE.pcm
+2026-11-12T18:22:31.7794940Z 
+2026-11-12T18:22:31.7909470Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/sys_types-963U87EULCTQEG0VN17UC9O99.pcm
+2026-11-12T18:22:31.8039390Z 
+2026-11-12T18:22:31.8151760Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdint-5QY69XBC1HNNMC14D923GYXDO.pcm
+2026-11-12T18:22:31.8225670Z 
+2026-11-12T18:22:31.8226570Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdatomic-E9TZ51I5GN35DP690KDOIIYPS.pcm
+2026-11-12T18:22:31.8490870Z 
+2026-11-12T18:22:31.8739040Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_intrinsics-10VTPLC33P1KDVD98AT4QOZS8.pcm
+2026-11-12T18:22:32.0942790Z 
+2026-11-12T18:22:32.1044250Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation3-7N82BTG4BEZMHDD8E02AAZR96.pcm
+2026-11-12T18:22:32.1151970Z 
+2026-11-12T18:22:32.1275520Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_inttypes-6YBDZ6PMUICKBAWZ5RYR41E6I.pcm
+2026-11-12T18:22:32.1404550Z 
+2026-11-12T18:22:32.1530300Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Darwin-CWYHQTT6VK37MK6KMX5ZA3KDZ.pcm
+2026-11-12T18:22:32.4582260Z 
+2026-11-12T18:22:32.4701690Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/simd-34WG9EHWAUKA2MGYDXEFEUL5Y.pcm
+2026-11-12T18:22:32.8000580Z 
+2026-11-12T18:22:32.8026470Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ObjectiveC-4VR3VEEMA8G0BDYUNCE8DF69Y.pcm
+2026-11-12T18:22:32.8125400Z 
+2026-11-12T18:22:32.8250640Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MachO-BTVH999S62GOPLOG4OWY0C94C.pcm
+2026-11-12T18:22:32.8354710Z 
+2026-11-12T18:22:32.8465880Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os_object-ADQVAZYQ68WWHC8S8PP6EC1XI.pcm
+2026-11-12T18:22:32.8584830Z 
+2026-11-12T18:22:32.8690510Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os_workgroup-7KVOT3EHL4Q75XJZM1ODN0ZI0.pcm
+2026-11-12T18:22:32.8802470Z 
+2026-11-12T18:22:32.8921470Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Spatial-704LGYEEU8WEFPQO5RHF4APLE.pcm
+2026-11-12T18:22:33.1483490Z 
+2026-11-12T18:22:33.1586410Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Dispatch-DSWMN15KWNXTSEDCBWEUT2JDI.pcm
+2026-11-12T18:22:33.1733270Z 
+2026-11-12T18:22:33.1776070Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/dnssd-F26QJWXCTYNNMYGB3HL9R170K.pcm
+2026-11-12T18:22:33.1803760Z 
+2026-11-12T18:22:33.1806390Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/XPC-16QDAHG2M72X1OY9DRRGNI2ZG.pcm
+2026-11-12T18:22:33.1813810Z 
+2026-11-12T18:22:33.1814380Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreFoundation-8S1UYY9J127ACQOPL2OTB3P2K.pcm
+2026-11-12T18:22:33.2002310Z 
+2026-11-12T18:22:33.2137420Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os-AHABNE0JLHMBIR9Q1PNZWPGR8.pcm
+2026-11-12T18:22:33.2264050Z 
+2026-11-12T18:22:33.2393520Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CFNetwork-66UV7LJLU9E4ICW79IH9AO1W4.pcm
+2026-11-12T18:22:33.3355820Z 
+2026-11-12T18:22:33.3488340Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreGraphics-3M5ZGSICFKCCZQBXTDZEW60UY.pcm
+2026-11-12T18:22:33.3823760Z 
+2026-11-12T18:22:33.3926110Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreAudioTypes-2D18E54J3XMVI9LH4H7VNWE9T.pcm
+2026-11-12T18:22:33.3927530Z 
+2026-11-12T18:22:33.4028550Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Security-CFACH7S914EORQ82EQNFUIX3H.pcm
+2026-11-12T18:22:33.5257100Z 
+2026-11-12T18:22:33.5387180Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreAudio-33SRI1LQ04FCY53NGIWP932CI.pcm
+2026-11-12T18:22:33.5513960Z 
+2026-11-12T18:22:33.5625590Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreText-DLV7GDJFOVLRDG2GB3HXE1KLD.pcm
+2026-11-12T18:22:33.5691120Z 
+2026-11-12T18:22:33.5728020Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ImageIO-GAYHAB90W4K66SCWY9HOYBCR.pcm
+2026-11-12T18:22:33.5774080Z 
+2026-11-12T18:22:33.5802310Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Foundation-3YCE9EYLVDMJEE8Y10GQ2JNPI.pcm
+2026-11-12T18:22:33.9578540Z 
+2026-11-12T18:22:33.9582660Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/DataDetection-EFL06FHL83RXATMAPO0LJVZJK.pcm
+2026-11-12T18:22:34.1000740Z 
+2026-11-12T18:22:34.1109430Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Symbols-237SINL85ZRB5BWPX8PWZ0LKY.pcm
+2026-11-12T18:22:34.1223670Z 
+2026-11-12T18:22:34.1324690Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UserNotifications-CNVEW8CCIZXL4TAB207QQBENG.pcm
+2026-11-12T18:22:34.1424840Z 
+2026-11-12T18:22:34.1526130Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Network-8DHMEMFIW50P54B3XE6CQY6TI.pcm
+2026-11-12T18:22:34.3662430Z 
+2026-11-12T18:22:34.3770260Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/IOSurface-DQNCOTHXG9JJVXAINXZDN8YB5.pcm
+2026-11-12T18:22:34.3884710Z 
+2026-11-12T18:22:34.3987350Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/OSLog-8LZDP8R911HJ75GGPTV8FIB5R.pcm
+2026-11-12T18:22:34.4099840Z 
+2026-11-12T18:22:34.4207910Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreData-26OR7VYYDSOP96X59DEWA9XDN.pcm
+2026-11-12T18:22:34.5404380Z 
+2026-11-12T18:22:34.5528790Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Accessibility-5UCLK6IGYIOZ95DJKRS6YN1SX.pcm
+2026-11-12T18:22:34.5657380Z 
+2026-11-12T18:22:34.5784310Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MediaAccessibility-3QID357WOBV3VUODBIXZUT9V2.pcm
+2026-11-12T18:22:34.5906460Z 
+2026-11-12T18:22:34.5967770Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Metal-9TE4PGH3MSNWSMJNLIUSMZ0S6.pcm
+2026-11-12T18:22:34.7340870Z 
+2026-11-12T18:22:34.7455880Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreMIDI-4DX88FUL2QV4C7V1J4O2K2U7I.pcm
+2026-11-12T18:22:34.7580530Z 
+2026-11-12T18:22:34.7704980Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreTransferable-B20MT11U7GVV3BNOI4DCF9YY7.pcm
+2026-11-12T18:22:34.7830590Z 
+2026-11-12T18:22:34.7895070Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVRouting-9AY1UUSYP1KRRH2DMQ5MUA8QJ.pcm
+2026-11-12T18:22:34.7895870Z 
+2026-11-12T18:22:34.7896440Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AudioToolbox-CWUZ6KVLHIKYHCHEFMDVDOQHS.pcm
+2026-11-12T18:22:34.8293780Z 
+2026-11-12T18:22:34.8295660Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/JavaScriptCore-8QMN34L6BHG4U833U0IBZAGCI.pcm
+2026-11-12T18:22:34.8338780Z 
+2026-11-12T18:22:34.8339700Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UniformTypeIdentifiers-EGED061WRQKL47UAGF6A1KAGB.pcm
+2026-11-12T18:22:34.8499430Z 
+2026-11-12T18:22:34.8500550Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UIUtilities-CG3TT3950NLVVL67WNYKCU136.pcm
+2026-11-12T18:22:34.9171870Z 
+2026-11-12T18:22:34.9175070Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/OpenGLES-524TTZKIKXMSAHQ5R2MF6B9SY.pcm
+2026-11-12T18:22:34.9658400Z 
+2026-11-12T18:22:34.9664500Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreVideo-BJTETA376CMTNB6A0S1LTE98I.pcm
+2026-11-12T18:22:35.1162930Z 
+2026-11-12T18:22:35.1169560Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreImage-6KVAXP9NQS0R2ZQA4ICUUSND2.pcm
+2026-11-12T18:22:35.3218720Z 
+2026-11-12T18:22:35.3319880Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreMedia-BP0QTO0029JUV7FCPYL0V2VQI.pcm
+2026-11-12T18:22:35.3421840Z 
+2026-11-12T18:22:35.3522640Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/QuartzCore-7WTAI3RMXPEPR8EDC0E8973K.pcm
+2026-11-12T18:22:35.3623870Z 
+2026-11-12T18:22:35.3725290Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftUICore-CL0L5SQL969HAYEEYFOP5Y1AP.pcm
+2026-11-12T18:22:35.3824920Z 
+2026-11-12T18:22:35.3927350Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UIKit-50TVIOWOMOEPLE4BUCOJI37TO.pcm
+2026-11-12T18:22:36.3559610Z 
+2026-11-12T18:22:36.3562630Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MediaToolbox-1CEOWAARB3YLB50IG70N91E49.pcm
+2026-11-12T18:22:36.3571900Z 
+2026-11-12T18:22:36.3583130Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVFAudio-8HBOK5NTSD21MT3QX5S7WSBR1.pcm
+2026-11-12T18:22:36.3584030Z 
+2026-11-12T18:22:36.3584630Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVFoundation-9CFMUI6EO0EBJB034EMMGPYVY.pcm
+2026-11-12T18:22:36.3585640Z 
+2026-11-12T18:22:36.3587300Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftUI-2T4U79E6NM98T10F74X9I14QV.pcm
+2026-11-12T18:22:36.4652380Z 
+2026-11-12T18:22:36.4653150Z SwiftExplicitDependencyGeneratePcm arm64 /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVKit-4TSNK94SAJYC3QQFXHWZQ5L0N.pcm
+2026-11-12T18:22:36.5573830Z 
+2026-11-12T18:22:36.5578870Z SwiftGeneratePch normal arm64 Compiling\ bridging\ header (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:36.6896110Z 
+2026-11-12T18:22:36.6902720Z SwiftDriverJobDiscovery normal arm64 Compiling bridging header (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:36.6904620Z 
+2026-11-12T18:22:36.7026400Z SwiftCompile normal arm64 Compiling\ DYBuild.swift,\ DYFeedClient.swift,\ DYLog.swift,\ DYSigner.swift,\ DYTVApp.swift,\ NativePlayerView.swift,\ PlaybackEngine.swift,\ RootView.swift,\ WebKitProbe.swift,\ WebKitShell.swift,\ GeneratedAssetSymbols.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYBuild.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYFeedClient.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYLog.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYSigner.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYTVApp.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/NativePlayerView.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/PlaybackEngine.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/RootView.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/WebKitProbe.swift /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/WebKitShell.swift /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/GeneratedAssetSymbols.swift /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreVideo.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/SwiftUI.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Accessibility.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/os.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Observation.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/AVKit.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/QuartzCore.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_DarwinFoundation1.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Distributed.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_DarwinFoundation3.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/SwiftUICore.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Symbols.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreAudio.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/AudioToolbox.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Spatial.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Network.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/DataDetection.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Swift.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_AVKit_SwiftUI.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_Concurrency.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/AVFAudio.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/DeveloperToolsSupport.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Dispatch.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreText.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/XPC.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/MediaAccessibility.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/UIKit.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/OSLog.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreFoundation.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/System.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/UniformTypeIdentifiers.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/TipKit.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreImage.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Synchronization.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_StringProcessing.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_DarwinFoundation2.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/ObjectiveC.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/simd.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreGraphics.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreMedia.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/AVFoundation.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreTransferable.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Metal.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Foundation.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Combine.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/CoreData.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/_Builtin_float.swiftmodule/arm64-apple-tvos.swiftmodule /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos/prebuilt-modules/26.5/Darwin.swiftmodule/arm64-apple-tvos.swiftmodule /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Foundation-3YCE9EYLVDMJEE8Y10GQ2JNPI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/sys_types-963U87EULCTQEG0VN17UC9O99.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreData-26OR7VYYDSOP96X59DEWA9XDN.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/DeveloperToolsSupport-82B1GEXDXYEV9I5G3RVNTXCQ3.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ImageIO-GAYHAB90W4K66SCWY9HOYBCR.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_tgmath-4DFMRLT69563Q1N7NXSCG8NRE.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/DataDetection-EFL06FHL83RXATMAPO0LJVZJK.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UniformTypeIdentifiers-EGED061WRQKL47UAGF6A1KAGB.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreTransferable-B20MT11U7GVV3BNOI4DCF9YY7.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Symbols-237SINL85ZRB5BWPX8PWZ0LKY.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_limits-7966B7K4AXHFBH5YJNRVGPVUH.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stddef-AOCIIMLFNYQRH1Q48N80CEKI4.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Accessibility-5UCLK6IGYIOZ95DJKRS6YN1SX.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVRouting-9AY1UUSYP1KRRH2DMQ5MUA8QJ.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os_object-ADQVAZYQ68WWHC8S8PP6EC1XI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftUICore-CL0L5SQL969HAYEEYFOP5Y1AP.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/OpenGLES-524TTZKIKXMSAHQ5R2MF6B9SY.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Security-CFACH7S914EORQ82EQNFUIX3H.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Darwin-CWYHQTT6VK37MK6KMX5ZA3KDZ.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_inttypes-6YBDZ6PMUICKBAWZ5RYR41E6I.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ObjectiveC-4VR3VEEMA8G0BDYUNCE8DF69Y.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation1-2UCA336AJQHRXX6EIV367HS6Z.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_SwiftConcurrencyShims-D2S0D711IFKSQ6UJU2AVWNQXK.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_AvailabilityInternal-64U4XN1KDZOHM9RXJFJXL2U6J.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AudioToolbox-CWUZ6KVLHIKYHCHEFMDVDOQHS.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/OSLog-8LZDP8R911HJ75GGPTV8FIB5R.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVKit-4TSNK94SAJYC3QQFXHWZQ5L0N.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftShims-42SOLAB7PPA44BFCQ4WQWB5B.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_float-E5QECA7Y6OBRVB8WV0QMXZMIA.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreFoundation-8S1UYY9J127ACQOPL2OTB3P2K.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UIKit-50TVIOWOMOEPLE4BUCOJI37TO.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UIUtilities-CG3TT3950NLVVL67WNYKCU136.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MediaToolbox-1CEOWAARB3YLB50IG70N91E49.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os-AHABNE0JLHMBIR9Q1PNZWPGR8.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Spatial-704LGYEEU8WEFPQO5RHF4APLE.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreMedia-BP0QTO0029JUV7FCPYL0V2VQI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/IOSurface-DQNCOTHXG9JJVXAINXZDN8YB5.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/simd-34WG9EHWAUKA2MGYDXEFEUL5Y.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/dnssd-F26QJWXCTYNNMYGB3HL9R170K.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/UserNotifications-CNVEW8CCIZXL4TAB207QQBENG.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVFAudio-8HBOK5NTSD21MT3QX5S7WSBR1.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreVideo-BJTETA376CMTNB6A0S1LTE98I.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreMIDI-4DX88FUL2QV4C7V1J4O2K2U7I.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdatomic-E9TZ51I5GN35DP690KDOIIYPS.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/AVFoundation-9CFMUI6EO0EBJB034EMMGPYVY.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/SwiftUI-2T4U79E6NM98T10F74X9I14QV.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation3-7N82BTG4BEZMHDD8E02AAZR96.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_DarwinFoundation2-91QJZTEPVJ7SWNJRCZ7CS2U7Z.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/XPC-16QDAHG2M72X1OY9DRRGNI2ZG.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CFNetwork-66UV7LJLU9E4ICW79IH9AO1W4.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreAudio-33SRI1LQ04FCY53NGIWP932CI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/os_workgroup-7KVOT3EHL4Q75XJZM1ODN0ZI0.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/QuartzCore-7WTAI3RMXPEPR8EDC0E8973K.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Dispatch-DSWMN15KWNXTSEDCBWEUT2JDI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreText-DLV7GDJFOVLRDG2GB3HXE1KLD.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/JavaScriptCore-8QMN34L6BHG4U833U0IBZAGCI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Network-8DHMEMFIW50P54B3XE6CQY6TI.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_intrinsics-10VTPLC33P1KDVD98AT4QOZS8.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Metal-9TE4PGH3MSNWSMJNLIUSMZ0S6.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreAudioTypes-2D18E54J3XMVI9LH4H7VNWE9T.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MediaAccessibility-3QID357WOBV3VUODBIXZUT9V2.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ptrauth-1TWRHKK866B9L5QBSH42DC090.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdarg-7CF0YWLMTRK50H11LZJ6YL14N.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreImage-6KVAXP9NQS0R2ZQA4ICUUSND2.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdint-5QY69XBC1HNNMC14D923GYXDO.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/MachO-BTVH999S62GOPLOG4OWY0C94C.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/CoreGraphics-3M5ZGSICFKCCZQBXTDZEW60UY.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/_Builtin_stdbool-2MQ4VAJZJRXPX4892KE4SCFK3.pcm /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/ptrcheck-DZ0UR7FPHY0IJ62NF23KGMMUB.pcm /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-dependencies-1.json /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-primary-Bridging-header.pch (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:36.7590780Z 
+2026-11-12T18:22:36.7595000Z CompileSwift normal arm64 (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:36.7595850Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:36.7599260Z     
+2026-11-12T18:22:41.6844470Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/WebKitShell.swift:15:13: warning: constant 'pair' inferred to have type 'AnyClass' (aka 'any AnyObject.Type'), which may be unexpected
+2026-11-12T18:22:41.6870950Z         let pair = objc_allocateClassPair(NSObject.self, className, 0)!
+2026-11-12T18:22:41.6871830Z             ^
+2026-11-12T18:22:41.6872720Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/WebKitShell.swift:15:13: note: add an explicit type annotation to silence this warning
+2026-11-12T18:22:41.6874450Z         let pair = objc_allocateClassPair(NSObject.self, className, 0)!
+2026-11-12T18:22:41.6874920Z             ^
+2026-11-12T18:22:41.6876600Z                 : AnyClass
+2026-11-12T18:22:41.6877060Z 
+2026-11-12T18:22:41.6998470Z SwiftDriverJobDiscovery normal arm64 Compiling DYBuild.swift, DYFeedClient.swift, DYLog.swift, DYSigner.swift, DYTVApp.swift, NativePlayerView.swift, PlaybackEngine.swift, RootView.swift, WebKitProbe.swift, WebKitShell.swift, GeneratedAssetSymbols.swift (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7001650Z 
+2026-11-12T18:22:41.7002760Z SwiftDriver\ Compilation\ Requirements DYTV normal arm64 com.apple.xcode.tools.swift.compiler (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7007670Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7041640Z     builtin-Swift-Compilation-Requirements -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name DYTV -O -whole-module-optimization @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList -enable-bare-slash-regex -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -target arm64-apple-tvos16.0 -g -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -swift-version 5 -I /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -F /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -c -num-threads 3 -Xcc -ivfsstatcache -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache -output-file-map /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-OutputFileMap.json -use-frontend-parseable-output -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -sdk-module-cache-path /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex -serialize-diagnostics -emit-dependencies -emit-module -emit-module-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule -validate-clang-modules-once -clang-build-session-file /Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Session.modulevalidation -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/swift-overrides.hmap -emit-const-values -Xfrontend -const-gather-protocols-file -Xfrontend /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_const_extract_protocols.json -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-generated-files.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-own-target-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-all-target-headers.hmap -Xcc -iquote -Xcc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV-project-headers.hmap -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/include -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources-normal/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/arm64 -Xcc -I/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources -emit-objc-header -emit-objc-header-path /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-Swift.h -import-objc-header /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYTV-Bridging-Header.h -working-directory /Users/runner/work/dy-tvos/dy-tvos -no-emit-module-separately-wmo
+2026-11-12T18:22:41.7061690Z 
+2026-11-12T18:22:41.7148550Z SwiftMergeGeneratedHeaders /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/DYTV-Swift.h /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-Swift.h (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7150890Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7154710Z     builtin-swiftHeaderTool -arch arm64 /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-Swift.h -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DerivedSources/DYTV-Swift.h
+2026-11-12T18:22:41.7158120Z 
+2026-11-12T18:22:41.7160650Z Copy /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.swiftmodule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7164340Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7167920Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.swiftmodule
+2026-11-12T18:22:41.7172070Z 
+2026-11-12T18:22:41.7173030Z Copy /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.swiftdoc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftdoc (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7174330Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7175750Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftdoc /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.swiftdoc
+2026-11-12T18:22:41.7177610Z 
+2026-11-12T18:22:41.7178640Z Copy /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.abi.json /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.abi.json (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7179850Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7181170Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.abi.json /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/arm64-apple-tvos.abi.json
+2026-11-12T18:22:41.7182360Z 
+2026-11-12T18:22:41.7183470Z Copy /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/Project/arm64-apple-tvos.swiftsourceinfo /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftsourceinfo (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7184690Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7186030Z     builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftsourceinfo /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.swiftmodule/Project/arm64-apple-tvos.swiftsourceinfo
+2026-11-12T18:22:41.7187340Z 
+2026-11-12T18:22:41.7188450Z ScanDependencies /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.o /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m normal arm64 objective-c com.apple.compilers.llvm.clang.1_0.compiler (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:41.7190970Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:41.7191240Z     
+2026-11-12T18:22:41.7191990Z     Using response file: /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp
+2026-11-12T18:22:41.7192750Z     
+2026-11-12T18:22:41.7206020Z     builtin-ScanDependencies -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.o.scan -- /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -ivfsstatcache /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache -target arm64-apple-tvos16.0 -fmessage-length\=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit\=0 -fno-color-diagnostics -fmodules-prune-interval\=86400 -fmodules-prune-after\=345600 -fbuild-session-file\=/Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror\=non-modular-include-in-framework-module -Wno-trigraphs -Wno-missing-field-initializers -Wno-missing-prototypes -Werror\=return-type -Wdocumentation -Wunreachable-code -Wquoted-include-in-framework-header -Wno-implicit-atomic-properties -Werror\=deprecated-objc-isa-usage -Wno-objc-interface-ivars -Werror\=objc-root-class -Wno-arc-repeated-use-of-weak -Wimplicit-retain-self -Wduplicate-method-match -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wno-float-conversion -Wnon-literal-null-conversion -Wobjc-literal-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wdeprecated-implementations -Wno-implicit-fallthrough -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Wno-sign-conversion -Winfinite-recursion -Wcomma -Wblock-capture-autoreleasing -Wstrict-prototypes -Wno-semicolon-before-method-body -Wunguarded-availability @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp -MMD -MT dependencies -MF /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.d --serialize-diagnostics /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.dia -c /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.o
+2026-11-12T18:22:42.3077010Z 
+2026-11-12T18:22:42.3265740Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdbool-A63LMCMEQNBU37QUEDGO3LIJG.scan
+2026-11-12T18:22:42.3267360Z     cd /
+2026-11-12T18:22:42.3283620Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdbool-A63LMCMEQNBU37QUEDGO3LIJG.scan
+2026-11-12T18:22:42.5353030Z 
+2026-11-12T18:22:42.5358100Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_AvailabilityInternal-3THZ8KOQ39KF76W8VUVQNWAUE.scan
+2026-11-12T18:22:42.5360240Z     cd /
+2026-11-12T18:22:42.5361140Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_AvailabilityInternal-3THZ8KOQ39KF76W8VUVQNWAUE.scan
+2026-11-12T18:22:42.5362030Z 
+2026-11-12T18:22:42.5362700Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_float-ZUMRQ1TZDJNM57YHBGWPI2K2.scan
+2026-11-12T18:22:42.5364090Z     cd /
+2026-11-12T18:22:42.5441090Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_float-ZUMRQ1TZDJNM57YHBGWPI2K2.scan
+2026-11-12T18:22:42.5465740Z 
+2026-11-12T18:22:42.5467340Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ptrauth-7ASEP3CEOF8XB9413ZJZX1PQB.scan
+2026-11-12T18:22:42.5468230Z     cd /
+2026-11-12T18:22:42.5468970Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ptrauth-7ASEP3CEOF8XB9413ZJZX1PQB.scan
+2026-11-12T18:22:42.5798240Z 
+2026-11-12T18:22:42.5799350Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stddef-9GL91FF3H9YW1M0S8SZIA86WM.scan
+2026-11-12T18:22:42.5800080Z     cd /
+2026-11-12T18:22:42.5800800Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stddef-9GL91FF3H9YW1M0S8SZIA86WM.scan
+2026-11-12T18:22:42.5801420Z 
+2026-11-12T18:22:42.5801930Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdarg-70SP2CVA3EFT0D8HH8QB5B02K.scan
+2026-11-12T18:22:42.5802610Z     cd /
+2026-11-12T18:22:42.5803210Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdarg-70SP2CVA3EFT0D8HH8QB5B02K.scan
+2026-11-12T18:22:42.5803820Z 
+2026-11-12T18:22:42.5804310Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ptrcheck-BCHRSQ788LDJ7WIEGUH2KNUXL.scan
+2026-11-12T18:22:42.5804900Z     cd /
+2026-11-12T18:22:42.5805540Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ptrcheck-BCHRSQ788LDJ7WIEGUH2KNUXL.scan
+2026-11-12T18:22:42.5863760Z 
+2026-11-12T18:22:42.5867990Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation1-E70UPJCVL3OGTGFA4STBW19J5.scan
+2026-11-12T18:22:42.5869760Z     cd /
+2026-11-12T18:22:42.5872110Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation1-E70UPJCVL3OGTGFA4STBW19J5.scan
+2026-11-12T18:22:42.6709170Z 
+2026-11-12T18:22:42.6712310Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation2-1EZ9IS89AB8IAMND6JMCRQXB4.scan
+2026-11-12T18:22:42.6713440Z     cd /
+2026-11-12T18:22:42.6714620Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation2-1EZ9IS89AB8IAMND6JMCRQXB4.scan
+2026-11-12T18:22:42.7436240Z 
+2026-11-12T18:22:42.7437140Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_limits-J7ADB03BCCYDBY0LSE60OC9T.scan
+2026-11-12T18:22:42.7438280Z     cd /
+2026-11-12T18:22:42.7439680Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_limits-J7ADB03BCCYDBY0LSE60OC9T.scan
+2026-11-12T18:22:42.7441070Z 
+2026-11-12T18:22:42.7446040Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdint-1P3C3HZYUU34D0JIC4FVHL92M.scan
+2026-11-12T18:22:42.7446720Z     cd /
+2026-11-12T18:22:42.7447370Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_stdint-1P3C3HZYUU34D0JIC4FVHL92M.scan
+2026-11-12T18:22:42.7699350Z 
+2026-11-12T18:22:42.7705660Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation3-5HAAKSMXMRIAY2MASDBA6Z5TI.scan
+2026-11-12T18:22:42.7707810Z     cd /
+2026-11-12T18:22:42.7712800Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_DarwinFoundation3-5HAAKSMXMRIAY2MASDBA6Z5TI.scan
+2026-11-12T18:22:42.8316430Z 
+2026-11-12T18:22:42.8325880Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_inttypes-33XCDQDHJC6NTWKP9WHG7QI00.scan
+2026-11-12T18:22:42.8326790Z     cd /
+2026-11-12T18:22:42.8327490Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/_Builtin_inttypes-33XCDQDHJC6NTWKP9WHG7QI00.scan
+2026-11-12T18:22:42.8615740Z 
+2026-11-12T18:22:42.8619720Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Darwin-550WY120JG7IEGMCCX8IRQWQS.scan
+2026-11-12T18:22:42.8621020Z     cd /
+2026-11-12T18:22:42.8621980Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Darwin-550WY120JG7IEGMCCX8IRQWQS.scan
+2026-11-12T18:22:43.0543160Z 
+2026-11-12T18:22:43.0569710Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ObjectiveC-11QNMXN4KHWUCBZEVU857LVH3.scan
+2026-11-12T18:22:43.0570490Z     cd /
+2026-11-12T18:22:43.0571150Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/ObjectiveC-11QNMXN4KHWUCBZEVU857LVH3.scan
+2026-11-12T18:22:43.0978820Z 
+2026-11-12T18:22:43.0982950Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/os_object-A4BJVEV09CZA1X7U79VJ8UJWR.scan
+2026-11-12T18:22:43.0983840Z     cd /
+2026-11-12T18:22:43.0986560Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/os_object-A4BJVEV09CZA1X7U79VJ8UJWR.scan
+2026-11-12T18:22:43.1268070Z 
+2026-11-12T18:22:43.1269460Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/os_workgroup-E8O5CQ51WEWB4KEYA137LAQ5D.scan
+2026-11-12T18:22:43.1270210Z     cd /
+2026-11-12T18:22:43.1270920Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/os_workgroup-E8O5CQ51WEWB4KEYA137LAQ5D.scan
+2026-11-12T18:22:43.1625590Z 
+2026-11-12T18:22:43.1627720Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Dispatch-BPSTMWFDDXYT3ZYJNS6DTU2LM.scan
+2026-11-12T18:22:43.1628460Z     cd /
+2026-11-12T18:22:43.1629130Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Dispatch-BPSTMWFDDXYT3ZYJNS6DTU2LM.scan
+2026-11-12T18:22:43.2048710Z 
+2026-11-12T18:22:43.2051810Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CoreFoundation-5V350DW6DY0P8LZK791VTFT19.scan
+2026-11-12T18:22:43.2052480Z     cd /
+2026-11-12T18:22:43.2053190Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CoreFoundation-5V350DW6DY0P8LZK791VTFT19.scan
+2026-11-12T18:22:43.2807040Z 
+2026-11-12T18:22:43.2807650Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/XPC-5720UEPNCFHMDKNSV1NL2WKRH.scan
+2026-11-12T18:22:43.2808680Z     cd /
+2026-11-12T18:22:43.2809340Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/XPC-5720UEPNCFHMDKNSV1NL2WKRH.scan
+2026-11-12T18:22:43.2809910Z 
+2026-11-12T18:22:43.2825340Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CFNetwork-63IWKNWRLE673JX5AV07MR8WQ.scan
+2026-11-12T18:22:43.2828460Z     cd /
+2026-11-12T18:22:43.2830100Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CFNetwork-63IWKNWRLE673JX5AV07MR8WQ.scan
+2026-11-12T18:22:43.3259930Z 
+2026-11-12T18:22:43.3261070Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CoreGraphics-EHKCON4GFVDU77UGKFHK6UMU5.scan
+2026-11-12T18:22:43.3261980Z     cd /
+2026-11-12T18:22:43.3262670Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/CoreGraphics-EHKCON4GFVDU77UGKFHK6UMU5.scan
+2026-11-12T18:22:43.3540400Z 
+2026-11-12T18:22:43.3541420Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Security-EAMZMX8MFTHQIRXUFTKSYTFG5.scan
+2026-11-12T18:22:43.3542180Z     cd /
+2026-11-12T18:22:43.3543060Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Security-EAMZMX8MFTHQIRXUFTKSYTFG5.scan
+2026-11-12T18:22:43.3543740Z 
+2026-11-12T18:22:43.3544360Z PrecompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Foundation-BPWVQZSZ8O5I0FU16ST9PK7ZL.scan
+2026-11-12T18:22:43.3545220Z     cd /
+2026-11-12T18:22:43.3546150Z     builtin-precompileModule /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/ExplicitPrecompiledModules/Foundation-BPWVQZSZ8O5I0FU16ST9PK7ZL.scan
+2026-11-12T18:22:43.5538590Z 
+2026-11-12T18:22:43.5579110Z CompileC /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.o /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m normal arm64 objective-c com.apple.compilers.llvm.clang.1_0.compiler (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:43.5581460Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:43.5583580Z     
+2026-11-12T18:22:43.5584410Z     Using response file: /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp
+2026-11-12T18:22:43.5585200Z     
+2026-11-12T18:22:43.5595010Z     /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -ivfsstatcache /Users/runner/work/dy-tvos/dy-tvos/build/SDKStatCaches.noindex/appletvos26.5-23L470-688ef53f1462e2c8f657fdc38a81448f49b6f683f7fac10796348a723a0a8627.sdkstatcache -target arm64-apple-tvos16.0 -fmessage-length\=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit\=0 -fno-color-diagnostics -fmodules-prune-interval\=86400 -fmodules-prune-after\=345600 -fbuild-session-file\=/Users/runner/work/dy-tvos/dy-tvos/build/ModuleCache.noindex/Session.modulevalidation -fmodules-validate-once-per-build-session -Wnon-modular-include-in-framework-module -Werror\=non-modular-include-in-framework-module -Wno-trigraphs -Wno-missing-field-initializers -Wno-missing-prototypes -Werror\=return-type -Wdocumentation -Wunreachable-code -Wquoted-include-in-framework-header -Wno-implicit-atomic-properties -Werror\=deprecated-objc-isa-usage -Wno-objc-interface-ivars -Werror\=objc-root-class -Wno-arc-repeated-use-of-weak -Wimplicit-retain-self -Wduplicate-method-match -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wno-float-conversion -Wnon-literal-null-conversion -Wobjc-literal-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wdeprecated-implementations -Wno-implicit-fallthrough -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Wno-sign-conversion -Winfinite-recursion -Wcomma -Wblock-capture-autoreleasing -Wstrict-prototypes -Wno-semicolon-before-method-body -Wunguarded-availability @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/e6072d4f65d7061329687fe24e3d63a7-common-args.resp -MMD -MT dependencies -MF /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.d --serialize-diagnostics /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.dia -c /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYWebViewShim.o
+2026-11-12T18:22:43.8079140Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:42:50: warning: undeclared selector 'setCustomUserAgent:' [-Wundeclared-selector]
+2026-11-12T18:22:43.8100280Z    42 |     if (userAgent && [config respondsToSelector:@selector(setCustomUserAgent:)]) {
+2026-11-12T18:22:43.8134070Z       |                                                  ^
+2026-11-12T18:22:43.8159190Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:46:21: warning: undeclared selector 'initWithFrame:' [-Wundeclared-selector]
+2026-11-12T18:22:43.8770400Z    46 |     SEL frameSel = @selector(initWithFrame:);
+2026-11-12T18:22:43.8877520Z       |                     ^
+2026-11-12T18:22:43.8979550Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:52:33: warning: undeclared selector 'setConfiguration:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9081470Z    52 |     if ([wv respondsToSelector:@selector(setConfiguration:)]) {
+2026-11-12T18:22:43.9183480Z       |                                 ^
+2026-11-12T18:22:43.9303300Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:171:32: warning: undeclared selector 'initWithSource:injectionTime:forMainFrameOnly:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9417430Z   171 |                         (raw, @selector(initWithSource:injectionTime:forMainFrameOnly:),
+2026-11-12T18:22:43.9519270Z       |                                ^
+2026-11-12T18:22:43.9649220Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:173:52: warning: undeclared selector 'addUserScript:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9752880Z   173 |             if (script && [ucc respondsToSelector:@selector(addUserScript:)]) {
+2026-11-12T18:22:43.9842720Z       |                                                    ^
+2026-11-12T18:22:43.9848450Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:174:39: warning: undeclared selector 'addUserScript:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9849330Z   174 |                 [ucc performSelector:@selector(addUserScript:) withObject:script];
+2026-11-12T18:22:43.9850910Z       |                                       ^
+2026-11-12T18:22:43.9851930Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:177:38: warning: undeclared selector 'addScriptMessageHandler:name:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9853330Z   177 |         if ([ucc respondsToSelector:@selector(addScriptMessageHandler:name:)]) {
+2026-11-12T18:22:43.9856290Z       |                                      ^
+2026-11-12T18:22:43.9857900Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:180:24: warning: undeclared selector 'addScriptMessageHandler:name:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9859610Z   180 |                 (ucc, @selector(addScriptMessageHandler:name:), handler, @"dyyHook");
+2026-11-12T18:22:43.9861660Z       |                        ^
+2026-11-12T18:22:43.9863630Z /Users/runner/work/dy-tvos/dy-tvos/App/Sources/App/DYWebViewShim.m:217:27: warning: undeclared selector 'evaluateJavaScript:completionHandler:' [-Wundeclared-selector]
+2026-11-12T18:22:43.9915580Z   217 |         msgSend(webView, @selector(evaluateJavaScript:completionHandler:), js, ^(id r, NSError *e) {});
+2026-11-12T18:22:43.9917590Z       |                           ^
+2026-11-12T18:22:43.9919210Z 9 warnings generated.
+2026-11-12T18:22:43.9925730Z 
+2026-11-12T18:22:43.9926420Z Ld /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV normal (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:43.9928050Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:43.9944880Z     /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-tvos16.0 -isysroot /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk -Os -L/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-appletvos -L/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -F/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/EagerLinkingTBDs/Release-appletvos -F/Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos -filelist /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.LinkFileList -Xlinker -rpath -Xlinker /usr/lib/swift -Xlinker -rpath -Xlinker @executable_path/Frameworks -Xlinker -dead_strip -Xlinker -object_path_lto -Xlinker /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_lto.o -Xlinker -dependency_info -Xlinker /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_dependency_info.dat -fobjc-arc -fobjc-link-runtime -L/Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/appletvos -L/usr/lib/swift -Xlinker -add_ast_path -Xlinker /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.swiftmodule @/Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV-linker-args.resp -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV
+2026-11-12T18:22:44.7229030Z 
+2026-11-12T18:22:44.7335880Z GenerateDSYMFile /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app.dSYM /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:44.7441710Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:44.7546720Z     /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV -o /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app.dSYM
+2026-11-12T18:22:45.1376350Z 
+2026-11-12T18:22:45.1376920Z ExtractAppIntentsMetadata (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:45.1377920Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:45.1385790Z     /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.1SdTtz/Metal.xctoolchain --module-name DYTV --sdk-root /Applications/Xcode_26.6.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS26.5.sdk --xcode-version 17F113 --platform-family tvOS --deployment-target 16.0 --bundle-identifier tv.dy.client --output /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app --target-triple arm64-apple-tvos16.0 --binary-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV --dependency-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV_dependency_info.dat --stringsdata-file /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftFileList --metadata-file-list /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyMetadataFileList --static-metadata-file-list /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/DYTV.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/Objects-normal/arm64/DYTV.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-11-12T18:22:45.1398650Z 2026-11-12 18:22:44.981 appintentsmetadataprocessor[2245:10239] Starting appintentsmetadataprocessor export
+2026-11-12T18:22:45.1401000Z 2026-11-12 18:22:44.992 appintentsmetadataprocessor[2245:10239] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+2026-11-12T18:22:45.1402420Z 
+2026-11-12T18:22:45.1403560Z CopySwiftLibs /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:45.1405140Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:45.1415150Z     builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/DYTV --scan-folder /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/Frameworks --scan-folder /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/PlugIns --scan-folder /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/SystemExtensions --scan-folder /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/Extensions --platform appletvos --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.1SdTtz/Metal.xctoolchain --toolchain /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/work/dy-tvos/dy-tvos/build/Build/Intermediates.noindex/DYTV.build/Release-appletvos/DYTV.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+2026-11-12T18:22:45.1427280Z Ignoring --strip-bitcode because --sign was not passed
+2026-11-12T18:22:45.1427910Z 
+2026-11-12T18:22:45.1429080Z RegisterExecutionPolicyException /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:45.1431020Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:45.1433230Z     builtin-RegisterExecutionPolicyException /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:45.1552430Z 
+2026-11-12T18:22:45.1554780Z Validate /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:45.1556710Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:45.1558710Z     builtin-validationUtility /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app -shallow-bundle -infoplist-subpath Info.plist
+2026-11-12T18:22:45.1565020Z 
+2026-11-12T18:22:45.1567770Z Touch /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app (in target 'DYTV' from project 'DYTV')
+2026-11-12T18:22:45.1569540Z     cd /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:45.1571240Z     /usr/bin/touch -c /Users/runner/work/dy-tvos/dy-tvos/build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:45.1618540Z 
+2026-11-12T18:22:45.2173660Z ** BUILD SUCCEEDED **
+2026-11-12T18:22:45.2333140Z 
+2026-11-12T18:22:45.3460040Z ##[group]Run APP_PATH=$(find build/Build/Products -name "DYTV.app" -type d | head -n 1)
+2026-11-12T18:22:45.3460620Z [36;1mAPP_PATH=$(find build/Build/Products -name "DYTV.app" -type d | head -n 1)[0m
+2026-11-12T18:22:45.3461120Z [36;1mecho "APP_PATH=$APP_PATH"[0m
+2026-11-12T18:22:45.3461540Z [36;1mtest -n "$APP_PATH" || { echo "::error::DYTV.app not found"; exit 1; }[0m
+2026-11-12T18:22:45.3462020Z [36;1mmkdir -p Payload[0m
+2026-11-12T18:22:45.3462320Z [36;1mcp -R "$APP_PATH" Payload/DYTV.app[0m
+2026-11-12T18:22:45.3462710Z [36;1mzip -qry DYTV-tvos-unsigned.ipa Payload[0m
+2026-11-12T18:22:45.3463070Z [36;1munzip -l DYTV-tvos-unsigned.ipa | head[0m
+2026-11-12T18:22:45.4064420Z shell: /bin/bash -e {0}
+2026-11-12T18:22:45.4064780Z ##[endgroup]
+2026-11-12T18:22:45.5226970Z APP_PATH=build/Build/Products/Release-appletvos/DYTV.app
+2026-11-12T18:22:45.6215580Z Archive:  DYTV-tvos-unsigned.ipa
+2026-11-12T18:22:45.6216210Z   Length      Date    Time    Name
+2026-11-12T18:22:45.6216920Z ---------  ---------- -----   ----
+2026-11-12T18:22:45.6217770Z         0  11-12-2026 18:22   Payload/
+2026-11-12T18:22:45.6218150Z         0  11-12-2026 18:22   Payload/DYTV.app/
+2026-11-12T18:22:45.6218590Z    349560  11-12-2026 18:22   Payload/DYTV.app/DYTV
+2026-11-12T18:22:45.6218970Z     11216  11-12-2026 18:22   Payload/DYTV.app/dy_browser_shim.js
+2026-11-12T18:22:45.6220590Z    538682  11-12-2026 18:22   Payload/DYTV.app/abogus_dy.js
+2026-11-12T18:22:45.6221490Z    485184  11-12-2026 18:22   Payload/DYTV.app/sign.js
+2026-11-12T18:22:45.6221870Z    147529  11-12-2026 18:22   Payload/DYTV.app/bdms.js
+2026-11-12T18:22:45.6392530Z ##[group]Run actions/upload-artifact@v4
+2026-11-12T18:22:45.6393460Z with:
+2026-11-12T18:22:45.6393940Z   name: DYTV-tvos-unsigned
+2026-11-12T18:22:45.6394480Z   path: DYTV-tvos-unsigned.ipa
+2026-11-12T18:22:45.6395100Z   retention-days: 7
+2026-11-12T18:22:45.6395700Z   if-no-files-found: error
+2026-11-12T18:22:45.6396290Z   compression-level: 6
+2026-11-12T18:22:45.6397000Z   overwrite: false
+2026-11-12T18:22:45.6397570Z   include-hidden-files: false
+2026-11-12T18:22:45.6398290Z ##[endgroup]
+2026-11-12T18:22:46.1953250Z (node:2263) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-12T18:22:46.1956080Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-12T18:22:46.2026810Z With the provided path, there will be 1 file uploaded
+2026-11-12T18:22:46.2027680Z Artifact name is valid!
+2026-11-12T18:22:46.2027930Z Root directory input is valid!
+2026-11-12T18:22:46.4247760Z Beginning upload of artifact content to blob storage
+2026-11-12T18:22:46.4582400Z (node:2263) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-12T18:22:46.5662610Z Uploaded bytes 368924
+2026-11-12T18:22:46.5880450Z Finished uploading artifact content to blob storage!
+2026-11-12T18:22:46.5881370Z SHA256 digest of uploaded artifact zip is ab005a710279563ea6c2d0c1293df299b0abda7307d83d57045f9078efa89b9c
+2026-11-12T18:22:46.5883470Z Finalizing artifact upload
+2026-11-12T18:22:47.0126770Z Artifact DYTV-tvos-unsigned.zip successfully finalized. Artifact ID 13970709166
+2026-11-12T18:22:47.0128360Z Artifact DYTV-tvos-unsigned has been successfully uploaded! Final size is 368924 bytes. Artifact ID is 13970709166
+2026-11-12T18:22:47.0142040Z Artifact download URL: https://github.com/Pupildan/dy-tvos/actions/runs/43278170201/artifacts/13970709166
+2026-11-12T18:22:47.0384330Z Post job cleanup.
+2026-11-12T18:22:47.2240440Z [command]/opt/homebrew/bin/git version
+2026-11-12T18:22:47.2548150Z git version 2.56.0
+2026-11-12T18:22:47.2583820Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/1382aef9-38e7-4871-803b-2e0ffd2fc5dd/.gitconfig'
+2026-11-12T18:22:47.2596220Z Temporarily overriding HOME='/Users/runner/work/_temp/1382aef9-38e7-4871-803b-2e0ffd2fc5dd' before making global git config changes
+2026-11-12T18:22:47.2597180Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-12T18:22:47.2604510Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/dy-tvos/dy-tvos
+2026-11-12T18:22:47.2774570Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-12T18:22:47.2921520Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-12T18:22:47.4799700Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-12T18:22:47.4902140Z http.https://github.com/.extraheader
+2026-11-12T18:22:47.5206820Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-12T18:22:47.5526450Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-12T18:22:47.6541080Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-12T18:22:47.6656430Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-12T18:22:47.8025960Z Cleaning up orphan processes
+2026-11-12T18:22:48.6582340Z Terminate orphan process: pid (1467) (ibtoold)
+2026-11-12T18:22:49.4467630Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
