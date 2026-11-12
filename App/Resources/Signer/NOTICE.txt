@@ -1,0 +1,14 @@
+Signer JS assets provenance
+===========================
+
+abogus.js / bdms.js / sign.js / abogus_dy.js
+  Source: myDV Android TV client (https://github.com/mytv-android/myDV), APK v2.3.45 assets.
+  License: GPL-3.0 (see myDV repo LICENSE) + author notice "仅供学习研究使用，不得用于商业目的".
+  This project is a personal, non-commercial study project. Do not redistribute commercially.
+
+dy_browser_shim.js
+  Extracted verbatim from myDV v2.3.45 classes.dex (embedded QuickJS browser-environment
+  shim string that myDV loads before the signature JS). Same license terms as above.
+
+Purpose: local a_bogus signature generation via JavaScriptCore (public tvOS framework),
+replacing the hidden-WebView data pump. Data-layer reference only — no myDV UI/UX code.
