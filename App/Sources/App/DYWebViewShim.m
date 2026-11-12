@@ -30,9 +30,6 @@ static NSString * _Nullable _dyLastHookMessage = nil;
 }
 @end
 
-@implementation DYWebViewShim
-@end
-
 id DYCreateWebViewWithFrame(CGRect frame, NSString * __nullable userAgent)
 {
     if (!dlopen("/System/Library/Frameworks/WebKit.framework/WebKit", RTLD_LAZY)) return nil;
@@ -94,15 +91,19 @@ void DYInstallFetchHook(id webView)
 
         Class UserScriptCls = NSClassFromString(@"WKUserScript");
         if (UserScriptCls) {
-            id script = [[UserScriptCls alloc] initWithSource:DYFetchHookJS
-                                               injectionTime:0 // WKUserScriptInjectionTimeAtDocumentStart
-                                            forMainFrameOnly:YES];
-            if ([ucc respondsToSelector:@selector(addUserScript:)]) {
+            id raw = ((id(*)(id, SEL))objc_msgSend)((id)UserScriptCls, @selector(alloc));
+            // initWithSource:injectionTime:forMainFrameOnly: (private selector; objc_msgSend cast)
+            id script = ((id(*)(id, SEL, NSString*, NSUInteger, BOOL))objc_msgSend)
+                        (raw, @selector(initWithSource:injectionTime:forMainFrameOnly:),
+                         DYFetchHookJS, 0 /*AtDocumentStart*/, YES);
+            if (script && [ucc respondsToSelector:@selector(addUserScript:)]) {
                 [ucc performSelector:@selector(addUserScript:) withObject:script];
             }
         }
         if ([ucc respondsToSelector:@selector(addScriptMessageHandler:name:)]) {
-            [ucc addScriptMessageHandler:[[DYHookBridge alloc] init] name:@"dyyHook"];
+            id handler = [[DYHookBridge alloc] init];
+            ((void(*)(id, SEL, id, NSString*))objc_msgSend)
+                (ucc, @selector(addScriptMessageHandler:name:), handler, @"dyyHook");
         }
     } @catch (NSException *e) {
         _dyLastHookMessage = [NSString stringWithFormat:@"INSTALL_ERR: %@", e.reason];
