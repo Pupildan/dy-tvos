@@ -34,12 +34,12 @@ final class DYSigner {
 
         // 1) browser shim（必须最先；提供 window/navigator/document/XHR/fetch/crypto 等全套仿真）
         guard load(ctx, "dy_browser_shim", log: "shim") else { return }
-        // 2) abogus.js（XHR 捕获钩子；注释要求必须先于 bdms.js 加载）
+        // 2) abogus.js（XHR 捕获钩子；必须先于 abogus_dy.js —— 后者内含 bdms）
         guard load(ctx, "abogus", log: "abogus") else { return }
-        // 3) bdms.js（字节跳动安全 SDK，真正计算 a_bogus）
-        guard load(ctx, "bdms", log: "bdms") else { return }
-        // 4) sign.js + abogus_dy.js（myDV 主签名包；失败不阻断，靠双函数检查兜底）
+        // 3) sign.js
         let signOK = load(ctx, "sign", log: "sign")
+        // 4) abogus_dy.js = 自足主签名包（内含 bdms/initABogus/getABogus/get_ab，覆盖前面的定义）。
+        //    注意：不加载独立 bdms.js —— 双 bdms 定义会覆盖 _v 状态致 init 冲突（v36 实测）。
         let dyOK = load(ctx, "abogus_dy", log: "abogus_dy")
         DYLog.shared.log("SIGNER extras sign=\(signOK) dy=\(dyOK)")
 
