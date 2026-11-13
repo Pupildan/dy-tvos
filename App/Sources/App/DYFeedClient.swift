@@ -294,7 +294,16 @@ final class DYFeedClient {
         guard !variants.isEmpty else { return nil }
 
         // highestQualityBitRate：分辨率 h*w → fps → bitRateValue → gearName!=adapt_lowest，取最大
+        // 追加：疑似 HEVC/H.265 档降权（tvOS AVPlayer 对部分 HEVC 解不出视频轨→黑屏有声），优先 H.264/AVC。
+        // douyinvod CDN URL 里 hevc 档常含 hevc/h265 字样；按 URL 启发式判断，不碰字段解析。
+        func isHEVC(_ u: URL) -> Bool {
+            let lo = u.absoluteString.lowercased()
+            return lo.contains("hevc") || lo.contains("h265") || lo.contains("h_265")
+        }
         let best = variants.max { a, b in
+            let hevcA = isHEVC(a.url), hevcB = isHEVC(b.url)
+            if hevcA != hevcB { return hevcA   // HEVC 排后（max 里 true 表示 a 更小）
+            }
             let resA = a.h * a.w, resB = b.h * b.w
             if resA != resB { return resA < resB }
             if a.fps != b.fps { return a.fps < b.fps }
@@ -304,7 +313,7 @@ final class DYFeedClient {
             return lowA < lowB
         }
         if let b = best {
-            DYLog.shared.log("FEED quality pick \(b.w)x\(b.h) bitrate=\(b.bitrate) gear=\(b.gear) of \(variants.count) variants")
+            DYLog.shared.log("FEED quality pick \(b.w)x\(b.h) bitrate=\(b.bitrate) gear=\(b.gear) hevc=\(isHEVC(b.url)) of \(variants.count) variants")
         }
         return best?.url
     }
