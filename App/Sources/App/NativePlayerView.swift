@@ -118,6 +118,11 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
+        // 立刻暂停非目标 player（不等动画/回调）——快速连刷时旧画面会冻住、声音照放（交接文档§声画同步）
+        for p in playerPool {
+            guard let pi = playerIndex[p] else { continue }
+            if pi != clampedIndex { p.pause() }
+        }
         // 对齐引擎索引 + 接近末尾时翻页（否则刷完首批就卡死，日志已证：items 恒 6、永不 needMore）
         // 用 next()/prev() 逐步对齐（内部会更新 currentAwemeId，且它们是 private 不能直接赋值）
         let engine = PlaybackEngine.shared
@@ -170,16 +175,24 @@ final class DYPlayerViewController: UIViewController {
         item.preferredForwardBufferDuration = 8
         asset.loadValuesAsynchronously(forKeys: ["playable"])
         player.replaceCurrentItem(with: item)   // 复用：不销毁 player，仅换 item
-        player.isMuted = false
+        // 换 item 瞬间先静音+暂停：视频轨道未解码前若继续放，会画面冻旧帧、声音已是新视频（冻结+有声根因）
+        player.pause()
+        player.isMuted = true
         playerIndex[player] = index
         DYLog.shared.log("POOL load idx=\(index)")
     }
 
-    /// 只有居中 cell 播放，其余暂停；并预载相邻。
+    /// 只有居中 cell 播放（解除静音），其余暂停+静音；并预载相邻。
     private func updatePlaybackStates(center index: Int) {
         for p in playerPool {
             guard let pi = playerIndex[p] else { continue }
-            if pi == index { p.play() } else { p.pause() }
+            if pi == index {
+                p.isMuted = false   // 居中槽解除静音（load 时置 true，此处恢复出声）
+                p.play()
+            } else {
+                p.pause()
+                p.isMuted = true
+            }
         }
         for adj in [index - 1, index + 1] where adj >= 0 {
             if !playerPool.contains(where: { playerIndex[$0] == adj }),
