@@ -58,6 +58,16 @@ final class PlayerCell: UICollectionViewCell {
     var isPlaying: Bool {
         player?.timeControlStatus == .playing
     }
+    /// 播放本 Cell（仅居中槽由控制器调）。
+    func play() {
+        player?.isMuted = false
+        player?.play()
+    }
+    /// 暂停本 Cell（非居中槽）。
+    func pause() {
+        player?.pause()
+        player?.isMuted = true
+    }
     /// 设置封面兜底图。
     func setCover(_ image: UIImage?) {
         coverImageView.image = image
@@ -298,11 +308,10 @@ final class DYPlayerViewController: UIViewController {
                 c.bind(player: p)
                 let ready = (p.currentItem?.status == .readyToPlay)
                 if isCenter, ready {
-                    p.play()
+                    c.play()               // 走 cell.play（解除静音+播）
                     c.setCoverVisible(false)
                 } else {
-                    p.pause()
-                    // 未 ready（或非居中）显示封面兜底
+                    c.pause()              // 走 cell.pause（暂停+静音）
                     if !ready { loadCover(for: c, index: idx) }
                     c.setCoverVisible(!ready)
                 }
@@ -329,7 +338,7 @@ final class DYPlayerViewController: UIViewController {
                   let p = PlayerManager.shared.player(at: ip.item) else { continue }
             if p.currentItem?.status == .readyToPlay {
                 c.setCoverVisible(false)
-                if ip.item == currentIndex { p.play() }
+                if ip.item == currentIndex { c.play() }
             }
         }
     }
