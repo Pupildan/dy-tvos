@@ -118,6 +118,17 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
+        // 对齐引擎索引 + 接近末尾时翻页（否则刷完首批就卡死，日志已证：items 恒 6、永不 needMore）
+        // 用 next()/prev() 逐步对齐（内部会更新 currentAwemeId，且它们是 private 不能直接赋值）
+        let engine = PlaybackEngine.shared
+        if clampedIndex > engine.index {
+            for _ in engine.index..<clampedIndex { engine.next() }
+        } else if clampedIndex < engine.index {
+            for _ in clampedIndex..<engine.index { engine.prev() }
+        }
+        if engine.count > 0, clampedIndex >= engine.count - 7 {
+            engine.triggerNeedMore()
+        }
         DYLog.shared.log("FEEDCOLL scrollTo idx=\(clampedIndex) y=\(targetY) items=\(count)")
         // 关键：滚动一开始就预载目标±1（不等滚动结束），让滑动时相邻已缓冲不卡
         preloadAdjacent(around: clampedIndex)

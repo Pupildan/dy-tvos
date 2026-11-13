@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v92"
-    static let changes = "v92: 修黑屏——urls到达时reloadData建cell,scrollTo改用clamp的setContentOffset替代scrollToItem(不再SKIP)"
+    static let version = "v93"
+    static let changes = "v93: 修刷不动——scrollTo对齐engine.index并接近末尾triggerNeedMore翻页(此前setContentOffset绕过翻页链路,刷完首批6条卡死)"
 }
