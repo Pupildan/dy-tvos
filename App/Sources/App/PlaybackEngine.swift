@@ -72,8 +72,8 @@ final class PlaybackEngine: ObservableObject {
         // 存原始 video bytes（按最终 position）——播放时现选新鲜 URL 用，避免预载 URL 过期
         if let raws = allRawVideos {
             for (i, id) in ids.enumerated() {
-                if let p = position[id], let rb = raws[i] {
-                    rawVideos[p] = rb
+                if let p = position[id], i < raws.count {
+                    rawVideos[p] = raws[i]
                 }
             }
         }
