@@ -178,9 +178,11 @@ final class DYFeedClient {
             // 最高画质：bit_rate 数组（field 21/31）挑最高档；无 bit_rate 则退回默认 play_addr
             var chosen: URL? = pickHighestQuality(from: video, awemeId: id)
             if chosen == nil {
-                // 默认 play_addr = video field 1，退化 field 9（s13.e:229-245）
+                // 默认 play_addr：s13.e:229 是 f1(d(7), d(8))。
+                // 实测移动端 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向（540p，慢）。
+                // 故优先 field 8，退化 field 1（含 field 9 兜底）。
                 var pa: Proto? = nil
-                for pb in video.bytesFields(1) + video.bytesFields(9) {
+                for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
                     if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
                 }
                 if let playAddr = pa {
