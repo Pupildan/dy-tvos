@@ -24,8 +24,6 @@ final class DYFeedClient {
     private var isFirstPage = true
     /// 已消费 aweme id（去重 + rec_raw_data 的 like/min）
     private var consumedIds: [String] = []
-    /// 已 dump 过 video 树的 aweme id（诊断去重，避免刷屏）
-    private var loggedTreeIds: Set<String> = []
 
     private init() {
         let cfg = URLSessionConfiguration.default
@@ -256,38 +254,20 @@ final class DYFeedClient {
         var entries: [[UInt8]] = video.bytesFields(21)
         if entries.isEmpty { entries = video.bytesFields(31) }
 
-        // 诊断：video 顶层字段骨架 + 21/31 号条目数（定位 bit_rate 到底在哪）
-        let skeleton = video.fields.keys.sorted().map { "\($0)[\(video.fields[$0]!.count)]" }.joined(separator: ",")
-        DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] videoFields=\(skeleton) f21=\(video.bytesFields(21).count) f31=\(video.bytesFields(31).count)")
-
-        // 诊断：video 子消息完整树 dump（移动端结构与网页版 s13 不同，直接看真实布局）
-        if !loggedTreeIds.contains(awemeId) {
-            loggedTreeIds.insert(awemeId)
-            let tree = Proto.dump(video, depth: 0, maxDepth: 3)
-            DYLog.shared.log("FEED VIDEOTREE[\(awemeId.prefix(8))]: \(tree.prefix(1800))")
-        }
-
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
-        for (idx, e) in entries.enumerated() {
+        for e in entries {
             guard let br = Proto.parse(e) else { continue }
             let gear = br.string(1) ?? ""
             let w = Int(br.varint(2) ?? 0)
             let h = Int(br.varint(3) ?? 0)
             // playAddr = field 4，取其 url_list
-            guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else {
-                DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) NO playAddr(field4)")
-                continue
-            }
+            guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else { continue }
             let urls = Proto.urlList(pa, 0)
             guard let raw = urls.first(where: { $0.lowercased().hasPrefix("https://") || $0.lowercased().hasPrefix("http://") }),
-                  let url = URL(string: raw) else {
-                DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) playAddr no-http-url f2=\(pa.strings(2).count) f1=\(pa.strings(1).count)")
-                continue
-            }
+                  let url = URL(string: raw) else { continue }
             // bitRateValue = field 5，退化 7
             let bitrate = Int(br.varint(5) ?? br.varint(7) ?? 0)
-            DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) bitrate=\(bitrate) url=\(raw.prefix(70))")
             variants.append(Variant(url: url, w: w, h: h, fps: 0, bitrate: bitrate, gear: gear))
         }
         guard !variants.isEmpty else { return nil }
@@ -436,34 +416,5 @@ struct Proto {
         }
         // 3) field 1
         return msg.strings(1).filter(isHttp)
-    }
-
-    /// 递归 dump proto 树（诊断用）：字段号 + wire 类型 + 字符串/嵌套结构。
-    static func dump(_ msg: Proto, depth: Int, maxDepth: Int) -> String {
-        guard depth <= maxDepth else { return "…" }
-        var out: [String] = []
-        for key in msg.fields.keys.sorted() {
-            for v in msg.fields[key] ?? [] {
-                switch v {
-                case .varint(let n):
-                    out.append("\(key):int=\(n)")
-                case .bytes(let b):
-                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
-                        out.append("\(key):str=\"\(s.prefix(60))\"")
-                    } else if let nested = parse(b) {
-                        let child = dump(nested, depth: depth + 1, maxDepth: maxDepth)
-                        out.append("\(key):msg{\(child)}")
-                    } else {
-                        out.append("\(key):bytes[\(b.count)]")
-                    }
-                }
-            }
-        }
-        return out.joined(separator: " ")
-    }
-
-    private static func isPrintable(_ s: String) -> Bool {
-        guard !s.isEmpty else { return false }
-        return s.allSatisfy { ($0.isASCII && !$0.isNewline && $0.unicodeScalars.allSatisfy { $0.value >= 32 }) }
     }
 }
