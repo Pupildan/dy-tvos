@@ -16,6 +16,8 @@ final class DYPlayerSlot {
     private let layer: AVPlayerLayer
     private(set) var index: Int = -1
     private(set) var isReady = false
+    /// 防重复 fire：同一槽 failed/ended 只推进一次（statusObservation 和 endObserver 可能都触发）
+    private var didFail = false
     private var statusObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
 
@@ -73,16 +75,21 @@ final class DYPlayerSlot {
                 DYLog.shared.log("SLOT idx=\(index) ready muted=\(self.player.isMuted)")
                 onReady()
             case .failed:
+                // 防重复：同一槽只推进一次（statusObservation 和 endObserver 可能都 fire）
+                guard !self.didFail else { return }
+                self.didFail = true
                 DYLog.shared.log("SLOT idx=\(index) FAILED err=\(it.error?.localizedDescription ?? "?")")
                 onFailed()
             default:
                 break
             }
         }
+        // 播完不是失败（正常播完由引擎 next 推进），不再额外 fire onFailed 防跳号
         endObserver = NotificationCenter.default.addObserver(
             forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main
         ) { [weak self] _ in
-            guard let self, self.player.currentItem === item else { return }
+            guard let self, self.player.currentItem === item, !self.didFail else { return }
+            self.didFail = true
             onFailed()
         }
     }
@@ -101,6 +108,7 @@ final class DYPlayerSlot {
         player.replaceCurrentItem(with: nil)
         index = -1
         isReady = false
+        didFail = false
         coverImage.image = nil
         DYLog.shared.log("SLOT cleared")
     }
@@ -176,8 +184,10 @@ final class DYPlayerViewController: UIViewController {
                 self.preloadNext(around: self.currentIndex)
             }, onFailed: { [weak self] in
                 guard let self else { return }
-                DYLog.shared.log("DUAL first load failed idx=\(self.currentIndex)")
+                DYLog.shared.log("DUAL first load failed idx=\(self.currentIndex), advance to next")
                 PlaybackEngine.shared.reportFailure()
+                // 首条加载失败（URL 失效/Cannot Open）→ 推进到下一条，绝不卡黑屏
+                self.advance()
             })
             return
         }

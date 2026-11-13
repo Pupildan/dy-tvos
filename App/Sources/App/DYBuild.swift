@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v85"
-    static let changes = "v85: 修启动黑屏(首批强制装载index0)+滑动诊断日志(定位只走一半)"
+    static let version = "v86"
+    static let changes = "v86: 修跳号(didFail防slot重复fire advance)+修启动黑屏(首批失败advance到下一条不卡黑屏)"
 }
