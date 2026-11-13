@@ -175,6 +175,17 @@ final class DYFeedClient {
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] video-ok")
+            // 一次性诊断：dump video 消息所有 field（号/wire/长度），定位 bit_rate 真实字段号
+            DYLog.shared.log("FEED video-dump a[\(ei)] \(video.fields.keys.sorted().map { k -> String in
+                let vals = video.fields[k] ?? []
+                let desc = vals.map { v -> String in
+                    switch v {
+                    case .varint(let n): return "varint=\(n)"
+                    case .bytes(let b): return "bytes=\(b.count)"
+                    }
+                }
+                return "f\(k)[\(desc.joined(separator: ","))]"
+            }.joined(separator: " "))")
             // aweme_id = field 1（s13.b 优先 str，退化为 varint）
             guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.log("FEED loop a[\(ei)] id-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] id=\(id) pick-start")
