@@ -180,14 +180,12 @@ final class PlayerManager {
                 var codec = "none"
                 if let track = it.asset.tracks(withMediaType: .video).first {
                     codec = track.formatDescriptions.map { desc -> String in
-                        if let cm = desc as? CMFormatDescription {
-                            let code = CMFormatDescriptionGetMediaSubType(cm)
-                            // FourCharCode(UInt32) 转可读字符串（如 'hvc1'/'avc1'）
-                            let chars = [24, 16, 8, 0].map { Character(UnicodeScalar((code >> $0) & 0xFF)!) }
-                            let s = String(chars)
-                            return s.allSatisfy { $0.isASCII && !$0.isWhitespace } ? s : "raw(\(code))"
-                        }
-                        return "?"
+                        let cm = desc as! CMFormatDescription
+                        let code = CMFormatDescriptionGetMediaSubType(cm)
+                        // FourCharCode(UInt32) 转可读字符串（如 'hvc1'/'avc1'）
+                        let chars = [24, 16, 8, 0].map { Character(UnicodeScalar((code >> $0) & 0xFF)!) }
+                        let s = String(chars)
+                        return s.allSatisfy { $0.isASCII && !$0.isWhitespace } ? s : "raw(\(code))"
                     }.joined(separator: ",")
                     if codec.isEmpty { codec = "empty" }
                 } else {
