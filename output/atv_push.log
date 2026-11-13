@@ -11385,3 +11385,226 @@
 11:16:48  [11:16:48] FEED VIDEOTREE[77067022]: 1:msg{1:str="v0200fg10000dbpr5vnog65pp1icpbf0" 2:str="https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10" 3:int=576 4:int=1024 5:str="v0200fg10000dbpr5vnog65pp1icpbf0_h264_540p_1780531" 6:int=1699962 7:str="dfd12820d0036108a3d0534d0a76def2"} 2:msg{1:str="tos-cn-i-0813c001/oQTAVftJAonB2GEV7JiEBeOLOIITEALzADA5eG" 2:str="https://p5-sign.douyinpic.com/tos-cn-i-0813c001/oQTAVftJAonB" 2:str="https://p96-sign.douyinpic.com/tos-cn-i-0813c001/oQTAVftJAon" 2:str="https://p5-sign.douyinpic.com/tos-cn-i-0813c001/oQTAVftJAonB" 3:int=540 4:int=720} 3:int=1024 4:int=576 5:msg{1:msg{} 3:int=720 4:int=720} 6:msg{1:str="tos-cn-p-0015/okfVZZ7jBFD5mzWEdtFXeQfOB84MQACz2WDEkA" 2:str="https://p96-sign.douyinpic.com/tos-cn-p-0015/okfVZZ7jBFD5mzW" 2:str="https://p9-sign.douyinpic.com/tos-cn-p-0015/okfVZZ7jBFD5mzWE" 2:str="https://p96-sign.douyinpic.com/tos-cn-p-0015/okfVZZ7jBFD5mzW" 3:int=360 4:int=640} 7:str="540p" 8:msg{1:str="v0200fg10000dbpr5vnog65pp1icpbf0" 2:str="https://v99-coldx.douyinvod.com/9f037ba01c8362e760e244ec8031" 2:str="https://v95-bjb-mc-cold.douyinvod.com/d09c20b50bc144cfa6d796" 2:str="https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10" 3:int=720 4:int=720 6:int=2665313} 9:int=1 10:msg{1:str="v0200fg10000dbpr5vnog65pp1icpbf0" 2:str="https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10" 3:int=576 4:int=1024 5:str="v0200fg10000dbpr5vnog65pp1icpbf0_h264_540p_1780531" 6:int=1699962 7:str="dfd12820d0036108a3d0534d0a76def2"} 11:msg{1:str="540_2_1" 2:int=23 3:int=1051811 4:msg{1:str="v0200fg10000dbpr5vnog65pp1icpbf0" 2:str="https://v5-daily-cm.douyinvod.com/76d4e5f7500fc555796e08ca57" 2:str="https://v5-gz2-a.douyinvod.com/c0bf25d5f2ae3f24096212854817a" 2:str="https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10" 2:str="https://api.amemv.com/aweme/
 11:16:48  [11:16:48] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
 11:16:48  [11:16:48] ENGINE merge total=6 index=0 replace=false auto=true
+11:35:05  [11:35:05] DYTV v80 launched
+11:35:05  [11:35:05] SIGNER init start
+11:35:05  [11:35:05] LOGSRV ready on port 8765
+11:35:05  [11:35:05] SIGNER load shim ok
+11:35:05  [11:35:05] SIGNER load abogus ok
+11:35:05  [11:35:05] LOGSRV advertising as DYTV-330
+11:35:05  [11:35:05] SIGNER load sign ok
+11:35:05  [11:35:05] DUAL viewDidLoad
+11:35:05  [11:35:05] ROOT auto-start v80
+11:35:05  [11:35:05] SIGNER load abogus_dy ok
+11:35:05  [11:35:05] SIGNER extras sign=true dy=true
+11:35:05  [11:35:05] SIGNER bdms=yes
+11:35:05  [11:35:05] SIGNER initABogus=true
+11:35:05  [11:35:05] SIGNER fns=AB (期望 AB)
+11:35:05  [11:35:05] SIGNER smoke={"ok":true,"value":"OJWhMRw6DkdNkDSk5X5LfY3qVW33YsAQ0SVkMDhezVfPyL39HMP89exEv5sv2OEeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+11:35:05  [11:35:05] SIGNER READY a_bogus len=180
+11:35:05  [11:35:05] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+11:35:05  [11:35:05] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+11:35:06  [11:35:06] LOGSRV Bonjour published: DYTV-330
+11:35:08  [11:35:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+11:35:08  [11:35:08] FEED first url[7703063668707987365]: https://n98-v-ncdncold.douyinvod.com/7d22462f52330059f841adce2d2536b9/6af92874/video/tos/cn/tos-cn-ve-15c000-ce/oAvInExxwAcUEfhz9FfosqDBHE59
+11:35:08  [11:35:08] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+11:35:08  [11:35:08] ENGINE merge total=6 index=0 replace=false auto=true
+11:35:17  [11:35:17] DUAL slide next -> idx=1
+11:35:18  [11:35:18] DUAL slide done activeIdx=1 idx=1
+11:35:18  [11:35:18] SLOT idx=1 readyToPlay muted=true
+11:35:18  [11:35:18] DUAL standby ready idx=1 keepMuted=true
+11:35:18  [11:35:18] SLOT cleared (resource released)
+11:35:20  [11:35:20] DUAL slide next -> idx=2
+11:35:20  [11:35:20] SLOT idx=2 FAILED err=Cannot Open
+11:35:20  [11:35:20] DUAL standby load failed idx=2
+11:35:20  [11:35:20] DUAL slide done activeIdx=0 idx=2
+11:35:21  [11:35:21] SLOT cleared (resource released)
+11:35:23  [11:35:23] DUAL slide next -> idx=3
+11:35:23  [11:35:23] DUAL slide done activeIdx=1 idx=3
+11:35:24  [11:35:24] SLOT idx=4 readyToPlay muted=true
+11:35:24  [11:35:24] DUAL standby ready idx=4 keepMuted=true
+11:35:24  [11:35:24] SLOT cleared (resource released)
+11:35:26  [11:35:26] DUAL slide next -> idx=5
+11:35:27  [11:35:26] SLOT idx=5 readyToPlay muted=true
+11:35:27  [11:35:26] DUAL standby ready idx=5 keepMuted=false
+11:35:27  [11:35:26] DUAL slide done activeIdx=0 idx=5
+11:35:27  [11:35:27] SLOT cleared (resource released)
+11:35:31  [11:35:31] DUAL slide prev -> idx=4
+11:35:31  [11:35:31] SLOT idx=4 readyToPlay muted=true
+11:35:31  [11:35:31] DUAL standby ready idx=4 keepMuted=false
+11:35:31  [11:35:31] DUAL slide done activeIdx=1 idx=4
+11:35:32  [11:35:32] SLOT cleared (resource released)
+11:35:32  [11:35:32] DUAL slide next -> idx=5
+11:35:32  [11:35:32] SLOT idx=5 readyToPlay muted=true
+11:35:32  [11:35:32] DUAL standby ready idx=5 keepMuted=false
+11:35:32  [11:35:32] DUAL slide done activeIdx=0 idx=5
+11:35:33  [11:35:33] SLOT cleared (resource released)
+11:35:34  [11:35:34] DUAL slide prev -> idx=4
+11:35:34  [11:35:34] SLOT idx=4 readyToPlay muted=true
+11:35:34  [11:35:34] DUAL standby ready idx=4 keepMuted=false
+11:35:34  [11:35:34] DUAL slide done activeIdx=1 idx=4
+11:35:35  [11:35:35] DUAL slide next -> idx=5
+11:35:35  [11:35:35] SLOT cleared (resource released)
+11:35:35  [11:35:35] DUAL slide done activeIdx=0 idx=5
+11:35:36  [11:35:36] SLOT cleared (resource released)
+11:35:40  [11:35:40] DUAL slide prev -> idx=4
+11:35:40  [11:35:40] SLOT idx=4 readyToPlay muted=true
+11:35:40  [11:35:40] DUAL standby ready idx=4 keepMuted=false
+11:35:40  [11:35:40] DUAL slide done activeIdx=1 idx=4
+11:35:41  [11:35:41] DUAL slide prev -> idx=3
+11:35:41  [11:35:41] SLOT cleared (resource released)
+11:35:41  [11:35:41] DUAL slide done activeIdx=0 idx=3
+11:35:42  [11:35:41] DUAL slide prev -> idx=2
+11:35:42  [11:35:42] SLOT cleared (resource released)
+11:35:42  [11:35:42] DUAL slide done activeIdx=1 idx=2
+11:35:43  [11:35:42] SLOT cleared (resource released)
+11:35:43  [11:35:43] DUAL slide prev -> idx=1
+11:35:43  [11:35:43] SLOT idx=1 readyToPlay muted=true
+11:35:43  [11:35:43] DUAL standby ready idx=1 keepMuted=false
+11:35:43  [11:35:43] DUAL slide done activeIdx=0 idx=1
+11:35:44  [11:35:43] DUAL slide prev -> idx=0
+11:35:44  [11:35:44] SLOT cleared (resource released)
+11:35:44  [11:35:44] DUAL slide done activeIdx=1 idx=0
+11:35:44  [11:35:44] SLOT cleared (resource released)
+11:35:45  [11:35:45] DUAL slide next -> idx=1
+11:35:45  [11:35:45] SLOT idx=1 readyToPlay muted=true
+11:35:45  [11:35:45] DUAL standby ready idx=1 keepMuted=false
+11:35:46  [11:35:45] SLOT idx=2 FAILED err=Cannot Open
+11:35:46  [11:35:45] DUAL standby load failed idx=2
+11:35:46  [11:35:46] DUAL slide done activeIdx=0 idx=1
+11:35:46  [11:35:46] SLOT cleared (resource released)
+11:35:47  [11:35:47] DUAL slide next -> idx=3
+11:35:47  [11:35:47] DUAL slide done activeIdx=1 idx=3
+11:35:47  [11:35:47] DUAL slide next -> idx=5
+11:35:48  [11:35:48] SLOT idx=4 readyToPlay muted=true
+11:35:48  [11:35:48] DUAL standby ready idx=4 keepMuted=true
+11:35:48  [11:35:48] SLOT idx=5 readyToPlay muted=true
+11:35:48  [11:35:48] DUAL standby ready idx=5 keepMuted=false
+11:35:48  [11:35:48] DUAL slide done activeIdx=0 idx=5
+11:35:48  [11:35:48] SLOT cleared (resource released)
+11:35:48  [11:35:48] SLOT cleared (resource released)
+11:35:59  [11:35:59] DUAL slide prev -> idx=4
+11:36:00  [11:35:59] SLOT idx=4 readyToPlay muted=true
+11:36:00  [11:35:59] DUAL standby ready idx=4 keepMuted=false
+11:36:00  [11:36:00] DUAL slide done activeIdx=1 idx=4
+11:36:00  [11:36:00] SLOT cleared (resource released)
+11:36:01  [11:36:01] DUAL slide prev -> idx=3
+11:36:01  [11:36:01] SLOT idx=3 readyToPlay muted=true
+11:36:01  [11:36:01] DUAL standby ready idx=3 keepMuted=false
+11:36:01  [11:36:01] DUAL slide done activeIdx=0 idx=3
+11:36:02  [11:36:02] SLOT cleared (resource released)
+11:36:02  [11:36:02] DUAL slide prev -> idx=2
+11:36:02  [11:36:02] SLOT idx=2 FAILED err=Cannot Open
+11:36:02  [11:36:02] DUAL standby load failed idx=2
+11:36:03  [11:36:03] DUAL slide done activeIdx=1 idx=2
+11:36:03  [11:36:03] SLOT cleared (resource released)
+11:36:05  [11:36:05] DUAL slide next -> idx=3
+11:36:06  [11:36:06] SLOT idx=3 readyToPlay muted=true
+11:36:06  [11:36:06] DUAL standby ready idx=3 keepMuted=false
+11:36:06  [11:36:06] DUAL slide done activeIdx=0 idx=3
+11:36:06  [11:36:06] SLOT cleared (resource released)
+11:36:07  [11:36:07] SLOT idx=4 readyToPlay muted=true
+11:36:07  [11:36:07] DUAL standby ready idx=4 keepMuted=true
+11:36:07  [11:36:07] DUAL slide next -> idx=5
+11:36:08  [11:36:08] SLOT idx=5 readyToPlay muted=true
+11:36:08  [11:36:08] DUAL standby ready idx=5 keepMuted=false
+11:36:08  [11:36:08] DUAL slide done activeIdx=1 idx=5
+11:36:08  [11:36:08] SLOT cleared (resource released)
+11:36:21  [11:36:21] DYTV v80 launched
+11:36:21  [11:36:21] SIGNER init start
+11:36:21  [11:36:21] LOGSRV ready on port 8765
+11:36:21  [11:36:21] SIGNER load shim ok
+11:36:21  [11:36:21] SIGNER load abogus ok
+11:36:21  [11:36:21] LOGSRV advertising as DYTV-214
+11:36:21  [11:36:21] SIGNER load sign ok
+11:36:21  [11:36:21] SIGNER load abogus_dy ok
+11:36:22  [11:36:21] SIGNER extras sign=true dy=true
+11:36:22  [11:36:21] SIGNER bdms=yes
+11:36:22  [11:36:21] SIGNER initABogus=true
+11:36:22  [11:36:21] SIGNER fns=AB (期望 AB)
+11:36:22  [11:36:21] DUAL viewDidLoad
+11:36:22  [11:36:21] SIGNER smoke={"ok":true,"value":"OXRhBfLfdDfshfSh5X5LfY3qVW33YsAs0SVkMDhezVfPKg39HMOU9exEv5hvWsfeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+11:36:22  [11:36:21] SIGNER READY a_bogus len=180
+11:36:22  [11:36:21] ROOT auto-start v80
+11:36:22  [11:36:21] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+11:36:22  [11:36:21] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+11:36:22  [11:36:22] LOGSRV Bonjour published: DYTV-214
+11:36:24  [11:36:24] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+11:36:24  [11:36:24] FEED first url[7703224521469605353]: https://v9-chc.douyinvod.com/3c09c57d27540c111106bc08fc00547d/6af928c1/video/cn/mps/logo/r/p/v1e00fgi0000dbjlj8nog65m9goh10p0/eedbc1417e594c
+11:36:24  [11:36:24] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+11:36:24  [11:36:24] ENGINE merge total=6 index=0 replace=false auto=true
+11:36:34  [11:36:34] DUAL slide next -> idx=1
+11:36:35  [11:36:35] DUAL slide done activeIdx=1 idx=1
+11:36:35  [11:36:35] SLOT idx=2 readyToPlay muted=true
+11:36:35  [11:36:35] DUAL standby ready idx=2 keepMuted=true
+11:36:35  [11:36:35] SLOT cleared (resource released)
+11:36:37  [11:36:37] DUAL slide next -> idx=3
+11:36:37  [11:36:37] DUAL slide done activeIdx=0 idx=3
+11:36:37  [11:36:37] SLOT idx=3 readyToPlay muted=true
+11:36:37  [11:36:37] DUAL standby ready idx=3 keepMuted=true
+11:36:38  [11:36:38] SLOT cleared (resource released)
+11:36:38  [11:36:38] DUAL slide next -> idx=4
+11:36:39  [11:36:39] DUAL slide done activeIdx=1 idx=4
+11:36:39  [11:36:39] SLOT cleared (resource released)
+11:36:39  [11:36:39] SLOT idx=5 readyToPlay muted=true
+11:36:39  [11:36:39] DUAL standby ready idx=5 keepMuted=true
+11:36:40  [11:36:40] DUAL slide prev -> idx=4
+11:36:41  [11:36:40] DUAL slide done activeIdx=0 idx=4
+11:36:41  [11:36:41] SLOT idx=4 readyToPlay muted=true
+11:36:41  [11:36:41] DUAL standby ready idx=4 keepMuted=true
+11:36:41  [11:36:41] SLOT cleared (resource released)
+11:36:42  [11:36:42] DUAL slide next -> idx=5
+11:36:42  [11:36:42] SLOT idx=5 readyToPlay muted=true
+11:36:42  [11:36:42] DUAL standby ready idx=5 keepMuted=false
+11:36:42  [11:36:42] DUAL slide done activeIdx=1 idx=5
+11:36:43  [11:36:43] SLOT cleared (resource released)
+11:36:43  [11:36:43] DUAL slide prev -> idx=4
+11:36:43  [11:36:43] DUAL slide done activeIdx=0 idx=4
+11:36:43  [11:36:43] SLOT idx=4 readyToPlay muted=true
+11:36:43  [11:36:43] DUAL standby ready idx=4 keepMuted=true
+11:36:44  [11:36:44] SLOT cleared (resource released)
+11:36:44  [11:36:44] DUAL slide prev -> idx=3
+11:36:45  [11:36:44] SLOT idx=3 readyToPlay muted=true
+11:36:45  [11:36:44] DUAL standby ready idx=3 keepMuted=false
+11:36:45  [11:36:45] DUAL slide done activeIdx=1 idx=3
+11:36:45  [11:36:45] SLOT cleared (resource released)
+11:36:46  [11:36:46] DUAL slide prev -> idx=2
+11:36:46  [11:36:46] DUAL slide done activeIdx=0 idx=2
+11:36:46  [11:36:46] SLOT idx=2 readyToPlay muted=true
+11:36:46  [11:36:46] DUAL standby ready idx=2 keepMuted=true
+11:36:47  [11:36:46] SLOT cleared (resource released)
+11:36:47  [11:36:47] DUAL slide prev -> idx=1
+11:36:47  [11:36:47] SLOT idx=1 FAILED err=Cannot Open
+11:36:47  [11:36:47] DUAL standby load failed idx=1
+11:36:47  [11:36:47] DUAL slide done activeIdx=1 idx=1
+11:36:48  [11:36:48] SLOT cleared (resource released)
+11:36:48  [11:36:48] DUAL slide next -> idx=2
+11:36:48  [11:36:48] SLOT idx=2 readyToPlay muted=true
+11:36:48  [11:36:48] DUAL standby ready idx=2 keepMuted=false
+11:36:48  [11:36:48] DUAL slide done activeIdx=0 idx=2
+11:36:48  [11:36:48] DUAL slide next -> idx=3
+11:36:49  [11:36:49] DUAL slide done activeIdx=1 idx=3
+11:36:49  [11:36:49] SLOT cleared (resource released)
+11:36:49  [11:36:49] SLOT cleared (resource released)
+11:36:53  [11:36:53] DUAL slide prev -> idx=4
+11:36:53  [11:36:53] DUAL slide done activeIdx=0 idx=4
+11:36:54  [11:36:53] DUAL slide prev -> idx=3
+11:36:54  [11:36:54] SLOT idx=3 readyToPlay muted=true
+11:36:54  [11:36:54] DUAL standby ready idx=3 keepMuted=false
+11:36:54  [11:36:54] DUAL slide done activeIdx=1 idx=3
+11:36:54  [11:36:54] SLOT cleared (resource released)
+11:36:54  [11:36:54] DUAL slide prev -> idx=2
+11:36:54  [11:36:54] SLOT cleared (resource released)
+11:36:55  [11:36:55] DUAL slide done activeIdx=0 idx=2
+11:36:55  [11:36:55] SLOT cleared (resource released)
+11:36:55  [11:36:55] DUAL slide next -> idx=3
+11:36:56  [11:36:55] SLOT idx=3 readyToPlay muted=true
+11:36:56  [11:36:55] DUAL standby ready idx=3 keepMuted=false
+11:36:56  [11:36:56] DUAL slide done activeIdx=1 idx=3
+11:36:56  [11:36:56] DUAL slide next -> idx=5
+11:36:56  [11:36:56] SLOT idx=5 readyToPlay muted=true
+11:36:56  [11:36:56] DUAL standby ready idx=5 keepMuted=false
+11:36:56  [11:36:56] DUAL slide done activeIdx=0 idx=5
+11:36:56  [11:36:56] SLOT cleared (resource released)
+11:36:57  [11:36:56] SLOT idx=4 readyToPlay muted=true
+11:36:57  [11:36:56] DUAL standby ready idx=4 keepMuted=false
+11:36:57  [11:36:57] SLOT cleared (resource released)
