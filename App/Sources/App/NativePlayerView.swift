@@ -1,5 +1,6 @@
 import UIKit
 import AVKit
+import AVFoundation
 import SwiftUI
 import Combine
 
@@ -14,7 +15,8 @@ final class DYPlayerViewController: AVPlayerViewController {
     private var preloadCache: [Int: AVPlayerItem] = [:]
     private let preloadRadius = 2
 
-    /// 无缝切换遮罩：换源瞬间盖黑，新源 readyToPlay 后 0.2s 淡出（消灭黑屏转圈）。
+    /// 无缝切换遮罩：换源瞬间铺上当前视频末帧快照（AVAssetImageGenerator），
+    /// 视觉=画面冻结→直接切新画面；新源 readyToPlay 后再延迟 100ms 淡出。
     private let switchCover: UIView = {
         let v = UIView()
         v.backgroundColor = .black
@@ -22,7 +24,12 @@ final class DYPlayerViewController: AVPlayerViewController {
         v.isUserInteractionEnabled = false   // 绝不抢遥控器焦点
         return v
     }()
-    private var isSwitching = false
+    private let coverImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit     // 与播放器 resizeAspect 一致，快照不变形
+        iv.clipsToBounds = true
+        return iv
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +60,15 @@ final class DYPlayerViewController: AVPlayerViewController {
             switchCover.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             switchCover.topAnchor.constraint(equalTo: view.topAnchor),
             switchCover.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        // 末帧快照铺满遮罩
+        switchCover.addSubview(coverImageView)
+        coverImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            coverImageView.leadingAnchor.constraint(equalTo: switchCover.leadingAnchor),
+            coverImageView.trailingAnchor.constraint(equalTo: switchCover.trailingAnchor),
+            coverImageView.topAnchor.constraint(equalTo: switchCover.topAnchor),
+            coverImageView.bottomAnchor.constraint(equalTo: switchCover.bottomAnchor),
         ])
         view.bringSubviewToFront(switchCover)
     }
@@ -92,8 +108,8 @@ final class DYPlayerViewController: AVPlayerViewController {
         guard let item = object as? AVPlayerItem else { return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context) }
         if keyPath == "status" {
             if item.status == .readyToPlay, item == player?.currentItem {
-                // 新源首帧可播 → 淡出切换遮罩
-                fadeOutCover()
+                // 新源首帧可播 → 延迟 100ms 再淡出快照遮罩（挡住底层可能的黑帧）
+                scheduleFadeOut()
             }
             if item.status == .failed {
                 let idx = preloadCache.first(where: { $0.value == item })?.key ?? -1
@@ -115,24 +131,47 @@ final class DYPlayerViewController: AVPlayerViewController {
         }
         currentIndex = engine.index
         DYLog.shared.log("PLAYER play index=\(currentIndex) url=\((it.asset as? AVURLAsset)?.url.absoluteString.prefix(80) ?? "?")")
-        // 换源瞬间盖黑（无缝切换），等新源 readyToPlay 后淡出
-        isSwitching = true
+        // 无缝切换：换源【前】先截当前视频末帧铺满遮罩（画面冻结），彻底挡住底层黑帧
+        captureSnapshotOfCurrent()
         view.bringSubviewToFront(switchCover)
         switchCover.alpha = 1
         player?.replaceCurrentItem(with: it)
         player?.play()
         preloadNeighbors(around: currentIndex)
-        // 兜底：若 item 已 ready（预加载命中），立即淡出
-        if it.status == .readyToPlay { fadeOutCover() }
+        // 兜底：若 item 已 ready（预加载命中），走延迟淡出
+        if it.status == .readyToPlay { scheduleFadeOut() }
     }
 
-    /// 新源首帧可播 → 0.2s 淡出遮罩。
-    private func fadeOutCover() {
-        guard isSwitching else { return }
-        isSwitching = false
-        UIView.animate(withDuration: 0.2, animations: { [weak self] in
-            self?.switchCover.alpha = 0
-        })
+    /// 用 AVAssetImageGenerator 截当前视频当前帧，铺满遮罩（末帧快照，非纯黑）。
+    /// 必须在 replaceCurrentItem 之前调用（截的是旧视频）。
+    private func captureSnapshotOfCurrent() {
+        guard let item = player?.currentItem,
+              let asset = item.asset as? AVURLAsset else {
+            coverImageView.image = nil   // 拿不到就退化为纯黑遮罩
+            return
+        }
+        let gen = AVAssetImageGenerator(asset: asset)
+        gen.appliesPreferredTrackTransform = true
+        gen.maximumSize = CGSize(width: 1920, height: 1080)   // 限尺寸，快
+        let time = player?.currentTime() ?? .zero
+        gen.generateCGImagesAsynchronously(forTimes: [NSValue(time: time)]) { [weak self] _, cgImage, _, result, _ in
+            guard result == .succeeded, let cg = cgImage else { return }
+            DispatchQueue.main.async {
+                // 仅当遮罩仍可见（正在切换）才铺快照，避免慢回调污染已淡出的遮罩
+                if let self, self.switchCover.alpha > 0.01 {
+                    self.coverImageView.image = UIImage(cgImage: cg)
+                }
+            }
+        }
+    }
+
+    /// 新源 readyToPlay 后【强制延迟 100ms】再 0.2s 淡出遮罩——哪怕底层黑一帧也被快照挡住。
+    private func scheduleFadeOut() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            UIView.animate(withDuration: 0.2, animations: { [weak self] in
+                self?.switchCover.alpha = 0
+            })
+        }
     }
 
     private func preloadNeighbors(around index: Int) {
