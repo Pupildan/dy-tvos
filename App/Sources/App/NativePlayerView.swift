@@ -178,7 +178,7 @@ final class PlayerManager {
             DispatchQueue.main.async {
                 // 编码诊断：查视频轨编码格式，确认黑屏是否 HEVC 解不出
                 var codec = "none"
-                if let track = it.asset?.tracks(withMediaType: .video).first {
+                if let track = it.asset.tracks(withMediaType: .video).first {
                     codec = track.formatDescriptions.map { desc -> String in
                         if let cm = desc as? CMFormatDescription, let type = CMFormatDescriptionGetMediaSubType(cm) as String? {
                             return type
