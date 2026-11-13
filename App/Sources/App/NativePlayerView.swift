@@ -197,16 +197,15 @@ final class DYPlayerViewController: UIViewController {
     }
 
     /// 只有居中 cell 播放（解除静音），其余暂停+静音；并预载相邻。
-    /// 居中槽只在 item readyToPlay 时才 play——未 ready 时 play 会"画面卡住只有声音"。
-    /// 滚动会反复触发本方法，未 ready 的槽等下次事件再查（不用 KVO，避免 v96 那套复杂度）。
+    /// 居中槽无条件 play + 解除静音：item 没 ready 时 AVPlayer 会自己缓冲、好了自动出画，
+    /// 绝不会黑屏无声（v101/v102 的 readyToPlay 门槛挡死了这个天性→黑屏增多，撤掉）。
+    /// 只保留 load 换 item 时的 pause+静音（防旧帧+新声）。
     private func updatePlaybackStates(center index: Int) {
         for p in playerPool {
             guard let pi = playerIndex[p] else { continue }
             if pi == index {
-                if p.currentItem?.status == .readyToPlay {
-                    p.isMuted = false
-                    p.play()
-                }
+                p.isMuted = false
+                p.play()
             } else {
                 p.pause()
                 p.isMuted = true
