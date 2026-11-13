@@ -134,9 +134,25 @@ final class PlayerManager {
         }
     }
 
+    /// 播放时现场选新鲜 URL：优先用原始 video bytes 现跑选链（URL 当下生成、不过期），
+    /// 取不到才退化用预载的静态 urls[index]。照 myDV 播放时现算模式，治预载 URL 过期黑屏。
+    private func resolveFreshURL(index: Int) -> URL {
+        if let raw = PlaybackEngine.shared.rawVideo(at: index),
+           let parsed = Proto.parse(raw),
+           let fresh = DYFeedClient.shared.pickHighestQuality(from: parsed, awemeId: "") {
+            DYLog.shared.log("MGR fresh url idx=\(index): \(fresh.absoluteString.prefix(100))")
+            return fresh
+        }
+        let fallback = PlaybackEngine.shared.urls[index]
+        DYLog.shared.log("MGR fresh url idx=\(index) fallback static")
+        return fallback
+    }
+
     /// 新建 player 装载 index，挂 ready KVO（ready 时回调刷新封面显隐）。
     private func acquire(index: Int) -> AVPlayer {
-        let url = PlaybackEngine.shared.urls[index]
+        // 播放时现场选新鲜 URL：优先用原始 video bytes 现跑选链（URL 当下生成、不过期），
+        // 取不到才退化用预载的静态 urls[index]（可能已过期→黑屏）。照 myDV 播放时现算模式。
+        let url = resolveFreshURL(index: index)
         var headers = ["User-Agent": DYFeedClient.mobileUA]
         if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
             headers["Cookie"] = cookie

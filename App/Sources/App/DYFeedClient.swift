@@ -165,6 +165,7 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
+        var rawVideos: [[UInt8]] = []
         var loggedFirst = false
         var ei = 0
         for entry in awemeEntries {
@@ -175,6 +176,7 @@ final class DYFeedClient {
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] video-ok")
+            rawVideos.append(videoBytes)   // 存原始 video bytes，播放时现选新鲜 URL（防预载过期）
             // 一次性诊断：dump video 消息所有 field（号/wire/长度），定位 bit_rate 真实字段号
             let videoDump = video.fields.keys.sorted().map { k -> String in
                 let vals = video.fields[k] ?? []
@@ -230,7 +232,8 @@ final class DYFeedClient {
         PlaybackEngine.shared.merge(ids: ids, urls: urls,
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
-                                    refresh: false)
+                                    refresh: false,
+                                    allRawVideos: rawVideos)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {
