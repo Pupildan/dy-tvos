@@ -160,7 +160,7 @@ final class DYPlayerViewController: UIViewController {
     private func reloadIfNeeded() {
         guard view.bounds.height > 0 else { return }
         let target = pendingIndex ?? PlaybackEngine.shared.index
-        guard target != currentIndex, let url = itemURL(target) else { return }
+        guard target != currentIndex, let url = itemURL(at: target) else { return }
         let dir: SlideDir = target > currentIndex ? .next : .prev
         let incoming = standbySlot
         incoming.cover = nil
