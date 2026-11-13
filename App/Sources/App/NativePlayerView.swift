@@ -300,13 +300,9 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
-        // 对齐引擎索引 + 接近末尾翻页
+        // 索引唯一来源是按键的 engine.next()/prev()；scrollTo 只负责渲染，绝不用 offset 反推索引
+        // （旧的 for{engine.next()} 对齐循环 + scroll 委托 centeredIndex 反推 = 正反馈跳多页，已删）
         let engine = PlaybackEngine.shared
-        if clampedIndex > engine.index {
-            for _ in engine.index..<clampedIndex { engine.next() }
-        } else if clampedIndex < engine.index {
-            for _ in clampedIndex..<engine.index { engine.prev() }
-        }
         if engine.count > 0, clampedIndex >= engine.count - 7 {
             engine.triggerNeedMore()
         }
@@ -375,11 +371,15 @@ final class DYPlayerViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
+    /// 按键精确 ±1：直接驱动引擎，不读 centeredIndex()（动画中途 offset 不稳，反推会连跳多页）。
+    /// 渲染由 scrollTo(targetIndex) 跟随引擎，索引唯一来源是这里。
     private func advance() {
-        scrollTo(index: centeredIndex() + 1, animated: true)
+        PlaybackEngine.shared.next()
+        scrollTo(index: PlaybackEngine.shared.index, animated: true)
     }
     private func rewind() {
-        scrollTo(index: max(0, centeredIndex() - 1), animated: true)
+        PlaybackEngine.shared.prev()
+        scrollTo(index: PlaybackEngine.shared.index, animated: true)
     }
 
     private func seek(by seconds: Double) {
@@ -446,12 +446,10 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
         let snappedY = (velocity.y >= 0 ? ceil(targetY / pageHeight) : floor(targetY / pageHeight)) * pageHeight
         targetContentOffset.pointee.y = snappedY
     }
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        updatePlaybackStates(center: centeredIndex())
-    }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updatePlaybackStates(center: centeredIndex())
-    }
+    // 已删除 scrollViewDidEndScrollingAnimation / scrollViewDidEndDecelerating：
+    // 它们在程序化 setContentOffset 动画中途用 centeredIndex() 反推索引（读到中途 offset），
+    // 再 scrollTo → 又触发委托 → 正反馈自激，一次按键连跳多页（日志铁证 idx 12→18）。
+    // tvOS 按键驱动：索引唯一来源是 engine.next()/prev()，播放态由 scrollTo 的 asyncAfter 刷新。
 }
 
 /// SwiftUI 包装：UICollectionView 垂直分页真实视频滑动（PlayerManager 上限 3 池）。

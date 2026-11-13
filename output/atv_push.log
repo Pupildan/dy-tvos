@@ -38139,3 +38139,767 @@
 18:59:41  [18:59:41] ENGINE merge total=42 index=29 replace=false auto=false
 18:59:42  [18:59:42] MGR acquire idx=32 total=7
 18:59:42  [18:59:42] MGR ready idx=32
+19:07:13  [19:07:13] DYTV v114 launched
+19:07:13  [19:07:13] SIGNER init start
+19:07:13  [19:07:13] LOGSRV ready on port 8765
+19:07:13  [19:07:13] SIGNER load shim ok
+19:07:13  [19:07:13] SIGNER load abogus ok
+19:07:13  [19:07:13] LOGSRV advertising as DYTV-232
+19:07:13  [19:07:13] SIGNER load sign ok
+19:07:13  [19:07:13] FEEDCOLL viewDidLoad
+19:07:13  [19:07:13] ROOT auto-start v114
+19:07:13  [19:07:13] SIGNER load abogus_dy ok
+19:07:13  [19:07:13] SIGNER extras sign=true dy=true
+19:07:13  [19:07:13] SIGNER bdms=yes
+19:07:13  [19:07:13] SIGNER initABogus=true
+19:07:13  [19:07:13] SIGNER fns=AB (期望 AB)
+19:07:13  [19:07:13] SIGNER smoke={"ok":true,"value":"OXmZ/DLDdkfsXdWg5XdLfY3qVW33YslL0SVkMDhezVfPby39HMPm9exEfSJvQc8eF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+19:07:13  [19:07:13] SIGNER READY a_bogus len=180
+19:07:13  [19:07:13] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+19:07:13  [19:07:13] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+19:07:14  [19:07:14] LOGSRV Bonjour published: DYTV-232
+19:07:16  [19:07:16] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+19:07:16  [19:07:16] FEED loop a[0] begin bytes=85717
+19:07:16  [19:07:16] FEED loop a[0] aweme-ok
+19:07:16  [19:07:16] FEED loop a[0] video-ok
+19:07:16  [19:07:16] FEED video-dump a[0] f1[bytes=344] f2[bytes=1061] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=993] f7[bytes=4] f8[bytes=1514] f9[varint=1] f10[bytes=344] f11[bytes=2545] f13[varint=8500] f14[bytes=1514] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740843] f24[varint=0] f26[bytes=0] f30[bytes=2993] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[0] id=7707274833549138149 pick-start
+19:07:16  [19:07:16] FEED loop a[0] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[0] final chosen=true
+19:07:16  [19:07:16] FEED first url[7707274833549138149]: https://v99-coldx.douyinvod.com/ca4bebf4f355d25e7784ee26427c5749/6af9926b/video/tos/cn/tos-cn-ve-15c000-ce/oEIA3JeIIg61VFw8xRCs7SAnOKgfLBBCG
+19:07:16  [19:07:16] FEED loop a[1] begin bytes=61164
+19:07:16  [19:07:16] FEED loop a[1] aweme-ok
+19:07:16  [19:07:16] FEED loop a[1] video-ok
+19:07:16  [19:07:16] FEED video-dump a[1] f1[bytes=343] f2[bytes=1053] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=981] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2592] f13[varint=10285] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740845] f24[varint=0] f25[bytes=1821] f26[bytes=0] f30[bytes=3180] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[1] id=7706846162766349018 pick-start
+19:07:16  [19:07:16] FEED loop a[1] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[1] final chosen=true
+19:07:16  [19:07:16] FEED loop a[2] begin bytes=57178
+19:07:16  [19:07:16] FEED loop a[2] aweme-ok
+19:07:16  [19:07:16] FEED loop a[2] video-ok
+19:07:16  [19:07:16] FEED video-dump a[2] f1[bytes=344] f2[bytes=1047] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=962] f7[bytes=4] f8[bytes=1496] f9[varint=1] f10[bytes=344] f11[bytes=2583,bytes=2580,bytes=2588] f13[varint=12300] f14[bytes=1496] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740847] f24[varint=0] f25[bytes=1820] f26[bytes=0] f29[bytes=687] f30[bytes=2908] f33[varint=1] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[2] id=7699291256697986880 pick-start
+19:07:16  [19:07:16] FEED loop a[2] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[2] final chosen=true
+19:07:16  [19:07:16] FEED loop a[3] begin bytes=44791
+19:07:16  [19:07:16] FEED loop a[3] aweme-ok
+19:07:16  [19:07:16] FEED loop a[3] video-ok
+19:07:16  [19:07:16] FEED video-dump a[3] f1[bytes=344] f2[bytes=1068] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=998] f7[bytes=4] f8[bytes=383] f9[varint=1] f10[bytes=344] f11[bytes=2598] f13[varint=12400] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740847] f24[varint=0] f25[bytes=1822] f26[bytes=0] f30[bytes=3048] f33[varint=1] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[3] id=7703052269638496377 pick-start
+19:07:16  [19:07:16] FEED loop a[3] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[3] final chosen=true
+19:07:16  [19:07:16] FEED loop a[4] begin bytes=56831
+19:07:16  [19:07:16] FEED loop a[4] aweme-ok
+19:07:16  [19:07:16] FEED loop a[4] video-ok
+19:07:16  [19:07:16] FEED video-dump a[4] f1[bytes=344] f2[bytes=1056] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1004] f7[bytes=4] f8[bytes=1519] f9[varint=1] f10[bytes=344] f11[bytes=2575,bytes=2575] f13[varint=24450] f14[bytes=1519] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740859] f24[varint=0] f25[bytes=1829] f26[bytes=0] f30[bytes=3324] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[4] id=7705652852269865381 pick-start
+19:07:16  [19:07:16] FEED loop a[4] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[4] final chosen=true
+19:07:16  [19:07:16] FEED loop a[5] begin bytes=50012
+19:07:16  [19:07:16] FEED loop a[5] aweme-ok
+19:07:16  [19:07:16] FEED loop a[5] video-ok
+19:07:16  [19:07:16] FEED video-dump a[5] f1[bytes=343] f2[bytes=1061] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=1008] f7[bytes=4] f8[bytes=1524] f9[varint=1] f10[bytes=343] f11[bytes=2559] f13[varint=10067] f14[bytes=1524] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740845] f24[varint=0] f25[bytes=1833] f26[bytes=0] f29[bytes=739] f30[bytes=2902] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:16  [19:07:16] FEED loop a[5] id=7706829693915629169 pick-start
+19:07:16  [19:07:16] FEED loop a[5] pick-done chosen=false
+19:07:16  [19:07:16] FEED loop a[5] final chosen=true
+19:07:16  [19:07:16] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+19:07:16  [19:07:16] ENGINE merge total=6 index=0 replace=false auto=true
+19:07:16  [19:07:16] ENGINE needMore (index=0 count=6)
+19:07:16  [19:07:16] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+19:07:16  [19:07:16] MGR acquire idx=0 total=1
+19:07:16  [19:07:16] MGR acquire idx=1 total=2
+19:07:16  [19:07:16] MGR acquire idx=2 total=3
+19:07:16  [19:07:16] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+19:07:17  [19:07:16] MGR ready idx=2
+19:07:17  [19:07:17] MGR ready idx=0
+19:07:17  [19:07:17] MGR ready idx=1
+19:07:18  [19:07:18] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=5 (refresh_index=2)
+19:07:18  [19:07:18] FEED loop a[0] begin bytes=53728
+19:07:18  [19:07:18] FEED loop a[0] aweme-ok
+19:07:18  [19:07:18] FEED loop a[0] video-ok
+19:07:18  [19:07:18] FEED video-dump a[0] f1[bytes=344] f2[bytes=1061] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2594] f13[varint=10834] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740848] f24[varint=0] f25[bytes=1828] f26[bytes=0] f30[bytes=2979] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:18  [19:07:18] FEED loop a[0] id=7704278353133705595 pick-start
+19:07:18  [19:07:18] FEED loop a[0] pick-done chosen=false
+19:07:18  [19:07:18] FEED loop a[0] final chosen=true
+19:07:18  [19:07:18] FEED first url[7704278353133705595]: https://v9-chc.douyinvod.com/85a41f1f1f9b18a2964d55d307a665a0/6af99270/video/cn/mps/logo/r/p/v2800fgi0000dblhg27og65nr1j6n7f0/1943ef43ae5743
+19:07:18  [19:07:18] FEED loop a[1] begin bytes=55366
+19:07:18  [19:07:18] FEED loop a[1] aweme-ok
+19:07:18  [19:07:18] FEED loop a[1] video-ok
+19:07:18  [19:07:18] FEED video-dump a[1] f1[bytes=343] f2[bytes=1059] f3[varint=1280] f4[varint=720] f5[bytes=8] f6[bytes=1008] f7[bytes=4] f8[bytes=1518] f9[varint=1] f10[bytes=343] f11[bytes=2589,bytes=2575] f13[varint=10239] f14[bytes=1518] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740848] f24[varint=0] f25[bytes=1825] f26[bytes=0] f30[bytes=3266] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:18  [19:07:18] FEED loop a[1] id=7698687003446435451 pick-start
+19:07:18  [19:07:18] FEED loop a[1] pick-done chosen=false
+19:07:18  [19:07:18] FEED loop a[1] final chosen=true
+19:07:18  [19:07:18] FEED loop a[2] begin bytes=55510
+19:07:18  [19:07:18] FEED loop a[2] aweme-ok
+19:07:18  [19:07:18] FEED loop a[2] video-ok
+19:07:18  [19:07:18] FEED video-dump a[2] f1[bytes=1307] f2[bytes=1049] f3[varint=2880] f4[varint=2160] f5[bytes=8] f6[bytes=1007] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1156] f34[bytes=0]
+19:07:18  [19:07:18] FEED loop a[2] id=7706519286248560613 pick-start
+19:07:18  [19:07:18] FEED loop a[2] pick-done chosen=false
+19:07:18  [19:07:18] FEED loop a[2] final chosen=true
+19:07:18  [19:07:18] FEED loop a[3] begin bytes=80546
+19:07:18  [19:07:18] FEED loop a[3] aweme-ok
+19:07:18  [19:07:18] FEED loop a[3] video-ok
+19:07:18  [19:07:18] FEED video-dump a[3] f1[bytes=342] f2[bytes=1063] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1526] f9[varint=1] f10[bytes=342] f11[bytes=2501] f13[varint=4067] f14[bytes=1526] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=342] f21[varint=1794740842] f24[varint=0] f25[bytes=1836] f26[bytes=0] f30[bytes=3651] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:18  [19:07:18] FEED loop a[3] id=7703762740180383857 pick-start
+19:07:18  [19:07:18] FEED loop a[3] pick-done chosen=false
+19:07:18  [19:07:18] FEED loop a[3] final chosen=true
+19:07:18  [19:07:18] FEED loop a[4] begin bytes=50043
+19:07:18  [19:07:18] FEED loop a[4] aweme-ok
+19:07:18  [19:07:18] FEED loop a[4] video-ok
+19:07:18  [19:07:18] FEED video-dump a[4] f1[bytes=343] f2[bytes=1029] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=976] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2564] f13[varint=6307] f14[bytes=1620] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=343] f21[varint=1794740844] f24[varint=0] f26[bytes=0] f30[bytes=3026] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:18  [19:07:18] FEED loop a[4] id=7707267966832066195 pick-start
+19:07:18  [19:07:18] FEED loop a[4] pick-done chosen=false
+19:07:18  [19:07:18] FEED loop a[4] final chosen=true
+19:07:18  [19:07:18] FEED mobile page refresh_index=2: awemes=5 usable=5 total_seen=11
+19:07:18  [19:07:18] ENGINE merge total=11 index=0 replace=false auto=false
+19:07:21  [19:07:21] ENGINE next -> index=1
+19:07:21  [19:07:21] MGR acquire idx=3 total=4
+19:07:21  [19:07:21] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+19:07:21  [19:07:21] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+19:07:21  [19:07:21] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+19:07:22  [19:07:22] MGR ready idx=3
+19:07:22  [19:07:22] ENGINE next -> index=2
+19:07:22  [19:07:22] MGR acquire idx=4 total=5
+19:07:22  [19:07:22] FEEDCOLL scrollTo idx=2 y=2160.0 items=11
+19:07:23  [19:07:22] MGR acquire idx=5 total=6
+19:07:23  [19:07:22] MGR evict idx=5
+19:07:23  [19:07:22] FEEDCOLL scrollTo idx=2 y=2160.0 items=11
+19:07:23  [19:07:23] MGR acquire idx=5 total=6
+19:07:23  [19:07:23] MGR ready idx=4
+19:07:23  [19:07:23] MGR ready idx=5
+19:07:24  [19:07:24] ENGINE next -> index=3
+19:07:24  [19:07:24] MGR evict idx=0
+19:07:24  [19:07:24] FEEDCOLL scrollTo idx=3 y=3240.0 items=11
+19:07:24  [19:07:24] MGR acquire idx=6 total=6
+19:07:24  [19:07:24] MGR acquire idx=7 total=7
+19:07:24  [19:07:24] MGR evict idx=6
+19:07:24  [19:07:24] MGR evict idx=7
+19:07:24  [19:07:24] FEEDCOLL scrollTo idx=3 y=3240.0 items=11
+19:07:24  [19:07:24] MGR acquire idx=7 total=6
+19:07:25  [19:07:25] ENGINE next -> index=4
+19:07:25  [19:07:25] ENGINE needMore (index=4 count=11)
+19:07:25  [19:07:25] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=11
+19:07:25  [19:07:25] MGR evict idx=1
+19:07:25  [19:07:25] MGR evict idx=7
+19:07:25  [19:07:25] MGR acquire idx=6 total=5
+19:07:25  [19:07:25] FEEDCOLL scrollTo idx=4 y=4320.0 items=11
+19:07:25  [19:07:25] MGR acquire idx=8 total=6
+19:07:25  [19:07:25] MGR acquire idx=9 total=7
+19:07:25  [19:07:25] MGR evict idx=8
+19:07:25  [19:07:25] MGR evict idx=9
+19:07:25  [19:07:25] FEEDCOLL scrollTo idx=4 y=4320.0 items=11
+19:07:25  [19:07:25] MGR acquire idx=9 total=6
+19:07:26  [19:07:26] MGR ready idx=6
+19:07:26  [19:07:26] MGR ready idx=9
+19:07:26  [19:07:26] ENGINE next -> index=5
+19:07:26  [19:07:26] MGR evict idx=9
+19:07:26  [19:07:26] MGR evict idx=2
+19:07:26  [19:07:26] MGR acquire idx=7 total=5
+19:07:26  [19:07:26] FEEDCOLL scrollTo idx=5 y=5400.0 items=11
+19:07:26  [19:07:26] MGR acquire idx=10 total=6
+19:07:27  [19:07:26] MGR evict idx=10
+19:07:27  [19:07:26] FEEDCOLL scrollTo idx=5 y=5400.0 items=11
+19:07:27  [19:07:26] MGR acquire idx=10 total=6
+19:07:27  [19:07:26] MGR evict idx=10
+19:07:27  [19:07:26] FEEDCOLL scrollTo idx=5 y=5400.0 items=11
+19:07:27  [19:07:27] MGR acquire idx=10 total=6
+19:07:27  [19:07:27] MGR ready idx=7
+19:07:27  [19:07:27] MGR ready idx=10
+19:07:27  [19:07:27] ENGINE next -> index=6
+19:07:28  [19:07:27] MGR evict idx=10
+19:07:28  [19:07:27] MGR evict idx=3
+19:07:28  [19:07:27] MGR acquire idx=8 total=5
+19:07:28  [19:07:27] FEEDCOLL scrollTo idx=6 y=6480.0 items=11
+19:07:28  [19:07:28] MGR acquire idx=10 total=6
+19:07:28  [19:07:28] MGR evict idx=10
+19:07:28  [19:07:28] FEEDCOLL scrollTo idx=6 y=6480.0 items=11
+19:07:28  [19:07:28] MGR acquire idx=10 total=6
+19:07:28  [19:07:28] MGR ready idx=8
+19:07:28  [19:07:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+19:07:28  [19:07:28] FEED loop a[0] begin bytes=57309
+19:07:28  [19:07:28] FEED loop a[0] aweme-ok
+19:07:28  [19:07:28] FEED loop a[0] video-ok
+19:07:28  [19:07:28] FEED video-dump a[0] f1[bytes=344] f2[bytes=1033] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=978] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2636,bytes=2632] f13[varint=10434] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740857] f24[varint=0] f25[bytes=1808] f26[bytes=0] f29[bytes=715] f30[bytes=2881] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:28  [19:07:28] FEED loop a[0] id=7698734523000901843 pick-start
+19:07:28  [19:07:28] FEED loop a[0] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[0] final chosen=true
+19:07:28  [19:07:28] FEED first url[7698734523000901843]: https://v9-chc.douyinvod.com/01c41aad774d7b394c3536489a2e15f9/6af99279/video/cn/mps/logo/r/p/v0200fg10000dbbmcc7og65sp6l86690/53809ef19e9c48
+19:07:28  [19:07:28] FEED loop a[1] begin bytes=74542
+19:07:28  [19:07:28] FEED loop a[1] aweme-ok
+19:07:28  [19:07:28] FEED loop a[1] video-ok
+19:07:28  [19:07:28] FEED video-dump a[1] f1[bytes=344] f2[bytes=1031] f3[varint=1920] f4[varint=1080] f5[bytes=8] f6[bytes=974] f7[bytes=7] f8[bytes=1507] f9[varint=1] f10[bytes=344] f11[bytes=2903] f13[varint=670707] f14[bytes=1507] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794741517] f22[varint=1] f23[bytes=0] f24[varint=0] f25[bytes=1827] f26[bytes=0] f29[bytes=3304] f30[bytes=4165] f33[varint=1] f34[bytes=0] f41[bytes=2902] f44[bytes=4]
+19:07:28  [19:07:28] FEED loop a[1] id=7699759942676726362 pick-start
+19:07:28  [19:07:28] FEED loop a[1] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[1] final chosen=true
+19:07:28  [19:07:28] FEED loop a[2] begin bytes=59729
+19:07:28  [19:07:28] FEED loop a[2] aweme-ok
+19:07:28  [19:07:28] FEED loop a[2] video-ok
+19:07:28  [19:07:28] FEED video-dump a[2] f1[bytes=344] f2[bytes=1055] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1000] f7[bytes=4] f8[bytes=1518] f9[varint=1] f10[bytes=344] f11[bytes=2578,bytes=2576] f13[varint=10567] f14[bytes=1518] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740857] f24[varint=0] f25[bytes=1829] f26[bytes=0] f30[bytes=3049] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:28  [19:07:28] FEED loop a[2] id=7706459145796851146 pick-start
+19:07:28  [19:07:28] FEED loop a[2] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[2] final chosen=true
+19:07:28  [19:07:28] FEED loop a[3] begin bytes=53437
+19:07:28  [19:07:28] FEED loop a[3] aweme-ok
+19:07:28  [19:07:28] FEED loop a[3] video-ok
+19:07:28  [19:07:28] FEED video-dump a[3] f1[bytes=343] f2[bytes=1051] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2560] f13[varint=5234] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740852] f24[varint=0] f25[bytes=1824] f26[bytes=0] f29[bytes=729] f30[bytes=2830] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:28  [19:07:28] FEED loop a[3] id=7700103702233409401 pick-start
+19:07:28  [19:07:28] FEED loop a[3] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[3] final chosen=true
+19:07:28  [19:07:28] FEED loop a[4] begin bytes=48688
+19:07:28  [19:07:28] FEED loop a[4] aweme-ok
+19:07:28  [19:07:28] FEED loop a[4] video-ok
+19:07:28  [19:07:28] FEED video-dump a[4] f1[bytes=342] f2[bytes=1033] f3[varint=1134] f4[varint=576] f5[bytes=8] f6[bytes=967] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=342] f11[bytes=2604] f13[varint=10467] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=342] f21[varint=1794740857] f24[varint=0] f26[bytes=0] f30[bytes=3001] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:28  [19:07:28] FEED loop a[4] id=7706959187289592930 pick-start
+19:07:28  [19:07:28] FEED loop a[4] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[4] final chosen=true
+19:07:28  [19:07:28] FEED loop a[5] begin bytes=41995
+19:07:28  [19:07:28] FEED loop a[5] aweme-ok
+19:07:28  [19:07:28] FEED loop a[5] video-ok
+19:07:28  [19:07:28] FEED video-dump a[5] f1[bytes=1307] f2[bytes=1048] f3[varint=2880] f4[varint=2160] f5[bytes=8] f6[bytes=1266] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1203] f34[bytes=0]
+19:07:28  [19:07:28] FEED loop a[5] id=7705726513207655899 pick-start
+19:07:28  [19:07:28] FEED loop a[5] pick-done chosen=false
+19:07:28  [19:07:28] FEED loop a[5] final chosen=true
+19:07:28  [19:07:28] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=17
+19:07:28  [19:07:28] ENGINE merge total=17 index=6 replace=false auto=false
+19:07:28  [19:07:28] MGR acquire idx=9 total=7
+19:07:28  [19:07:28] MGR ready idx=10
+19:07:28  [19:07:28] MGR ready idx=9
+19:07:29  [19:07:29] ENGINE next -> index=7
+19:07:29  [19:07:29] ENGINE next -> index=8
+19:07:29  [19:07:29] ENGINE next -> index=9
+19:07:29  [19:07:29] ENGINE next -> index=10
+19:07:29  [19:07:29] ENGINE next -> index=11
+19:07:29  [19:07:29] MGR evict idx=4
+19:07:29  [19:07:29] MGR evict idx=8
+19:07:29  [19:07:29] MGR evict idx=6
+19:07:29  [19:07:29] MGR evict idx=7
+19:07:29  [19:07:29] MGR evict idx=5
+19:07:29  [19:07:29] MGR acquire idx=11 total=3
+19:07:29  [19:07:29] MGR acquire idx=12 total=4
+19:07:29  [19:07:29] MGR acquire idx=13 total=5
+19:07:29  [19:07:29] FEEDCOLL scrollTo idx=11 y=11880.0 items=17
+19:07:29  [19:07:29] FEEDCOLL scrollTo idx=11 y=11880.0 items=17
+19:07:30  [19:07:30] MGR ready idx=13
+19:07:30  [19:07:30] MGR ready idx=11
+19:07:30  [19:07:30] ENGINE needMore (index=11 count=17)
+19:07:30  [19:07:30] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=17
+19:07:30  [19:07:30] ENGINE next -> index=12
+19:07:30  [19:07:30] MGR evict idx=9
+19:07:30  [19:07:30] MGR acquire idx=14 total=5
+19:07:30  [19:07:30] FEEDCOLL scrollTo idx=12 y=12960.0 items=17
+19:07:31  [19:07:31] FEEDCOLL scrollTo idx=12 y=12960.0 items=17
+19:07:31  [19:07:31] MGR ready idx=12
+19:07:31  [19:07:31] MGR failed idx=14 err=You do not have permission to access the requested resource. -> skip
+19:07:32  [19:07:32] ENGINE next -> index=13
+19:07:32  [19:07:32] MGR evict idx=10
+19:07:32  [19:07:32] MGR acquire idx=15 total=4
+19:07:32  [19:07:32] FEEDCOLL scrollTo idx=13 y=14040.0 items=17
+19:07:32  [19:07:32] MGR acquire idx=16 total=5
+19:07:32  [19:07:32] MGR evict idx=16
+19:07:32  [19:07:32] FEEDCOLL scrollTo idx=13 y=14040.0 items=17
+19:07:32  [19:07:32] MGR acquire idx=16 total=5
+19:07:32  [19:07:32] MGR ready idx=15
+19:07:32  [19:07:32] MGR ready idx=16
+19:07:33  [19:07:32] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+19:07:33  [19:07:32] FEED loop a[0] begin bytes=62604
+19:07:33  [19:07:32] FEED loop a[0] aweme-ok
+19:07:33  [19:07:32] FEED loop a[0] video-ok
+19:07:33  [19:07:32] FEED video-dump a[0] f1[bytes=344] f2[bytes=1037] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=980] f7[bytes=4] f8[bytes=1500] f9[varint=1] f10[bytes=344] f11[bytes=2607] f13[varint=16567] f14[bytes=1500] f15[varint=1] f16[bytes=347] f17[varint=0] f18[bytes=344] f21[varint=1794740868] f24[varint=0] f25[bytes=1823] f26[bytes=0] f30[bytes=2932] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:33  [19:07:32] FEED loop a[0] id=7703114281848600256 pick-start
+19:07:33  [19:07:32] FEED loop a[0] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[0] final chosen=true
+19:07:33  [19:07:32] FEED first url[7703114281848600256]: https://v11-coldf.douyinvod.com/dbd7d845c2133a057be5d22c8629cee7/6af99284/video/tos/cn/tos-cn-ve-15/ocFDDNNI20fe8sPW6AgesIumQAErG2GdKJeCLE/?
+19:07:33  [19:07:32] FEED loop a[1] begin bytes=70748
+19:07:33  [19:07:32] FEED loop a[1] aweme-ok
+19:07:33  [19:07:32] FEED loop a[1] video-ok
+19:07:33  [19:07:32] FEED video-dump a[1] f1[bytes=1292] f2[bytes=1057] f3[varint=2142] f4[varint=1080] f5[bytes=8] f6[bytes=1009] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1228] f34[bytes=0]
+19:07:33  [19:07:32] FEED loop a[1] id=7704818737374852260 pick-start
+19:07:33  [19:07:32] FEED loop a[1] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[1] final chosen=true
+19:07:33  [19:07:32] FEED loop a[2] begin bytes=53554
+19:07:33  [19:07:32] FEED loop a[2] aweme-ok
+19:07:33  [19:07:32] FEED loop a[2] video-ok
+19:07:33  [19:07:32] FEED video-dump a[2] f1[bytes=342] f2[bytes=1061] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1000] f7[bytes=4] f8[bytes=382] f9[varint=1] f10[bytes=342] f11[bytes=2562,bytes=2011] f13[varint=7734] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=342] f21[varint=1794740859] f24[varint=0] f25[bytes=1825] f26[bytes=0] f30[bytes=3037] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:33  [19:07:32] FEED loop a[2] id=7707332124739011706 pick-start
+19:07:33  [19:07:32] FEED loop a[2] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[2] final chosen=true
+19:07:33  [19:07:32] FEED loop a[3] begin bytes=96881
+19:07:33  [19:07:32] FEED loop a[3] aweme-ok
+19:07:33  [19:07:32] FEED loop a[3] video-ok
+19:07:33  [19:07:32] FEED video-dump a[3] f1[bytes=343] f2[bytes=1057] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1002] f7[bytes=4] f8[bytes=1524] f9[varint=1] f10[bytes=343] f11[bytes=2600] f13[varint=11134] f14[bytes=1524] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740863] f24[varint=0] f25[bytes=1828] f26[bytes=0] f30[bytes=3174] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:33  [19:07:32] FEED loop a[3] id=7701956875080495845 pick-start
+19:07:33  [19:07:32] FEED loop a[3] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[3] final chosen=true
+19:07:33  [19:07:32] FEED loop a[4] begin bytes=59046
+19:07:33  [19:07:32] FEED loop a[4] aweme-ok
+19:07:33  [19:07:32] FEED loop a[4] video-ok
+19:07:33  [19:07:32] FEED video-dump a[4] f1[bytes=343] f2[bytes=1035] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=968] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2615,bytes=2617] f13[varint=15208] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740867] f24[varint=0] f25[bytes=1811] f26[bytes=0] f30[bytes=3099] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:33  [19:07:32] FEED loop a[4] id=7700594405493907913 pick-start
+19:07:33  [19:07:32] FEED loop a[4] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[4] final chosen=true
+19:07:33  [19:07:32] FEED loop a[5] begin bytes=58599
+19:07:33  [19:07:32] FEED loop a[5] aweme-ok
+19:07:33  [19:07:32] FEED loop a[5] video-ok
+19:07:33  [19:07:32] FEED video-dump a[5] f1[bytes=343] f2[bytes=997] f3[varint=576] f4[varint=768] f5[bytes=8] f6[bytes=982] f7[bytes=4] f8[bytes=1517] f9[varint=1] f10[bytes=343] f11[bytes=2746] f13[varint=213740] f14[bytes=1517] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=343] f21[varint=1794741065] f22[varint=1] f23[bytes=0] f24[varint=0] f25[bytes=1820] f26[bytes=0] f29[bytes=1349] f30[bytes=3617] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:33  [19:07:32] FEED loop a[5] id=7704345053623291151 pick-start
+19:07:33  [19:07:32] FEED loop a[5] pick-done chosen=false
+19:07:33  [19:07:32] FEED loop a[5] final chosen=true
+19:07:33  [19:07:32] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=23
+19:07:33  [19:07:32] ENGINE merge total=23 index=13 replace=false auto=false
+19:07:33  [19:07:33] ENGINE next -> index=14
+19:07:33  [19:07:33] ENGINE next -> index=15
+19:07:33  [19:07:33] MGR evict idx=12
+19:07:33  [19:07:33] MGR evict idx=11
+19:07:33  [19:07:33] MGR acquire idx=17 total=4
+19:07:33  [19:07:33] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+19:07:33  [19:07:33] MGR acquire idx=14 total=5
+19:07:33  [19:07:33] MGR acquire idx=18 total=6
+19:07:33  [19:07:33] MGR evict idx=18
+19:07:33  [19:07:33] MGR evict idx=14
+19:07:33  [19:07:33] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+19:07:33  [19:07:33] MGR acquire idx=14 total=5
+19:07:33  [19:07:33] MGR acquire idx=18 total=6
+19:07:33  [19:07:33] MGR acquire idx=19 total=7
+19:07:33  [19:07:33] MGR evict idx=18
+19:07:33  [19:07:33] MGR evict idx=14
+19:07:33  [19:07:33] MGR evict idx=19
+19:07:33  [19:07:33] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+19:07:33  [19:07:33] MGR acquire idx=14 total=5
+19:07:33  [19:07:33] MGR acquire idx=19 total=6
+19:07:33  [19:07:33] MGR ready idx=17
+19:07:34  [19:07:33] MGR ready idx=19
+19:07:34  [19:07:34] MGR failed idx=14 err=You do not have permission to access the requested resource. -> skip
+19:07:34  [19:07:34] MGR failed idx=14 dup -> no advance (break cascade)
+19:07:34  [19:07:34] ENGINE next -> index=16
+19:07:34  [19:07:34] MGR evict idx=19
+19:07:34  [19:07:34] MGR evict idx=13
+19:07:34  [19:07:34] MGR acquire idx=18 total=4
+19:07:34  [19:07:34] FEEDCOLL scrollTo idx=16 y=17280.0 items=23
+19:07:34  [19:07:34] MGR acquire idx=20 total=5
+19:07:34  [19:07:34] MGR acquire idx=21 total=6
+19:07:34  [19:07:34] MGR evict idx=20
+19:07:34  [19:07:34] MGR evict idx=21
+19:07:34  [19:07:34] FEEDCOLL scrollTo idx=16 y=17280.0 items=23
+19:07:34  [19:07:34] MGR failed idx=18 err=Cannot Open -> skip
+19:07:34  [19:07:34] MGR acquire idx=21 total=4
+19:07:35  [19:07:35] ENGINE next -> index=17
+19:07:35  [19:07:35] MGR evict idx=21
+19:07:35  [19:07:35] MGR acquire idx=19 total=4
+19:07:35  [19:07:35] FEEDCOLL scrollTo idx=17 y=18360.0 items=23
+19:07:35  [19:07:35] MGR acquire idx=22 total=5
+19:07:35  [19:07:35] MGR evict idx=22
+19:07:35  [19:07:35] FEEDCOLL scrollTo idx=17 y=18360.0 items=23
+19:07:35  [19:07:35] MGR acquire idx=22 total=5
+19:07:35  [19:07:35] MGR ready idx=19
+19:07:36  [19:07:36] ENGINE needMore (index=17 count=23)
+19:07:36  [19:07:36] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=23
+19:07:36  [19:07:36] ENGINE next -> index=18
+19:07:36  [19:07:36] MGR evict idx=22
+19:07:36  [19:07:36] MGR evict idx=15
+19:07:36  [19:07:36] MGR acquire idx=20 total=4
+19:07:36  [19:07:36] FEEDCOLL scrollTo idx=18 y=19440.0 items=23
+19:07:36  [19:07:36] MGR acquire idx=22 total=5
+19:07:36  [19:07:36] MGR acquire idx=18 total=6
+19:07:36  [19:07:36] MGR evict idx=18
+19:07:36  [19:07:36] MGR evict idx=22
+19:07:36  [19:07:36] FEEDCOLL scrollTo idx=18 y=19440.0 items=23
+19:07:36  [19:07:36] MGR acquire idx=22 total=5
+19:07:36  [19:07:36] MGR acquire idx=18 total=6
+19:07:36  [19:07:36] MGR ready idx=20
+19:07:36  [19:07:36] MGR failed idx=18 err=Cannot Open -> skip
+19:07:36  [19:07:36] MGR failed idx=18 dup -> no advance (break cascade)
+19:07:36  [19:07:36] MGR acquire idx=18 total=6
+19:07:36  [19:07:36] MGR failed idx=18 err=Cannot Open -> skip
+19:07:36  [19:07:36] MGR failed idx=18 dup -> no advance (break cascade)
+19:07:37  [19:07:37] ENGINE next -> index=19
+19:07:37  [19:07:37] MGR evict idx=16
+19:07:37  [19:07:37] MGR evict idx=22
+19:07:37  [19:07:37] MGR acquire idx=21 total=4
+19:07:37  [19:07:37] FEEDCOLL scrollTo idx=19 y=20520.0 items=23
+19:07:38  [19:07:38] MGR acquire idx=22 total=5
+19:07:38  [19:07:38] MGR acquire idx=18 total=6
+19:07:38  [19:07:38] MGR failed idx=18 err=Cannot Open -> skip
+19:07:38  [19:07:38] MGR failed idx=18 dup -> no advance (break cascade)
+19:07:38  [19:07:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+19:07:38  [19:07:38] FEED loop a[0] begin bytes=54753
+19:07:38  [19:07:38] FEED loop a[0] aweme-ok
+19:07:38  [19:07:38] FEED loop a[0] video-ok
+19:07:38  [19:07:38] FEED video-dump a[0] f1[bytes=344] f2[bytes=1061] f3[varint=768] f4[varint=576] f5[bytes=8] f6[bytes=1008] f7[bytes=4] f8[bytes=1531] f9[varint=1] f10[bytes=344] f11[bytes=2593] f13[varint=17167] f14[bytes=1531] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740874] f24[varint=0] f25[bytes=1841] f26[bytes=0] f30[bytes=3511] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:38  [19:07:38] FEED loop a[0] id=7678672729323511409 pick-start
+19:07:38  [19:07:38] FEED loop a[0] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[0] final chosen=true
+19:07:38  [19:07:38] FEED first url[7678672729323511409]: https://v5-ex-dyseries.douyinvod.com/6e5a2940c4d6cfb9be4ea30a0ddcf3c2/6af9928a/video/tos/cn/tos-cn-ve-15c000-ce/o0QeIQPOkDADIwDnoDFvJ7VQSBfg
+19:07:38  [19:07:38] FEED loop a[1] begin bytes=49312
+19:07:38  [19:07:38] FEED loop a[1] aweme-ok
+19:07:38  [19:07:38] FEED loop a[1] video-ok
+19:07:38  [19:07:38] FEED video-dump a[1] f1[bytes=344] f2[bytes=1050] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=993] f7[bytes=4] f8[bytes=1524] f9[varint=1] f10[bytes=344] f11[bytes=2574] f13[varint=19434] f14[bytes=1524] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740876] f24[varint=0] f25[bytes=1833] f26[bytes=0] f29[bytes=715] f30[bytes=2009] f33[varint=1] f34[bytes=0] f44[bytes=3]
+19:07:38  [19:07:38] FEED loop a[1] id=7702471080082709883 pick-start
+19:07:38  [19:07:38] FEED loop a[1] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[1] final chosen=true
+19:07:38  [19:07:38] FEED loop a[2] begin bytes=108716
+19:07:38  [19:07:38] FEED loop a[2] aweme-ok
+19:07:38  [19:07:38] FEED loop a[2] video-ok
+19:07:38  [19:07:38] FEED video-dump a[2] f1[bytes=1316] f2[bytes=1064] f3[varint=2880] f4[varint=2160] f5[bytes=8] f6[bytes=999] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1123] f34[bytes=0]
+19:07:38  [19:07:38] FEED loop a[2] id=7706068757080425658 pick-start
+19:07:38  [19:07:38] FEED loop a[2] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[2] final chosen=true
+19:07:38  [19:07:38] FEED loop a[3] begin bytes=56746
+19:07:38  [19:07:38] FEED loop a[3] aweme-ok
+19:07:38  [19:07:38] FEED loop a[3] video-ok
+19:07:38  [19:07:38] FEED video-dump a[3] f1[bytes=344] f2[bytes=1005] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=972] f7[bytes=4] f8[bytes=1509] f9[varint=1] f10[bytes=344] f11[bytes=2591,bytes=2591] f13[varint=8985] f14[bytes=1509] f15[varint=1] f16[bytes=347] f17[varint=0] f18[bytes=344] f21[varint=1794740865] f24[varint=0] f25[bytes=1830] f26[bytes=0] f30[bytes=3113] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:38  [19:07:38] FEED loop a[3] id=7697835835768589587 pick-start
+19:07:38  [19:07:38] FEED loop a[3] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[3] final chosen=true
+19:07:38  [19:07:38] FEED loop a[4] begin bytes=70474
+19:07:38  [19:07:38] FEED loop a[4] aweme-ok
+19:07:38  [19:07:38] FEED loop a[4] video-ok
+19:07:38  [19:07:38] FEED video-dump a[4] f1[bytes=344] f2[bytes=1057] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1008] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2578] f13[varint=15742] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740872] f24[varint=0] f25[bytes=1833] f26[bytes=0] f30[bytes=2363] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:38  [19:07:38] FEED loop a[4] id=7705004050143901925 pick-start
+19:07:38  [19:07:38] FEED loop a[4] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[4] final chosen=true
+19:07:38  [19:07:38] FEED loop a[5] begin bytes=78516
+19:07:38  [19:07:38] FEED loop a[5] aweme-ok
+19:07:38  [19:07:38] FEED loop a[5] video-ok
+19:07:38  [19:07:38] FEED video-dump a[5] f1[bytes=344] f2[bytes=1042] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=980] f7[bytes=4] f8[bytes=1507] f9[varint=1] f10[bytes=344] f11[bytes=2622,bytes=2617] f13[varint=15000] f14[bytes=1507] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740872] f24[varint=0] f25[bytes=1812] f26[bytes=0] f30[bytes=2185] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:38  [19:07:38] FEED loop a[5] id=7701706572242920425 pick-start
+19:07:38  [19:07:38] FEED loop a[5] pick-done chosen=false
+19:07:38  [19:07:38] FEED loop a[5] final chosen=true
+19:07:38  [19:07:38] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=29
+19:07:38  [19:07:38] ENGINE merge total=29 index=19 replace=false auto=false
+19:07:38  [19:07:38] MGR failed idx=21 err=You do not have permission to access the requested resource. -> skip
+19:07:38  [19:07:38] MGR acquire idx=21 total=5
+19:07:38  [19:07:38] MGR ready idx=22
+19:07:39  [19:07:39] MGR failed idx=21 err=You do not have permission to access the requested resource. -> skip
+19:07:39  [19:07:39] MGR failed idx=21 dup -> no advance (break cascade)
+19:07:39  [19:07:39] ENGINE next -> index=20
+19:07:39  [19:07:39] ENGINE next -> index=21
+19:07:39  [19:07:39] ENGINE next -> index=22
+19:07:39  [19:07:39] ENGINE next -> index=23
+19:07:39  [19:07:39] MGR evict idx=17
+19:07:39  [19:07:39] MGR evict idx=20
+19:07:39  [19:07:39] MGR evict idx=19
+19:07:39  [19:07:39] MGR acquire idx=23 total=2
+19:07:39  [19:07:39] MGR acquire idx=24 total=3
+19:07:39  [19:07:39] MGR acquire idx=25 total=4
+19:07:39  [19:07:39] FEEDCOLL scrollTo idx=23 y=24840.0 items=29
+19:07:40  [19:07:39] MGR failed idx=25 err=Cannot Open -> skip
+19:07:40  [19:07:40] MGR ready idx=23
+19:07:40  [19:07:40] MGR ready idx=24
+19:07:40  [19:07:40] ENGINE next -> index=24
+19:07:40  [19:07:40] MGR acquire idx=26 total=4
+19:07:40  [19:07:40] FEEDCOLL scrollTo idx=24 y=25920.0 items=29
+19:07:41  [19:07:41] MGR ready idx=26
+19:07:41  [19:07:41] ENGINE needMore (index=24 count=29)
+19:07:41  [19:07:41] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=29
+19:07:41  [19:07:41] ENGINE next -> index=25
+19:07:41  [19:07:41] MGR evict idx=22
+19:07:41  [19:07:41] MGR acquire idx=27 total=4
+19:07:41  [19:07:41] FEEDCOLL scrollTo idx=25 y=27000.0 items=29
+19:07:42  [19:07:42] MGR acquire idx=25 total=5
+19:07:42  [19:07:42] MGR failed idx=25 err=Cannot Open -> skip
+19:07:42  [19:07:42] MGR failed idx=25 dup -> no advance (break cascade)
+19:07:42  [19:07:42] MGR acquire idx=25 total=5
+19:07:42  [19:07:42] MGR failed idx=25 err=Cannot Open -> skip
+19:07:42  [19:07:42] MGR failed idx=25 dup -> no advance (break cascade)
+19:07:42  [19:07:42] MGR failed idx=27 err=You do not have permission to access the requested resource. -> skip
+19:07:42  [19:07:42] ENGINE next -> index=26
+19:07:42  [19:07:42] MGR evict idx=23
+19:07:42  [19:07:42] MGR acquire idx=28 total=3
+19:07:42  [19:07:42] FEEDCOLL scrollTo idx=26 y=28080.0 items=29
+19:07:43  [19:07:43] MGR acquire idx=25 total=4
+19:07:43  [19:07:43] MGR failed idx=25 err=Cannot Open -> skip
+19:07:43  [19:07:43] MGR failed idx=25 dup -> no advance (break cascade)
+19:07:43  [19:07:43] MGR ready idx=28
+19:07:44  [19:07:44] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+19:07:44  [19:07:44] FEED loop a[0] begin bytes=59318
+19:07:44  [19:07:44] FEED loop a[0] aweme-ok
+19:07:44  [19:07:44] FEED loop a[0] video-ok
+19:07:44  [19:07:44] FEED video-dump a[0] f1[bytes=344] f2[bytes=1054] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1013] f7[bytes=4] f8[bytes=1519] f9[varint=1] f10[bytes=344] f11[bytes=2466] f13[varint=24914] f14[bytes=1519] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740887] f24[varint=0] f25[bytes=1827] f26[bytes=0] f30[bytes=3023] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:44  [19:07:44] FEED loop a[0] id=7703148011043965307 pick-start
+19:07:44  [19:07:44] FEED loop a[0] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[0] final chosen=true
+19:07:44  [19:07:44] FEED first url[7703148011043965307]: https://v95-bjb-mc-cold.douyinvod.com/5ec290aac6567401db6380bebc6afcdc/6af99297/video/tos/cn/tos-cn-ve-15c000-ce/o8Gn9qOa5fdEAFI7EAILl2MfkOS
+19:07:44  [19:07:44] FEED loop a[1] begin bytes=45595
+19:07:44  [19:07:44] FEED loop a[1] aweme-ok
+19:07:44  [19:07:44] FEED loop a[1] video-ok
+19:07:44  [19:07:44] FEED video-dump a[1] f1[bytes=344] f2[bytes=1049] f3[varint=576] f4[varint=768] f5[bytes=8] f6[bytes=996] f7[bytes=4] f8[bytes=1519] f9[varint=1] f10[bytes=344] f11[bytes=2609,bytes=2593] f13[varint=17415] f14[bytes=1519] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740880] f24[varint=0] f25[bytes=1830] f26[bytes=0] f29[bytes=717] f30[bytes=2326] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:44  [19:07:44] FEED loop a[1] id=7703068626895736571 pick-start
+19:07:44  [19:07:44] FEED loop a[1] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[1] final chosen=true
+19:07:44  [19:07:44] FEED loop a[2] begin bytes=55399
+19:07:44  [19:07:44] FEED loop a[2] aweme-ok
+19:07:44  [19:07:44] FEED loop a[2] video-ok
+19:07:44  [19:07:44] FEED video-dump a[2] f1[bytes=343] f2[bytes=1059] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1000] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2567] f13[varint=8409] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740871] f24[varint=0] f25[bytes=1825] f26[bytes=0] f30[bytes=3108] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:44  [19:07:44] FEED loop a[2] id=7700268527501118665 pick-start
+19:07:44  [19:07:44] FEED loop a[2] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[2] final chosen=true
+19:07:44  [19:07:44] FEED loop a[3] begin bytes=63911
+19:07:44  [19:07:44] FEED loop a[3] aweme-ok
+19:07:44  [19:07:44] FEED loop a[3] video-ok
+19:07:44  [19:07:44] FEED video-dump a[3] f1[bytes=343] f2[bytes=1025] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=970] f7[bytes=4] f8[bytes=1517] f9[varint=1] f10[bytes=343] f11[bytes=2734] f13[varint=64834] f14[bytes=1517] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740927] f22[varint=1] f23[bytes=0] f24[varint=0] f25[bytes=1827] f26[bytes=0] f29[bytes=1331] f30[bytes=3807] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:44  [19:07:44] FEED loop a[3] id=7706487501666748083 pick-start
+19:07:44  [19:07:44] FEED loop a[3] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[3] final chosen=true
+19:07:44  [19:07:44] FEED loop a[4] begin bytes=54216
+19:07:44  [19:07:44] FEED loop a[4] aweme-ok
+19:07:44  [19:07:44] FEED loop a[4] video-ok
+19:07:44  [19:07:44] FEED video-dump a[4] f1[bytes=344] f2[bytes=1061] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1012] f7[bytes=4] f8[bytes=1520] f9[varint=1] f10[bytes=344] f11[bytes=2539,bytes=2541] f13[varint=9834] f14[bytes=1520] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740872] f24[varint=0] f25[bytes=1824] f26[bytes=0] f30[bytes=2911] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:44  [19:07:44] FEED loop a[4] id=7706561451910412898 pick-start
+19:07:44  [19:07:44] FEED loop a[4] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[4] final chosen=true
+19:07:44  [19:07:44] FEED loop a[5] begin bytes=44471
+19:07:44  [19:07:44] FEED loop a[5] aweme-ok
+19:07:44  [19:07:44] FEED loop a[5] video-ok
+19:07:44  [19:07:44] FEED video-dump a[5] f1[bytes=1294] f2[bytes=1039] f3[varint=2224] f4[varint=2160] f5[bytes=8] f6[bytes=988] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1033] f34[bytes=0]
+19:07:44  [19:07:44] FEED loop a[5] id=7707105680171649178 pick-start
+19:07:44  [19:07:44] FEED loop a[5] pick-done chosen=false
+19:07:44  [19:07:44] FEED loop a[5] final chosen=true
+19:07:44  [19:07:44] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=35
+19:07:44  [19:07:44] ENGINE merge total=35 index=26 replace=false auto=false
+19:07:44  [19:07:44] ENGINE next -> index=27
+19:07:44  [19:07:44] MGR evict idx=24
+19:07:44  [19:07:44] MGR acquire idx=29 total=3
+19:07:44  [19:07:44] FEEDCOLL scrollTo idx=27 y=29160.0 items=35
+19:07:44  [19:07:44] MGR acquire idx=27 total=4
+19:07:44  [19:07:44] MGR ready idx=29
+19:07:45  [19:07:45] MGR failed idx=27 err=You do not have permission to access the requested resource. -> skip
+19:07:45  [19:07:45] MGR failed idx=27 dup -> no advance (break cascade)
+19:07:45  [19:07:45] ENGINE next -> index=28
+19:07:45  [19:07:45] MGR acquire idx=30 total=4
+19:07:45  [19:07:45] FEEDCOLL scrollTo idx=28 y=30240.0 items=35
+19:07:45  [19:07:45] MGR acquire idx=27 total=5
+19:07:46  [19:07:46] MGR failed idx=27 err=You do not have permission to access the requested resource. -> skip
+19:07:46  [19:07:46] MGR failed idx=27 dup -> no advance (break cascade)
+19:07:46  [19:07:46] MGR ready idx=30
+19:07:46  [19:07:46] ENGINE next -> index=29
+19:07:46  [19:07:46] MGR evict idx=26
+19:07:46  [19:07:46] MGR acquire idx=31 total=4
+19:07:46  [19:07:46] FEEDCOLL scrollTo idx=29 y=31320.0 items=35
+19:07:47  [19:07:47] MGR failed idx=31 err=You do not have permission to access the requested resource. -> skip
+19:07:47  [19:07:47] ENGINE needMore (index=29 count=35)
+19:07:47  [19:07:47] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=35
+19:07:47  [19:07:47] ENGINE next -> index=30
+19:07:47  [19:07:47] MGR acquire idx=32 total=4
+19:07:47  [19:07:47] FEEDCOLL scrollTo idx=30 y=32400.0 items=35
+19:07:48  [19:07:48] ENGINE next -> index=31
+19:07:48  [19:07:48] MGR evict idx=28
+19:07:48  [19:07:48] MGR acquire idx=33 total=4
+19:07:48  [19:07:48] FEEDCOLL scrollTo idx=31 y=33480.0 items=35
+19:07:48  [19:07:48] MGR acquire idx=31 total=5
+19:07:48  [19:07:48] MGR ready idx=33
+19:07:49  [19:07:49] MGR failed idx=31 err=You do not have permission to access the requested resource. -> skip
+19:07:49  [19:07:49] MGR failed idx=31 dup -> no advance (break cascade)
+19:07:49  [19:07:49] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+19:07:49  [19:07:49] FEED loop a[0] begin bytes=56163
+19:07:49  [19:07:49] FEED loop a[0] aweme-ok
+19:07:49  [19:07:49] FEED loop a[0] video-ok
+19:07:49  [19:07:49] FEED video-dump a[0] f1[bytes=344] f2[bytes=1018] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=970] f7[bytes=4] f8[bytes=1504] f9[varint=1] f10[bytes=344] f11[bytes=2593] f13[varint=13281] f14[bytes=1504] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740882] f24[varint=0] f25[bytes=1809] f26[bytes=0] f30[bytes=2955] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[0] id=7698671302374270898 pick-start
+19:07:49  [19:07:49] FEED loop a[0] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[0] final chosen=true
+19:07:49  [19:07:49] FEED first url[7698671302374270898]: https://v95-bjb-mc-cold.douyinvod.com/7cc186bd71e2f888a6222908a8d73767/6af99292/video/tos/cn/tos-cn-ve-15/ocoQ3XECpingsNIxBcDLccFtI4iAA4pXQa
+19:07:49  [19:07:49] FEED loop a[1] begin bytes=50853
+19:07:49  [19:07:49] FEED loop a[1] aweme-ok
+19:07:49  [19:07:49] FEED loop a[1] video-ok
+19:07:49  [19:07:49] FEED video-dump a[1] f1[bytes=344] f2[bytes=1041] f3[varint=576] f4[varint=1254] f5[bytes=8] f6[bytes=978] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2627] f13[varint=37167] f14[bytes=1620] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794740906] f24[varint=0] f25[bytes=1813] f26[bytes=0] f29[bytes=1044] f30[bytes=2122] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[1] id=7705121521736356771 pick-start
+19:07:49  [19:07:49] FEED loop a[1] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[1] final chosen=true
+19:07:49  [19:07:49] FEED loop a[2] begin bytes=50365
+19:07:49  [19:07:49] FEED loop a[2] aweme-ok
+19:07:49  [19:07:49] FEED loop a[2] video-ok
+19:07:49  [19:07:49] FEED video-dump a[2] f1[bytes=342] f2[bytes=1044] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=963] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=342] f11[bytes=2560] f13[varint=6800] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=342] f21[varint=1794740875] f24[varint=0] f25[bytes=1804] f26[bytes=0] f30[bytes=3063] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[2] id=7700181714870022515 pick-start
+19:07:49  [19:07:49] FEED loop a[2] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[2] final chosen=true
+19:07:49  [19:07:49] FEED loop a[3] begin bytes=55041
+19:07:49  [19:07:49] FEED loop a[3] aweme-ok
+19:07:49  [19:07:49] FEED loop a[3] video-ok
+19:07:49  [19:07:49] FEED video-dump a[3] f1[bytes=344] f2[bytes=1040] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=972] f7[bytes=4] f8[bytes=1505] f9[varint=1] f10[bytes=344] f11[bytes=2556] f13[varint=9334] f14[bytes=1505] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740878] f24[varint=0] f25[bytes=1809] f26[bytes=0] f30[bytes=3124] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[3] id=7706840291123584154 pick-start
+19:07:49  [19:07:49] FEED loop a[3] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[3] final chosen=true
+19:07:49  [19:07:49] FEED loop a[4] begin bytes=52121
+19:07:49  [19:07:49] FEED loop a[4] aweme-ok
+19:07:49  [19:07:49] FEED loop a[4] video-ok
+19:07:49  [19:07:49] FEED video-dump a[4] f1[bytes=343] f2[bytes=1054] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=997] f7[bytes=4] f8[bytes=382] f9[varint=1] f10[bytes=343] f11[bytes=2608] f13[varint=12399] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740881] f24[varint=0] f25[bytes=1822] f26[bytes=0] f30[bytes=2282] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[4] id=7701583373042931429 pick-start
+19:07:49  [19:07:49] FEED loop a[4] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[4] final chosen=true
+19:07:49  [19:07:49] FEED loop a[5] begin bytes=49640
+19:07:49  [19:07:49] FEED loop a[5] aweme-ok
+19:07:49  [19:07:49] FEED loop a[5] video-ok
+19:07:49  [19:07:49] FEED video-dump a[5] f1[bytes=344] f2[bytes=1003] f3[varint=720] f4[varint=1280] f5[bytes=8] f6[bytes=969] f7[bytes=4] f8[bytes=1499] f9[varint=1] f10[bytes=344] f11[bytes=2725] f13[varint=135267] f14[bytes=1499] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794741004] f22[varint=1] f23[bytes=0] f24[varint=0] f25[bytes=1812] f26[bytes=0] f29[bytes=1385] f30[bytes=3466] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:49  [19:07:49] FEED loop a[5] id=7698764817422617892 pick-start
+19:07:49  [19:07:49] FEED loop a[5] pick-done chosen=false
+19:07:49  [19:07:49] FEED loop a[5] final chosen=true
+19:07:49  [19:07:49] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=41
+19:07:49  [19:07:49] ENGINE merge total=41 index=31 replace=false auto=false
+19:07:49  [19:07:49] ENGINE next -> index=32
+19:07:50  [19:07:49] MGR evict idx=29
+19:07:50  [19:07:49] MGR acquire idx=34 total=4
+19:07:50  [19:07:49] FEEDCOLL scrollTo idx=32 y=34560.0 items=41
+19:07:50  [19:07:50] MGR failed idx=34 err=Cannot Open -> skip
+19:07:50  [19:07:50] MGR acquire idx=31 total=4
+19:07:50  [19:07:50] MGR failed idx=31 err=You do not have permission to access the requested resource. -> skip
+19:07:50  [19:07:50] MGR failed idx=31 dup -> no advance (break cascade)
+19:07:51  [19:07:50] ENGINE next -> index=33
+19:07:51  [19:07:50] MGR evict idx=30
+19:07:51  [19:07:50] MGR acquire idx=35 total=3
+19:07:51  [19:07:50] FEEDCOLL scrollTo idx=33 y=35640.0 items=41
+19:07:51  [19:07:51] ENGINE next -> index=34
+19:07:52  [19:07:51] MGR acquire idx=36 total=4
+19:07:52  [19:07:51] FEEDCOLL scrollTo idx=34 y=36720.0 items=41
+19:07:52  [19:07:52] MGR acquire idx=34 total=5
+19:07:52  [19:07:52] MGR ready idx=35
+19:07:52  [19:07:52] MGR failed idx=34 err=Cannot Open -> skip
+19:07:52  [19:07:52] MGR failed idx=34 dup -> no advance (break cascade)
+19:07:52  [19:07:52] MGR acquire idx=34 total=5
+19:07:52  [19:07:52] MGR ready idx=32
+19:07:52  [19:07:52] MGR failed idx=34 err=Cannot Open -> skip
+19:07:52  [19:07:52] MGR failed idx=34 dup -> no advance (break cascade)
+19:07:52  [19:07:52] MGR failed idx=36 err=You do not have permission to access the requested resource. -> skip
+19:07:52  [19:07:52] ENGINE needMore (index=34 count=41)
+19:07:53  [19:07:52] FEED mobile GET refresh_index=8 cold=0 count=10 bogus_len=180 seen=41
+19:07:53  [19:07:52] ENGINE next -> index=35
+19:07:53  [19:07:52] MGR evict idx=32
+19:07:53  [19:07:52] MGR acquire idx=37 total=3
+19:07:53  [19:07:52] FEEDCOLL scrollTo idx=35 y=37800.0 items=41
+19:07:53  [19:07:53] MGR acquire idx=34 total=4
+19:07:53  [19:07:53] MGR failed idx=34 err=Cannot Open -> skip
+19:07:53  [19:07:53] MGR failed idx=34 dup -> no advance (break cascade)
+19:07:53  [19:07:53] MGR failed idx=37 err=You do not have permission to access the requested resource. -> skip
+19:07:54  [19:07:54] ENGINE next -> index=36
+19:07:54  [19:07:54] MGR evict idx=33
+19:07:54  [19:07:54] MGR acquire idx=38 total=2
+19:07:54  [19:07:54] FEEDCOLL scrollTo idx=36 y=38880.0 items=41
+19:07:54  [19:07:54] MGR acquire idx=36 total=3
+19:07:54  [19:07:54] MGR ready idx=38
+19:07:54  [19:07:54] ENGINE next -> index=37
+19:07:54  [19:07:54] MGR evict idx=36
+19:07:54  [19:07:54] MGR acquire idx=39 total=3
+19:07:54  [19:07:54] FEEDCOLL scrollTo idx=37 y=39960.0 items=41
+19:07:55  [19:07:54] MGR acquire idx=37 total=4
+19:07:55  [19:07:54] MGR acquire idx=36 total=5
+19:07:55  [19:07:54] MGR evict idx=37
+19:07:55  [19:07:54] MGR evict idx=36
+19:07:55  [19:07:54] FEEDCOLL scrollTo idx=37 y=39960.0 items=41
+19:07:55  [19:07:54] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=8)
+19:07:55  [19:07:54] FEED loop a[0] begin bytes=79722
+19:07:55  [19:07:54] FEED loop a[0] aweme-ok
+19:07:55  [19:07:54] FEED loop a[0] video-ok
+19:07:55  [19:07:54] FEED video-dump a[0] f1[bytes=1306] f2[bytes=1064] f3[varint=886] f4[varint=1184] f5[bytes=8] f6[bytes=998] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1185] f34[bytes=0]
+19:07:55  [19:07:54] FEED loop a[0] id=7705637308692224219 pick-start
+19:07:55  [19:07:54] FEED loop a[0] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[0] final chosen=true
+19:07:55  [19:07:54] FEED first url[7705637308692224219]: https://v5-ex-music.douyinstatic.com/a49689612e080e128db31e04864f7389/6b1e7c93/video/tos/cn/tos-cn-v-2178-ce/oYCTEo1mkWDAmQUAEVQMfI8eEAVYgEQ
+19:07:55  [19:07:54] FEED loop a[1] begin bytes=52570
+19:07:55  [19:07:54] FEED loop a[1] aweme-ok
+19:07:55  [19:07:54] FEED loop a[1] video-ok
+19:07:55  [19:07:54] FEED video-dump a[1] f1[bytes=344] f2[bytes=1072] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2600] f13[varint=11734] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794740885] f24[varint=0] f25[bytes=1828] f26[bytes=0] f30[bytes=3002] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:55  [19:07:54] FEED loop a[1] id=7700430652836175077 pick-start
+19:07:55  [19:07:54] FEED loop a[1] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[1] final chosen=true
+19:07:55  [19:07:54] FEED loop a[2] begin bytes=62448
+19:07:55  [19:07:54] FEED loop a[2] aweme-ok
+19:07:55  [19:07:54] FEED loop a[2] video-ok
+19:07:55  [19:07:54] FEED video-dump a[2] f1[bytes=1306] f2[bytes=1050] f3[varint=0] f4[varint=0] f5[bytes=8] f6[bytes=971] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1186] f34[bytes=0]
+19:07:55  [19:07:54] FEED loop a[2] id=7707344218322528674 pick-start
+19:07:55  [19:07:54] FEED loop a[2] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[2] final chosen=true
+19:07:55  [19:07:54] FEED loop a[3] begin bytes=50624
+19:07:55  [19:07:54] FEED loop a[3] aweme-ok
+19:07:55  [19:07:54] FEED loop a[3] video-ok
+19:07:55  [19:07:54] FEED video-dump a[3] f1[bytes=343] f2[bytes=1003] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=989] f7[bytes=4] f8[bytes=1494] f9[varint=1] f10[bytes=343] f11[bytes=2713] f13[varint=110272] f14[bytes=1494] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=343] f21[varint=1794740984] f22[varint=1] f23[bytes=0] f24[varint=0] f26[bytes=0] f29[bytes=1997] f30[bytes=3305] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:55  [19:07:54] FEED loop a[3] id=7707544207958740267 pick-start
+19:07:55  [19:07:54] FEED loop a[3] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[3] final chosen=true
+19:07:55  [19:07:54] FEED loop a[4] begin bytes=47089
+19:07:55  [19:07:54] FEED loop a[4] aweme-ok
+19:07:55  [19:07:54] FEED loop a[4] video-ok
+19:07:55  [19:07:54] FEED video-dump a[4] f1[bytes=343] f2[bytes=1055] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=968] f7[bytes=4] f8[bytes=1505] f9[varint=1] f10[bytes=343] f11[bytes=2587] f13[varint=10357] f14[bytes=1505] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740884] f24[varint=0] f26[bytes=0] f30[bytes=3048] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:07:55  [19:07:54] FEED loop a[4] id=7707285015218324986 pick-start
+19:07:55  [19:07:54] FEED loop a[4] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[4] final chosen=true
+19:07:55  [19:07:54] FEED loop a[5] begin bytes=60115
+19:07:55  [19:07:54] FEED loop a[5] aweme-ok
+19:07:55  [19:07:54] FEED loop a[5] video-ok
+19:07:55  [19:07:54] FEED video-dump a[5] f1[bytes=1299] f2[bytes=1038] f3[varint=2818] f4[varint=2114] f5[bytes=8] f6[bytes=979] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1137] f34[bytes=0]
+19:07:55  [19:07:54] FEED loop a[5] id=7705675672513221865 pick-start
+19:07:55  [19:07:54] FEED loop a[5] pick-done chosen=false
+19:07:55  [19:07:54] FEED loop a[5] final chosen=true
+19:07:55  [19:07:54] FEED mobile page refresh_index=8: awemes=6 usable=6 total_seen=47
+19:07:55  [19:07:54] ENGINE merge total=47 index=37 replace=false auto=false
+19:07:55  [19:07:55] MGR acquire idx=37 total=4
+19:07:55  [19:07:55] MGR acquire idx=36 total=5
+19:07:55  [19:07:55] MGR failed idx=36 err=You do not have permission to access the requested resource. -> skip
+19:07:55  [19:07:55] MGR failed idx=36 dup -> no advance (break cascade)
+19:07:55  [19:07:55] MGR failed idx=37 err=You do not have permission to access the requested resource. -> skip
+19:07:55  [19:07:55] MGR failed idx=37 dup -> no advance (break cascade)
+19:07:55  [19:07:55] MGR acquire idx=37 total=4
+19:07:55  [19:07:55] MGR ready idx=39
+19:07:56  [19:07:56] MGR failed idx=37 err=You do not have permission to access the requested resource. -> skip
+19:07:56  [19:07:56] MGR failed idx=37 dup -> no advance (break cascade)
+19:07:56  [19:07:56] MGR acquire idx=37 total=4
+19:07:57  [19:07:56] MGR failed idx=37 err=You do not have permission to access the requested resource. -> skip
+19:07:57  [19:07:56] MGR failed idx=37 dup -> no advance (break cascade)
+19:07:57  [19:07:57] ENGINE next -> index=38
+19:07:57  [19:07:57] ENGINE next -> index=39
+19:07:57  [19:07:57] MGR evict idx=35
+19:07:57  [19:07:57] MGR acquire idx=40 total=3
+19:07:57  [19:07:57] MGR acquire idx=41 total=4
+19:07:57  [19:07:57] FEEDCOLL scrollTo idx=39 y=42120.0 items=47
+19:07:57  [19:07:57] MGR ready idx=41
+19:07:59  [19:07:59] ENGINE next -> index=40
+19:07:59  [19:07:59] ENGINE needMore (index=40 count=47)
+19:07:59  [19:07:59] FEED mobile GET refresh_index=9 cold=0 count=10 bogus_len=180 seen=47
+19:07:59  [19:07:59] MGR acquire idx=42 total=5
+19:07:59  [19:07:59] FEEDCOLL scrollTo idx=40 y=43200.0 items=47
+19:07:59  [19:07:59] MGR failed idx=42 err=You do not have permission to access the requested resource. -> skip
+19:08:00  [19:08:00] MGR ready idx=40
+19:08:01  [19:08:01] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=9)
+19:08:01  [19:08:01] FEED loop a[0] begin bytes=43658
+19:08:01  [19:08:01] FEED loop a[0] aweme-ok
+19:08:01  [19:08:01] FEED loop a[0] video-ok
+19:08:01  [19:08:01] FEED video-dump a[0] f1[bytes=1282] f2[bytes=1053] f3[varint=1440] f4[varint=1080] f5[bytes=8] f6[bytes=998] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=399] f34[bytes=0]
+19:08:01  [19:08:01] FEED loop a[0] id=7706488531799995234 pick-start
+19:08:01  [19:08:01] FEED loop a[0] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[0] final chosen=true
+19:08:01  [19:08:01] FEED first url[7706488531799995234]: https://v5-ex-music.douyinstatic.com/3d39a49b5805b8327e0534f50b6e085e/6b1e7cb7/video/tos/cn/tos-cn-v-2178/aa9b8d18dc934c148dd0c7eecc2dfbe0/?
+19:08:01  [19:08:01] FEED loop a[1] begin bytes=58971
+19:08:01  [19:08:01] FEED loop a[1] aweme-ok
+19:08:01  [19:08:01] FEED loop a[1] video-ok
+19:08:01  [19:08:01] FEED video-dump a[1] f1[bytes=343] f2[bytes=1024] f3[varint=768] f4[varint=576] f5[bytes=8] f6[bytes=976] f7[bytes=4] f8[bytes=1508] f9[varint=1] f10[bytes=343] f11[bytes=2456] f13[varint=8100] f14[bytes=1508] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794740889] f24[varint=0] f25[bytes=1827] f26[bytes=0] f30[bytes=3719] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:08:01  [19:08:01] FEED loop a[1] id=7704907328306876074 pick-start
+19:08:01  [19:08:01] FEED loop a[1] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[1] final chosen=true
+19:08:01  [19:08:01] FEED loop a[2] begin bytes=49949
+19:08:01  [19:08:01] FEED loop a[2] aweme-ok
+19:08:01  [19:08:01] FEED loop a[2] video-ok
+19:08:01  [19:08:01] FEED video-dump a[2] f1[bytes=344] f2[bytes=1068] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1002] f7[bytes=4] f8[bytes=1521] f9[varint=1] f10[bytes=344] f11[bytes=2547] f13[varint=138717] f14[bytes=1521] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794741019] f22[varint=1] f23[bytes=0] f24[varint=0] f26[bytes=0] f29[bytes=1439] f30[bytes=3233] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:08:01  [19:08:01] FEED loop a[2] id=7697225785774373114 pick-start
+19:08:01  [19:08:01] FEED loop a[2] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[2] final chosen=true
+19:08:01  [19:08:01] FEED loop a[3] begin bytes=54826
+19:08:01  [19:08:01] FEED loop a[3] aweme-ok
+19:08:01  [19:08:01] FEED loop a[3] video-ok
+19:08:01  [19:08:01] FEED video-dump a[3] f1[bytes=344] f2[bytes=1045] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=968] f7[bytes=4] f8[bytes=1509] f9[varint=1] f10[bytes=344] f11[bytes=2629,bytes=2619] f13[varint=13034] f14[bytes=1509] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794740894] f24[varint=0] f25[bytes=1816] f26[bytes=0] f30[bytes=3014] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:08:01  [19:08:01] FEED loop a[3] id=7703564029869259978 pick-start
+19:08:01  [19:08:01] FEED loop a[3] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[3] final chosen=true
+19:08:01  [19:08:01] FEED loop a[4] begin bytes=60456
+19:08:01  [19:08:01] FEED loop a[4] aweme-ok
+19:08:01  [19:08:01] FEED loop a[4] video-ok
+19:08:01  [19:08:01] FEED video-dump a[4] f1[bytes=1282] f2[bytes=1028] f3[varint=2880] f4[varint=2160] f5[bytes=8] f6[bytes=973] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1227] f34[bytes=0]
+19:08:01  [19:08:01] FEED loop a[4] id=7706369437424164544 pick-start
+19:08:01  [19:08:01] FEED loop a[4] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[4] final chosen=true
+19:08:01  [19:08:01] FEED loop a[5] begin bytes=53610
+19:08:01  [19:08:01] FEED loop a[5] aweme-ok
+19:08:01  [19:08:01] FEED loop a[5] video-ok
+19:08:01  [19:08:01] FEED video-dump a[5] f1[bytes=344] f2[bytes=1035] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=974] f7[bytes=4] f8[bytes=1506] f9[varint=1] f10[bytes=344] f11[bytes=2606] f13[varint=10067] f14[bytes=1506] f15[varint=1] f16[bytes=347] f17[varint=0] f18[bytes=344] f21[varint=1794740891] f24[varint=0] f25[bytes=1815] f26[bytes=0] f29[bytes=697] f30[bytes=2854] f33[varint=0] f34[bytes=0] f44[bytes=3]
+19:08:01  [19:08:01] FEED loop a[5] id=7703766630095377507 pick-start
+19:08:01  [19:08:01] FEED loop a[5] pick-done chosen=false
+19:08:01  [19:08:01] FEED loop a[5] final chosen=true
+19:08:01  [19:08:01] FEED mobile page refresh_index=9: awemes=6 usable=6 total_seen=53
+19:08:01  [19:08:01] ENGINE merge total=53 index=40 replace=false auto=false
