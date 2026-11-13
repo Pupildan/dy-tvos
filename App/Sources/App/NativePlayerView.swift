@@ -14,9 +14,15 @@ final class PlayerLayerView: UIView {
     }
 }
 
-/// Feed Cell：内嵌 PlayerLayerView，绑定池里的 AVPlayer（真实视频图层随 Cell 滑动）。
+/// Feed Cell：每个 Cell 独占一个 AVPlayer（真实视频图层随 Cell 滑动）。
+/// 铁律：真实视频层物理滑动，绝无截图假象。每 Cell 一个解码器，显示哪个 index 就播哪个，
+/// 永不 replaceCurrentItem 换 URL——根除"池改派换源空窗"导致的黑屏/冻屏。
 final class PlayerCell: UICollectionViewCell {
     let playerView = PlayerLayerView()
+    /// 本 Cell 独占的 player（显示期间持有一个，复用时销毁）
+    private var player: AVPlayer?
+    /// 正在装载的 index（防 recycled cell 串号）
+    private var loadedIndex: Int = -1
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,28 +35,73 @@ final class PlayerCell: UICollectionViewCell {
         super.layoutSubviews()
         playerView.frame = contentView.bounds
     }
+
+    /// 装载 index 的视频到本 Cell 独占的 player（每次显示都新建，不换 URL）。
+    func configure(index: Int, url: URL, cookieHeader: String?) {
+        // 彻底销毁旧 player（不 replaceCurrentItem 换源，根除换源空窗）
+        teardownPlayer()
+        var headers = ["User-Agent": DYFeedClient.mobileUA]
+        if let cookie = cookieHeader, !cookie.isEmpty {
+            headers["Cookie"] = cookie
+        }
+        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
+        let item = AVPlayerItem(asset: asset)
+        item.preferredForwardBufferDuration = 8
+        asset.loadValuesAsynchronously(forKeys: ["playable"])
+        let p = AVPlayer()
+        p.replaceCurrentItem(with: item)
+        p.isMuted = true            // 默认静音，只有居中槽由控制器解除
+        playerView.player = p
+        player = p
+        loadedIndex = index
+        DYLog.shared.log("CELL load idx=\(index) player=\(ObjectIdentifier(p).hashValue)")
+    }
+
+    /// 播放本 Cell（仅居中槽由控制器调）。
+    func play() {
+        player?.isMuted = false
+        player?.play()
+    }
+    /// 暂停本 Cell（非居中槽）。
+    func pause() {
+        player?.pause()
+        player?.isMuted = true
+    }
+    /// 当前时间（seek 用）。
+    func currentTime() -> CMTime {
+        player?.currentItem?.currentTime() ?? .zero
+    }
+    func seek(to t: CMTime) {
+        player?.seek(to: t, toleranceBefore: .zero, toleranceAfter: .zero)
+    }
+    var isPlaying: Bool {
+        player?.timeControlStatus == .playing
+    }
+
+    /// 复用时彻底销毁 player（防 recycled cell 串号/黑屏）。
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        teardownPlayer()
+        loadedIndex = -1
+    }
+
+    private func teardownPlayer() {
+        player?.pause()
+        player?.replaceCurrentItem(with: nil)
+        playerView.player = nil
+        player = nil
+    }
 }
 
-/// 原生播放器：UICollectionView 垂直分页 + 3 实例 AVPlayer 池。
-/// 真实图层滑动：滑动=前后两个 Cell 连同真实视频画面一起位移（UIScrollView 原生物理/惯性），绝无截图假象。
-/// PlayerPool 维持 3 个 AVPlayer 循环复用（当前/上一/下一），Cell 划出不销毁，replaceCurrentItem 复用（治 Cannot Open）。
+/// 原生播放器：UICollectionView 垂直分页 + 每 Cell 独占 AVPlayer。
+/// 真实图层滑动：滑动=前后两个 Cell 连同真实视频画面一起位移（UIScrollView 原生物理/惯性）。
+/// 每 Cell 一个解码器、显示哪个播哪个、永不换 URL——根除池改派换源空窗（黑屏/冻屏病根）。
 /// 遥控：上/下驱动 setContentOffset 滚动；左右=seek；播放暂停键切换。
 final class DYPlayerViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
-
-    // PlayerPool：3 个循环复用的 AVPlayer
-    private lazy var playerPool: [AVPlayer] = (0..<3).map { _ in AVPlayer() }
-    /// 每个 player 当前装载的 index（池复用依据）
-    private var playerIndex: [AVPlayer: Int] = [:]
-    /// 每个 player 的 currentItem.status KVO——item ready 时自动起播（治黑屏/冻屏：play 不再只靠滚动离散触发）
-    private var statusObservers: [AVPlayer: NSKeyValueObservation] = [:]
-
-    deinit {
-        for obs in statusObservers.values { obs.invalidate() }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +155,6 @@ final class DYPlayerViewController: UIViewController {
         guard collectionView.window != nil,
               collectionView.bounds.height > 0,
               !PlaybackEngine.shared.urls.isEmpty else { return false }
-        // 强制 layout 让 flow layout 算出真实 contentSize
         collectionView.layoutIfNeeded()
         return true
     }
@@ -124,8 +174,7 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
-        // 对齐引擎索引 + 接近末尾时翻页（否则刷完首批就卡死，日志已证：items 恒 6、永不 needMore）
-        // 用 next()/prev() 逐步对齐（内部会更新 currentAwemeId，且它们是 private 不能直接赋值）
+        // 对齐引擎索引 + 接近末尾时翻页（否则刷完首批就卡死）
         let engine = PlaybackEngine.shared
         if clampedIndex > engine.index {
             for _ in engine.index..<clampedIndex { engine.next() }
@@ -136,96 +185,23 @@ final class DYPlayerViewController: UIViewController {
             engine.triggerNeedMore()
         }
         DYLog.shared.log("FEEDCOLL scrollTo idx=\(clampedIndex) y=\(targetY) items=\(count)")
-        // 关键：滚动一开始就预载目标±1（不等滚动结束），让滑动时相邻已缓冲不卡
-        preloadAdjacent(around: clampedIndex)
+        // 滚动到位：居中 Cell 播、其余停（cell 已在 cellForItemAt 各自装载，此处只控播放态）
         DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
             self?.updatePlaybackStates(center: clampedIndex)
         }
     }
 
-    // MARK: - PlayerPool
-
-    /// 取一个 player 装载 index（复用已装载该 index 的；否则取离中心最远的）。
-    private func acquirePlayer(for index: Int) -> AVPlayer {
-        if let owned = playerPool.first(where: { playerIndex[$0] == index }) {
-            return owned
-        }
-        guard let p = playerPool.min(by: { distance($0) > distance($1) }) else {
-            let fb = playerPool[0]
-            load(player: fb, index: index)
-            return fb
-        }
-        load(player: p, index: index)
-        return p
-    }
-
-    private func distance(_ p: AVPlayer) -> Int {
-        guard let i = playerIndex[p] else { return Int.max }
-        return abs(i - currentIndex)
-    }
-
-    private func load(player: AVPlayer, index: Int) {
-        guard PlaybackEngine.shared.urls.indices.contains(index) else { return }
-        let url = PlaybackEngine.shared.urls[index]
-        var headers = ["User-Agent": DYFeedClient.mobileUA]
-        if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
-            headers["Cookie"] = cookie
-        }
-        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
-        let item = AVPlayerItem(asset: asset)
-        item.preferredForwardBufferDuration = 8
-        asset.loadValuesAsynchronously(forKeys: ["playable"])
-        player.replaceCurrentItem(with: item)   // 复用：不销毁 player，仅换 item
-        // 换 item 瞬间先静音+暂停：旧帧还挂 layer、新声先解出→"画面卡住只有声音"（v93 病灶）
-        player.pause()
-        player.isMuted = true
-        playerIndex[player] = index
-        // KVO 等 item 真正 readyToPlay 且它仍是当前居中槽才 play——play 不再只靠滚动离散触发，
-        // 治"item 在最后一次 updatePlaybackStates 之后才 ready → 没人唤它播 → 黑屏/冻屏"。
-        statusObservers[player]?.invalidate()
-        statusObservers[player] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            guard let self, it.status == .readyToPlay else { return }
-            DispatchQueue.main.async {
-                guard self.playerIndex[player] == index,
-                      self.currentIndex == index else { return }
-                player.isMuted = false
-                player.play()
-                DYLog.shared.log("POOL readyPlay idx=\(index)")
-            }
-        }
-        DYLog.shared.log("POOL load idx=\(index)")
-    }
-
-    /// 只有居中 cell 播放（解除静音），其余暂停+静音；并预载相邻。
-    /// 居中槽无条件 play + 解除静音：item 没 ready 时 AVPlayer 会自己缓冲、好了自动出画，
-    /// 绝不会黑屏无声（v101/v102 的 readyToPlay 门槛挡死了这个天性→黑屏增多，撤掉）。
-    /// 只保留 load 换 item 时的 pause+静音（防旧帧+新声）。
+    /// 只有居中 Cell 播放（解除静音），其余暂停+静音。
+    /// 每 Cell 独占 player、无换 URL，故无换源空窗——居中槽直接 play，AVPlayer 没 ready 会自己缓冲。
     private func updatePlaybackStates(center index: Int) {
-        for p in playerPool {
-            guard let pi = playerIndex[p] else { continue }
-            if pi == index {
-                p.isMuted = false
-                p.play()
+        for cell in collectionView.visibleCells {
+            guard let c = cell as? PlayerCell,
+                  let ip = collectionView.indexPath(for: c) else { continue }
+            if ip.item == index {
+                c.play()
             } else {
-                p.pause()
-                p.isMuted = true
+                c.pause()
             }
-        }
-        for adj in [index - 1, index + 1] where adj >= 0 {
-            if !playerPool.contains(where: { playerIndex[$0] == adj }),
-               let free = playerPool.first(where: { p in
-                   guard let i = playerIndex[p] else { return true }
-                   return abs(i - index) > 1
-               }) {
-                load(player: free, index: adj)
-            }
-        }
-    }
-
-    /// 预载 index 及其相邻（上一/下一）的 player，让滑动时已缓冲。
-    private func preloadAdjacent(around index: Int) {
-        for i in [index - 1, index, index + 1] where i >= 0 {
-            acquirePlayer(for: i)
         }
     }
 
@@ -244,20 +220,28 @@ final class DYPlayerViewController: UIViewController {
         scrollTo(index: max(0, centeredIndex() - 1), animated: true)
     }
 
+    private func centeredCell() -> PlayerCell? {
+        let ci = centeredIndex()
+        for cell in collectionView.visibleCells {
+            if let c = cell as? PlayerCell,
+               let ip = collectionView.indexPath(for: c), ip.item == ci {
+                return c
+            }
+        }
+        return nil
+    }
+
     private func seek(by seconds: Double) {
-        let p = playerForCentered()
-        guard let t = p?.currentItem?.currentTime().seconds, t.isFinite else { return }
+        guard let c = centeredCell() else { return }
+        let t = c.currentTime().seconds
+        guard t.isFinite else { return }
         let target = max(0, t + seconds)
-        p?.seek(to: CMTime(seconds: target, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero)
+        c.seek(to: CMTime(seconds: target, preferredTimescale: 600))
         DYLog.shared.log("FEEDCOLL seek \(seconds)s -> \(target)")
     }
-    private func playerForCentered() -> AVPlayer? {
-        let ci = centeredIndex()
-        return playerPool.first { playerIndex[$0] == ci }
-    }
     private func togglePlayPause() {
-        guard let p = playerForCentered() else { return }
-        if p.timeControlStatus == .playing { p.pause() } else { p.play() }
+        guard let c = centeredCell() else { return }
+        if c.isPlaying { c.pause() } else { c.play() }
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -281,8 +265,11 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PlayerCell
-        let p = acquirePlayer(for: indexPath.item)
-        cell.playerView.player = p
+        let idx = indexPath.item
+        guard PlaybackEngine.shared.urls.indices.contains(idx) else { return cell }
+        let url = PlaybackEngine.shared.urls[idx]
+        // 每 Cell 独占 player 装载本 index（configure 内部先销毁旧 player，不换 URL）
+        cell.configure(index: idx, url: url, cookieHeader: DYFeedClient.shared.cookieHeaderForPlayback())
         cell.playerView.frame = cell.contentView.bounds
         return cell
     }
@@ -292,13 +279,6 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         (cell as? PlayerCell)?.playerView.frame = cell.contentView.bounds
     }
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // Cell 划出屏幕：暂停其 player（不销毁，放回池循环复用）
-        if let c = cell as? PlayerCell, let p = c.playerView.player {
-            p.pause()
-            DYLog.shared.log("POOL pause offscreen idx=\(indexPath.item)")
-        }
-    }
     /// tvOS 无 isPagingEnabled：拖拽结束手动整页吸附
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, withTargetContentOffset targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let pageHeight = max(1, scrollView.bounds.height)
@@ -307,16 +287,14 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
         targetContentOffset.pointee.y = snappedY
     }
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        let ci = centeredIndex()
-        updatePlaybackStates(center: ci)
+        updatePlaybackStates(center: centeredIndex())
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let ci = centeredIndex()
-        updatePlaybackStates(center: ci)
+        updatePlaybackStates(center: centeredIndex())
     }
 }
 
-/// SwiftUI 包装：UICollectionView 垂直分页真实视频滑动。
+/// SwiftUI 包装：UICollectionView 垂直分页真实视频滑动（每 Cell 独占 AVPlayer）。
 struct NativePlayerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> DYPlayerViewController {
         DYPlayerViewController()

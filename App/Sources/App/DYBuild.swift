@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v103"
-    static let changes = "v103: 治黑屏增多——撤updatePlaybackStates的readyToPlay门槛,居中槽无条件play+解除静音(AVPlayer没ready会自缓冲,挡死它才黑屏);留load换item pause+静音+KVO兜底"
+    static let version = "v104"
+    static let changes = "v104: 废除3-player池改派——每Cell独占AVPlayer,显示哪个播哪个永不换URL,复用时销毁;根除换源空窗(黑屏/冻屏病根),保留真实视频层滑动铁律"
 }
