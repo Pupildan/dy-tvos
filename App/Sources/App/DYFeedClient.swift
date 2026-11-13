@@ -166,15 +166,21 @@ final class DYFeedClient {
         var ids: [String] = []
         var urls: [URL] = []
         var loggedFirst = false
+        var ei = 0
         for entry in awemeEntries {
-            guard let aweme = Proto.parse(entry) else { continue }
+            DYLog.shared.log("FEED loop a[\(ei)] begin bytes=\(entry.count)")
+            guard let aweme = Proto.parse(entry) else { DYLog.shared.log("FEED loop a[\(ei)] parse-nil"); ei += 1; continue }
+            DYLog.shared.log("FEED loop a[\(ei)] aweme-ok")
             // video = aweme field 7，退化 field 8（s13.e:229）
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
-                  let video = Proto.parse(videoBytes) else { continue }
+                  let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
+            DYLog.shared.log("FEED loop a[\(ei)] video-ok")
             // aweme_id = field 1（s13.b 优先 str，退化为 varint）
-            guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { continue }
+            guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.log("FEED loop a[\(ei)] id-nil"); ei += 1; continue }
+            DYLog.shared.log("FEED loop a[\(ei)] id=\(id) pick-start")
             // 最高画质：bit_rate 数组（field 21/31）挑最高档；无 bit_rate 则退回默认 play_addr
             var chosen: URL? = pickHighestQuality(from: video, awemeId: id)
+            DYLog.shared.log("FEED loop a[\(ei)] pick-done chosen=\(chosen != nil)")
             if chosen == nil {
                 // 默认 play_addr：s13.e:229 是 f1(d(7), d(8))。
                 // 实测移动端 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向（540p，慢）。
@@ -192,6 +198,7 @@ final class DYFeedClient {
                     }
                 }
             }
+            DYLog.shared.log("FEED loop a[\(ei)] final chosen=\(chosen != nil)")
             if let url = chosen {
                 ids.append(id); urls.append(url)
                 if !loggedFirst {
@@ -199,6 +206,7 @@ final class DYFeedClient {
                     DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
                 }
             }
+            ei += 1
         }
         consumedIds.append(contentsOf: ids)
         DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) total_seen=\(consumedIds.count)")
@@ -337,6 +345,11 @@ struct Proto {
     let fields: [Int: [Value]]
 
     static func parse(_ data: [UInt8]) -> Proto? {
+        return parse(data, depth: 0)
+    }
+    /// v90：加 depth 上限，防深嵌套 protobuf 递归 parse 栈溢出。
+    private static func parse(_ data: [UInt8], depth: Int) -> Proto? {
+        guard depth < 16 else { return nil }
         var map: [Int: [Value]] = [:]
         var i = 0
         func readVarint(_ i: inout Int) -> UInt64? {
@@ -398,17 +411,25 @@ struct Proto {
     /// 提取 PlayAddr.urlList，严格照抄 s13.a 的字段优先级：
     /// field 2 →（depth<2 时）递归子消息 → field 1。每步只收 http(s) 开头的串（s13.d）。
     /// field 1 装的是 uri（如 v0300fg…），真正可播的 http CDN URL 在 field 2。
+    /// v90：递归加预算上限（防移动端 protobuf 深嵌套/多 bytes 字段导致栈溢出或内存爆掉）。
     static func urlList(_ msg: Proto, _ depth: Int) -> [String] {
+        return urlList(msg, depth, budget: 64)
+    }
+    private static func urlList(_ msg: Proto, _ depth: Int, budget: Int) -> [String] {
+        guard budget > 0 else { return [] }   // 预算耗尽，停止递归
         // 1) field 2
         let f2 = msg.strings(2).filter(isHttp)
         if !f2.isEmpty { return f2 }
-        // 2) 递归子消息（所有 bytes 字段尝试解析，按字段号序）
+        // 2) 递归子消息（所有 bytes 字段尝试解析，按字段号序）—— depth<2 且预算递减
         if depth < 2 {
             var rec: [String] = []
+            var remaining = budget
             for key in msg.fields.keys.sorted() {
                 for case .bytes(let b) in (msg.fields[key] ?? []) {
+                    guard remaining > 0 else { return rec }
+                    remaining -= 1
                     if let nested = parse(b) {
-                        rec.append(contentsOf: urlList(nested, depth + 1))
+                        rec.append(contentsOf: urlList(nested, depth + 1, budget: remaining))
                     }
                 }
             }

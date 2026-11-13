@@ -10,36 +10,19 @@ import AVFoundation
 /// 焦点意图：原生播放器持有焦点（上/下切视频，左/右 seek，Menu 干净退出）。
 struct RootView: View {
     @State private var started = false
-    @State private var launchAlpha: Double = 1
     @ObservedObject private var engine = PlaybackEngine.shared
-    /// 启动视频开关：true=显示启动视频加载动画；false=纯黑（二分定位闪退用）
-    private let showLaunchVideo = false
 
     var body: some View {
         ZStack {
             // 原生播放器全屏（居中、不裁切、周围留白——原始约束）
             NativePlayerView()
                 .ignoresSafeArea()
-
-            // 启动加载动画：全屏循环静音视频，feed 首批就绪后淡出
-            if showLaunchVideo, engine.urls.isEmpty {
-                LaunchVideoView()
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-            }
         }
         .background(Color.black)
         .onAppear {
             guard !started else { return }
             started = true
             DYLog.shared.log("ROOT auto-start \(DYBuild.version)")
-        }
-        // feed 首批就绪 → 淡出启动视频
-        .onChange(of: engine.urls.isEmpty) { empty in
-            guard !empty else { return }
-            withAnimation(.easeOut(duration: 0.4)) {
-                launchAlpha = 0
-            }
         }
     }
 }

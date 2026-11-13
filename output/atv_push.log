@@ -13694,3 +13694,63 @@
 13:28:49  [13:28:49] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
 13:28:50  [13:28:49] LOGSRV Bonjour published: DYTV-119
 13:28:51  [13:28:51] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=5 (refresh_index=1)
+13:52:05  [13:52:05] DYTV v89 launched
+13:52:05  [13:52:05] SIGNER init start
+13:52:05  [13:52:05] LOGSRV ready on port 8765
+13:52:05  [13:52:05] SIGNER load shim ok
+13:52:05  [13:52:05] SIGNER load abogus ok
+13:52:05  [13:52:05] LOGSRV advertising as DYTV-230
+13:52:05  [13:52:05] SIGNER load sign ok
+13:52:05  [13:52:05] FEEDCOLL viewDidLoad
+13:52:05  [13:52:05] ROOT auto-start v89
+13:52:05  [13:52:05] SIGNER load abogus_dy ok
+13:52:05  [13:52:05] SIGNER extras sign=true dy=true
+13:52:05  [13:52:05] SIGNER bdms=yes
+13:52:05  [13:52:05] SIGNER initABogus=true
+13:52:05  [13:52:05] SIGNER fns=AB (期望 AB)
+13:52:05  [13:52:05] SIGNER smoke={"ok":true,"value":"QXmqQdggDk2B6fyg5XALfY3qVW33YsWh0SVkMDhezVfP4g39HMTb9exEvd7vP7DeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+13:52:05  [13:52:05] SIGNER READY a_bogus len=180
+13:52:05  [13:52:05] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+13:52:05  [13:52:05] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+13:52:06  [13:52:06] LOGSRV Bonjour published: DYTV-230
+13:52:08  [13:52:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+13:52:09  [13:52:09] DYTV v89 launched
+13:52:09  [13:52:09] SIGNER init start
+13:52:09  [13:52:09] LOGSRV ready on port 8765
+13:52:09  [13:52:09] LOGSRV advertising as DYTV-808
+13:52:09  [13:52:09] SIGNER load shim ok
+13:52:09  [13:52:09] SIGNER load abogus ok
+13:52:09  [13:52:09] SIGNER load sign ok
+13:52:09  [13:52:09] FEEDCOLL viewDidLoad
+13:52:09  [13:52:09] ROOT auto-start v89
+13:52:09  [13:52:09] SIGNER load abogus_dy ok
+13:52:09  [13:52:09] SIGNER extras sign=true dy=true
+13:52:09  [13:52:09] SIGNER bdms=yes
+13:52:09  [13:52:09] SIGNER initABogus=true
+13:52:09  [13:52:09] SIGNER fns=AB (期望 AB)
+13:52:09  [13:52:09] SIGNER smoke={"ok":true,"value":"YJ8ZQfzkdkfpfd6g5XALfY3qVW33YsWh0SVkMDhezVfPXL39HMTz9exEvd7vYX6eF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+13:52:09  [13:52:09] SIGNER READY a_bogus len=180
+13:52:09  [13:52:09] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+13:52:09  [13:52:09] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+13:52:09  [13:52:09] LOGSRV Bonjour published: DYTV-808
+13:52:11  [13:52:11] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+13:52:12  [13:52:12] DYTV v89 launched
+13:52:12  [13:52:12] SIGNER init start
+13:52:12  [13:52:12] LOGSRV ready on port 8765
+13:52:12  [13:52:12] SIGNER load shim ok
+13:52:12  [13:52:12] SIGNER load abogus ok
+13:52:12  [13:52:12] LOGSRV advertising as DYTV-966
+13:52:12  [13:52:12] SIGNER load sign ok
+13:52:12  [13:52:12] FEEDCOLL viewDidLoad
+13:52:12  [13:52:12] ROOT auto-start v89
+13:52:12  [13:52:12] SIGNER load abogus_dy ok
+13:52:12  [13:52:12] SIGNER extras sign=true dy=true
+13:52:12  [13:52:12] SIGNER bdms=yes
+13:52:12  [13:52:12] SIGNER initABogus=true
+13:52:12  [13:52:12] SIGNER fns=AB (期望 AB)
+13:52:12  [13:52:12] SIGNER smoke={"ok":true,"value":"mvRwBfLDDDDiXD6k5XALfY3qVW33YsWh0SVkMDhezVfPIL39HMO19exEvd7vLYfeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+13:52:12  [13:52:12] SIGNER READY a_bogus len=180
+13:52:12  [13:52:12] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+13:52:12  [13:52:12] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+13:52:13  [13:52:13] LOGSRV Bonjour published: DYTV-966
+13:52:14  [13:52:14] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
