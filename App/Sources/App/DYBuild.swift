@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v104"
-    static let changes = "v104: 废除3-player池改派——每Cell独占AVPlayer,显示哪个播哪个永不换URL,复用时销毁;根除换源空窗(黑屏/冻屏病根),保留真实视频层滑动铁律"
+    static let version = "v105"
+    static let changes = "v105: 治黑屏——configure加复用守卫(已装载同一index且player在则复用不重建),防reloadData/重复cellForItemAt销毁已缓冲player致居中瞬黑屏"
 }

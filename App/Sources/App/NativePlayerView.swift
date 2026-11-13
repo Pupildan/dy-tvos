@@ -36,8 +36,13 @@ final class PlayerCell: UICollectionViewCell {
         playerView.frame = contentView.bounds
     }
 
-    /// 装载 index 的视频到本 Cell 独占的 player（每次显示都新建，不换 URL）。
+    /// 装载 index 的视频到本 Cell 独占的 player。
+    /// 守卫：已装载同一 index 且 player 还在 → 直接复用，不销毁重建（否则 reloadData/重复 cellForItemAt
+    /// 会把已缓冲的 player 销毁重建→居中那一瞬黑屏，日志已证同一 idx 被 load 两次）。
     func configure(index: Int, url: URL, cookieHeader: String?) {
+        if loadedIndex == index, player != nil {
+            return   // 已是本 index，复用现成 player（保住缓冲）
+        }
         // 彻底销毁旧 player（不 replaceCurrentItem 换源，根除换源空窗）
         teardownPlayer()
         var headers = ["User-Agent": DYFeedClient.mobileUA]
