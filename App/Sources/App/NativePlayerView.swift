@@ -13,6 +13,8 @@ final class DYPlayerSlot {
     let container: UIView          // 动画作用于此 view 的 transform
     private let layer: AVPlayerLayer
     private(set) var index: Int = -1
+    /// 正在加载的目标 index（加载中非 nil）——防止滑动完成回调误清正在装载的槽
+    var loadingIndex: Int? = nil
     private var statusObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
 
@@ -81,6 +83,7 @@ final class DYPlayerSlot {
         player.pause()
         player.replaceCurrentItem(with: nil)
         index = -1
+        loadingIndex = nil
         DYLog.shared.log("SLOT cleared (resource released)")
     }
 
@@ -153,22 +156,27 @@ final class DYPlayerViewController: UIViewController {
         return PlaybackEngine.shared.urls[index]
     }
 
-    /// 装载槽位。前台槽出声，后台预载槽静音（滑到前台在 slideTransition 里取消静音）。
-    /// 关键：若该槽已装载同一 index（正在播放），绝不重载/重新静音（否则前台无声）。
+    /// 装载槽位。前台槽出声，后台预载槽静音。
+    /// 关键：静音只在【该槽当前确是备用槽】时生效；若它已滑到前台（正在播），绝不静音/重载。
     private func load(slot: DYPlayerSlot, index: Int, muted: Bool) {
+        // 已是目标内容：只在它是备用槽时才静音，前台槽保持出声，且不重载
         if slot.index == index, slot.currentItem != nil {
-            // 已是目标内容：只按需调整静音，不重载
-            slot.player.isMuted = muted
+            let isStandby = (slot !== activeSlot)
+            slot.player.isMuted = muted && isStandby
             return
         }
         guard let url = itemURL(at: index) else { return }
+        slot.loadingIndex = index   // 标记加载中，防止滑动完成回调误清
         slot.load(url: url, index: index, muted: muted, onReady: { [weak self] in
             guard let self else { return }
-            // 仅当它仍是备用槽时保持静音；若已滑到前台，保持出声
+            slot.loadingIndex = nil
+            // ready 时再校验：若已滑到前台则保持出声
             let isStandby = (slot !== self.activeSlot)
+            slot.player.isMuted = muted && isStandby
             DYLog.shared.log("DUAL slot ready idx=\(index) keepMuted=\(isStandby)")
         }, onFailed: { [weak self] in
             guard let self else { return }
+            slot.loadingIndex = nil
             DYLog.shared.log("DUAL idx=\(index) failed/ended (isActive=\(self.activeSlot === slot))")
             if self.activeSlot === slot {
                 PlaybackEngine.shared.reportFailure()
@@ -252,14 +260,21 @@ final class DYPlayerViewController: UIViewController {
             self.activeIdx = self.slots.firstIndex(where: { $0 === incoming }) ?? 0
             self.isAnimating = false
 
-            // 内存纪律：滑出屏外的旧槽若已不在保活范围（index 落到新位置之后）→ 清资源防溢出
-            if outgoing.index > self.currentIndex {
+            // 内存纪律：只清【非相邻 + 没在加载】的槽，绝不清正在用/正在装载的（防 Cannot Open 黑帧）
+            if self.isKeepWorthy(outgoing) {
                 outgoing.clear()
             }
             // 立即预载下一条到刚腾出的备用槽
             self.preloadNext(around: self.currentIndex)
             DYLog.shared.log("DUAL slide done activeIdx=\(self.activeIdx) idx=\(index)")
         }
+    }
+
+    /// 槽是否可安全清空：非相邻（|index-current|>1）且没在加载下一条。
+    private func isKeepWorthy(_ slot: DYPlayerSlot) -> Bool {
+        if let li = slot.loadingIndex, abs(li - currentIndex) <= 1 { return false }   // 正在加载相邻内容
+        if slot.index != -1, abs(slot.index - currentIndex) <= 1 { return false }      // 相邻保留（供回切）
+        return true
     }
 
     // MARK: - 导航
