@@ -264,8 +264,24 @@ final class DYFeedClient {
 
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
+        var dumped = false
         for e in entries {
             guard let br = Proto.parse(e) else { continue }
+            // 一次性诊断：dump bit_rate 首条的所有 field（号/wire/长度），确认真实结构（is_h265/play_addr 字段号）
+            if !dumped {
+                dumped = true
+                let dump = br.fields.keys.sorted().map { k -> String in
+                    let vals = br.fields[k] ?? []
+                    let sizes = vals.map { v -> String in
+                        switch v {
+                        case .varint(let n): return "varint=\(n)"
+                        case .bytes(let b): return "bytes=\(b.count)"
+                        }
+                    }
+                    return "f\(k)[\(sizes.joined(separator: ","))]"
+                }.joined(separator: " ")
+                DYLog.shared.log("FEED bitrate-dump aweme=\(awemeId) entries=\(entries.count) \(dump)")
+            }
             let gear = br.string(1) ?? ""
             let w = Int(br.varint(2) ?? 0)
             let h = Int(br.varint(3) ?? 0)
