@@ -12,6 +12,8 @@ struct RootView: View {
     @State private var started = false
     @State private var launchAlpha: Double = 1
     @ObservedObject private var engine = PlaybackEngine.shared
+    /// 启动视频开关：true=显示启动视频加载动画；false=纯黑（二分定位闪退用）
+    private let showLaunchVideo = false
 
     var body: some View {
         ZStack {
@@ -20,7 +22,7 @@ struct RootView: View {
                 .ignoresSafeArea()
 
             // 启动加载动画：全屏循环静音视频，feed 首批就绪后淡出
-            if engine.urls.isEmpty {
+            if showLaunchVideo, engine.urls.isEmpty {
                 LaunchVideoView()
                     .ignoresSafeArea()
                     .transition(.opacity)
