@@ -21158,3 +21158,923 @@
 15:53:48  [15:53:48] FEEDCOLL scrollTo idx=10 y=10800.0 items=18
 15:53:48  [15:53:48] POOL load idx=11
 15:53:48  [15:53:48] POOL pause offscreen idx=9
+15:53:50  [15:53:50] ENGINE next -> index=11
+15:53:50  [15:53:50] ENGINE needMore (index=11 count=18)
+15:53:50  [15:53:50] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+15:53:50  [15:53:50] FEEDCOLL scrollTo idx=11 y=11880.0 items=18
+15:53:50  [15:53:50] POOL load idx=12
+15:53:50  [15:53:50] POOL pause offscreen idx=10
+15:53:52  [15:53:52] ENGINE next -> index=12
+15:53:52  [15:53:52] FEEDCOLL scrollTo idx=12 y=12960.0 items=18
+15:53:52  [15:53:52] POOL load idx=13
+15:53:52  [15:53:52] POOL pause offscreen idx=11
+15:53:52  [15:53:52] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+15:53:52  [15:53:52] FEED loop a[0] begin bytes=58579
+15:53:52  [15:53:52] FEED loop a[0] aweme-ok
+15:53:52  [15:53:52] FEED loop a[0] video-ok
+15:53:52  [15:53:52] FEED loop a[0] id=7706343495351900283 pick-start
+15:53:52  [15:53:52] FEED loop a[0] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[0] final chosen=true
+15:53:52  [15:53:52] FEED first url[7706343495351900283]: https://v5-se-gddgtc-music.douyinstatic.com/046d1ff49e977f58bcc3d7862d8d9f7a/6b1e4f2c/video/tos/cn/tos-cn-v-2178-ce/o0s3AWGAAIrALGweU4eFmxvV cands=2
+15:53:52  [15:53:52] FEED loop a[1] begin bytes=51311
+15:53:52  [15:53:52] FEED loop a[1] aweme-ok
+15:53:52  [15:53:52] FEED loop a[1] video-ok
+15:53:52  [15:53:52] FEED loop a[1] id=7702428463702318522 pick-start
+15:53:52  [15:53:52] FEED loop a[1] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[1] final chosen=true
+15:53:52  [15:53:52] FEED loop a[2] begin bytes=52703
+15:53:52  [15:53:52] FEED loop a[2] aweme-ok
+15:53:52  [15:53:52] FEED loop a[2] video-ok
+15:53:52  [15:53:52] FEED loop a[2] id=7701309332654632182 pick-start
+15:53:52  [15:53:52] FEED loop a[2] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[2] final chosen=true
+15:53:52  [15:53:52] FEED loop a[3] begin bytes=103673
+15:53:52  [15:53:52] FEED loop a[3] aweme-ok
+15:53:52  [15:53:52] FEED loop a[3] video-ok
+15:53:52  [15:53:52] FEED loop a[3] id=7696785258578021647 pick-start
+15:53:52  [15:53:52] FEED loop a[3] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[3] final chosen=true
+15:53:52  [15:53:52] FEED loop a[4] begin bytes=52740
+15:53:52  [15:53:52] FEED loop a[4] aweme-ok
+15:53:52  [15:53:52] FEED loop a[4] video-ok
+15:53:52  [15:53:52] FEED loop a[4] id=7702771303241078217 pick-start
+15:53:52  [15:53:52] FEED loop a[4] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[4] final chosen=true
+15:53:52  [15:53:52] FEED loop a[5] begin bytes=48730
+15:53:52  [15:53:52] FEED loop a[5] aweme-ok
+15:53:52  [15:53:52] FEED loop a[5] video-ok
+15:53:52  [15:53:52] FEED loop a[5] id=7706927237437925105 pick-start
+15:53:52  [15:53:52] FEED loop a[5] pick-done chosen=false
+15:53:52  [15:53:52] FEED loop a[5] final chosen=true
+15:53:52  [15:53:52] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+15:53:52  [15:53:52] ENGINE merge total=24 index=12 replace=false auto=false
+15:53:52  [15:53:52] POOL pause offscreen idx=12
+15:53:52  [15:53:52] FEEDCOLL scrollTo idx=12 y=12960.0 items=24
+15:53:53  [15:53:53] ENGINE next -> index=13
+15:53:53  [15:53:53] FEEDCOLL scrollTo idx=13 y=14040.0 items=24
+15:53:53  [15:53:53] POOL load idx=14
+15:53:53  [15:53:53] POOL failed idx=14 -> fallback https://v9-music.douyinstatic.com/c9734235fffb214bcecadab9fa137aed/6b1e4f44/vide
+15:53:53  [15:53:53] POOL load idx=14
+15:53:53  [15:53:53] POOL pause offscreen idx=12
+15:53:53  [15:53:53] POOL pause offscreen idx=13
+15:53:53  [15:53:53] POOL load idx=11
+15:53:53  [15:53:53] FEEDCOLL scrollTo idx=13 y=14040.0 items=24
+15:53:53  [15:53:53] POOL load idx=14
+15:53:53  [15:53:53] POOL pause offscreen idx=12
+15:53:55  [15:53:55] ENGINE next -> index=14
+15:53:55  [15:53:55] FEEDCOLL scrollTo idx=14 y=15120.0 items=24
+15:53:55  [15:53:55] POOL load idx=15
+15:53:55  [15:53:55] POOL pause offscreen idx=13
+15:53:57  [15:53:57] ENGINE next -> index=15
+15:53:57  [15:53:57] FEEDCOLL scrollTo idx=15 y=16200.0 items=24
+15:53:57  [15:53:57] POOL load idx=16
+15:53:57  [15:53:57] POOL pause offscreen idx=14
+15:53:59  [15:53:58] ENGINE next -> index=16
+15:53:59  [15:53:58] FEEDCOLL scrollTo idx=16 y=17280.0 items=24
+15:53:59  [15:53:58] POOL load idx=17
+15:53:59  [15:53:59] POOL readyPlay idx=16
+15:53:59  [15:53:59] POOL pause offscreen idx=15
+15:54:00  [15:54:00] ENGINE next -> index=17
+15:54:00  [15:54:00] ENGINE needMore (index=17 count=24)
+15:54:00  [15:54:00] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+15:54:00  [15:54:00] FEEDCOLL scrollTo idx=17 y=18360.0 items=24
+15:54:00  [15:54:00] POOL load idx=18
+15:54:00  [15:54:00] POOL pause offscreen idx=16
+15:54:01  [15:54:01] ENGINE next -> index=18
+15:54:01  [15:54:01] FEEDCOLL scrollTo idx=18 y=19440.0 items=24
+15:54:01  [15:54:01] POOL load idx=19
+15:54:01  [15:54:01] POOL pause offscreen idx=17
+15:54:02  [15:54:02] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+15:54:02  [15:54:02] FEED loop a[0] begin bytes=57926
+15:54:02  [15:54:02] FEED loop a[0] aweme-ok
+15:54:02  [15:54:02] FEED loop a[0] video-ok
+15:54:02  [15:54:02] FEED loop a[0] id=7702610296734016889 pick-start
+15:54:02  [15:54:02] FEED loop a[0] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[0] final chosen=true
+15:54:02  [15:54:02] FEED first url[7702610296734016889]: https://v9-chc.douyinvod.com/6bb9e9620975addc5f4d380a1679f83e/6af96524/video/cn/mps/logo/r/p/v2800fgi0000dbiim2nog65oik9198ng/3602d4d9f1a243 cands=2
+15:54:02  [15:54:02] FEED loop a[1] begin bytes=89723
+15:54:02  [15:54:02] FEED loop a[1] aweme-ok
+15:54:02  [15:54:02] FEED loop a[1] video-ok
+15:54:02  [15:54:02] FEED loop a[1] id=7706087740240257507 pick-start
+15:54:02  [15:54:02] FEED loop a[1] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[1] final chosen=true
+15:54:02  [15:54:02] FEED loop a[2] begin bytes=47458
+15:54:02  [15:54:02] FEED loop a[2] aweme-ok
+15:54:02  [15:54:02] FEED loop a[2] video-ok
+15:54:02  [15:54:02] FEED loop a[2] id=7704990123930209590 pick-start
+15:54:02  [15:54:02] FEED loop a[2] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[2] final chosen=true
+15:54:02  [15:54:02] FEED loop a[3] begin bytes=63826
+15:54:02  [15:54:02] FEED loop a[3] aweme-ok
+15:54:02  [15:54:02] FEED loop a[3] video-ok
+15:54:02  [15:54:02] FEED loop a[3] id=7706869519302880121 pick-start
+15:54:02  [15:54:02] FEED loop a[3] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[3] final chosen=true
+15:54:02  [15:54:02] FEED loop a[4] begin bytes=45239
+15:54:02  [15:54:02] FEED loop a[4] aweme-ok
+15:54:02  [15:54:02] FEED loop a[4] video-ok
+15:54:02  [15:54:02] FEED loop a[4] id=7697228314960772346 pick-start
+15:54:02  [15:54:02] FEED loop a[4] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[4] final chosen=true
+15:54:02  [15:54:02] FEED loop a[5] begin bytes=56697
+15:54:02  [15:54:02] FEED loop a[5] aweme-ok
+15:54:02  [15:54:02] FEED loop a[5] video-ok
+15:54:02  [15:54:02] FEED loop a[5] id=7706576909023594633 pick-start
+15:54:02  [15:54:02] FEED loop a[5] pick-done chosen=false
+15:54:02  [15:54:02] FEED loop a[5] final chosen=true
+15:54:02  [15:54:02] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=30
+15:54:02  [15:54:02] ENGINE merge total=30 index=18 replace=false auto=false
+15:54:02  [15:54:02] ENGINE next -> index=19
+15:54:02  [15:54:02] FEEDCOLL scrollTo idx=19 y=20520.0 items=30
+15:54:02  [15:54:02] POOL load idx=20
+15:54:02  [15:54:02] POOL pause offscreen idx=18
+15:54:02  [15:54:02] POOL load idx=17
+15:54:02  [15:54:02] FEEDCOLL scrollTo idx=19 y=20520.0 items=30
+15:54:02  [15:54:02] POOL load idx=20
+15:54:02  [15:54:02] POOL pause offscreen idx=18
+15:54:03  [15:54:03] ENGINE next -> index=20
+15:54:03  [15:54:03] FEEDCOLL scrollTo idx=20 y=21600.0 items=30
+15:54:03  [15:54:03] POOL load idx=21
+15:54:04  [15:54:04] POOL pause offscreen idx=19
+15:54:04  [15:54:04] ENGINE next -> index=21
+15:54:04  [15:54:04] FEEDCOLL scrollTo idx=21 y=22680.0 items=30
+15:54:04  [15:54:04] POOL load idx=22
+15:54:04  [15:54:04] POOL readyPlay idx=21
+15:54:05  [15:54:05] POOL pause offscreen idx=20
+15:54:06  [15:54:06] ENGINE next -> index=22
+15:54:06  [15:54:06] FEEDCOLL scrollTo idx=22 y=23760.0 items=30
+15:54:06  [15:54:06] POOL load idx=23
+15:54:06  [15:54:06] POOL pause offscreen idx=21
+15:54:08  [15:54:07] ENGINE next -> index=23
+15:54:08  [15:54:07] ENGINE needMore (index=23 count=30)
+15:54:08  [15:54:07] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=30
+15:54:08  [15:54:07] FEEDCOLL scrollTo idx=23 y=24840.0 items=30
+15:54:08  [15:54:07] POOL load idx=24
+15:54:08  [15:54:08] POOL pause offscreen idx=22
+15:54:09  [15:54:09] ENGINE next -> index=24
+15:54:09  [15:54:09] FEEDCOLL scrollTo idx=24 y=25920.0 items=30
+15:54:09  [15:54:09] POOL load idx=25
+15:54:09  [15:54:09] POOL pause offscreen idx=23
+15:54:09  [15:54:09] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+15:54:09  [15:54:09] FEED loop a[0] begin bytes=55225
+15:54:09  [15:54:09] FEED loop a[0] aweme-ok
+15:54:09  [15:54:09] FEED loop a[0] video-ok
+15:54:09  [15:54:09] FEED loop a[0] id=7704644855540043059 pick-start
+15:54:09  [15:54:09] FEED loop a[0] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[0] final chosen=true
+15:54:09  [15:54:09] FEED first url[7704644855540043059]: https://v5-daily-cm-dyseries.douyinvod.com/c89de1d335f3aa914a836c4ae6f77541/6af965aa/video/tos/cn/tos-cn-ve-15/oMasPARdiIIu3BTFx1iglijQEPZMA cands=2
+15:54:09  [15:54:09] FEED loop a[1] begin bytes=76886
+15:54:09  [15:54:09] FEED loop a[1] aweme-ok
+15:54:09  [15:54:09] FEED loop a[1] video-ok
+15:54:09  [15:54:09] FEED loop a[1] id=7705400248970297551 pick-start
+15:54:09  [15:54:09] FEED loop a[1] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[1] final chosen=true
+15:54:09  [15:54:09] FEED loop a[2] begin bytes=58017
+15:54:09  [15:54:09] FEED loop a[2] aweme-ok
+15:54:09  [15:54:09] FEED loop a[2] video-ok
+15:54:09  [15:54:09] FEED loop a[2] id=7704929171076037834 pick-start
+15:54:09  [15:54:09] FEED loop a[2] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[2] final chosen=true
+15:54:09  [15:54:09] FEED loop a[3] begin bytes=58317
+15:54:09  [15:54:09] FEED loop a[3] aweme-ok
+15:54:09  [15:54:09] FEED loop a[3] video-ok
+15:54:09  [15:54:09] FEED loop a[3] id=7700619326601307483 pick-start
+15:54:09  [15:54:09] FEED loop a[3] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[3] final chosen=true
+15:54:09  [15:54:09] FEED loop a[4] begin bytes=44382
+15:54:09  [15:54:09] FEED loop a[4] aweme-ok
+15:54:09  [15:54:09] FEED loop a[4] video-ok
+15:54:09  [15:54:09] FEED loop a[4] id=7707266803144576497 pick-start
+15:54:09  [15:54:09] FEED loop a[4] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[4] final chosen=false
+15:54:09  [15:54:09] FEED loop a[5] begin bytes=65722
+15:54:09  [15:54:09] FEED loop a[5] aweme-ok
+15:54:09  [15:54:09] FEED loop a[5] video-ok
+15:54:09  [15:54:09] FEED loop a[5] id=7701514745912262373 pick-start
+15:54:09  [15:54:09] FEED loop a[5] pick-done chosen=false
+15:54:09  [15:54:09] FEED loop a[5] final chosen=true
+15:54:09  [15:54:09] FEED mobile page refresh_index=6: awemes=6 usable=5 total_seen=35
+15:54:09  [15:54:09] ENGINE merge total=35 index=24 replace=false auto=false
+15:54:09  [15:54:09] POOL pause offscreen idx=24
+15:54:09  [15:54:09] FEEDCOLL scrollTo idx=24 y=25920.0 items=35
+15:54:10  [15:54:10] ENGINE next -> index=25
+15:54:10  [15:54:10] FEEDCOLL scrollTo idx=25 y=27000.0 items=35
+15:54:10  [15:54:10] POOL load idx=26
+15:54:10  [15:54:10] POOL pause offscreen idx=24
+15:54:12  [15:54:12] ENGINE next -> index=26
+15:54:12  [15:54:12] FEEDCOLL scrollTo idx=26 y=28080.0 items=35
+15:54:12  [15:54:12] POOL load idx=27
+15:54:12  [15:54:12] POOL pause offscreen idx=25
+15:54:12  [15:54:12] POOL readyPlay idx=26
+15:54:15  [15:54:15] ENGINE next -> index=27
+15:54:15  [15:54:15] FEEDCOLL scrollTo idx=27 y=29160.0 items=35
+15:54:15  [15:54:15] POOL load idx=28
+15:54:15  [15:54:15] POOL pause offscreen idx=26
+15:56:24  [15:56:24] DYTV v101 launched
+15:56:24  [15:56:24] SIGNER init start
+15:56:24  [15:56:24] LOGSRV ready on port 8765
+15:56:24  [15:56:24] SIGNER load shim ok
+15:56:24  [15:56:24] SIGNER load abogus ok
+15:56:24  [15:56:24] LOGSRV advertising as DYTV-724
+15:56:24  [15:56:24] SIGNER load sign ok
+15:56:24  [15:56:24] SIGNER load abogus_dy ok
+15:56:24  [15:56:24] SIGNER extras sign=true dy=true
+15:56:24  [15:56:24] SIGNER bdms=yes
+15:56:24  [15:56:24] SIGNER initABogus=true
+15:56:24  [15:56:24] SIGNER fns=AB (期望 AB)
+15:56:24  [15:56:24] FEEDCOLL viewDidLoad
+15:56:24  [15:56:24] ROOT auto-start v101
+15:56:24  [15:56:24] SIGNER smoke={"ok":true,"value":"O7m0/mhgDi2p6fSX5XALfY3qVW33YsA-0SVkMDhezVfPwy39HMYS9exEvB0v1xLeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+15:56:24  [15:56:24] SIGNER READY a_bogus len=180
+15:56:24  [15:56:24] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+15:56:24  [15:56:24] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+15:56:24  [15:56:24] LOGSRV Bonjour published: DYTV-724
+15:56:26  [15:56:26] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+15:56:26  [15:56:26] FEED loop a[0] begin bytes=47022
+15:56:26  [15:56:26] FEED loop a[0] aweme-ok
+15:56:26  [15:56:26] FEED loop a[0] video-ok
+15:56:26  [15:56:26] FEED loop a[0] id=7705273678691141049 pick-start
+15:56:26  [15:56:26] FEED loop a[0] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[0] final chosen=true
+15:56:26  [15:56:26] FEED first url[7705273678691141049]: https://v95-zjbwz-mc-cold.douyinvod.com/f4ce23e382c1c27c7dd81a88c272c4be/6af965ae/video/tos/cn/tos-cn-ve-15c000-ce/o4AQuFmKG7YaDoyB9feBqsA7w
+15:56:26  [15:56:26] FEED loop a[1] begin bytes=85033
+15:56:26  [15:56:26] FEED loop a[1] aweme-ok
+15:56:26  [15:56:26] FEED loop a[1] video-ok
+15:56:26  [15:56:26] FEED loop a[1] id=7703858179171552522 pick-start
+15:56:26  [15:56:26] FEED loop a[1] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[1] final chosen=true
+15:56:26  [15:56:26] FEED loop a[2] begin bytes=62438
+15:56:26  [15:56:26] FEED loop a[2] aweme-ok
+15:56:26  [15:56:26] FEED loop a[2] video-ok
+15:56:26  [15:56:26] FEED loop a[2] id=7706845642752750437 pick-start
+15:56:26  [15:56:26] FEED loop a[2] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[2] final chosen=true
+15:56:26  [15:56:26] FEED loop a[3] begin bytes=55617
+15:56:26  [15:56:26] FEED loop a[3] aweme-ok
+15:56:26  [15:56:26] FEED loop a[3] video-ok
+15:56:26  [15:56:26] FEED loop a[3] id=7697945120738711680 pick-start
+15:56:26  [15:56:26] FEED loop a[3] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[3] final chosen=true
+15:56:26  [15:56:26] FEED loop a[4] begin bytes=45239
+15:56:26  [15:56:26] FEED loop a[4] aweme-ok
+15:56:26  [15:56:26] FEED loop a[4] video-ok
+15:56:26  [15:56:26] FEED loop a[4] id=7707168815042599289 pick-start
+15:56:26  [15:56:26] FEED loop a[4] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[4] final chosen=true
+15:56:26  [15:56:26] FEED loop a[5] begin bytes=65186
+15:56:26  [15:56:26] FEED loop a[5] aweme-ok
+15:56:26  [15:56:26] FEED loop a[5] video-ok
+15:56:26  [15:56:26] FEED loop a[5] id=7700957788930837769 pick-start
+15:56:26  [15:56:26] FEED loop a[5] pick-done chosen=false
+15:56:26  [15:56:26] FEED loop a[5] final chosen=true
+15:56:26  [15:56:26] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+15:56:26  [15:56:26] ENGINE merge total=6 index=0 replace=false auto=true
+15:56:26  [15:56:26] POOL load idx=0
+15:56:26  [15:56:26] ENGINE needMore (index=0 count=6)
+15:56:26  [15:56:26] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+15:56:26  [15:56:26] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+15:56:26  [15:56:26] POOL load idx=1
+15:56:28  [15:56:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+15:56:28  [15:56:28] FEED loop a[0] begin bytes=54278
+15:56:28  [15:56:28] FEED loop a[0] aweme-ok
+15:56:28  [15:56:28] FEED loop a[0] video-ok
+15:56:28  [15:56:28] FEED loop a[0] id=7699731246679537521 pick-start
+15:56:28  [15:56:28] FEED loop a[0] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[0] final chosen=true
+15:56:28  [15:56:28] FEED first url[7699731246679537521]: https://v5-se-qn-daily-cm-cold.douyinvod.com/2059d11579949a72676c9beedd15f493/6af965b9/video/tos/cn/tos-cn-ve-15c000-ce/ogfpskOPvqjpIwEi8vqF
+15:56:28  [15:56:28] FEED loop a[1] begin bytes=51797
+15:56:28  [15:56:28] FEED loop a[1] aweme-ok
+15:56:28  [15:56:28] FEED loop a[1] video-ok
+15:56:28  [15:56:28] FEED loop a[1] id=7706365263634437578 pick-start
+15:56:28  [15:56:28] FEED loop a[1] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[1] final chosen=true
+15:56:28  [15:56:28] FEED loop a[2] begin bytes=50204
+15:56:28  [15:56:28] FEED loop a[2] aweme-ok
+15:56:28  [15:56:28] FEED loop a[2] video-ok
+15:56:28  [15:56:28] FEED loop a[2] id=7698822122743570505 pick-start
+15:56:28  [15:56:28] FEED loop a[2] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[2] final chosen=true
+15:56:28  [15:56:28] FEED loop a[3] begin bytes=93964
+15:56:28  [15:56:28] FEED loop a[3] aweme-ok
+15:56:28  [15:56:28] FEED loop a[3] video-ok
+15:56:28  [15:56:28] FEED loop a[3] id=7702293499214855872 pick-start
+15:56:28  [15:56:28] FEED loop a[3] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[3] final chosen=true
+15:56:28  [15:56:28] FEED loop a[4] begin bytes=47489
+15:56:28  [15:56:28] FEED loop a[4] aweme-ok
+15:56:28  [15:56:28] FEED loop a[4] video-ok
+15:56:28  [15:56:28] FEED loop a[4] id=7706525832080696282 pick-start
+15:56:28  [15:56:28] FEED loop a[4] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[4] final chosen=true
+15:56:28  [15:56:28] FEED loop a[5] begin bytes=41414
+15:56:28  [15:56:28] FEED loop a[5] aweme-ok
+15:56:28  [15:56:28] FEED loop a[5] video-ok
+15:56:28  [15:56:28] FEED loop a[5] id=7707476175782633615 pick-start
+15:56:28  [15:56:28] FEED loop a[5] pick-done chosen=false
+15:56:28  [15:56:28] FEED loop a[5] final chosen=true
+15:56:28  [15:56:28] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+15:56:28  [15:56:28] ENGINE merge total=12 index=0 replace=false auto=false
+15:56:28  [15:56:28] POOL pause offscreen idx=0
+15:56:28  [15:56:28] FEEDCOLL scrollTo idx=0 y=0.0 items=12
+15:56:29  [15:56:29] ENGINE next -> index=1
+15:56:29  [15:56:29] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+15:56:29  [15:56:29] POOL load idx=2
+15:56:30  [15:56:29] POOL pause offscreen idx=0
+15:56:31  [15:56:31] ENGINE next -> index=2
+15:56:31  [15:56:31] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+15:56:31  [15:56:31] POOL load idx=3
+15:56:31  [15:56:31] POOL pause offscreen idx=1
+15:56:33  [15:56:33] ENGINE next -> index=3
+15:56:33  [15:56:33] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+15:56:33  [15:56:33] POOL load idx=4
+15:56:33  [15:56:33] POOL pause offscreen idx=2
+15:56:35  [15:56:35] ENGINE next -> index=4
+15:56:35  [15:56:35] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+15:56:35  [15:56:35] POOL load idx=5
+15:56:35  [15:56:35] POOL load idx=2
+15:56:35  [15:56:35] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+15:56:35  [15:56:35] POOL load idx=5
+15:56:35  [15:56:35] POOL pause offscreen idx=3
+15:56:36  [15:56:36] POOL load idx=6
+15:56:36  [15:56:36] ENGINE next -> index=5
+15:56:36  [15:56:36] ENGINE needMore (index=5 count=12)
+15:56:36  [15:56:36] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+15:56:36  [15:56:36] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+15:56:36  [15:56:36] POOL load idx=7
+15:56:36  [15:56:36] POOL load idx=3
+15:56:36  [15:56:36] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+15:56:36  [15:56:36] POOL load idx=6
+15:56:37  [15:56:37] POOL pause offscreen idx=4
+15:56:38  [15:56:38] POOL load idx=8
+15:56:38  [15:56:38] ENGINE next -> index=6
+15:56:38  [15:56:38] FEEDCOLL scrollTo idx=6 y=6480.0 items=12
+15:56:38  [15:56:38] POOL load idx=6
+15:56:38  [15:56:38] POOL load idx=7
+15:56:38  [15:56:38] POOL load idx=9
+15:56:38  [15:56:38] POOL load idx=4
+15:56:38  [15:56:38] FEEDCOLL scrollTo idx=6 y=6480.0 items=12
+15:56:38  [15:56:38] POOL load idx=7
+15:56:38  [15:56:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+15:56:38  [15:56:38] FEED loop a[0] begin bytes=51630
+15:56:38  [15:56:38] FEED loop a[0] aweme-ok
+15:56:38  [15:56:38] FEED loop a[0] video-ok
+15:56:38  [15:56:38] FEED loop a[0] id=7705001184729696178 pick-start
+15:56:38  [15:56:38] FEED loop a[0] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[0] final chosen=true
+15:56:38  [15:56:38] FEED first url[7705001184729696178]: https://v13-cold.douyinvod.com/ab19619e51fb1d441723415f9b1a02d9/6af965d7/video/tos/cn/tos-cn-ve-15c000-ce/ogDzAUK2TXX9JB1AgVQMQe8ARfMUgIfIJQ
+15:56:38  [15:56:38] FEED loop a[1] begin bytes=50694
+15:56:38  [15:56:38] FEED loop a[1] aweme-ok
+15:56:38  [15:56:38] FEED loop a[1] video-ok
+15:56:38  [15:56:38] FEED loop a[1] id=7705851917444112357 pick-start
+15:56:38  [15:56:38] FEED loop a[1] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[1] final chosen=true
+15:56:38  [15:56:38] FEED loop a[2] begin bytes=77305
+15:56:38  [15:56:38] FEED loop a[2] aweme-ok
+15:56:38  [15:56:38] FEED loop a[2] video-ok
+15:56:38  [15:56:38] FEED loop a[2] id=7704176024610940593 pick-start
+15:56:38  [15:56:38] FEED loop a[2] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[2] final chosen=true
+15:56:38  [15:56:38] FEED loop a[3] begin bytes=56452
+15:56:38  [15:56:38] FEED loop a[3] aweme-ok
+15:56:38  [15:56:38] FEED loop a[3] video-ok
+15:56:38  [15:56:38] FEED loop a[3] id=7704982473444805818 pick-start
+15:56:38  [15:56:38] FEED loop a[3] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[3] final chosen=true
+15:56:38  [15:56:38] FEED loop a[4] begin bytes=60307
+15:56:38  [15:56:38] FEED loop a[4] aweme-ok
+15:56:38  [15:56:38] FEED loop a[4] video-ok
+15:56:38  [15:56:38] FEED loop a[4] id=7704230868638787163 pick-start
+15:56:38  [15:56:38] FEED loop a[4] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[4] final chosen=true
+15:56:38  [15:56:38] FEED loop a[5] begin bytes=43600
+15:56:38  [15:56:38] FEED loop a[5] aweme-ok
+15:56:38  [15:56:38] FEED loop a[5] video-ok
+15:56:38  [15:56:38] FEED loop a[5] id=7706036917142105704 pick-start
+15:56:38  [15:56:38] FEED loop a[5] pick-done chosen=false
+15:56:38  [15:56:38] FEED loop a[5] final chosen=true
+15:56:38  [15:56:38] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+15:56:38  [15:56:38] ENGINE merge total=18 index=6 replace=false auto=false
+15:56:38  [15:56:38] POOL pause offscreen idx=6
+15:56:38  [15:56:38] POOL pause offscreen idx=5
+15:56:38  [15:56:38] POOL load idx=9
+15:56:38  [15:56:38] POOL load idx=7
+15:56:38  [15:56:38] FEEDCOLL scrollTo idx=6 y=6480.0 items=18
+15:56:38  [15:56:38] POOL pause offscreen idx=5
+15:56:40  [15:56:40] POOL load idx=10
+15:56:40  [15:56:40] ENGINE next -> index=7
+15:56:40  [15:56:40] FEEDCOLL scrollTo idx=7 y=7560.0 items=18
+15:56:40  [15:56:40] POOL load idx=7
+15:56:40  [15:56:40] POOL load idx=8
+15:56:40  [15:56:40] POOL pause offscreen idx=9
+15:56:41  [15:56:41] POOL pause offscreen idx=6
+15:56:46  [15:56:46] POOL load idx=9
+15:56:46  [15:56:46] ENGINE prev -> index=6
+15:56:46  [15:56:46] FEEDCOLL scrollTo idx=6 y=6480.0 items=18
+15:56:46  [15:56:46] POOL load idx=5
+15:56:46  [15:56:46] POOL load idx=6
+15:56:46  [15:56:46] POOL pause offscreen idx=7
+15:56:48  [15:56:48] POOL load idx=10
+15:56:48  [15:56:48] ENGINE next -> index=7
+15:56:48  [15:56:48] FEEDCOLL scrollTo idx=7 y=7560.0 items=18
+15:56:48  [15:56:48] POOL load idx=8
+15:56:48  [15:56:48] POOL pause offscreen idx=6
+15:56:49  [15:56:49] POOL load idx=11
+15:56:49  [15:56:49] ENGINE next -> index=8
+15:56:49  [15:56:49] FEEDCOLL scrollTo idx=8 y=8640.0 items=18
+15:56:49  [15:56:49] POOL load idx=8
+15:56:49  [15:56:49] POOL load idx=9
+15:56:49  [15:56:49] POOL pause offscreen idx=7
+15:56:51  [15:56:51] POOL load idx=12
+15:56:51  [15:56:51] ENGINE next -> index=9
+15:56:51  [15:56:51] FEEDCOLL scrollTo idx=9 y=9720.0 items=18
+15:56:51  [15:56:51] POOL load idx=10
+15:56:51  [15:56:51] POOL pause offscreen idx=8
+15:56:53  [15:56:53] POOL load idx=13
+15:56:53  [15:56:53] ENGINE next -> index=10
+15:56:53  [15:56:53] FEEDCOLL scrollTo idx=10 y=10800.0 items=18
+15:56:53  [15:56:53] POOL load idx=11
+15:56:53  [15:56:53] POOL load idx=14
+15:56:53  [15:56:53] POOL load idx=11
+15:56:53  [15:56:53] ENGINE next -> index=11
+15:56:53  [15:56:53] ENGINE needMore (index=11 count=18)
+15:56:53  [15:56:53] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+15:56:53  [15:56:53] FEEDCOLL scrollTo idx=11 y=11880.0 items=18
+15:56:53  [15:56:53] POOL load idx=12
+15:56:53  [15:56:53] POOL pause offscreen idx=9
+15:56:53  [15:56:53] POOL load idx=9
+15:56:53  [15:56:53] POOL load idx=12
+15:56:53  [15:56:53] POOL pause offscreen idx=10
+15:56:55  [15:56:55] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+15:56:55  [15:56:55] FEED loop a[0] begin bytes=53351
+15:56:55  [15:56:55] FEED loop a[0] aweme-ok
+15:56:55  [15:56:55] FEED loop a[0] video-ok
+15:56:55  [15:56:55] FEED loop a[0] id=7704186192841267641 pick-start
+15:56:55  [15:56:55] FEED loop a[0] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[0] final chosen=true
+15:56:55  [15:56:55] FEED first url[7704186192841267641]: https://v9-chc.douyinvod.com/b4b183fd8a53ba8a94e7ac97364e1c0c/6af965d0/video/cn/mps/logo/r/p/v2700fgi0000dblc8lnog65gvk1j4a60/44b05799f12a48
+15:56:55  [15:56:55] FEED loop a[1] begin bytes=95436
+15:56:55  [15:56:55] FEED loop a[1] aweme-ok
+15:56:55  [15:56:55] FEED loop a[1] video-ok
+15:56:55  [15:56:55] FEED loop a[1] id=7705986383760867017 pick-start
+15:56:55  [15:56:55] FEED loop a[1] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[1] final chosen=true
+15:56:55  [15:56:55] FEED loop a[2] begin bytes=57036
+15:56:55  [15:56:55] FEED loop a[2] aweme-ok
+15:56:55  [15:56:55] FEED loop a[2] video-ok
+15:56:55  [15:56:55] FEED loop a[2] id=7698678805561420751 pick-start
+15:56:55  [15:56:55] FEED loop a[2] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[2] final chosen=true
+15:56:55  [15:56:55] FEED loop a[3] begin bytes=78904
+15:56:55  [15:56:55] FEED loop a[3] aweme-ok
+15:56:55  [15:56:55] FEED loop a[3] video-ok
+15:56:55  [15:56:55] FEED loop a[3] id=7705005840918667099 pick-start
+15:56:55  [15:56:55] FEED loop a[3] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[3] final chosen=true
+15:56:55  [15:56:55] FEED loop a[4] begin bytes=57471
+15:56:55  [15:56:55] FEED loop a[4] aweme-ok
+15:56:55  [15:56:55] FEED loop a[4] video-ok
+15:56:55  [15:56:55] FEED loop a[4] id=7705256086084914472 pick-start
+15:56:55  [15:56:55] FEED loop a[4] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[4] final chosen=true
+15:56:55  [15:56:55] FEED loop a[5] begin bytes=47361
+15:56:55  [15:56:55] FEED loop a[5] aweme-ok
+15:56:55  [15:56:55] FEED loop a[5] video-ok
+15:56:55  [15:56:55] FEED loop a[5] id=7702792864967560890 pick-start
+15:56:55  [15:56:55] FEED loop a[5] pick-done chosen=false
+15:56:55  [15:56:55] FEED loop a[5] final chosen=true
+15:56:55  [15:56:55] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+15:56:55  [15:56:55] ENGINE merge total=24 index=11 replace=false auto=false
+15:56:55  [15:56:55] POOL pause offscreen idx=11
+15:56:55  [15:56:55] POOL load idx=14
+15:56:55  [15:56:55] FEEDCOLL scrollTo idx=11 y=11880.0 items=24
+15:56:55  [15:56:55] POOL load idx=10
+15:56:57  [15:56:57] POOL load idx=15
+15:56:57  [15:56:57] ENGINE next -> index=12
+15:56:57  [15:56:57] FEEDCOLL scrollTo idx=12 y=12960.0 items=24
+15:56:57  [15:56:57] POOL load idx=13
+15:56:57  [15:56:57] POOL pause offscreen idx=14
+15:56:57  [15:56:57] POOL pause offscreen idx=11
+15:56:59  [15:56:59] POOL load idx=16
+15:56:59  [15:56:59] ENGINE next -> index=13
+15:56:59  [15:56:59] FEEDCOLL scrollTo idx=13 y=14040.0 items=24
+15:56:59  [15:56:59] POOL load idx=14
+15:56:59  [15:56:59] POOL pause offscreen idx=12
+15:57:00  [15:57:00] POOL load idx=17
+15:57:00  [15:57:00] ENGINE next -> index=14
+15:57:00  [15:57:00] FEEDCOLL scrollTo idx=14 y=15120.0 items=24
+15:57:00  [15:57:00] POOL load idx=14
+15:57:00  [15:57:00] POOL load idx=15
+15:57:00  [15:57:00] POOL pause offscreen idx=13
+15:57:02  [15:57:02] POOL load idx=18
+15:57:02  [15:57:02] ENGINE next -> index=15
+15:57:02  [15:57:02] FEEDCOLL scrollTo idx=15 y=16200.0 items=24
+15:57:02  [15:57:02] POOL load idx=16
+15:57:02  [15:57:02] POOL pause offscreen idx=14
+15:57:04  [15:57:03] POOL load idx=19
+15:57:04  [15:57:04] ENGINE next -> index=16
+15:57:04  [15:57:04] FEEDCOLL scrollTo idx=16 y=17280.0 items=24
+15:57:04  [15:57:04] POOL load idx=17
+15:57:04  [15:57:04] POOL pause offscreen idx=15
+15:57:05  [15:57:05] POOL load idx=20
+15:57:06  [15:57:05] ENGINE next -> index=17
+15:57:06  [15:57:05] ENGINE needMore (index=17 count=24)
+15:57:06  [15:57:05] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+15:57:06  [15:57:05] FEEDCOLL scrollTo idx=17 y=18360.0 items=24
+15:57:06  [15:57:05] POOL load idx=17
+15:57:06  [15:57:05] POOL load idx=18
+15:57:06  [15:57:06] POOL pause offscreen idx=16
+15:57:07  [15:57:07] POOL load idx=21
+15:57:07  [15:57:07] ENGINE next -> index=18
+15:57:07  [15:57:07] FEEDCOLL scrollTo idx=18 y=19440.0 items=24
+15:57:07  [15:57:07] POOL load idx=19
+15:57:07  [15:57:07] POOL load idx=22
+15:57:08  [15:57:07] POOL load idx=16
+15:57:08  [15:57:07] FEEDCOLL scrollTo idx=18 y=19440.0 items=24
+15:57:08  [15:57:07] POOL load idx=17
+15:57:08  [15:57:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+15:57:08  [15:57:08] FEED loop a[0] begin bytes=70506
+15:57:08  [15:57:08] FEED loop a[0] aweme-ok
+15:57:08  [15:57:08] FEED loop a[0] video-ok
+15:57:08  [15:57:08] FEED loop a[0] id=7699930914045857033 pick-start
+15:57:08  [15:57:08] FEED loop a[0] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[0] final chosen=true
+15:57:08  [15:57:08] FEED first url[7699930914045857033]: https://v5-daily-cm-dyseries.douyinvod.com/3e0758ca2f6962e0b90cbea144f16ee5/6af9668d/video/tos/cn/tos-cn-ve-15/owBlAUT2iFO3hA6gQqEDnWf8IEFeg
+15:57:08  [15:57:08] FEED loop a[1] begin bytes=51672
+15:57:08  [15:57:08] FEED loop a[1] aweme-ok
+15:57:08  [15:57:08] FEED loop a[1] video-ok
+15:57:08  [15:57:08] FEED loop a[1] id=7704893454467660187 pick-start
+15:57:08  [15:57:08] FEED loop a[1] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[1] final chosen=true
+15:57:08  [15:57:08] FEED loop a[2] begin bytes=62548
+15:57:08  [15:57:08] FEED loop a[2] aweme-ok
+15:57:08  [15:57:08] FEED loop a[2] video-ok
+15:57:08  [15:57:08] FEED loop a[2] id=7705397469747619257 pick-start
+15:57:08  [15:57:08] FEED loop a[2] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[2] final chosen=true
+15:57:08  [15:57:08] FEED loop a[3] begin bytes=50490
+15:57:08  [15:57:08] FEED loop a[3] aweme-ok
+15:57:08  [15:57:08] FEED loop a[3] video-ok
+15:57:08  [15:57:08] FEED loop a[3] id=7703931481404829669 pick-start
+15:57:08  [15:57:08] FEED loop a[3] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[3] final chosen=true
+15:57:08  [15:57:08] FEED loop a[4] begin bytes=54464
+15:57:08  [15:57:08] FEED loop a[4] aweme-ok
+15:57:08  [15:57:08] FEED loop a[4] video-ok
+15:57:08  [15:57:08] FEED loop a[4] id=7705840556002470857 pick-start
+15:57:08  [15:57:08] FEED loop a[4] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[4] final chosen=true
+15:57:08  [15:57:08] FEED loop a[5] begin bytes=94743
+15:57:08  [15:57:08] FEED loop a[5] aweme-ok
+15:57:08  [15:57:08] FEED loop a[5] video-ok
+15:57:08  [15:57:08] FEED loop a[5] id=7697907099456598976 pick-start
+15:57:08  [15:57:08] FEED loop a[5] pick-done chosen=false
+15:57:08  [15:57:08] FEED loop a[5] final chosen=true
+15:57:08  [15:57:08] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=30
+15:57:08  [15:57:08] ENGINE merge total=30 index=18 replace=false auto=false
+15:57:08  [15:57:08] POOL pause offscreen idx=17
+15:57:08  [15:57:08] POOL pause offscreen idx=18
+15:57:08  [15:57:08] POOL load idx=22
+15:57:08  [15:57:08] POOL load idx=17
+15:57:08  [15:57:08] FEEDCOLL scrollTo idx=18 y=19440.0 items=30
+15:57:08  [15:57:08] POOL pause offscreen idx=17
+15:57:11  [15:57:11] POOL load idx=23
+15:57:11  [15:57:11] ENGINE next -> index=19
+15:57:11  [15:57:11] FEEDCOLL scrollTo idx=19 y=20520.0 items=30
+15:57:11  [15:57:11] POOL load idx=20
+15:57:11  [15:57:11] POOL pause offscreen idx=22
+15:57:12  [15:57:12] POOL pause offscreen idx=18
+15:57:14  [15:57:13] POOL load idx=24
+15:57:14  [15:57:13] ENGINE next -> index=20
+15:57:14  [15:57:13] FEEDCOLL scrollTo idx=20 y=21600.0 items=30
+15:57:14  [15:57:13] POOL load idx=20
+15:57:14  [15:57:13] POOL load idx=21
+15:57:14  [15:57:14] POOL pause offscreen idx=19
+15:57:15  [15:57:15] POOL load idx=25
+15:57:15  [15:57:15] ENGINE next -> index=21
+15:57:15  [15:57:15] FEEDCOLL scrollTo idx=21 y=22680.0 items=30
+15:57:15  [15:57:15] POOL load idx=22
+15:57:15  [15:57:15] POOL pause offscreen idx=20
+15:57:17  [15:57:16] POOL load idx=26
+15:57:17  [15:57:16] ENGINE next -> index=22
+15:57:17  [15:57:16] FEEDCOLL scrollTo idx=22 y=23760.0 items=30
+15:57:17  [15:57:16] POOL load idx=23
+15:57:17  [15:57:17] POOL pause offscreen idx=21
+15:57:18  [15:57:18] POOL load idx=27
+15:57:18  [15:57:18] ENGINE next -> index=23
+15:57:18  [15:57:18] ENGINE needMore (index=23 count=30)
+15:57:18  [15:57:18] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=30
+15:57:18  [15:57:18] FEEDCOLL scrollTo idx=23 y=24840.0 items=30
+15:57:18  [15:57:18] POOL load idx=23
+15:57:18  [15:57:18] POOL load idx=24
+15:57:18  [15:57:18] POOL pause offscreen idx=22
+15:57:20  [15:57:20] POOL load idx=28
+15:57:20  [15:57:20] ENGINE next -> index=24
+15:57:20  [15:57:20] FEEDCOLL scrollTo idx=24 y=25920.0 items=30
+15:57:20  [15:57:20] POOL load idx=25
+15:57:20  [15:57:20] POOL pause offscreen idx=23
+15:57:20  [15:57:20] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+15:57:20  [15:57:20] FEED loop a[0] begin bytes=77180
+15:57:20  [15:57:20] FEED loop a[0] aweme-ok
+15:57:20  [15:57:20] FEED loop a[0] video-ok
+15:57:20  [15:57:20] FEED loop a[0] id=7704696705673733283 pick-start
+15:57:20  [15:57:20] FEED loop a[0] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[0] final chosen=true
+15:57:20  [15:57:20] FEED first url[7704696705673733283]: https://v9-chc.douyinvod.com/0d287a2de2331f10a651f444f2698d01/6af965ec/video/cn/mps/logo/r/p/v0300fg10000dbm99kfog65vned1ngqg/e5e0ef2a0c6b4e
+15:57:20  [15:57:20] FEED loop a[1] begin bytes=55893
+15:57:20  [15:57:20] FEED loop a[1] aweme-ok
+15:57:20  [15:57:20] FEED loop a[1] video-ok
+15:57:20  [15:57:20] FEED loop a[1] id=7706910878993973425 pick-start
+15:57:20  [15:57:20] FEED loop a[1] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[1] final chosen=true
+15:57:20  [15:57:20] FEED loop a[2] begin bytes=57142
+15:57:20  [15:57:20] FEED loop a[2] aweme-ok
+15:57:20  [15:57:20] FEED loop a[2] video-ok
+15:57:20  [15:57:20] FEED loop a[2] id=7704350670510072741 pick-start
+15:57:20  [15:57:20] FEED loop a[2] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[2] final chosen=true
+15:57:20  [15:57:20] FEED loop a[3] begin bytes=44860
+15:57:20  [15:57:20] FEED loop a[3] aweme-ok
+15:57:20  [15:57:20] FEED loop a[3] video-ok
+15:57:20  [15:57:20] FEED loop a[3] id=7707092149909261992 pick-start
+15:57:20  [15:57:20] FEED loop a[3] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[3] final chosen=true
+15:57:20  [15:57:20] FEED loop a[4] begin bytes=54875
+15:57:20  [15:57:20] FEED loop a[4] aweme-ok
+15:57:20  [15:57:20] FEED loop a[4] video-ok
+15:57:20  [15:57:20] FEED loop a[4] id=7706462020756950291 pick-start
+15:57:20  [15:57:20] FEED loop a[4] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[4] final chosen=true
+15:57:20  [15:57:20] FEED loop a[5] begin bytes=95958
+15:57:20  [15:57:20] FEED loop a[5] aweme-ok
+15:57:20  [15:57:20] FEED loop a[5] video-ok
+15:57:20  [15:57:20] FEED loop a[5] id=7706857974069564581 pick-start
+15:57:20  [15:57:20] FEED loop a[5] pick-done chosen=false
+15:57:20  [15:57:20] FEED loop a[5] final chosen=true
+15:57:20  [15:57:20] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=36
+15:57:20  [15:57:20] ENGINE merge total=36 index=24 replace=false auto=false
+15:57:20  [15:57:20] POOL pause offscreen idx=24
+15:57:20  [15:57:20] POOL load idx=28
+15:57:20  [15:57:20] FEEDCOLL scrollTo idx=24 y=25920.0 items=36
+15:57:20  [15:57:20] POOL load idx=23
+15:57:21  [15:57:21] POOL load idx=29
+15:57:22  [15:57:21] ENGINE next -> index=25
+15:57:22  [15:57:21] FEEDCOLL scrollTo idx=25 y=27000.0 items=36
+15:57:22  [15:57:21] POOL load idx=26
+15:57:22  [15:57:21] POOL pause offscreen idx=28
+15:57:22  [15:57:22] POOL pause offscreen idx=24
+15:57:23  [15:57:23] POOL load idx=30
+15:57:23  [15:57:23] ENGINE next -> index=26
+15:57:23  [15:57:23] FEEDCOLL scrollTo idx=26 y=28080.0 items=36
+15:57:23  [15:57:23] POOL load idx=26
+15:57:23  [15:57:23] POOL load idx=27
+15:57:24  [15:57:24] POOL pause offscreen idx=25
+15:57:28  [15:57:28] POOL load idx=31
+15:57:28  [15:57:28] ENGINE next -> index=27
+15:57:28  [15:57:28] FEEDCOLL scrollTo idx=27 y=29160.0 items=36
+15:57:28  [15:57:28] POOL load idx=28
+15:57:28  [15:57:28] POOL pause offscreen idx=26
+15:57:30  [15:57:30] POOL load idx=32
+15:57:30  [15:57:30] ENGINE next -> index=28
+15:57:30  [15:57:30] FEEDCOLL scrollTo idx=28 y=30240.0 items=36
+15:57:30  [15:57:30] POOL load idx=29
+15:57:30  [15:57:30] POOL pause offscreen idx=27
+15:57:31  [15:57:31] POOL load idx=33
+15:57:31  [15:57:31] ENGINE next -> index=29
+15:57:31  [15:57:31] ENGINE needMore (index=29 count=36)
+15:57:31  [15:57:31] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=36
+15:57:31  [15:57:31] FEEDCOLL scrollTo idx=29 y=31320.0 items=36
+15:57:31  [15:57:31] POOL load idx=29
+15:57:32  [15:57:31] POOL load idx=30
+15:57:32  [15:57:32] POOL pause offscreen idx=28
+15:57:33  [15:57:33] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+15:57:33  [15:57:33] FEED loop a[0] begin bytes=87756
+15:57:33  [15:57:33] FEED loop a[0] aweme-ok
+15:57:33  [15:57:33] FEED loop a[0] video-ok
+15:57:33  [15:57:33] FEED loop a[0] id=7705000122639789497 pick-start
+15:57:33  [15:57:33] FEED loop a[0] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[0] final chosen=true
+15:57:33  [15:57:33] FEED first url[7705000122639789497]: https://v96-dyseries.douyinvod.com/42dc7f215b510e757ac712d07409b007/6af965ff/video/tos/cn/tos-cn-ve-15c000-ce/o8aA8fabcws9DoFIgZ1EASBoUE7FQw
+15:57:33  [15:57:33] FEED loop a[1] begin bytes=77671
+15:57:33  [15:57:33] FEED loop a[1] aweme-ok
+15:57:33  [15:57:33] FEED loop a[1] video-ok
+15:57:33  [15:57:33] FEED loop a[1] id=7704319760200288945 pick-start
+15:57:33  [15:57:33] FEED loop a[1] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[1] final chosen=true
+15:57:33  [15:57:33] FEED loop a[2] begin bytes=48350
+15:57:33  [15:57:33] FEED loop a[2] aweme-ok
+15:57:33  [15:57:33] FEED loop a[2] video-ok
+15:57:33  [15:57:33] FEED loop a[2] id=7706851722680864010 pick-start
+15:57:33  [15:57:33] FEED loop a[2] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[2] final chosen=true
+15:57:33  [15:57:33] FEED loop a[3] begin bytes=68154
+15:57:33  [15:57:33] FEED loop a[3] aweme-ok
+15:57:33  [15:57:33] FEED loop a[3] video-ok
+15:57:33  [15:57:33] FEED loop a[3] id=7701636851567758626 pick-start
+15:57:33  [15:57:33] FEED loop a[3] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[3] final chosen=true
+15:57:33  [15:57:33] FEED loop a[4] begin bytes=46647
+15:57:33  [15:57:33] FEED loop a[4] aweme-ok
+15:57:33  [15:57:33] FEED loop a[4] video-ok
+15:57:33  [15:57:33] FEED loop a[4] id=7707438863258556809 pick-start
+15:57:33  [15:57:33] FEED loop a[4] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[4] final chosen=true
+15:57:33  [15:57:33] FEED loop a[5] begin bytes=53670
+15:57:33  [15:57:33] FEED loop a[5] aweme-ok
+15:57:33  [15:57:33] FEED loop a[5] video-ok
+15:57:33  [15:57:33] FEED loop a[5] id=7705803107653132218 pick-start
+15:57:33  [15:57:33] FEED loop a[5] pick-done chosen=false
+15:57:33  [15:57:33] FEED loop a[5] final chosen=true
+15:57:33  [15:57:33] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=42
+15:57:33  [15:57:33] ENGINE merge total=42 index=29 replace=false auto=false
+15:57:33  [15:57:33] POOL pause offscreen idx=29
+15:57:34  [15:57:33] POOL load idx=33
+15:57:34  [15:57:33] FEEDCOLL scrollTo idx=29 y=31320.0 items=42
+15:57:34  [15:57:33] POOL load idx=28
+15:57:37  [15:57:37] POOL load idx=34
+15:57:37  [15:57:37] ENGINE next -> index=30
+15:57:37  [15:57:37] FEEDCOLL scrollTo idx=30 y=32400.0 items=42
+15:57:37  [15:57:37] POOL load idx=31
+15:57:37  [15:57:37] POOL pause offscreen idx=33
+15:57:37  [15:57:37] POOL pause offscreen idx=29
+15:57:39  [15:57:39] POOL load idx=35
+15:57:39  [15:57:39] ENGINE next -> index=31
+15:57:39  [15:57:39] FEEDCOLL scrollTo idx=31 y=33480.0 items=42
+15:57:39  [15:57:39] POOL load idx=32
+15:57:39  [15:57:39] POOL pause offscreen idx=30
+15:57:47  [15:57:47] POOL load idx=36
+15:57:47  [15:57:47] ENGINE next -> index=32
+15:57:47  [15:57:47] FEEDCOLL scrollTo idx=32 y=34560.0 items=42
+15:57:47  [15:57:47] POOL load idx=32
+15:57:47  [15:57:47] POOL load idx=33
+15:57:47  [15:57:47] POOL pause offscreen idx=31
+15:57:49  [15:57:49] POOL load idx=37
+15:57:49  [15:57:49] ENGINE next -> index=33
+15:57:49  [15:57:49] FEEDCOLL scrollTo idx=33 y=35640.0 items=42
+15:57:49  [15:57:49] POOL load idx=34
+15:57:49  [15:57:49] POOL pause offscreen idx=32
+15:57:50  [15:57:50] POOL load idx=38
+15:57:50  [15:57:50] ENGINE next -> index=34
+15:57:50  [15:57:50] FEEDCOLL scrollTo idx=34 y=36720.0 items=42
+15:57:50  [15:57:50] POOL load idx=35
+15:57:50  [15:57:50] POOL pause offscreen idx=33
+15:57:51  [15:57:51] POOL load idx=39
+15:57:51  [15:57:51] ENGINE next -> index=35
+15:57:51  [15:57:51] ENGINE needMore (index=35 count=42)
+15:57:51  [15:57:51] FEED mobile GET refresh_index=8 cold=0 count=10 bogus_len=180 seen=42
+15:57:51  [15:57:51] FEEDCOLL scrollTo idx=35 y=37800.0 items=42
+15:57:51  [15:57:51] POOL load idx=35
+15:57:51  [15:57:51] POOL load idx=36
+15:57:51  [15:57:51] POOL pause offscreen idx=34
+15:57:53  [15:57:53] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=8)
+15:57:53  [15:57:53] FEED loop a[0] begin bytes=53489
+15:57:53  [15:57:53] FEED loop a[0] aweme-ok
+15:57:53  [15:57:53] FEED loop a[0] video-ok
+15:57:53  [15:57:53] FEED loop a[0] id=7705899364695446705 pick-start
+15:57:53  [15:57:53] FEED loop a[0] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[0] final chosen=true
+15:57:53  [15:57:53] FEED first url[7705899364695446705]: https://v13-music.douyinstatic.com/8dd4ff23cb05d7e0ac53e2e59edfc566/6b1e5019/video/tos/cn/tos-cn-v-2178/db36729928fc4e468fb5667965e43ff6/?a=
+15:57:53  [15:57:53] FEED loop a[1] begin bytes=50783
+15:57:53  [15:57:53] FEED loop a[1] aweme-ok
+15:57:53  [15:57:53] FEED loop a[1] video-ok
+15:57:53  [15:57:53] FEED loop a[1] id=7700188340637873898 pick-start
+15:57:53  [15:57:53] FEED loop a[1] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[1] final chosen=true
+15:57:53  [15:57:53] FEED loop a[2] begin bytes=46132
+15:57:53  [15:57:53] FEED loop a[2] aweme-ok
+15:57:53  [15:57:53] FEED loop a[2] video-ok
+15:57:53  [15:57:53] FEED loop a[2] id=7706382085635721073 pick-start
+15:57:53  [15:57:53] FEED loop a[2] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[2] final chosen=true
+15:57:53  [15:57:53] FEED loop a[3] begin bytes=49097
+15:57:53  [15:57:53] FEED loop a[3] aweme-ok
+15:57:53  [15:57:53] FEED loop a[3] video-ok
+15:57:53  [15:57:53] FEED loop a[3] id=7706951474039637753 pick-start
+15:57:53  [15:57:53] FEED loop a[3] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[3] final chosen=true
+15:57:53  [15:57:53] FEED loop a[4] begin bytes=45127
+15:57:53  [15:57:53] FEED loop a[4] aweme-ok
+15:57:53  [15:57:53] FEED loop a[4] video-ok
+15:57:53  [15:57:53] FEED loop a[4] id=7703994100504914149 pick-start
+15:57:53  [15:57:53] FEED loop a[4] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[4] final chosen=true
+15:57:53  [15:57:53] FEED loop a[5] begin bytes=52793
+15:57:53  [15:57:53] FEED loop a[5] aweme-ok
+15:57:53  [15:57:53] FEED loop a[5] video-ok
+15:57:53  [15:57:53] FEED loop a[5] id=7705363034944922474 pick-start
+15:57:53  [15:57:53] FEED loop a[5] pick-done chosen=false
+15:57:53  [15:57:53] FEED loop a[5] final chosen=true
+15:57:53  [15:57:53] FEED mobile page refresh_index=8: awemes=6 usable=6 total_seen=48
+15:57:53  [15:57:53] ENGINE merge total=48 index=35 replace=false auto=false
+15:57:53  [15:57:53] POOL pause offscreen idx=35
+15:57:53  [15:57:53] POOL load idx=39
+15:57:53  [15:57:53] FEEDCOLL scrollTo idx=35 y=37800.0 items=48
+15:57:53  [15:57:53] POOL load idx=34
+15:57:56  [15:57:56] POOL load idx=40
+15:57:56  [15:57:56] ENGINE next -> index=36
+15:57:56  [15:57:56] FEEDCOLL scrollTo idx=36 y=38880.0 items=48
+15:57:56  [15:57:56] POOL load idx=37
+15:57:56  [15:57:56] POOL pause offscreen idx=39
+15:57:56  [15:57:56] POOL pause offscreen idx=35
+15:57:57  [15:57:57] POOL load idx=41
+15:57:57  [15:57:57] ENGINE next -> index=37
+15:57:57  [15:57:57] FEEDCOLL scrollTo idx=37 y=39960.0 items=48
+15:57:57  [15:57:57] POOL load idx=38
+15:57:57  [15:57:57] POOL pause offscreen idx=36
+15:57:58  [15:57:58] POOL load idx=42
+15:57:58  [15:57:58] ENGINE next -> index=38
+15:57:58  [15:57:58] FEEDCOLL scrollTo idx=38 y=41040.0 items=48
+15:57:58  [15:57:58] POOL load idx=38
+15:57:58  [15:57:58] POOL load idx=39
+15:57:58  [15:57:58] POOL pause offscreen idx=37
+15:57:59  [15:57:59] POOL load idx=43
+15:58:00  [15:57:59] ENGINE next -> index=39
+15:58:00  [15:57:59] FEEDCOLL scrollTo idx=39 y=42120.0 items=48
+15:58:00  [15:57:59] POOL load idx=40
+15:58:00  [15:58:00] POOL pause offscreen idx=38
+15:58:01  [15:58:01] POOL load idx=44
+15:58:01  [15:58:01] ENGINE next -> index=40
+15:58:01  [15:58:01] FEEDCOLL scrollTo idx=40 y=43200.0 items=48
+15:58:01  [15:58:01] POOL load idx=41
+15:58:01  [15:58:01] POOL pause offscreen idx=39
+15:58:02  [15:58:02] POOL load idx=45
+15:58:02  [15:58:02] ENGINE next -> index=41
+15:58:02  [15:58:02] ENGINE needMore (index=41 count=48)
+15:58:02  [15:58:02] FEED mobile GET refresh_index=9 cold=0 count=10 bogus_len=180 seen=48
+15:58:02  [15:58:02] FEEDCOLL scrollTo idx=41 y=44280.0 items=48
+15:58:02  [15:58:02] POOL load idx=41
+15:58:02  [15:58:02] POOL load idx=42
+15:58:02  [15:58:02] POOL pause offscreen idx=40
+15:58:03  [15:58:03] POOL load idx=46
+15:58:03  [15:58:03] ENGINE next -> index=42
+15:58:03  [15:58:03] FEEDCOLL scrollTo idx=42 y=45360.0 items=48
+15:58:03  [15:58:03] POOL load idx=43
+15:58:03  [15:58:03] POOL pause offscreen idx=41
+15:58:04  [15:58:04] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=9)
+15:58:04  [15:58:04] FEED loop a[0] begin bytes=58519
+15:58:04  [15:58:04] FEED loop a[0] aweme-ok
+15:58:04  [15:58:04] FEED loop a[0] video-ok
+15:58:04  [15:58:04] FEED loop a[0] id=7696413739399055526 pick-start
+15:58:04  [15:58:04] FEED loop a[0] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[0] final chosen=true
+15:58:04  [15:58:04] FEED first url[7696413739399055526]: https://v95-bjb-mc-cold.douyinvod.com/1784c4510379ec67cf69e27043b980f6/6af96614/video/tos/cn/tos-cn-ve-15/oAkUGLGC7BBfNRprgeIgI5CATAUA9rS6nV
+15:58:04  [15:58:04] FEED loop a[1] begin bytes=71035
+15:58:04  [15:58:04] FEED loop a[1] aweme-ok
+15:58:04  [15:58:04] FEED loop a[1] video-ok
+15:58:04  [15:58:04] FEED loop a[1] id=7698031874300543857 pick-start
+15:58:04  [15:58:04] FEED loop a[1] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[1] final chosen=true
+15:58:04  [15:58:04] FEED loop a[2] begin bytes=48828
+15:58:04  [15:58:04] FEED loop a[2] aweme-ok
+15:58:04  [15:58:04] FEED loop a[2] video-ok
+15:58:04  [15:58:04] FEED loop a[2] id=7697627343280713905 pick-start
+15:58:04  [15:58:04] FEED loop a[2] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[2] final chosen=true
+15:58:04  [15:58:04] FEED loop a[3] begin bytes=51783
+15:58:04  [15:58:04] FEED loop a[3] aweme-ok
+15:58:04  [15:58:04] FEED loop a[3] video-ok
+15:58:04  [15:58:04] FEED loop a[3] id=7702501015278388153 pick-start
+15:58:04  [15:58:04] FEED loop a[3] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[3] final chosen=true
+15:58:04  [15:58:04] FEED loop a[4] begin bytes=57152
+15:58:04  [15:58:04] FEED loop a[4] aweme-ok
+15:58:04  [15:58:04] FEED loop a[4] video-ok
+15:58:04  [15:58:04] FEED loop a[4] id=7706856521426071985 pick-start
+15:58:04  [15:58:04] FEED loop a[4] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[4] final chosen=true
+15:58:04  [15:58:04] FEED loop a[5] begin bytes=59462
+15:58:04  [15:58:04] FEED loop a[5] aweme-ok
+15:58:04  [15:58:04] FEED loop a[5] video-ok
+15:58:04  [15:58:04] FEED loop a[5] id=7704901525872626985 pick-start
+15:58:04  [15:58:04] FEED loop a[5] pick-done chosen=false
+15:58:04  [15:58:04] FEED loop a[5] final chosen=true
+15:58:04  [15:58:04] FEED mobile page refresh_index=9: awemes=6 usable=6 total_seen=54
+15:58:04  [15:58:04] ENGINE merge total=54 index=42 replace=false auto=false
+15:58:04  [15:58:04] POOL pause offscreen idx=42
+15:58:04  [15:58:04] POOL load idx=46
+15:58:04  [15:58:04] FEEDCOLL scrollTo idx=42 y=45360.0 items=54
+15:58:04  [15:58:04] POOL load idx=41
+15:58:08  [15:58:08] POOL load idx=47
+15:58:08  [15:58:08] ENGINE next -> index=43
+15:58:08  [15:58:08] FEEDCOLL scrollTo idx=43 y=46440.0 items=54
+15:58:08  [15:58:08] POOL load idx=44
+15:58:08  [15:58:08] POOL pause offscreen idx=46
+15:58:09  [15:58:09] POOL pause offscreen idx=42
+15:58:10  [15:58:10] POOL load idx=48
+15:58:10  [15:58:10] ENGINE next -> index=44
+15:58:10  [15:58:10] FEEDCOLL scrollTo idx=44 y=47520.0 items=54
+15:58:10  [15:58:10] POOL load idx=44
+15:58:10  [15:58:10] POOL load idx=45
+15:58:10  [15:58:10] POOL load idx=49
+15:58:10  [15:58:10] POOL load idx=42
+15:58:10  [15:58:10] FEEDCOLL scrollTo idx=44 y=47520.0 items=54
+15:58:10  [15:58:10] POOL load idx=43
+15:58:11  [15:58:10] POOL pause offscreen idx=43
+15:58:32  [15:58:31] POOL load idx=46
+15:58:32  [15:58:32] POOL pause offscreen idx=44
+15:58:32  [15:58:32] POOL pause offscreen idx=45
+15:58:32  [15:58:32] POOL pause offscreen idx=46
+15:58:32  [15:58:32] POOL load idx=47
+15:58:32  [15:58:32] POOL load idx=48
+15:58:32  [15:58:32] POOL pause offscreen idx=47
+15:58:32  [15:58:32] POOL load idx=50
+15:58:33  [15:58:33] POOL load idx=48

@@ -45,6 +45,12 @@ final class DYPlayerViewController: UIViewController {
     private lazy var playerPool: [AVPlayer] = (0..<3).map { _ in AVPlayer() }
     /// 每个 player 当前装载的 index（池复用依据）
     private var playerIndex: [AVPlayer: Int] = [:]
+    /// 每个 player 的 currentItem.status KVO——item ready 时自动起播（治黑屏/冻屏：play 不再只靠滚动离散触发）
+    private var statusObservers: [AVPlayer: NSKeyValueObservation] = [:]
+
+    deinit {
+        for obs in statusObservers.values { obs.invalidate() }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -174,6 +180,19 @@ final class DYPlayerViewController: UIViewController {
         player.pause()
         player.isMuted = true
         playerIndex[player] = index
+        // KVO 等 item 真正 readyToPlay 且它仍是当前居中槽才 play——play 不再只靠滚动离散触发，
+        // 治"item 在最后一次 updatePlaybackStates 之后才 ready → 没人唤它播 → 黑屏/冻屏"。
+        statusObservers[player]?.invalidate()
+        statusObservers[player] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+            guard let self, it.status == .readyToPlay else { return }
+            DispatchQueue.main.async {
+                guard self.playerIndex[player] == index,
+                      self.currentIndex == index else { return }
+                player.isMuted = false
+                player.play()
+                DYLog.shared.log("POOL readyPlay idx=\(index)")
+            }
+        }
         DYLog.shared.log("POOL load idx=\(index)")
     }
 
