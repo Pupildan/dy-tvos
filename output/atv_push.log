@@ -12995,3 +12995,320 @@
 12:38:47  [12:38:47] DUAL slide done activeIdx=0 idx=4
 12:38:47  [12:38:47] SLOT idx=5 ready muted=true
 12:38:47  [12:38:47] DUAL preload ready idx=5
+12:49:03  [12:49:03] DYTV v86 launched
+12:49:03  [12:49:03] SIGNER init start
+12:49:03  [12:49:03] SIGNER load shim ok
+12:49:03  [12:49:03] SIGNER load abogus ok
+12:49:03  [12:49:03] LOGSRV ready on port 8765
+12:49:03  [12:49:03] LOGSRV advertising as DYTV-517
+12:49:03  [12:49:03] SIGNER load sign ok
+12:49:03  [12:49:03] DUAL viewDidLoad
+12:49:03  [12:49:03] ROOT auto-start v86
+12:49:03  [12:49:03] SIGNER load abogus_dy ok
+12:49:03  [12:49:03] SIGNER extras sign=true dy=true
+12:49:03  [12:49:03] SIGNER bdms=yes
+12:49:03  [12:49:03] SIGNER initABogus=true
+12:49:03  [12:49:03] SIGNER fns=AB (期望 AB)
+12:49:03  [12:49:03] SIGNER smoke={"ok":true,"value":"xyRMMV8XDEdi6DyD5XALfY3qVW33YsUM0SVkMDhezVfPQL39HMT29exEv2UvGlYeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+12:49:03  [12:49:03] SIGNER READY a_bogus len=180
+12:49:03  [12:49:03] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+12:49:03  [12:49:03] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+12:49:04  [12:49:04] LOGSRV Bonjour published: DYTV-517
+12:49:06  [12:49:05] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+12:49:06  [12:49:05] FEED first url[7705377214229612658]: https://v9-chc.douyinvod.com/b897c7807adee5c009ec91a95dde0a63/6af939c7/video/cn/mps/logo/r/p/v0d00fg10000dbnfudnog65k0k7iujs0/f64ec6f232b546
+12:49:06  [12:49:05] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+12:49:06  [12:49:05] ENGINE merge total=6 index=0 replace=false auto=true
+12:49:06  [12:49:06] SLOT idx=0 ready muted=false
+12:49:06  [12:49:06] DUAL first load idx=0 play
+12:49:07  [12:49:07] SLOT idx=1 ready muted=true
+12:49:07  [12:49:07] DUAL preload ready idx=1
+12:49:16  [12:49:16] ENGINE needMore (index=0 count=6)
+12:49:16  [12:49:16] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+12:49:16  [12:49:16] ENGINE next -> index=1
+12:49:16  [12:49:16] ENGINE next -> index=2
+12:49:16  [12:49:16] DUAL first load failed idx=2, advance to next
+12:49:16  [12:49:16] ENGINE next -> index=3
+12:49:17  [12:49:17] SLOT idx=3 ready muted=true
+12:49:17  [12:49:17] DUAL slide next -> idx=3 in.frame=(0.0, 0.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=0
+12:49:17  [12:49:17] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:17  [12:49:17] DUAL slide done activeIdx=1 idx=3
+12:49:18  [12:49:18] SLOT idx=4 ready muted=true
+12:49:18  [12:49:18] DUAL preload ready idx=4
+12:49:18  [12:49:18] SLOT cleared
+12:49:18  [12:49:18] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+12:49:18  [12:49:18] FEED first url[7706802576034272635]: https://v9-chc.douyinvod.com/15115a70d58e00662cd17d9f062b623f/6af939e6/video/cn/mps/logo/r/p/v2700fgi0000dbq0ufnog65vl1hp0heg/856d51c52da240
+12:49:18  [12:49:18] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+12:49:18  [12:49:18] ENGINE merge total=12 index=3 replace=false auto=false
+12:49:19  [12:49:18] ENGINE next -> index=4
+12:49:19  [12:49:19] SLOT idx=4 ready muted=true
+12:49:19  [12:49:19] DUAL slide next -> idx=4 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=3
+12:49:19  [12:49:19] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:19  [12:49:19] DUAL slide done activeIdx=0 idx=4
+12:49:20  [12:49:20] SLOT idx=5 ready muted=true
+12:49:20  [12:49:20] DUAL preload ready idx=5
+12:49:20  [12:49:20] ENGINE next -> index=5
+12:49:20  [12:49:20] SLOT idx=5 ready muted=true
+12:49:20  [12:49:20] DUAL slide next -> idx=5 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=4
+12:49:21  [12:49:21] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:21  [12:49:21] DUAL slide done activeIdx=1 idx=5
+12:49:22  [12:49:21] SLOT idx=6 ready muted=true
+12:49:22  [12:49:21] DUAL preload ready idx=6
+12:49:22  [12:49:22] ENGINE needMore (index=5 count=12)
+12:49:22  [12:49:22] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+12:49:22  [12:49:22] ENGINE next -> index=6
+12:49:22  [12:49:22] SLOT idx=6 ready muted=true
+12:49:22  [12:49:22] DUAL slide next -> idx=6 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=5
+12:49:22  [12:49:22] ENGINE next -> index=7
+12:49:22  [12:49:22] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:22  [12:49:22] DUAL slide done activeIdx=0 idx=6
+12:49:22  [12:49:22] SLOT idx=7 ready muted=true
+12:49:22  [12:49:22] DUAL slide next -> idx=7 in.frame=(0.0, 1080.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=7
+12:49:22  [12:49:22] SLOT idx=7 ready muted=true
+12:49:22  [12:49:22] DUAL preload ready idx=7
+12:49:23  [12:49:23] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:23  [12:49:23] DUAL slide done activeIdx=0 idx=7
+12:49:24  [12:49:24] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+12:49:24  [12:49:24] FEED first url[7696733790189653274]: https://v11-dyseries.douyinvod.com/cacdc76eb48c6fb757402109aaedaea3/6af939e2/video/tos/cn/tos-cn-ve-15/oIGHfIyA2RTonLEBPEEefWcGzQPMC7AwQVgIA
+12:49:24  [12:49:24] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+12:49:24  [12:49:24] ENGINE merge total=18 index=7 replace=false auto=false
+12:49:24  [12:49:24] SLOT idx=8 ready muted=true
+12:49:24  [12:49:24] DUAL preload ready idx=8
+12:49:24  [12:49:24] ENGINE next -> index=8
+12:49:25  [12:49:25] SLOT idx=8 ready muted=true
+12:49:25  [12:49:25] DUAL slide next -> idx=8 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=7
+12:49:25  [12:49:25] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:25  [12:49:25] DUAL slide done activeIdx=1 idx=8
+12:49:26  [12:49:26] SLOT idx=9 ready muted=true
+12:49:26  [12:49:26] DUAL preload ready idx=9
+12:49:27  [12:49:27] ENGINE next -> index=9
+12:49:28  [12:49:27] SLOT idx=9 ready muted=true
+12:49:28  [12:49:27] DUAL slide next -> idx=9 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=8
+12:49:28  [12:49:28] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:28  [12:49:28] DUAL slide done activeIdx=0 idx=9
+12:49:29  [12:49:29] SLOT idx=10 ready muted=true
+12:49:29  [12:49:29] DUAL preload ready idx=10
+12:49:30  [12:49:30] ENGINE next -> index=10
+12:49:30  [12:49:30] SLOT idx=10 ready muted=true
+12:49:30  [12:49:30] DUAL slide next -> idx=10 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=9
+12:49:30  [12:49:30] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:30  [12:49:30] DUAL slide done activeIdx=1 idx=10
+12:49:31  [12:49:31] SLOT idx=11 ready muted=true
+12:49:31  [12:49:31] DUAL preload ready idx=11
+12:49:32  [12:49:32] ENGINE next -> index=11
+12:49:33  [12:49:32] SLOT idx=11 ready muted=true
+12:49:33  [12:49:32] DUAL slide next -> idx=11 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=10
+12:49:33  [12:49:33] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:33  [12:49:33] DUAL slide done activeIdx=0 idx=11
+12:49:34  [12:49:34] SLOT idx=12 ready muted=true
+12:49:34  [12:49:34] DUAL preload ready idx=12
+12:49:35  [12:49:35] ENGINE needMore (index=11 count=18)
+12:49:35  [12:49:35] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+12:49:35  [12:49:35] ENGINE next -> index=12
+12:49:35  [12:49:35] ENGINE next -> index=13
+12:49:36  [12:49:36] SLOT idx=13 ready muted=true
+12:49:36  [12:49:36] DUAL slide next -> idx=13 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=11
+12:49:36  [12:49:36] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:36  [12:49:36] DUAL slide done activeIdx=1 idx=13
+12:49:37  [12:49:37] SLOT cleared
+12:49:37  [12:49:37] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+12:49:37  [12:49:37] FEED first url[7706283454854389864]: https://v13-music.douyinstatic.com/2ca68c977048dd9a696856c8ba59a569/6b1e23f9/video/tos/cn/tos-cn-ve-2178-ce/owYG9ild1CwpNWY6BBAJ3DGYiDxIvMfE
+12:49:37  [12:49:37] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+12:49:37  [12:49:37] ENGINE merge total=24 index=13 replace=false auto=false
+12:49:38  [12:49:38] ENGINE next -> index=14
+12:49:38  [12:49:38] ENGINE next -> index=15
+12:49:39  [12:49:38] SLOT idx=15 ready muted=true
+12:49:39  [12:49:38] DUAL slide next -> idx=15 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=13
+12:49:39  [12:49:39] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:39  [12:49:39] DUAL slide done activeIdx=0 idx=15
+12:49:39  [12:49:39] SLOT idx=16 ready muted=true
+12:49:39  [12:49:39] DUAL preload ready idx=16
+12:49:39  [12:49:39] SLOT cleared
+12:49:40  [12:49:40] ENGINE next -> index=16
+12:49:41  [12:49:40] SLOT idx=16 ready muted=true
+12:49:41  [12:49:40] DUAL slide next -> idx=16 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=15
+12:49:41  [12:49:41] ENGINE next -> index=17
+12:49:41  [12:49:41] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:41  [12:49:41] DUAL slide done activeIdx=1 idx=16
+12:49:41  [12:49:41] SLOT idx=17 ready muted=true
+12:49:41  [12:49:41] DUAL slide next -> idx=17 in.frame=(0.0, 1080.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=17
+12:49:42  [12:49:42] SLOT idx=17 ready muted=true
+12:49:42  [12:49:42] DUAL preload ready idx=17
+12:49:42  [12:49:42] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:42  [12:49:42] DUAL slide done activeIdx=1 idx=17
+12:49:43  [12:49:43] ENGINE needMore (index=17 count=24)
+12:49:43  [12:49:43] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+12:49:43  [12:49:43] ENGINE next -> index=18
+12:49:43  [12:49:43] ENGINE next -> index=19
+12:49:44  [12:49:43] SLOT idx=19 ready muted=true
+12:49:44  [12:49:43] DUAL slide next -> idx=19 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=17
+12:49:44  [12:49:44] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:44  [12:49:44] DUAL slide done activeIdx=0 idx=19
+12:49:44  [12:49:44] SLOT idx=20 ready muted=true
+12:49:44  [12:49:44] DUAL preload ready idx=20
+12:49:44  [12:49:44] SLOT cleared
+12:49:45  [12:49:45] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+12:49:45  [12:49:45] FEED first url[7705729455960463609]: https://v9-chc.douyinvod.com/e2ae9c751af2534162d29d5b64d34ed2/6af939f8/video/cn/mps/logo/r/p/v2800fgi0000dbo3u67og65im2n3f0jg/c896417d899c43
+12:49:45  [12:49:45] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=30
+12:49:45  [12:49:45] ENGINE merge total=30 index=19 replace=false auto=false
+12:49:47  [12:49:47] ENGINE next -> index=20
+12:49:48  [12:49:48] SLOT idx=20 ready muted=true
+12:49:48  [12:49:48] DUAL slide next -> idx=20 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=19
+12:49:48  [12:49:48] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:48  [12:49:48] DUAL slide done activeIdx=1 idx=20
+12:49:49  [12:49:49] SLOT idx=21 ready muted=true
+12:49:49  [12:49:49] DUAL preload ready idx=21
+12:49:52  [12:49:52] ENGINE next -> index=21
+12:49:52  [12:49:52] ENGINE next -> index=22
+12:49:52  [12:49:52] SLOT idx=22 ready muted=true
+12:49:52  [12:49:52] DUAL slide next -> idx=22 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=20
+12:49:53  [12:49:53] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:53  [12:49:53] DUAL slide done activeIdx=0 idx=22
+12:49:53  [12:49:53] SLOT idx=23 ready muted=true
+12:49:53  [12:49:53] DUAL preload ready idx=23
+12:49:53  [12:49:53] SLOT cleared
+12:49:54  [12:49:54] ENGINE next -> index=23
+12:49:54  [12:49:54] SLOT idx=23 ready muted=true
+12:49:55  [12:49:54] DUAL slide next -> idx=23 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=22
+12:49:55  [12:49:55] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:55  [12:49:55] DUAL slide done activeIdx=1 idx=23
+12:49:55  [12:49:55] SLOT idx=24 ready muted=true
+12:49:55  [12:49:55] DUAL preload ready idx=24
+12:49:56  [12:49:56] ENGINE needMore (index=23 count=30)
+12:49:56  [12:49:56] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=30
+12:49:56  [12:49:56] ENGINE next -> index=24
+12:49:56  [12:49:56] SLOT idx=24 ready muted=true
+12:49:56  [12:49:56] DUAL slide next -> idx=24 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=23
+12:49:57  [12:49:57] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:49:57  [12:49:57] DUAL slide done activeIdx=0 idx=24
+12:49:57  [12:49:57] SLOT idx=25 FAILED err=You do not have permission to access the requested resource.
+12:49:57  [12:49:57] DUAL preload failed idx=25
+12:49:58  [12:49:58] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+12:49:58  [12:49:58] FEED first url[7705507429258467834]: https://v26-music.douyinstatic.com/5ff3c6b00ce7c860bb2c0f3de376bd5f/6b1e240e/video/tos/cn/tos-cn-ve-2178/osIQENlMgSGgykmpCAw2NEY6lGaQUdArhIb
+12:49:58  [12:49:58] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=36
+12:49:58  [12:49:58] ENGINE merge total=36 index=24 replace=false auto=false
+12:49:59  [12:49:59] ENGINE next -> index=25
+12:50:01  [12:50:01] ENGINE next -> index=26
+12:50:02  [12:50:02] ENGINE next -> index=27
+12:50:02  [12:50:02] SLOT idx=27 ready muted=true
+12:50:02  [12:50:02] DUAL slide next -> idx=27 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=24
+12:50:03  [12:50:03] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:03  [12:50:03] DUAL slide done activeIdx=1 idx=27
+12:50:03  [12:50:03] SLOT idx=28 ready muted=true
+12:50:03  [12:50:03] DUAL preload ready idx=28
+12:50:03  [12:50:03] SLOT cleared
+12:50:04  [12:50:04] ENGINE next -> index=28
+12:50:04  [12:50:04] SLOT idx=28 ready muted=true
+12:50:04  [12:50:04] DUAL slide next -> idx=28 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=27
+12:50:05  [12:50:05] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:05  [12:50:05] DUAL slide done activeIdx=0 idx=28
+12:50:05  [12:50:05] SLOT idx=29 ready muted=true
+12:50:05  [12:50:05] DUAL preload ready idx=29
+12:50:06  [12:50:06] ENGINE next -> index=29
+12:50:06  [12:50:06] SLOT idx=29 ready muted=true
+12:50:06  [12:50:06] DUAL slide next -> idx=29 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=28
+12:50:06  [12:50:06] ENGINE needMore (index=29 count=36)
+12:50:06  [12:50:06] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=36
+12:50:06  [12:50:06] ENGINE next -> index=30
+12:50:06  [12:50:06] SLOT idx=30 ready muted=true
+12:50:07  [12:50:07] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:07  [12:50:07] DUAL slide done activeIdx=1 idx=29
+12:50:07  [12:50:07] SLOT idx=30 ready muted=true
+12:50:07  [12:50:07] DUAL preload ready idx=30
+12:50:08  [12:50:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+12:50:08  [12:50:08] FEED first url[7697795107059163027]: https://v11-cold1.douyinvod.com/b3f0ae98eca1180e25019846e21c8447/6af93a05/video/tos/cn/tos-cn-ve-15c000-ce/oMQofO2IFF2dARygIFLrAHeGA44aHTFee
+12:50:08  [12:50:08] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=42
+12:50:08  [12:50:08] ENGINE merge total=42 index=30 replace=false auto=false
+12:50:09  [12:50:09] ENGINE next -> index=31
+12:50:09  [12:50:09] ENGINE next -> index=32
+12:50:09  [12:50:09] ENGINE next -> index=33
+12:50:10  [12:50:10] SLOT idx=33 ready muted=true
+12:50:10  [12:50:10] DUAL slide next -> idx=33 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=30
+12:50:10  [12:50:10] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:10  [12:50:10] DUAL slide done activeIdx=0 idx=33
+12:50:11  [12:50:11] SLOT cleared
+12:50:11  [12:50:11] ENGINE next -> index=34
+12:50:12  [12:50:12] SLOT idx=34 ready muted=true
+12:50:12  [12:50:12] DUAL slide next -> idx=34 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=33
+12:50:12  [12:50:12] ENGINE next -> index=35
+12:50:12  [12:50:12] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:12  [12:50:12] DUAL slide done activeIdx=1 idx=34
+12:50:12  [12:50:12] SLOT idx=35 ready muted=true
+12:50:12  [12:50:12] DUAL slide next -> idx=35 in.frame=(0.0, 1080.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=35
+12:50:12  [12:50:12] SLOT idx=35 ready muted=true
+12:50:12  [12:50:12] DUAL preload ready idx=35
+12:50:13  [12:50:12] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:13  [12:50:12] DUAL slide done activeIdx=1 idx=35
+12:50:13  [12:50:13] SLOT idx=36 ready muted=true
+12:50:13  [12:50:13] DUAL preload ready idx=36
+12:50:13  [12:50:13] ENGINE needMore (index=35 count=42)
+12:50:13  [12:50:13] FEED mobile GET refresh_index=8 cold=0 count=10 bogus_len=180 seen=42
+12:50:13  [12:50:13] ENGINE next -> index=36
+12:50:13  [12:50:13] SLOT idx=36 ready muted=true
+12:50:13  [12:50:13] DUAL slide next -> idx=36 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=35
+12:50:13  [12:50:13] ENGINE next -> index=37
+12:50:14  [12:50:14] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:14  [12:50:14] DUAL slide done activeIdx=0 idx=36
+12:50:15  [12:50:15] SLOT idx=37 ready muted=true
+12:50:15  [12:50:15] DUAL slide next -> idx=37 in.frame=(0.0, 1080.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=37
+12:50:15  [12:50:15] SLOT idx=37 ready muted=true
+12:50:15  [12:50:15] DUAL preload ready idx=37
+12:50:15  [12:50:15] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:15  [12:50:15] DUAL slide done activeIdx=0 idx=37
+12:50:15  [12:50:15] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=8)
+12:50:15  [12:50:15] FEED first url[7707188803547921065]: https://v9-awememusicpgc.amemv.com/382adef07465225fcc3c37f695ee32b1/6b1e2478/video/tos/cn/tos-cn-ve-2774/ocQEqAY4EcDAgOCMQYptB6v02NFRZdIEiBn
+12:50:15  [12:50:15] FEED mobile page refresh_index=8: awemes=6 usable=6 total_seen=48
+12:50:15  [12:50:15] ENGINE merge total=48 index=37 replace=false auto=false
+12:50:15  [12:50:15] SLOT idx=38 ready muted=true
+12:50:15  [12:50:15] DUAL preload ready idx=38
+12:50:16  [12:50:16] ENGINE next -> index=38
+12:50:16  [12:50:16] SLOT idx=38 ready muted=true
+12:50:16  [12:50:16] DUAL slide next -> idx=38 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=37
+12:50:16  [12:50:16] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:16  [12:50:16] DUAL slide done activeIdx=1 idx=38
+12:50:17  [12:50:17] SLOT idx=39 ready muted=true
+12:50:17  [12:50:17] DUAL preload ready idx=39
+12:50:19  [12:50:18] ENGINE next -> index=39
+12:50:19  [12:50:19] ENGINE next -> index=40
+12:50:19  [12:50:19] SLOT idx=40 ready muted=true
+12:50:19  [12:50:19] DUAL slide next -> idx=40 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=38
+12:50:19  [12:50:19] ENGINE next -> index=41
+12:50:19  [12:50:19] SLOT idx=41 ready muted=true
+12:50:19  [12:50:19] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:19  [12:50:19] DUAL slide done activeIdx=0 idx=40
+12:50:20  [12:50:20] SLOT idx=41 ready muted=true
+12:50:20  [12:50:20] DUAL preload ready idx=41
+12:50:20  [12:50:20] SLOT cleared
+12:50:20  [12:50:20] ENGINE needMore (index=41 count=48)
+12:50:21  [12:50:20] FEED mobile GET refresh_index=9 cold=0 count=10 bogus_len=180 seen=48
+12:50:21  [12:50:20] ENGINE next -> index=42
+12:50:21  [12:50:21] SLOT idx=42 ready muted=true
+12:50:21  [12:50:21] DUAL slide next -> idx=42 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=41
+12:50:21  [12:50:21] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:21  [12:50:21] DUAL slide done activeIdx=1 idx=42
+12:50:21  [12:50:21] SLOT idx=43 ready muted=true
+12:50:21  [12:50:21] DUAL preload ready idx=43
+12:50:22  [12:50:22] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=9)
+12:50:22  [12:50:22] FEED first url[7704510377421296550]: https://v9-chc.douyinvod.com/4d6e15d375cdf3722c5aaa5809a4e039/6af93a15/video/cn/mps/logo/r/p/v2700fgi0000dbluh37og65gaq63jdbg/8d068f9ac1c047
+12:50:22  [12:50:22] FEED mobile page refresh_index=9: awemes=6 usable=6 total_seen=54
+12:50:22  [12:50:22] ENGINE merge total=54 index=42 replace=false auto=false
+12:50:23  [12:50:22] ENGINE next -> index=43
+12:50:23  [12:50:23] SLOT idx=43 ready muted=true
+12:50:23  [12:50:23] DUAL slide next -> idx=43 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=42
+12:50:23  [12:50:23] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:23  [12:50:23] DUAL slide done activeIdx=0 idx=43
+12:50:24  [12:50:24] SLOT idx=44 ready muted=true
+12:50:24  [12:50:24] DUAL preload ready idx=44
+12:50:26  [12:50:25] ENGINE next -> index=44
+12:50:26  [12:50:26] ENGINE next -> index=45
+12:50:26  [12:50:26] SLOT idx=45 ready muted=true
+12:50:26  [12:50:26] DUAL slide next -> idx=45 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=43
+12:50:26  [12:50:26] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:26  [12:50:26] DUAL slide done activeIdx=1 idx=45
+12:50:26  [12:50:26] ENGINE next -> index=46
+12:50:26  [12:50:26] ENGINE next -> index=47
+12:50:27  [12:50:27] SLOT idx=47 ready muted=true
+12:50:27  [12:50:27] DUAL slide next -> idx=47 in.frame=(0.0, 2160.0, 1920.0, 1080.0) out.frame=(0.0, 0.0, 1920.0, 1080.0) out.idx=45
+12:50:27  [12:50:27] SLOT cleared
+12:50:27  [12:50:27] DUAL slide done in.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0) out.transform=CGAffineTransform(a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: -1080.0)
+12:50:27  [12:50:27] DUAL slide done activeIdx=0 idx=47
+12:50:27  [12:50:27] SLOT cleared

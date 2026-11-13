@@ -185,8 +185,8 @@ final class DYPlayerViewController: UIViewController {
             }, onFailed: { [weak self] in
                 guard let self else { return }
                 DYLog.shared.log("DUAL first load failed idx=\(self.currentIndex), advance to next")
-                PlaybackEngine.shared.reportFailure()
-                // 首条加载失败（URL 失效/Cannot Open）→ 推进到下一条，绝不卡黑屏
+                // 首条加载失败（URL 失效/Cannot Open）→ 只走 advance() 一条路推进，
+                // 绝不再调 reportFailure()（它会 triggerRefresh → onRefresh 又动 index → 双推进跳号）
                 self.advance()
             })
             return
@@ -242,7 +242,8 @@ final class DYPlayerViewController: UIViewController {
         // 起步位置：下一个从下方来，上一个从上方来
         incoming.container.transform = CGAffineTransform(translationX: 0, y: down ? h : -h)
         view.bringSubviewToFront(incoming.container)
-        // 滑入槽出声（此刻已 ready）
+        // 声音先行：起步瞬间就静音旧槽、出新槽声（画面还在滑，声音已切到新视频）
+        outgoing.player.isMuted = true
         incoming.player.isMuted = false
         incoming.player.play()
 
