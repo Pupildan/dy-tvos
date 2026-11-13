@@ -62,7 +62,7 @@ final class DYPlayerViewController: UIViewController {
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.isPagingEnabled = true
+        // tvOS 无 isPagingEnabled：用 scrollViewWillEndDragging 手动整页吸附
         collectionView.backgroundColor = .black
         collectionView.register(PlayerCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.dataSource = self
@@ -108,7 +108,12 @@ final class DYPlayerViewController: UIViewController {
             return owned
         }
         // 否则取"离当前播放最远/未播放"的 player
-        let p = (playerPool.min { distanceFromCenter($0) > distanceFromCenter($1) })
+        guard let p = playerPool.min(by: { distanceFromCenter($0) > distanceFromCenter($1) }) else {
+            // 池空（不应发生）→ 兜底用第一个
+            let fallback = playerPool[0]
+            load(player: fallback, index: index)
+            return fallback
+        }
         load(player: p, index: index)
         return p
     }
@@ -247,6 +252,13 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
         let ci = centeredIndex()
         updatePlaybackStates(center: ci)
         PlaybackEngine.shared.index = ci
+    }
+    /// tvOS 无 isPagingEnabled：拖拽结束时手动整页吸附（模拟分页物理）
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, withTargetContentOffset targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let pageHeight = max(1, scrollView.bounds.height)
+        let targetY = targetContentOffset.pointee.y
+        let snappedY = (velocity.y >= 0 ? ceil(targetY / pageHeight) : floor(targetY / pageHeight)) * pageHeight
+        targetContentOffset.pointee.y = snappedY
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let ci = centeredIndex()
