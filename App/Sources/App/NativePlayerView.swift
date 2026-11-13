@@ -69,8 +69,6 @@ final class PlayerManager {
     /// player ready 变化回调（index）——供控制器刷新封面显隐
     var onPlayerReady: ((Int) -> Void)?
     private var readyObservers: [Int: NSKeyValueObservation] = [:]
-    /// 已跳过的失败 index——只 skip 一次，防反复 acquire/failed 驱动 advance 级联跳多页
-    private var failedIndices = Set<Int>()
 
     private init() {}
 
@@ -78,9 +76,7 @@ final class PlayerManager {
     /// 窗口放宽到 ±2：来回微抖时有缓冲余量，不会一抖就 evict 刚 ready 的（±1 会抖动→黑屏）。
     /// 只从 scrollTo(最终目标 index) 调用；updatePlaybackStates/willDisplay 只查池不触驱逐（杜绝双 center 打架抖动）。
     func prepare(center idx: Int) {
-        // desired 窗口跳过已失败的 index（坏视频不再 acquire/failed，断级联跳多页），按顺序取最多 5 个
-        let window = (idx - 2...idx + 2).filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) && !failedIndices.contains($0) }
-        let desired = Array(window.prefix(5))
+        let desired = [idx - 2, idx - 1, idx, idx + 1, idx + 2].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
         // 1) 驱逐范围外的 player：pause + replaceCurrentItem(nil) 强制回收解码器
         for (i, p) in players where !desired.contains(i) {
             p.pause()
@@ -150,43 +146,15 @@ final class PlayerManager {
         players[index] = p
         readyObservers[index]?.invalidate()
         readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            // ready → 回调刷新封面；failed(Cannot Open，如 HEVC 解不出) → 预处理无感跳过
-            guard it.status == .readyToPlay || it.status == .failed else { return }
-            let failed = (it.status == .failed)
+            guard it.status == .readyToPlay else { return }
             DispatchQueue.main.async {
-                if failed {
-                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
-                    self?.skipFailed(index: index)
-                } else {
-                    self?.onPlayerReady?(index)
-                    DYLog.shared.log("MGR ready idx=\(index)")
-                }
+                self?.onPlayerReady?(index)
+                DYLog.shared.log("MGR ready idx=\(index)")
             }
         }
         DYLog.shared.log("MGR acquire idx=\(index) total=\(players.count)")
         return p
     }
-
-    /// 预处理无感跳过：index 的视频打不开(Cannot Open，如 HEVC 解不出)时，驱逐它并回调跳过。
-    /// 只对首次失败回调 advance：failedIndices 记录已跳过的，重复 failed 不再 advance（断级联跳多页）。
-    func skipFailed(index: Int) {
-        if let p = players[index] {
-            p.pause()
-            p.replaceCurrentItem(with: nil)
-            readyObservers[index]?.invalidate()
-            readyObservers.removeValue(forKey: index)
-            players.removeValue(forKey: index)
-        }
-        guard !failedIndices.contains(index) else {
-            DYLog.shared.log("MGR failed idx=\(index) dup -> no advance (break cascade)")
-            return
-        }
-        failedIndices.insert(index)
-        onSkipFailed?(index)
-    }
-
-    /// 失败跳过回调（index）——控制器接到后 advance 到下一个。
-    var onSkipFailed: ((Int) -> Void)?
 }
 
 /// 原生播放器：UICollectionView 垂直分页 + PlayerManager 上限 3 池。
@@ -224,12 +192,6 @@ final class DYPlayerViewController: UIViewController {
         // player ready → 刷新可见 cell 封面显隐（ready 的隐藏封面露出真实视频）
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
-        }
-        // player 打不开(Cannot Open/HEVC) → 预处理无感跳过：仅当失败的是当前居中才 advance（邻位预载失败不跳）
-        PlayerManager.shared.onSkipFailed = { [weak self] idx in
-            guard idx == self?.currentIndex else { return }
-            DYLog.shared.log("FEEDCOLL skip failed idx=\(idx) -> advance")
-            self?.advance()
         }
     }
 
@@ -300,9 +262,13 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
-        // 索引唯一来源是按键的 engine.next()/prev()；scrollTo 只负责渲染，绝不用 offset 反推索引
-        // （旧的 for{engine.next()} 对齐循环 + scroll 委托 centeredIndex 反推 = 正反馈跳多页，已删）
+        // 对齐引擎索引 + 接近末尾翻页
         let engine = PlaybackEngine.shared
+        if clampedIndex > engine.index {
+            for _ in engine.index..<clampedIndex { engine.next() }
+        } else if clampedIndex < engine.index {
+            for _ in clampedIndex..<engine.index { engine.prev() }
+        }
         if engine.count > 0, clampedIndex >= engine.count - 7 {
             engine.triggerNeedMore()
         }
@@ -371,15 +337,11 @@ final class DYPlayerViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
-    /// 按键精确 ±1：直接驱动引擎，不读 centeredIndex()（动画中途 offset 不稳，反推会连跳多页）。
-    /// 渲染由 scrollTo(targetIndex) 跟随引擎，索引唯一来源是这里。
     private func advance() {
-        PlaybackEngine.shared.next()
-        scrollTo(index: PlaybackEngine.shared.index, animated: true)
+        scrollTo(index: centeredIndex() + 1, animated: true)
     }
     private func rewind() {
-        PlaybackEngine.shared.prev()
-        scrollTo(index: PlaybackEngine.shared.index, animated: true)
+        scrollTo(index: max(0, centeredIndex() - 1), animated: true)
     }
 
     private func seek(by seconds: Double) {
@@ -446,10 +408,12 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
         let snappedY = (velocity.y >= 0 ? ceil(targetY / pageHeight) : floor(targetY / pageHeight)) * pageHeight
         targetContentOffset.pointee.y = snappedY
     }
-    // 已删除 scrollViewDidEndScrollingAnimation / scrollViewDidEndDecelerating：
-    // 它们在程序化 setContentOffset 动画中途用 centeredIndex() 反推索引（读到中途 offset），
-    // 再 scrollTo → 又触发委托 → 正反馈自激，一次按键连跳多页（日志铁证 idx 12→18）。
-    // tvOS 按键驱动：索引唯一来源是 engine.next()/prev()，播放态由 scrollTo 的 asyncAfter 刷新。
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        updatePlaybackStates(center: centeredIndex())
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updatePlaybackStates(center: centeredIndex())
+    }
 }
 
 /// SwiftUI 包装：UICollectionView 垂直分页真实视频滑动（PlayerManager 上限 3 池）。
