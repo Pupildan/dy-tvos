@@ -126,6 +126,8 @@ final class DYPlayerViewController: UIViewController {
     private var activeIdx = 0
     private var currentIndex = 0
     private var isAnimating = false
+    /// 首批是否已装载（启动黑屏修复：首批到达强制装载 index 0）
+    private var hasLoadedOnce = false
 
     private var activeSlot: DYPlayerSlot { slots[activeIdx] }
     private var standbySlot: DYPlayerSlot { slots[1 - activeIdx] }
@@ -162,6 +164,23 @@ final class DYPlayerViewController: UIViewController {
 
     private func reloadIfNeeded() {
         guard view.bounds.height > 0 else { return }
+        // 首批到达：强制装载 index 0（此时 currentIndex==engine.index==0，不能走 != 守卫，否则黑屏）
+        if !hasLoadedOnce {
+            guard let url = itemURL(at: PlaybackEngine.shared.index) else { return }
+            hasLoadedOnce = true
+            currentIndex = PlaybackEngine.shared.index
+            activeSlot.load(url: url, index: currentIndex, muted: false, cover: nil, onReady: { [weak self] in
+                guard let self else { return }
+                self.activeSlot.player.play()
+                DYLog.shared.log("DUAL first load idx=\(self.currentIndex) play")
+                self.preloadNext(around: self.currentIndex)
+            }, onFailed: { [weak self] in
+                guard let self else { return }
+                DYLog.shared.log("DUAL first load failed idx=\(self.currentIndex)")
+                PlaybackEngine.shared.reportFailure()
+            })
+            return
+        }
         guard PlaybackEngine.shared.index != currentIndex else { return }
         guard let url = itemURL(at: PlaybackEngine.shared.index) else { return }
         let target = PlaybackEngine.shared.index
@@ -217,13 +236,14 @@ final class DYPlayerViewController: UIViewController {
         incoming.player.isMuted = false
         incoming.player.play()
 
-        DYLog.shared.log("DUAL slide \(down ? "next" : "prev") -> idx=\(index)")
+        DYLog.shared.log("DUAL slide \(down ? "next" : "prev") -> idx=\(index) in.frame=\(incoming.container.frame) out.frame=\(outgoing.container.frame) out.idx=\(outgoing.index)")
         UIView.animate(withDuration: 0.35, delay: 0, options: [.curveEaseInOut]) { [weak self] in
             guard let self else { return }
             incoming.container.transform = .identity
             outgoing.container.transform = CGAffineTransform(translationX: 0, y: down ? -h : h)
         } completion: { [weak self] _ in
             guard let self else { return }
+            DYLog.shared.log("DUAL slide done in.transform=\(incoming.container.transform) out.transform=\(outgoing.container.transform)")
             // 错峰：新槽已占屏，旧槽 pause，0.5s 后清（只清非相邻，相邻保留供回切）
             outgoing.player.pause()
             if abs(outgoing.index - index) > 1 {
