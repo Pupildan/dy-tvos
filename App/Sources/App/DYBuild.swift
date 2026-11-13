@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v76"
-    static let changes = "v76: 回退稳定单播放器+快照遮罩底座,方向感=快照向上/下滑出(弃脆弱双池,终结黑屏/跳号/无声)"
+    static let version = "v77"
+    static let changes = "v77: UICollectionView垂直分页+3实例PlayerPool——真实视频图层滑动(UIScrollView物理惯性),遥控setContentOffset,Cell划出不销毁播放器循环复用"
 }
