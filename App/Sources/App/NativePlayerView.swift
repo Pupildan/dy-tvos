@@ -161,13 +161,9 @@ final class PlayerManager {
                     DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
                     self?.skipFailed(index: index)
                 } else {
-                    // readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）→ 也跳过
-                    let videoTracks = (it.asset as? AVURLAsset)?.tracks(withMediaType: .video) ?? []
-                    if videoTracks.isEmpty {
-                        DYLog.shared.log("MGR ready idx=\(index) 但无视频轨 -> skip")
-                        self?.skipFailed(index: index)
-                        return
-                    }
+                    // readyToPlay → 直接 onPlayerReady（v111 行为，黑屏无声很少）。
+                    // 已删"无视频轨检测"：loadValuesAsynchronously 只加载 playable、track 可能未就绪，
+                    // tracks(video) 误返回空 → 误杀好视频 → skip → 黑屏无声增多（v119 回归）。
                     self?.onPlayerReady?(index)
                     DYLog.shared.log("MGR ready idx=\(index)")
                 }
