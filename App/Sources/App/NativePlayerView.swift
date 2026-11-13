@@ -154,11 +154,19 @@ final class DYPlayerViewController: UIViewController {
     }
 
     /// 装载槽位。前台槽出声，后台预载槽静音（滑到前台在 slideTransition 里取消静音）。
+    /// 关键：若该槽已装载同一 index（正在播放），绝不重载/重新静音（否则前台无声）。
     private func load(slot: DYPlayerSlot, index: Int, muted: Bool) {
+        if slot.index == index, slot.currentItem != nil {
+            // 已是目标内容：只按需调整静音，不重载
+            slot.player.isMuted = muted
+            return
+        }
         guard let url = itemURL(at: index) else { return }
         slot.load(url: url, index: index, muted: muted, onReady: { [weak self] in
             guard let self else { return }
-            DYLog.shared.log("DUAL slot ready idx=\(index) isStandby=\(slot !== self.activeSlot)")
+            // 仅当它仍是备用槽时保持静音；若已滑到前台，保持出声
+            let isStandby = (slot !== self.activeSlot)
+            DYLog.shared.log("DUAL slot ready idx=\(index) keepMuted=\(isStandby)")
         }, onFailed: { [weak self] in
             guard let self else { return }
             DYLog.shared.log("DUAL idx=\(index) failed/ended (isActive=\(self.activeSlot === slot))")
@@ -215,6 +223,8 @@ final class DYPlayerViewController: UIViewController {
         guard !isAnimating else { return }
         isAnimating = true
         let outgoing = activeSlot
+        // 关键：确保容器 frame 就绪（否则 transform 动画作用在零 frame 上 → 视觉无效/瞬移）
+        view.layoutIfNeeded()
         let h = screenHeight
 
         // 入场起点：下一个从下方来，上一个从上方来（容器 view transform）

@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v72"
-    static let changes = "v72: 修滑动瞬移——AVPlayerLayer 套容器 UIView,动画 container.transform(直接动画 layer.transform 真机不生效)"
+    static let version = "v74"
+    static let changes = "v74: 修无声(同idx不重载/不重静音)+修无动画(滑动前layoutIfNeeded确保容器frame)"
 }
