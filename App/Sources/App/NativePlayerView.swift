@@ -72,8 +72,6 @@ final class PlayerManager {
     /// player ready 变化回调（index）——供控制器刷新封面显隐
     var onPlayerReady: ((Int) -> Void)?
     private var readyObservers: [Int: NSKeyValueObservation] = [:]
-    /// 已跳过的失败 index——只 skip 一次，防反复 acquire/failed 驱动 advance 级联跳多页
-    private var failedIndices = Set<Int>()
 
     private init() {}
 
@@ -81,11 +79,7 @@ final class PlayerManager {
     /// 窗口放宽到 ±2：来回微抖时有缓冲余量，不会一抖就 evict 刚 ready 的（±1 会抖动→黑屏）。
     /// 只从 scrollTo(最终目标 index) 调用；updatePlaybackStates/willDisplay 只查池不触驱逐（杜绝双 center 打架抖动）。
     func prepare(center idx: Int) {
-        // desired 窗口跳过已失败的 index（坏视频不再 acquire/failed，断级联跳多页），按顺序取最多 5 个
-        let window = (idx - 2...idx + 2).filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) && !failedIndices.contains($0) }
-        let desired = Array(window.prefix(5))
-        // 1) 驱逐范围外的 player：pause + replaceCurrentItem(nil) 强制回收解码器
-        for (i, p) in players where !desired.contains(i) {
+        let desired = [idx - 2, idx - 1, idx, idx + 1, idx + 2].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
             p.pause()
             p.replaceCurrentItem(with: nil)   // 关键：置空 item，系统瞬间回收解码器
             readyObservers[i]?.invalidate()
@@ -153,46 +147,18 @@ final class PlayerManager {
         players[index] = p
         readyObservers[index]?.invalidate()
         readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            // ready → 回调刷新封面；failed(Cannot Open，如 HEVC 解不出) → 预处理无感跳过
-            guard it.status == .readyToPlay || it.status == .failed else { return }
-            let failed = (it.status == .failed)
+            // 只在 readyToPlay 时 onPlayerReady。failed 不再自动 advance/skip：
+            // 那会导致跳多页 + 声画不同步（advance 用动画中途的 centeredIndex 反推）。
+            // failed 时保持封面、不 play，等用户手动按↓跳过。
+            guard it.status == .readyToPlay else { return }
             DispatchQueue.main.async {
-                if failed {
-                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
-                    self?.skipFailed(index: index)
-                } else {
-                    // readyToPlay → 直接 onPlayerReady（v111 行为，黑屏无声很少）。
-                    // 已删"无视频轨检测"：loadValuesAsynchronously 只加载 playable、track 可能未就绪，
-                    // tracks(video) 误返回空 → 误杀好视频 → skip → 黑屏无声增多（v119 回归）。
-                    self?.onPlayerReady?(index)
-                    DYLog.shared.log("MGR ready idx=\(index)")
-                }
+                self?.onPlayerReady?(index)
+                DYLog.shared.log("MGR ready idx=\(index)")
             }
         }
         DYLog.shared.log("MGR acquire idx=\(index) total=\(players.count)")
         return p
     }
-
-    /// 预处理无感跳过：index 的视频打不开(Cannot Open，如 HEVC 解不出)时，驱逐它并回调跳过。
-    /// 只对首次失败回调 advance：failedIndices 记录已跳过的，重复 failed 不再 advance（断级联跳多页）。
-    func skipFailed(index: Int) {
-        if let p = players[index] {
-            p.pause()
-            p.replaceCurrentItem(with: nil)
-            readyObservers[index]?.invalidate()
-            readyObservers.removeValue(forKey: index)
-            players.removeValue(forKey: index)
-        }
-        guard !failedIndices.contains(index) else {
-            DYLog.shared.log("MGR failed idx=\(index) dup -> no advance (break cascade)")
-            return
-        }
-        failedIndices.insert(index)
-        onSkipFailed?(index)
-    }
-
-    /// 失败跳过回调（index）——控制器接到后 advance 到下一个。
-    var onSkipFailed: ((Int) -> Void)?
 }
 
 /// 原生播放器：UICollectionView 垂直分页 + PlayerManager 上限 3 池。
@@ -230,12 +196,6 @@ final class DYPlayerViewController: UIViewController {
         // player ready → 刷新可见 cell 封面显隐（ready 的隐藏封面露出真实视频）
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
-        }
-        // player 打不开(Cannot Open/HEVC) → 预处理无感跳过：仅当失败的是当前居中才 advance（邻位预载失败不跳）
-        PlayerManager.shared.onSkipFailed = { [weak self] idx in
-            guard idx == self?.currentIndex else { return }
-            DYLog.shared.log("FEEDCOLL skip failed idx=\(idx) -> advance")
-            self?.advance()
         }
     }
 
