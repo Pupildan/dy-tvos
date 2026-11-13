@@ -174,7 +174,7 @@ final class DYFeedClient {
             // aweme_id = field 1（s13.b 优先 str，退化为 varint）
             guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { continue }
             // 最高画质：bit_rate 数组（field 21/31）挑最高档；无 bit_rate 则退回默认 play_addr
-            var chosen: URL? = pickHighestQuality(from: video)
+            var chosen: URL? = pickHighestQuality(from: video, awemeId: id)
             if chosen == nil {
                 // 默认 play_addr = video field 1，退化 field 9（s13.e:229-245）
                 var pa: Proto? = nil
@@ -248,24 +248,35 @@ final class DYFeedClient {
     /// 4=playAddr(内含 url_list)、5(退化 7)=bitRateValue。
     /// 排序（highestQualityBitRate，取最大）：分辨率 h*w → fps → bitRateValue → gearName!=adapt_lowest。
     /// 无 bit_rate 档则退回默认 play_addr（field 1/9）。
-    func pickHighestQuality(from video: Proto) -> URL? {
+    func pickHighestQuality(from video: Proto, awemeId: String) -> URL? {
         var entries: [[UInt8]] = video.bytesFields(21)
         if entries.isEmpty { entries = video.bytesFields(31) }
 
+        // 诊断：video 顶层字段骨架 + 21/31 号条目数（定位 bit_rate 到底在哪）
+        let skeleton = video.fields.keys.sorted().map { "\($0)[\(video.fields[$0]!.count)]" }.joined(separator: ",")
+        DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] videoFields=\(skeleton) f21=\(video.bytesFields(21).count) f31=\(video.bytesFields(31).count)")
+
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
-        for e in entries {
+        for (idx, e) in entries.enumerated() {
             guard let br = Proto.parse(e) else { continue }
             let gear = br.string(1) ?? ""
             let w = Int(br.varint(2) ?? 0)
             let h = Int(br.varint(3) ?? 0)
             // playAddr = field 4，取其 url_list
-            guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else { continue }
+            guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else {
+                DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) NO playAddr(field4)")
+                continue
+            }
             let urls = Proto.urlList(pa, 0)
             guard let raw = urls.first(where: { $0.lowercased().hasPrefix("https://") || $0.lowercased().hasPrefix("http://") }),
-                  let url = URL(string: raw) else { continue }
+                  let url = URL(string: raw) else {
+                DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) playAddr no-http-url f2=\(pa.strings(2).count) f1=\(pa.strings(1).count)")
+                continue
+            }
             // bitRateValue = field 5，退化 7
             let bitrate = Int(br.varint(5) ?? br.varint(7) ?? 0)
+            DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] var\(idx) gear=\(gear) \(w)x\(h) bitrate=\(bitrate) url=\(raw.prefix(70))")
             variants.append(Variant(url: url, w: w, h: h, fps: 0, bitrate: bitrate, gear: gear))
         }
         guard !variants.isEmpty else { return nil }

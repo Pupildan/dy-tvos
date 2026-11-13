@@ -6616,3 +6616,196 @@
 08:09:08  [08:09:08] PLAYER play index=38 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbed7hfog65sevroc
 08:09:15  [08:09:15] ENGINE next -> index=39
 08:09:15  [08:09:15] PLAYER play index=39 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000da3c5svog65kheucn
+09:04:32  [09:04:31] DYTV v65 launched
+09:04:32  [09:04:31] SIGNER init start
+09:04:32  [09:04:31] LOGSRV ready on port 8765
+09:04:32  [09:04:31] SIGNER load shim ok
+09:04:32  [09:04:31] SIGNER load abogus ok
+09:04:32  [09:04:31] LOGSRV advertising as DYTV-457
+09:04:32  [09:04:32] SIGNER load sign ok
+09:04:32  [09:04:32] SIGNER load abogus_dy ok
+09:04:32  [09:04:32] SIGNER extras sign=true dy=true
+09:04:32  [09:04:32] SIGNER bdms=yes
+09:04:32  [09:04:32] SIGNER initABogus=true
+09:04:32  [09:04:32] SIGNER fns=AB (期望 AB)
+09:04:32  [09:04:32] PLAYER viewDidLoad
+09:04:32  [09:04:32] PLAYER no url at index=0 (will retry)
+09:04:32  [09:04:32] SIGNER smoke={"ok":true,"value":"my8hB5wDmDdsvfWv5X5LfY3qVW33YsWW0SVkMDhezVfPKy39HMOL9exEv3vvWoSeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+09:04:32  [09:04:32] SIGNER READY a_bogus len=180
+09:04:32  [09:04:32] ROOT auto-start v65
+09:04:32  [09:04:32] PLAYER no url at index=0 (will retry)
+09:04:32  [09:04:32] PLAYER no url at index=0 (will retry)
+09:04:32  [09:04:32] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+09:04:32  [09:04:32] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+09:04:32  [09:04:32] LOGSRV Bonjour published: DYTV-457
+09:04:34  [09:04:34] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+09:04:34  [09:04:34] FEED first url[7703037313051413795]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbjass7og65ifra2q0b0&line=0&file_id=272fd597b6494cbdae02ccf900cc8564&sign=ee9
+09:04:34  [09:04:34] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+09:04:34  [09:04:34] ENGINE merge total=6 index=0 replace=false auto=true
+09:04:34  [09:04:34] PLAYER play index=0 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbjass7og65ifra2q
+09:05:11  [09:05:11] ENGINE needMore (index=0 count=6)
+09:05:11  [09:05:11] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+09:05:11  [09:05:11] ENGINE next -> index=1
+09:05:11  [09:05:11] PLAYER play index=1 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbdjodfog65o3jaup
+09:05:13  [09:05:13] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+09:05:13  [09:05:13] FEED first url[7702046355132260250]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbhijavog65m1rr50ab0&line=0&file_id=6ebd3265a147400bafa0559b80842f98&sign=d76
+09:05:13  [09:05:13] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+09:05:13  [09:05:13] ENGINE merge total=12 index=1 replace=false auto=false
+09:05:20  [09:05:20] ENGINE next -> index=2
+09:05:20  [09:05:20] PLAYER play index=2 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbo64mnog65p7ur8f
+09:05:20  [09:05:20] ENGINE next -> index=3
+09:05:20  [09:05:20] PLAYER play index=3 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000db7lvenog65pa4pib
+09:05:20  [09:05:20] ENGINE next -> index=4
+09:05:20  [09:05:20] PLAYER play index=4 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dboqhuvog65q29537
+09:05:23  [09:05:23] ENGINE next -> index=5
+09:05:23  [09:05:23] PLAYER play index=5 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbhep8vog65vla4ar
+09:05:23  [09:05:23] ENGINE needMore (index=5 count=12)
+09:05:23  [09:05:23] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+09:05:23  [09:05:23] ENGINE next -> index=6
+09:05:23  [09:05:23] PLAYER play index=6 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbhijavog65m1rr50
+09:05:25  [09:05:25] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+09:05:25  [09:05:25] FEED first url[7703876615496327098]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbkqlhnog65qfh8nd5dg&line=0&file_id=52a6e3ff4abf48a1b340160fb360b746&sign=e77
+09:05:25  [09:05:25] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+09:05:25  [09:05:25] ENGINE merge total=18 index=6 replace=false auto=false
+09:05:28  [09:05:28] ENGINE next -> index=7
+09:05:28  [09:05:28] PLAYER play index=7 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbmq90vog65j5oqro
+09:05:28  [09:05:28] ENGINE next -> index=8
+09:05:28  [09:05:28] PLAYER play index=8 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbnis7fog65nbv2p6
+09:05:33  [09:05:33] ENGINE next -> index=9
+09:05:33  [09:05:33] PLAYER play index=9 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbo8dg7og65kuien9
+09:05:33  [09:05:33] ENGINE next -> index=10
+09:05:33  [09:05:33] PLAYER play index=10 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbkqe8nog65vi86nl
+09:05:37  [09:05:37] ENGINE next -> index=11
+09:05:37  [09:05:37] PLAYER play index=11 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbnuqrnog65kckjgj
+09:05:47  [09:05:47] ENGINE needMore (index=11 count=18)
+09:05:47  [09:05:47] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+09:05:47  [09:05:47] ENGINE next -> index=12
+09:05:47  [09:05:47] PLAYER play index=12 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbkqlhnog65qfh8nd
+09:05:49  [09:05:49] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+09:05:49  [09:05:49] FEED first url[7696458346936716571]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000db7kjf7og65l9bi0ilq0&line=0&file_id=9a0cf04ba2ba42728aab39107365feb3&sign=0ca
+09:05:49  [09:05:49] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+09:05:49  [09:05:49] ENGINE merge total=24 index=12 replace=false auto=false
+09:05:51  [09:05:51] ENGINE next -> index=13
+09:05:51  [09:05:51] PLAYER play index=13 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbdmh6nog65sm9d3a
+09:05:52  [09:05:51] ENGINE next -> index=14
+09:05:52  [09:05:51] PLAYER play index=14 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dber43nog65lntr3r
+09:05:57  [09:05:57] PLAYER item ended index=14, auto-next
+09:05:57  [09:05:57] ENGINE next -> index=15
+09:05:57  [09:05:57] PLAYER play index=15 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbkumifog65hodq28
+09:06:01  [09:06:01] ENGINE next -> index=16
+09:06:01  [09:06:01] PLAYER play index=16 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbbkiqvog65rq9417
+09:06:01  [09:06:01] ENGINE next -> index=17
+09:06:01  [09:06:01] PLAYER play index=17 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbo697vog65nr3iut
+09:06:04  [09:06:04] ENGINE needMore (index=17 count=24)
+09:06:04  [09:06:04] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+09:06:04  [09:06:04] ENGINE next -> index=18
+09:06:04  [09:06:04] PLAYER play index=18 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000db7kjf7og65l9bi0i
+09:06:06  [09:06:06] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=5 (refresh_index=5)
+09:06:06  [09:06:06] FEED first url[7705067024481984959]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbmu9gvog65qplri8jtg&line=0&file_id=1a2f300665794f45811dcb08c05f600c&sign=eb0
+09:06:06  [09:06:06] FEED mobile page refresh_index=5: awemes=5 usable=5 total_seen=29
+09:06:06  [09:06:06] ENGINE merge total=29 index=18 replace=false auto=false
+09:06:08  [09:06:08] ENGINE next -> index=19
+09:06:08  [09:06:08] PLAYER play index=19 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbqofunog65i4jqrt
+09:06:08  [09:06:08] ENGINE next -> index=20
+09:06:08  [09:06:08] PLAYER play index=20 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbqo667og65v154i8
+09:06:15  [09:06:15] ENGINE next -> index=21
+09:06:15  [09:06:15] PLAYER play index=21 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbqtkofog65nbi29d
+09:06:15  [09:06:15] PLAYER item ended index=20, auto-next
+09:06:15  [09:06:15] ENGINE next -> index=22
+09:06:15  [09:06:15] PLAYER play index=22 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000db6efqfog65vtru1e
+09:06:19  [09:06:19] ENGINE needMore (index=22 count=29)
+09:06:19  [09:06:19] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=29
+09:06:19  [09:06:19] ENGINE next -> index=23
+09:06:19  [09:06:19] PLAYER play index=23 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbni0pnog65t4jod8
+09:06:19  [09:06:19] ENGINE next -> index=24
+09:06:19  [09:06:19] PLAYER play index=24 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbmu9gvog65qplri8
+09:06:21  [09:06:21] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+09:06:21  [09:06:21] FEED first url[7705746557488451433]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbo4tofog65rliq5gmag&line=0&file_id=fc6d254cee5e4bd98293de9bdcd5ae35&sign=e1a
+09:06:21  [09:06:21] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=35
+09:06:21  [09:06:21] ENGINE merge total=35 index=24 replace=false auto=false
+09:06:31  [09:06:31] ENGINE next -> index=25
+09:06:31  [09:06:31] PLAYER play index=25 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbq35pfog65ubfspd
+09:06:32  [09:06:31] ENGINE next -> index=26
+09:06:32  [09:06:31] PLAYER play index=26 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbhbm0vog65i5hpqq
+09:06:38  [09:06:38] ENGINE next -> index=27
+09:06:38  [09:06:38] PLAYER play index=27 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbnbnmnog65jn23rf
+09:06:41  [09:06:41] ENGINE next -> index=28
+09:06:41  [09:06:41] PLAYER play index=28 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbmcv4nog65gn4u11
+09:06:41  [09:06:41] ENGINE needMore (index=28 count=35)
+09:06:41  [09:06:41] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=35
+09:06:41  [09:06:41] ENGINE next -> index=29
+09:06:41  [09:06:41] PLAYER play index=29 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbo4tofog65rliq5g
+09:06:41  [09:06:41] ENGINE next -> index=30
+09:06:41  [09:06:41] PLAYER play index=30 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbbq59fog65o3ljlr
+09:06:43  [09:06:43] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+09:06:43  [09:06:43] FEED first url[7705827167318613370]: https://v5-se-ex-mc-awememusicpgc.amemv.com/c7f5cf589a735b95234ca7dec6e4918a/6b1df097/video/tos/cn/tos-cn-ve-2774/ogOUIC5AvDCUNZDPxzF1AZqQTt
+09:06:43  [09:06:43] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=41
+09:06:43  [09:06:43] ENGINE merge total=41 index=30 replace=false auto=false
+09:06:44  [09:06:44] ENGINE next -> index=31
+09:06:44  [09:06:44] PLAYER play index=31 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dblufv7og65sgnoud
+09:06:44  [09:06:44] ENGINE next -> index=32
+09:06:44  [09:06:44] PLAYER play index=32 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000db8s2pnog65l6dsk3
+09:06:47  [09:06:47] ENGINE next -> index=33
+09:06:47  [09:06:47] PLAYER play index=33 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbqkqfnog65l07gs5
+09:06:47  [09:06:47] ENGINE next -> index=34
+09:06:47  [09:06:47] PLAYER play index=34 url=https://v5-ex-awememusicpgc.amemv.com/e50a7e9fe3a4d6381825f96d24645613/6b1defa3/
+09:06:52  [09:06:52] ENGINE needMore (index=34 count=41)
+09:06:52  [09:06:52] FEED mobile GET refresh_index=8 cold=0 count=10 bogus_len=180 seen=41
+09:06:52  [09:06:52] ENGINE next -> index=35
+09:06:52  [09:06:52] PLAYER play index=35 url=https://v5-se-ex-mc-awememusicpgc.amemv.com/c7f5cf589a735b95234ca7dec6e4918a/6b1
+09:06:54  [09:06:54] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=5 (refresh_index=8)
+09:06:54  [09:06:54] FEED first url[7697865269096321954]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dba4ulvog65vk34c1ilg&line=0&file_id=01c646f9e2f94adaadc586c7b2dba96d&sign=993
+09:06:54  [09:06:54] FEED mobile page refresh_index=8: awemes=5 usable=5 total_seen=46
+09:06:54  [09:06:54] ENGINE merge total=46 index=35 replace=false auto=false
+09:06:57  [09:06:57] ENGINE next -> index=36
+09:06:57  [09:06:57] PLAYER play index=36 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000db84ognog65jnuhlj
+09:07:02  [09:07:02] ENGINE next -> index=37
+09:07:02  [09:07:02] PLAYER play index=37 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000da418ffog65pnuuv7
+09:07:09  [09:07:08] ENGINE next -> index=38
+09:07:09  [09:07:08] PLAYER play index=38 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbqmgffog65q03evf
+09:07:09  [09:07:09] ENGINE next -> index=39
+09:07:09  [09:07:09] PLAYER play index=39 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000daa0gmvog65urhrbb
+09:07:09  [09:07:09] ENGINE needMore (index=39 count=46)
+09:07:09  [09:07:09] FEED mobile GET refresh_index=9 cold=0 count=10 bogus_len=180 seen=46
+09:07:09  [09:07:09] ENGINE next -> index=40
+09:07:09  [09:07:09] PLAYER play index=40 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbqt15nog65pirih7
+09:07:11  [09:07:11] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=9)
+09:07:11  [09:07:11] FEED first url[7703406380174118182]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbjvlcfog65vpafuv510&line=0&file_id=9e968e01a8b748bdadeb635716f1fca2&sign=506
+09:07:11  [09:07:11] FEED mobile page refresh_index=9: awemes=6 usable=6 total_seen=52
+09:07:11  [09:07:11] ENGINE merge total=52 index=40 replace=false auto=false
+09:07:14  [09:07:14] ENGINE next -> index=41
+09:07:14  [09:07:14] PLAYER play index=41 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dba4ulvog65vk34c1
+09:07:19  [09:07:18] ENGINE next -> index=42
+09:07:19  [09:07:18] PLAYER play index=42 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbqp69fog65p1iqek
+09:07:24  [09:07:24] ENGINE next -> index=43
+09:07:24  [09:07:24] PLAYER play index=43 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbpkq7nog65gfekrv
+09:07:31  [09:07:30] ENGINE next -> index=44
+09:07:31  [09:07:30] PLAYER play index=44 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dblvpjvog65p9sgdi
+09:07:35  [09:07:35] ENGINE next -> index=45
+09:07:35  [09:07:35] PLAYER play index=45 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbmqi7fog65m915rp
+09:07:35  [09:07:35] ENGINE needMore (index=45 count=52)
+09:07:35  [09:07:35] FEED mobile GET refresh_index=10 cold=0 count=10 bogus_len=180 seen=52
+09:07:35  [09:07:35] ENGINE next -> index=46
+09:07:35  [09:07:35] PLAYER play index=46 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbjvlcfog65vpafuv
+09:07:37  [09:07:37] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=10)
+09:07:37  [09:07:37] FEED first url[7706926870582791450]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq81dvog65oe436tvd0&line=0&file_id=826cf55abfe1466a91c938df24ca740e&sign=6b6
+09:07:37  [09:07:37] FEED mobile page refresh_index=10: awemes=6 usable=6 total_seen=58
+09:07:37  [09:07:37] ENGINE merge total=58 index=46 replace=false auto=false
+09:07:41  [09:07:41] ENGINE next -> index=47
+09:07:41  [09:07:41] PLAYER play index=47 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbj0qe7og65skiqme
+09:07:45  [09:07:45] ENGINE next -> index=48
+09:07:46  [09:07:45] PLAYER play index=48 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbpgba7og65irmkon
+09:08:05  [09:08:05] ENGINE next -> index=49
+09:08:05  [09:08:05] PLAYER play index=49 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbnhiefog65l7gfd2
+09:08:08  [09:08:08] ENGINE next -> index=50
+09:08:09  [09:08:08] PLAYER play index=50 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbktjdfog65mr2tk8
+09:08:11  [09:08:11] ENGINE next -> index=51
+09:08:11  [09:08:11] PLAYER play index=51 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbjhdg7og65s71o4t
+09:08:11  [09:08:11] ENGINE needMore (index=51 count=58)
+09:08:11  [09:08:11] FEED mobile GET refresh_index=11 cold=0 count=10 bogus_len=180 seen=58
+09:08:11  [09:08:11] ENGINE next -> index=52
+09:08:11  [09:08:11] PLAYER play index=52 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq81dvog65oe436t
+09:08:13  [09:08:13] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=11)
+09:08:13  [09:08:13] FEED first url[7700264063629055656]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbed9pvog65ikjpq7d60&line=0&file_id=e280c35bd1134448a3ba960f56777a5f&sign=587
+09:08:13  [09:08:13] FEED mobile page refresh_index=11: awemes=6 usable=6 total_seen=64
+09:08:13  [09:08:13] ENGINE merge total=64 index=52 replace=false auto=false
