@@ -4,15 +4,14 @@ import AVFoundation
 import SwiftUI
 import Combine
 
-/// 双播放器池槽位：一个 AVPlayer + 绑定它的 AVPlayerLayer。
-/// 两个槽叠满全屏，永远只显示一个；另一个后台预加载下一/上一条。
-/// 内存纪律（A12 双 1080P 无压力但仍要节制）：
-///   1) 后台预载 item.preferredForwardBufferDuration = 3.0（只缓冲起步 3 秒，不缓存整片）
-///   2) 后台槽强制 isMuted=true，滑到前台才出声
-///   3) 滑出屏外的旧槽 clear() → replaceCurrentItem(with:nil) 清资源，防连续刷数小时内存溢出
+/// 双播放器池槽位：容器 UIView + 内嵌 AVPlayerLayer + AVPlayer。
+/// 关键：动画作用于 container（UIView），UIKit 对 view 动画可靠；
+/// 直接动画 AVPlayerLayer（挂在 view.layer 上）在真机不产生动画（瞬移）。
+/// 内存纪律：后台预载只缓冲 3 秒、强制静音；滑出屏外的旧槽 clear() 释放资源。
 final class DYPlayerSlot {
     let player: AVPlayer
-    let layer: AVPlayerLayer
+    let container: UIView          // 动画作用于此 view 的 transform
+    private let layer: AVPlayerLayer
     private(set) var index: Int = -1
     private var statusObservation: NSKeyValueObservation?
     private var endObserver: NSObjectProtocol?
@@ -21,10 +20,20 @@ final class DYPlayerSlot {
 
     init() {
         player = AVPlayer()
+        container = UIView()
+        container.backgroundColor = .black
+        container.clipsToBounds = true
         layer = AVPlayerLayer()
         layer.player = player
         layer.videoGravity = .resizeAspect   // 居中、不裁切、周围留白（原始约束）
         layer.backgroundColor = UIColor.black.cgColor
+        container.layer.addSublayer(layer)
+    }
+
+    /// container 布局（由 VC 在 layoutSubviews 调用）
+    func layout(in bounds: CGRect) {
+        container.frame = bounds
+        layer.frame = container.bounds
     }
 
     /// 绑定 item + 状态/播完监听。后台预载：静音 + 只缓冲 3 秒。
@@ -86,8 +95,8 @@ final class DYPlayerSlot {
 }
 
 /// 原生播放器：双播放器池 + 垂直滑动过渡（模拟抖音上下滑）。
-/// PlayerA/PlayerB 各绑一个 AVPlayerLayer 叠满全屏，永远只显示一个；
-/// 切换时新旧 Layer 做物理位移动画（curveEaseInOut 0.3s），彻底消灭黑屏/淡入淡出。
+/// PlayerA/PlayerB 各一个容器 UIView（内嵌 AVPlayerLayer）叠满全屏，永远只显示一个；
+/// 切换时新旧容器做物理位移动画（UIView.animate curveEaseInOut 0.3s），彻底消灭黑屏/瞬移。
 /// 遥控：上=prev(从上滑入) 下=next(从下滑入) 左右=seek Menu=退出。
 final class DYPlayerViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
@@ -111,14 +120,14 @@ final class DYPlayerViewController: UIViewController {
         view.backgroundColor = .black
         DYLog.shared.log("DUALPLAYER viewDidLoad")
 
+        // 容器 view 叠满全屏（动画作用于 container 的 transform）
         for s in slots {
-            s.layer.frame = view.bounds
-            view.layer.addSublayer(s.layer)
+            s.container.frame = view.bounds
+            view.addSubview(s.container)
         }
         // A 在前台，B 预置到屏幕下方（隐藏在底）
-        slotA.layer.zPosition = 1
-        slotB.layer.zPosition = 0
-        slotB.layer.transform = CATransform3DMakeTranslation(0, screenHeight, 0)
+        slotA.container.transform = .identity
+        slotB.container.transform = CGAffineTransform(translationX: 0, y: screenHeight)
 
         PlaybackEngine.shared.$index
             .receive(on: DispatchQueue.main)
@@ -134,7 +143,7 @@ final class DYPlayerViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        for s in slots { s.layer.frame = view.bounds }
+        for s in slots { s.layout(in: view.bounds) }
     }
 
     // MARK: - 装载/预加载
@@ -197,7 +206,7 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
-    // MARK: - 垂直滑动过渡
+    // MARK: - 垂直滑动过渡（动画容器 view 的 transform）
 
     private enum SlideDir { case down, up }
 
@@ -208,14 +217,9 @@ final class DYPlayerViewController: UIViewController {
         let outgoing = activeSlot
         let h = screenHeight
 
-        // 入场起点：下一个从下方来，上一个从上方来
-        let incomingStartY: CGFloat = direction == .down ? h : -h
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)   // 关掉隐式动画，位置由我们控制
-        incoming.layer.transform = CATransform3DMakeTranslation(0, incomingStartY, 0)
-        incoming.layer.zPosition = 2            // 入场层在最上
-        outgoing.layer.zPosition = 1
-        CATransaction.commit()
+        // 入场起点：下一个从下方来，上一个从上方来（容器 view transform）
+        incoming.container.transform = CGAffineTransform(translationX: 0, y: direction == .down ? h : -h)
+        view.bringSubviewToFront(incoming.container)
 
         // 滑到前台 → 取消静音出声
         incoming.player.isMuted = false
@@ -225,19 +229,15 @@ final class DYPlayerViewController: UIViewController {
         UIView.animate(withDuration: animDuration, delay: 0, options: [.curveEaseInOut]) { [weak self] in
             guard let self else { return }
             // 入场滑到中央
-            self.applyTranslation(y: 0, to: incoming.layer)
+            incoming.container.transform = .identity
             // 出场滑向对侧（下一个→往上出；上一个→往下出）
             let outY: CGFloat = direction == .down ? -h : h
-            self.applyTranslation(y: outY, to: outgoing.layer)
+            outgoing.container.transform = CGAffineTransform(translationX: 0, y: outY)
         } completion: { [weak self] _ in
             guard let self else { return }
             // 收尾：旧槽暂停、复位到屏幕下方待命
             outgoing.player.pause()
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            outgoing.layer.transform = CATransform3DMakeTranslation(0, self.screenHeight, 0)
-            outgoing.layer.zPosition = 0
-            CATransaction.commit()
+            outgoing.container.transform = CGAffineTransform(translationX: 0, y: self.screenHeight)
 
             self.activeIdx = self.slots.firstIndex(where: { $0 === incoming }) ?? 0
             self.isAnimating = false
@@ -250,10 +250,6 @@ final class DYPlayerViewController: UIViewController {
             self.preloadNext(around: self.currentIndex)
             DYLog.shared.log("DUAL slide done activeIdx=\(self.activeIdx) idx=\(index)")
         }
-    }
-
-    private func applyTranslation(y: CGFloat, to layer: CALayer) {
-        layer.transform = CATransform3DMakeTranslation(0, y, 0)
     }
 
     // MARK: - 导航
