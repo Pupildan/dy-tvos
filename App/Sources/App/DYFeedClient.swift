@@ -249,7 +249,7 @@ final class DYFeedClient {
     /// 排序（highestQualityBitRate，取最大）：分辨率 h*w → fps → bitRateValue → gearName!=adapt_lowest。
     /// 无 bit_rate 档则退回默认 play_addr（field 1/9）。
     func pickHighestQuality(from video: Proto) -> URL? {
-        var entries: [Proto] = video.bytesFields(21)
+        var entries: [[UInt8]] = video.bytesFields(21)
         if entries.isEmpty { entries = video.bytesFields(31) }
 
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
