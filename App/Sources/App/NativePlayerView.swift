@@ -69,6 +69,8 @@ final class PlayerManager {
     /// player ready 变化回调（index）——供控制器刷新封面显隐
     var onPlayerReady: ((Int) -> Void)?
     private var readyObservers: [Int: NSKeyValueObservation] = [:]
+    /// 已跳过的失败 index——只 skip 一次，防反复 acquire/failed 驱动 advance 级联跳多页
+    private var failedIndices = Set<Int>()
 
     private init() {}
 
@@ -76,7 +78,9 @@ final class PlayerManager {
     /// 窗口放宽到 ±2：来回微抖时有缓冲余量，不会一抖就 evict 刚 ready 的（±1 会抖动→黑屏）。
     /// 只从 scrollTo(最终目标 index) 调用；updatePlaybackStates/willDisplay 只查池不触驱逐（杜绝双 center 打架抖动）。
     func prepare(center idx: Int) {
-        let desired = [idx - 2, idx - 1, idx, idx + 1, idx + 2].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
+        // desired 窗口跳过已失败的 index（坏视频不再 acquire/failed，断级联跳多页），按顺序取最多 5 个
+        let window = (idx - 2...idx + 2).filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) && !failedIndices.contains($0) }
+        let desired = Array(window.prefix(5))
         // 1) 驱逐范围外的 player：pause + replaceCurrentItem(nil) 强制回收解码器
         for (i, p) in players where !desired.contains(i) {
             p.pause()
@@ -164,7 +168,7 @@ final class PlayerManager {
     }
 
     /// 预处理无感跳过：index 的视频打不开(Cannot Open，如 HEVC 解不出)时，驱逐它并回调跳过。
-    /// 无条件回调，由控制器判断"失败的是否当前居中"再 advance（manager 不持有 currentIndex）。
+    /// 只对首次失败回调 advance：failedIndices 记录已跳过的，重复 failed 不再 advance（断级联跳多页）。
     func skipFailed(index: Int) {
         if let p = players[index] {
             p.pause()
@@ -173,6 +177,11 @@ final class PlayerManager {
             readyObservers.removeValue(forKey: index)
             players.removeValue(forKey: index)
         }
+        guard !failedIndices.contains(index) else {
+            DYLog.shared.log("MGR failed idx=\(index) dup -> no advance (break cascade)")
+            return
+        }
+        failedIndices.insert(index)
         onSkipFailed?(index)
     }
 
