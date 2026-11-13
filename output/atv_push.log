@@ -13832,3 +13832,186 @@
 14:06:11  [14:06:11] FEED loop a[2] id=7705036283671858447 pick-start
 14:06:11  [14:06:11] FEED loop a[2] pick-done chosen=false
 14:06:11  [14:06:11] FEED loop a[2] final chosen=true
+14:22:21  [14:22:21] DYTV v91 launched
+14:22:21  [14:22:21] SIGNER init start
+14:22:21  [14:22:21] SIGNER load shim ok
+14:22:21  [14:22:21] SIGNER load abogus ok
+14:22:21  [14:22:21] LOGSRV ready on port 8765
+14:22:21  [14:22:21] LOGSRV advertising as DYTV-808
+14:22:21  [14:22:21] SIGNER load sign ok
+14:22:21  [14:22:21] FEEDCOLL viewDidLoad
+14:22:22  [14:22:21] ROOT auto-start v91
+14:22:22  [14:22:21] SIGNER load abogus_dy ok
+14:22:22  [14:22:21] SIGNER extras sign=true dy=true
+14:22:22  [14:22:21] SIGNER bdms=yes
+14:22:22  [14:22:21] SIGNER initABogus=true
+14:22:22  [14:22:21] SIGNER fns=AB (期望 AB)
+14:22:22  [14:22:21] SIGNER smoke={"ok":true,"value":"x7mqQR8hmEgNkVWD5XALfY3qVW33Ysli0SVkMDhezVfPFy39HMY29exEv8wvUuYeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+14:22:22  [14:22:21] SIGNER READY a_bogus len=180
+14:22:22  [14:22:21] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+14:22:22  [14:22:21] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+14:22:22  [14:22:22] LOGSRV Bonjour published: DYTV-808
+14:22:24  [14:22:24] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+14:22:24  [14:22:24] FEED loop a[0] begin bytes=56788
+14:22:24  [14:22:24] FEED loop a[0] aweme-ok
+14:22:24  [14:22:24] FEED loop a[0] video-ok
+14:22:24  [14:22:24] FEED loop a[0] id=7706056054156660608 pick-start
+14:22:24  [14:22:24] FEED loop a[0] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[0] final chosen=true
+14:22:24  [14:22:24] FEED first url[7706056054156660608]: https://v9-chc.douyinvod.com/f93322408fab4d9745328817e507c4a6/6af94fa8/video/cn/mps/logo/r/p/v0200fg10000dbomhinog65ok5me973g/3651f9e275f348
+14:22:24  [14:22:24] FEED loop a[1] begin bytes=58552
+14:22:24  [14:22:24] FEED loop a[1] aweme-ok
+14:22:24  [14:22:24] FEED loop a[1] video-ok
+14:22:24  [14:22:24] FEED loop a[1] id=7706515214014991667 pick-start
+14:22:24  [14:22:24] FEED loop a[1] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[1] final chosen=true
+14:22:24  [14:22:24] FEED loop a[2] begin bytes=72707
+14:22:24  [14:22:24] FEED loop a[2] aweme-ok
+14:22:24  [14:22:24] FEED loop a[2] video-ok
+14:22:24  [14:22:24] FEED loop a[2] id=7706932829556890340 pick-start
+14:22:24  [14:22:24] FEED loop a[2] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[2] final chosen=true
+14:22:24  [14:22:24] FEED loop a[3] begin bytes=84809
+14:22:24  [14:22:24] FEED loop a[3] aweme-ok
+14:22:24  [14:22:24] FEED loop a[3] video-ok
+14:22:24  [14:22:24] FEED loop a[3] id=7707078869329413349 pick-start
+14:22:24  [14:22:24] FEED loop a[3] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[3] final chosen=true
+14:22:24  [14:22:24] FEED loop a[4] begin bytes=59503
+14:22:24  [14:22:24] FEED loop a[4] aweme-ok
+14:22:24  [14:22:24] FEED loop a[4] video-ok
+14:22:24  [14:22:24] FEED loop a[4] id=7705742969030675023 pick-start
+14:22:24  [14:22:24] FEED loop a[4] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[4] final chosen=true
+14:22:24  [14:22:24] FEED loop a[5] begin bytes=57101
+14:22:24  [14:22:24] FEED loop a[5] aweme-ok
+14:22:24  [14:22:24] FEED loop a[5] video-ok
+14:22:24  [14:22:24] FEED loop a[5] id=7699690368765756538 pick-start
+14:22:24  [14:22:24] FEED loop a[5] pick-done chosen=false
+14:22:24  [14:22:24] FEED loop a[5] final chosen=true
+14:22:24  [14:22:24] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+14:22:24  [14:22:24] ENGINE merge total=6 index=0 replace=false auto=true
+14:22:24  [14:22:24] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:30  [14:22:30] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:31  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:31  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:32  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:32  [14:22:32] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:32  [14:22:32] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:33  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:33  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:33  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:33  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:34  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:34  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:35  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:35  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:35  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:35  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:35  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:36  [14:22:36] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:36  [14:22:36] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:36  [14:22:36] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:37  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:37  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:37  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:37  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:38  [14:22:38] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:38  [14:22:38] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:21] DYTV v91 launched
+14:22:42  [14:22:21] SIGNER init start
+14:22:42  [14:22:21] SIGNER load shim ok
+14:22:42  [14:22:21] SIGNER load abogus ok
+14:22:42  [14:22:21] LOGSRV ready on port 8765
+14:22:42  [14:22:21] LOGSRV advertising as DYTV-808
+14:22:42  [14:22:21] SIGNER load sign ok
+14:22:42  [14:22:21] FEEDCOLL viewDidLoad
+14:22:42  [14:22:21] ROOT auto-start v91
+14:22:42  [14:22:21] SIGNER load abogus_dy ok
+14:22:42  [14:22:21] SIGNER extras sign=true dy=true
+14:22:42  [14:22:21] SIGNER bdms=yes
+14:22:42  [14:22:21] SIGNER initABogus=true
+14:22:42  [14:22:21] SIGNER fns=AB (期望 AB)
+14:22:42  [14:22:21] SIGNER smoke={"ok":true,"value":"x7mqQR8hmEgNkVWD5XALfY3qVW33Ysli0SVkMDhezVfPFy39HMY29exEv8wvUuYeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+14:22:42  [14:22:21] SIGNER READY a_bogus len=180
+14:22:42  [14:22:21] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+14:22:42  [14:22:21] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+14:22:42  [14:22:22] LOGSRV Bonjour published: DYTV-808
+14:22:42  [14:22:24] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+14:22:42  [14:22:24] FEED loop a[0] begin bytes=56788
+14:22:42  [14:22:24] FEED loop a[0] aweme-ok
+14:22:42  [14:22:24] FEED loop a[0] video-ok
+14:22:42  [14:22:24] FEED loop a[0] id=7706056054156660608 pick-start
+14:22:42  [14:22:24] FEED loop a[0] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[0] final chosen=true
+14:22:42  [14:22:24] FEED first url[7706056054156660608]: https://v9-chc.douyinvod.com/f93322408fab4d9745328817e507c4a6/6af94fa8/video/cn/mps/logo/r/p/v0200fg10000dbomhinog65ok5me973g/3651f9e275f348
+14:22:42  [14:22:24] FEED loop a[1] begin bytes=58552
+14:22:42  [14:22:24] FEED loop a[1] aweme-ok
+14:22:42  [14:22:24] FEED loop a[1] video-ok
+14:22:42  [14:22:24] FEED loop a[1] id=7706515214014991667 pick-start
+14:22:42  [14:22:24] FEED loop a[1] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[1] final chosen=true
+14:22:42  [14:22:24] FEED loop a[2] begin bytes=72707
+14:22:42  [14:22:24] FEED loop a[2] aweme-ok
+14:22:42  [14:22:24] FEED loop a[2] video-ok
+14:22:42  [14:22:24] FEED loop a[2] id=7706932829556890340 pick-start
+14:22:42  [14:22:24] FEED loop a[2] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[2] final chosen=true
+14:22:42  [14:22:24] FEED loop a[3] begin bytes=84809
+14:22:42  [14:22:24] FEED loop a[3] aweme-ok
+14:22:42  [14:22:24] FEED loop a[3] video-ok
+14:22:42  [14:22:24] FEED loop a[3] id=7707078869329413349 pick-start
+14:22:42  [14:22:24] FEED loop a[3] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[3] final chosen=true
+14:22:42  [14:22:24] FEED loop a[4] begin bytes=59503
+14:22:42  [14:22:24] FEED loop a[4] aweme-ok
+14:22:42  [14:22:24] FEED loop a[4] video-ok
+14:22:42  [14:22:24] FEED loop a[4] id=7705742969030675023 pick-start
+14:22:42  [14:22:24] FEED loop a[4] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[4] final chosen=true
+14:22:42  [14:22:24] FEED loop a[5] begin bytes=57101
+14:22:42  [14:22:24] FEED loop a[5] aweme-ok
+14:22:42  [14:22:24] FEED loop a[5] video-ok
+14:22:42  [14:22:24] FEED loop a[5] id=7699690368765756538 pick-start
+14:22:42  [14:22:24] FEED loop a[5] pick-done chosen=false
+14:22:42  [14:22:24] FEED loop a[5] final chosen=true
+14:22:42  [14:22:24] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+14:22:42  [14:22:24] ENGINE merge total=6 index=0 replace=false auto=true
+14:22:42  [14:22:24] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:30] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:31] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:32] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:32] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:33] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:34] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:35] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:36] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:36] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:36] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:37] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:42  [14:22:38] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:38] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:42  [14:22:41] LOGSRV Bonjour didNotPublish: ["NSNetServicesErrorCode": -72000, "NSNetServicesErrorDomain": 10]
+14:22:42  [14:22:42] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:43  [14:22:42] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:43  [14:22:43] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:43  [14:22:43] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:43  [14:22:43] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:44  [14:22:44] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:44  [14:22:44] FEEDCOLL scrollTo SKIP idx=0 (not laid out / idx out of range)
+14:22:45  [14:22:44] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:45  [14:22:45] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)
+14:22:45  [14:22:45] FEEDCOLL scrollTo SKIP idx=1 (not laid out / idx out of range)

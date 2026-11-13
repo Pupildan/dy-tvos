@@ -85,35 +85,44 @@ final class DYPlayerViewController: UIViewController {
     }
 
     private func reloadIfNeeded() {
-        guard collectionView.bounds.height > 0, !PlaybackEngine.shared.urls.isEmpty else { return }
+        guard !PlaybackEngine.shared.urls.isEmpty else { return }
+        // urls 变化后必须 reloadData，flow layout 才会真正建 cell（否则 numberOfItems 恒 0 → scrollTo 全 SKIP → 黑屏）
+        collectionView.reloadData()
         scrollTo(index: PlaybackEngine.shared.index, animated: false)
     }
 
     // MARK: - 滚动驱动
 
-    /// 目标 index 是否可安全 scrollToItem：collectionView 已 layout、item 数覆盖 index。
-    /// 崩溃根因（.ips 堆栈）：首次 urls 到达时 flow layout 未算出 contentSize，
-    /// scrollToItem 判定 indexPath 越界 → _validateScrollingTargetIndexPath 抛 NSException → SIGABRT。
+    /// 是否具备滚动条件：有数据 + 已进 window + bounds 有效。满足时 reloadData/layout 后可安全滚动。
     private func canScrollTo(index: Int) -> Bool {
-        guard collectionView.bounds.height > 0, collectionView.window != nil else { return false }
-        // 强制 layout 让 flow layout 算出真实 contentSize / item 数
+        guard collectionView.window != nil,
+              collectionView.bounds.height > 0,
+              !PlaybackEngine.shared.urls.isEmpty else { return false }
+        // 强制 layout 让 flow layout 算出真实 contentSize
         collectionView.layoutIfNeeded()
-        let items = collectionView.numberOfItems(inSection: 0)
-        return index >= 0 && index < items
+        return true
     }
 
     private func scrollTo(index: Int, animated: Bool) {
         guard canScrollTo(index: index) else {
-            DYLog.shared.log("FEEDCOLL scrollTo SKIP idx=\(index) (not laid out / idx out of range)")
+            DYLog.shared.log("FEEDCOLL scrollTo SKIP idx=\(index) (not laid out / no data)")
             return
         }
-        let ip = IndexPath(item: index, section: 0)
-        collectionView.scrollToItem(at: ip, at: .centeredVertically, animated: animated)
-        currentIndex = index
+        let count = PlaybackEngine.shared.urls.count
+        guard index >= 0, index < count else { return }
+        let clampedIndex = min(max(0, index), count - 1)
+        // 用 setContentOffset（clamp 到 contentSize 内）替代 scrollToItem：
+        // 后者在 flow layout 未就绪时会走 _validateScrollingTargetIndexPath 抛 NSException（.ips 已定位）。
+        let pageHeight = max(1, collectionView.bounds.height)
+        let maxOffset = max(0, collectionView.contentSize.height - collectionView.bounds.height)
+        let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
+        collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
+        currentIndex = clampedIndex
+        DYLog.shared.log("FEEDCOLL scrollTo idx=\(clampedIndex) y=\(targetY) items=\(count)")
         // 关键：滚动一开始就预载目标±1（不等滚动结束），让滑动时相邻已缓冲不卡
-        preloadAdjacent(around: index)
+        preloadAdjacent(around: clampedIndex)
         DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
-            self?.updatePlaybackStates(center: index)
+            self?.updatePlaybackStates(center: clampedIndex)
         }
     }
 
