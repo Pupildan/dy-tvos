@@ -161,6 +161,12 @@ final class PlayerManager {
                     DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
                     self?.skipFailed(index: index)
                 } else {
+                    // readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）→ 也跳过
+                    if it.tracks(withMediaType: .video).isEmpty {
+                        DYLog.shared.log("MGR ready idx=\(index) 但无视频轨 -> skip")
+                        self?.skipFailed(index: index)
+                        return
+                    }
                     self?.onPlayerReady?(index)
                     DYLog.shared.log("MGR ready idx=\(index)")
                 }

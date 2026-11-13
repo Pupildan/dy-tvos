@@ -171,13 +171,6 @@ final class DYFeedClient {
             DYLog.shared.log("FEED loop a[\(ei)] begin bytes=\(entry.count)")
             guard let aweme = Proto.parse(entry) else { DYLog.shared.log("FEED loop a[\(ei)] parse-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] aweme-ok")
-            // 照抄 myDV isPrimaryAweme：awemeType(proto field 6) != 0 是图集/图文帖，无有效视频轨，
-            // 取它会导致黑屏有声。≠0 直接跳过，不进播放池（DataModelKt.java:181-184 / zq5.java:970）。
-            if let at = aweme.varint(6), at != 0 {
-                DYLog.shared.log("FEED loop a[\(ei)] awemeType=\(at) 非视频帖 -> skip")
-                ei += 1
-                continue
-            }
             // video = aweme field 7，退化 field 8（s13.e:229）
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
