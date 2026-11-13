@@ -162,7 +162,8 @@ final class PlayerManager {
                     self?.skipFailed(index: index)
                 } else {
                     // readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）→ 也跳过
-                    if it.tracks(withMediaType: .video).isEmpty {
+                    let videoTracks = (it.asset as? AVURLAsset)?.tracks(withMediaType: .video) ?? []
+                    if videoTracks.isEmpty {
                         DYLog.shared.log("MGR ready idx=\(index) 但无视频轨 -> skip")
                         self?.skipFailed(index: index)
                         return
