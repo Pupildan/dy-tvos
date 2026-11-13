@@ -165,6 +165,7 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
+        var candidates: [[URL]] = []
         var loggedFirst = false
         var ei = 0
         for entry in awemeEntries {
@@ -210,9 +211,31 @@ final class DYFeedClient {
             DYLog.shared.log("FEED loop a[\(ei)] final chosen=\(chosen != nil)")
             if let url = chosen {
                 ids.append(id); urls.append(url)
+                // 收集该视频全部 CDN 候选（主链 HEVC 播不出时切备用，治黑屏）：
+                // bit_rate 各档 + 默认 play_addr 各 field 的所有 CDN 直链，去重。
+                var cands: [URL] = [url]
+                func addCand(_ raws: [String]) {
+                    for raw in raws {
+                        var u = raw
+                        if u.hasPrefix("//") { u = "https:" + u }
+                        let lo = u.lowercased()
+                        guard lo.hasPrefix("https://") || lo.hasPrefix("http://") else { continue }
+                        guard !lo.contains("/aweme/v1/play/"), !lo.contains("api-play") else { continue }
+                        if let cu = URL(string: u), !cands.contains(cu) { cands.append(cu) }
+                    }
+                }
+                for e in video.bytesFields(21) + video.bytesFields(31) {
+                    if let br = Proto.parse(e), let paB = br.bytesFields(4).first, let pa = Proto.parse(paB) {
+                        addCand(Proto.urlList(pa, 0))
+                    }
+                }
+                for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
+                    if let cand = Proto.parse(pb) { addCand(Proto.urlList(cand, 0)) }
+                }
+                candidates.append(cands)
                 if !loggedFirst {
                     loggedFirst = true
-                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
+                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140)) cands=\(cands.count)")
                 }
             }
             ei += 1
@@ -227,7 +250,8 @@ final class DYFeedClient {
         PlaybackEngine.shared.merge(ids: ids, urls: urls,
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
-                                    refresh: false)
+                                    refresh: false,
+                                    allCandidates: candidates)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {

@@ -188,13 +188,27 @@ final class DYPlayerViewController: UIViewController {
         // KVO 等 item 真正 readyToPlay 且它仍是当前居中槽才 play——固定延时赌不准解码时机（有声画面冻结真根因）
         statusObservers[player]?.invalidate()
         statusObservers[player] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            guard let self, it.status == .readyToPlay else { return }
+            guard let self else { return }
             DispatchQueue.main.async {
-                guard self.playerIndex[player] == index,
-                      self.currentIndex == index else { return }
-                player.isMuted = false
-                player.play()
-                DYLog.shared.log("POOL readyPlay idx=\(index)")
+                guard self.playerIndex[player] == index else { return }
+                switch it.status {
+                case .readyToPlay:
+                    guard self.currentIndex == index else { return }
+                    player.isMuted = false
+                    player.play()
+                    DYLog.shared.log("POOL readyPlay idx=\(index)")
+                case .failed:
+                    // 主链播不出（如 HEVC 视频轨解不出→黑屏有声），切同视频备用档重试
+                    if let fb = PlaybackEngine.shared.fallbackURL(at: index) {
+                        DYLog.shared.log("POOL failed idx=\(index) -> fallback \(fb.absoluteString.prefix(80))")
+                        PlaybackEngine.shared.promoteFallback(fb, at: index)
+                        self.load(player: player, index: index)
+                    } else {
+                        DYLog.shared.log("POOL failed idx=\(index) (no fallback)")
+                    }
+                default:
+                    break
+                }
             }
         }
         DYLog.shared.log("POOL load idx=\(index)")

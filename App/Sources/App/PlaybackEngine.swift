@@ -11,6 +11,8 @@ final class PlaybackEngine: ObservableObject {
 
     @Published var urls: [URL] = []
     @Published var index: Int = 0
+    /// 每个 aweme id 的全部候选 CDN 直链（主链播不出时切备用档，治 HEVC 黑屏）
+    private var urlPool: [String: [URL]] = [:]
 
     /// 直链批次拉取时间（用于过期判断）
     private(set) var fetchedAt: Date = .distantPast
@@ -34,6 +36,20 @@ final class PlaybackEngine: ObservableObject {
         urls.indices.contains(index) ? urls[index] : nil
     }
 
+    /// 某 index 的备用档（主链播不出时切，治 HEVC 黑屏）：从候选池取一个非当前 URL。
+    func fallbackURL(at index: Int) -> URL? {
+        guard urls.indices.contains(index) else { return nil }
+        let id = awemeOrder.indices.contains(index) ? awemeOrder[index] : ""
+        let cur = urls[index]
+        return (urlPool[id] ?? []).first { $0 != cur }
+    }
+
+    /// 主链失败切备用后，把 urls[index] 换成备用（后续重试不再重复选同一个）。
+    func promoteFallback(_ fallback: URL, at index: Int) {
+        guard urls.indices.contains(index) else { return }
+        urls[index] = fallback
+    }
+
     var count: Int { urls.count }
 
     /// 已消费（当前及之前）的 aweme id——feed 直连翻页时作 presented_ids 排除重复推荐。
@@ -45,7 +61,7 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allCandidates: [[URL]]? = nil) {
         let previousAwemeId = currentAwemeId
         var mergedIds = awemeOrder
         var mergedUrls = self.urls
@@ -62,6 +78,14 @@ final class PlaybackEngine: ObservableObject {
         }
         awemeOrder = mergedIds
         self.urls = mergedUrls
+        // 填候选池（主链播不出时切备用档，治 HEVC 黑屏）：每个 id 记它这次的全部候选（去重）
+        if let cands = allCandidates {
+            for (i, id) in ids.enumerated() {
+                var set = urlPool[id] ?? []
+                for u in cands[i] where !set.contains(u) { set.append(u) }
+                urlPool[id] = set
+            }
+        }
         fetchedAt = Date()
         consecutiveFailures = 0
         if refresh, !previousAwemeId.isEmpty, let pos = awemeOrder.firstIndex(of: previousAwemeId) {
