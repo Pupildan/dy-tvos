@@ -32,6 +32,14 @@ final class DYPlayerViewController: AVPlayerViewController {
         iv.clipsToBounds = true
         return iv
     }()
+    /// 新源未 Ready 时的极小 Loading 圈（第四点兜底：绝不给用户看黑屏）
+    private let snapLoading: UIActivityIndicatorView = {
+        let a = UIActivityIndicatorView(style: .large)
+        a.color = .white
+        a.hidesWhenStopped = true
+        a.translatesAutoresizingMaskIntoConstraints = false
+        return a
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,6 +77,12 @@ final class DYPlayerViewController: AVPlayerViewController {
             snapImage.trailingAnchor.constraint(equalTo: snapCover.trailingAnchor),
             snapImage.topAnchor.constraint(equalTo: snapCover.topAnchor),
             snapImage.bottomAnchor.constraint(equalTo: snapCover.bottomAnchor),
+        ])
+        // 新源未 Ready 时的极小 Loading 圈（居中）
+        snapCover.addSubview(snapLoading)
+        NSLayoutConstraint.activate([
+            snapLoading.centerXAnchor.constraint(equalTo: snapCover.centerXAnchor),
+            snapLoading.centerYAnchor.constraint(equalTo: snapCover.centerYAnchor),
         ])
         view.bringSubviewToFront(snapCover)
     }
