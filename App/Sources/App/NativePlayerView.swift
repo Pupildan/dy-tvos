@@ -4,42 +4,121 @@ import AVFoundation
 import SwiftUI
 import Combine
 
-/// 原生播放器：继承 AVPlayerViewController（tvOS 原生路径，Menu 键干净退出）。
-/// 视频重力 = resizeAspect（居中、不裁切、周围留白——满足原始约束，不拉伸全屏）。
-/// 上/下遥控键覆盖为 prev/next；左/右仍走原生 seek。
-/// 关键：监听 item 失败/播完自动跳下一条（解卡永久黑屏）；预加载前后各 2 条。
-/// 焦点意图：播放器传输控件参与焦点；上/下被本类拦截改语义。
-final class DYPlayerViewController: AVPlayerViewController {
-    private var cancellables = Set<AnyCancellable>()
-    private var currentIndex: Int = -1
-    private var preloadCache: [Int: AVPlayerItem] = [:]
-    private let preloadRadius = 2
+/// 双播放器池槽位：一个 AVPlayer + 绑定它的 AVPlayerLayer。
+/// 两个槽叠满全屏，永远只显示一个；另一个后台预加载下一/上一条。
+/// 内存纪律（A12 双 1080P 无压力但仍要节制）：
+///   1) 后台预载 item.preferredForwardBufferDuration = 3.0（只缓冲起步 3 秒，不缓存整片）
+///   2) 后台槽强制 isMuted=true，滑到前台才出声
+///   3) 滑出屏外的旧槽 clear() → replaceCurrentItem(with:nil) 清资源，防连续刷数小时内存溢出
+final class DYPlayerSlot {
+    let player: AVPlayer
+    let layer: AVPlayerLayer
+    private(set) var index: Int = -1
+    private var statusObservation: NSKeyValueObservation?
+    private var endObserver: NSObjectProtocol?
 
-    /// 无缝切换遮罩：换源瞬间铺上当前视频末帧快照（AVAssetImageGenerator），
-    /// 视觉=画面冻结→直接切新画面；新源 readyToPlay 后再延迟 100ms 淡出。
-    private let switchCover: UIView = {
-        let v = UIView()
-        v.backgroundColor = .black
-        v.alpha = 0
-        v.isUserInteractionEnabled = false   // 绝不抢遥控器焦点
-        return v
-    }()
-    private let coverImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit     // 与播放器 resizeAspect 一致，快照不变形
-        iv.clipsToBounds = true
-        return iv
-    }()
+    var currentItem: AVPlayerItem? { player.currentItem }
+
+    init() {
+        player = AVPlayer()
+        layer = AVPlayerLayer()
+        layer.player = player
+        layer.videoGravity = .resizeAspect   // 居中、不裁切、周围留白（原始约束）
+        layer.backgroundColor = UIColor.black.cgColor
+    }
+
+    /// 绑定 item + 状态/播完监听。后台预载：静音 + 只缓冲 3 秒。
+    func load(url: URL, index: Int, muted: Bool, onReady: @escaping () -> Void, onFailed: @escaping () -> Void) {
+        self.index = index
+        removeAllObservers()
+        let headers: [String: String] = {
+            var h = ["User-Agent": DYFeedClient.mobileUA]
+            if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
+                h["Cookie"] = cookie
+            }
+            return h
+        }()
+        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
+        let item = AVPlayerItem(asset: asset)
+        item.preferredForwardBufferDuration = 3.0   // 只缓冲起步 3 秒，省内存/流量
+        asset.loadValuesAsynchronously(forKeys: ["playable"])
+        player.replaceCurrentItem(with: item)
+        player.isMuted = muted                       // 后台预载强制静音
+
+        statusObservation = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+            guard let self, self.player.currentItem === it else { return }
+            switch it.status {
+            case .readyToPlay:
+                DYLog.shared.log("SLOT idx=\(index) readyToPlay muted=\(self.player.isMuted)")
+                onReady()
+            case .failed:
+                DYLog.shared.log("SLOT idx=\(index) FAILED err=\(it.error?.localizedDescription ?? "?")")
+                onFailed()
+            default:
+                break
+            }
+        }
+        endObserver = NotificationCenter.default.addObserver(
+            forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main
+        ) { [weak self] _ in
+            guard let self, self.player.currentItem === item else { return }
+            onFailed()   // 播完 → 走 advance（复用失败跳转路径）
+        }
+    }
+
+    /// 清空槽位资源：replaceCurrentItem(with:nil) 释放解码器/缓冲，防内存溢出。
+    func clear() {
+        removeAllObservers()
+        player.pause()
+        player.replaceCurrentItem(with: nil)
+        index = -1
+        DYLog.shared.log("SLOT cleared (resource released)")
+    }
+
+    func removeAllObservers() {
+        statusObservation?.invalidate()
+        statusObservation = nil
+        if let o = endObserver { NotificationCenter.default.removeObserver(o) }
+        endObserver = nil
+    }
+
+    deinit { removeAllObservers() }
+}
+
+/// 原生播放器：双播放器池 + 垂直滑动过渡（模拟抖音上下滑）。
+/// PlayerA/PlayerB 各绑一个 AVPlayerLayer 叠满全屏，永远只显示一个；
+/// 切换时新旧 Layer 做物理位移动画（curveEaseInOut 0.3s），彻底消灭黑屏/淡入淡出。
+/// 遥控：上=prev(从上滑入) 下=next(从下滑入) 左右=seek Menu=退出。
+final class DYPlayerViewController: UIViewController {
+    private var cancellables = Set<AnyCancellable>()
+    private let slotA = DYPlayerSlot()
+    private let slotB = DYPlayerSlot()
+    private lazy var slots: [DYPlayerSlot] = [slotA, slotB]
+    /// 当前前台可见的槽（0=A, 1=B）
+    private var activeIdx = 0
+    private var currentIndex: Int = -1
+    private var isAnimating = false
+    private let animDuration: TimeInterval = 0.3
+
+    private var activeSlot: DYPlayerSlot { slots[activeIdx] }
+    private var standbySlot: DYPlayerSlot { slots[1 - activeIdx] }
+    private var screenHeight: CGFloat { view.bounds.height }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         try? AVAudioSession.sharedInstance().setCategory(.playback)
         try? AVAudioSession.sharedInstance().setActive(true)
-        // 居中、不裁切、周围留白（原始约束：不拉伸全屏、不锁比例）
-        videoGravity = .resizeAspect
         view.backgroundColor = .black
-        player = AVPlayer()
-        DYLog.shared.log("PLAYER viewDidLoad")
+        DYLog.shared.log("DUALPLAYER viewDidLoad")
+
+        for s in slots {
+            s.layer.frame = view.bounds
+            view.layer.addSublayer(s.layer)
+        }
+        // A 在前台，B 预置到屏幕下方（隐藏在底）
+        slotA.layer.zPosition = 1
+        slotB.layer.zPosition = 0
+        slotB.layer.transform = CATransform3DMakeTranslation(0, screenHeight, 0)
 
         PlaybackEngine.shared.$index
             .receive(on: DispatchQueue.main)
@@ -51,147 +130,145 @@ final class DYPlayerViewController: AVPlayerViewController {
             .store(in: &cancellables)
 
         reloadIfNeeded()
-
-        // 无缝切换遮罩：盖在最上层（AVPlayerViewController 的视频层之上）
-        view.addSubview(switchCover)
-        switchCover.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            switchCover.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            switchCover.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            switchCover.topAnchor.constraint(equalTo: view.topAnchor),
-            switchCover.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-        // 末帧快照铺满遮罩
-        switchCover.addSubview(coverImageView)
-        coverImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            coverImageView.leadingAnchor.constraint(equalTo: switchCover.leadingAnchor),
-            coverImageView.trailingAnchor.constraint(equalTo: switchCover.trailingAnchor),
-            coverImageView.topAnchor.constraint(equalTo: switchCover.topAnchor),
-            coverImageView.bottomAnchor.constraint(equalTo: switchCover.bottomAnchor),
-        ])
-        view.bringSubviewToFront(switchCover)
     }
 
-    private func item(at index: Int) -> AVPlayerItem? {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for s in slots { s.layer.frame = view.bounds }
+    }
+
+    // MARK: - 装载/预加载
+
+    private func itemURL(at index: Int) -> URL? {
         guard PlaybackEngine.shared.urls.indices.contains(index) else { return nil }
-        let url = PlaybackEngine.shared.urls[index]
-        if let cached = preloadCache[index] { return cached }
-        // 关键：CDN 直链需移动端请求上下文（UA/Cookie），否则 403 no-permission。
-        // UA 用移动端 UA（与 feed 拉取一致，myDV 移动端直链配安卓 UA）。
-        var headers: [String: String] = [
-            "User-Agent": DYFeedClient.mobileUA,
-        ]
-        if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
-            headers["Cookie"] = cookie
-        }
-        let asset = AVURLAsset(url: url, options: [
-            "AVURLAssetHTTPHeaderFieldsKey": headers,
-        ])
-        let item = AVPlayerItem(asset: asset)
-        preloadCache[index] = item
-        observeItem(item, index: index)
-        return item
+        return PlaybackEngine.shared.urls[index]
     }
 
-    /// 监听 item 失败/播完 → 自动跳下一条（解"缓冲完仍黑屏不播"）。
-    private func observeItem(_ item: AVPlayerItem, index: Int) {
-        NotificationCenter.default.addObserver(forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main) { [weak self] _ in
-            DYLog.shared.log("PLAYER item ended index=\(index), auto-next")
-            self?.advance()
-        }
-        item.addObserver(self, forKeyPath: "status", options: [.new], context: nil)
-        item.addObserver(self, forKeyPath: "error", options: [.new], context: nil)
-    }
-
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        guard let item = object as? AVPlayerItem else { return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context) }
-        if keyPath == "status" {
-            if item.status == .readyToPlay, item == player?.currentItem {
-                // 新源首帧可播 → 延迟 100ms 再淡出快照遮罩（挡住底层可能的黑帧）
-                scheduleFadeOut()
+    /// 装载槽位。前台槽出声，后台预载槽静音（滑到前台在 slideTransition 里取消静音）。
+    private func load(slot: DYPlayerSlot, index: Int, muted: Bool) {
+        guard let url = itemURL(at: index) else { return }
+        slot.load(url: url, index: index, muted: muted, onReady: { [weak self] in
+            guard let self else { return }
+            DYLog.shared.log("DUAL slot ready idx=\(index) isStandby=\(slot !== self.activeSlot)")
+        }, onFailed: { [weak self] in
+            guard let self else { return }
+            DYLog.shared.log("DUAL idx=\(index) failed/ended (isActive=\(self.activeSlot === slot))")
+            if self.activeSlot === slot {
+                PlaybackEngine.shared.reportFailure()
+                self.advance()
             }
-            if item.status == .failed {
-                let idx = preloadCache.first(where: { $0.value == item })?.key ?? -1
-                DYLog.shared.log("PLAYER item FAILED index=\(idx) err=\(item.error?.localizedDescription ?? "?")")
-                PlaybackEngine.shared.reportFailure() // 连续失败/过期 → 触发页面重拉新直链
-                if item == player?.currentItem { advance() }
-            }
-        }
+        })
     }
 
     private func reloadIfNeeded() {
         let engine = PlaybackEngine.shared
         guard engine.index != currentIndex else { return }
-        guard let it = item(at: engine.index) else {
-            // 关键：取不到 item 时【不提交】currentIndex，等 setURLs 到达后自动重试播 index 0。
-            // （否则 currentIndex 提前=0，之后 0!=0 恒假，首条永远播不出 → 只能手动切。）
-            DYLog.shared.log("PLAYER no url at index=\(engine.index) (will retry)")
+        guard itemURL(at: engine.index) != nil else {
+            // 取不到 URL 不提交 index，等 setURLs 后重试播 index 0
+            DYLog.shared.log("DUAL no url at index=\(engine.index) (will retry)")
             return
         }
+        let previousIndex = currentIndex
         currentIndex = engine.index
-        DYLog.shared.log("PLAYER play index=\(currentIndex) url=\((it.asset as? AVURLAsset)?.url.absoluteString.prefix(80) ?? "?")")
-        // 无缝切换：换源【前】先截当前视频末帧铺满遮罩（画面冻结），彻底挡住底层黑帧
-        captureSnapshotOfCurrent()
-        view.bringSubviewToFront(switchCover)
-        switchCover.alpha = 1
-        player?.replaceCurrentItem(with: it)
-        player?.play()
-        preloadNeighbors(around: currentIndex)
-        // 兜底：若 item 已 ready（预加载命中），走延迟淡出
-        if it.status == .readyToPlay { scheduleFadeOut() }
-    }
 
-    /// 用 AVAssetImageGenerator 截当前视频当前帧，铺满遮罩（末帧快照，非纯黑）。
-    /// 必须在 replaceCurrentItem 之前调用（截的是旧视频）。
-    private func captureSnapshotOfCurrent() {
-        guard let item = player?.currentItem,
-              let asset = item.asset as? AVURLAsset else {
-            coverImageView.image = nil   // 拿不到就退化为纯黑遮罩
+        // 首次：直接装到 active 槽播放（无滑动，前台出声）
+        if previousIndex == -1 {
+            load(slot: activeSlot, index: engine.index, muted: false)
+            activeSlot.player.play()
+            preloadNext(around: engine.index)
+            DYLog.shared.log("DUAL first play idx=\(engine.index)")
             return
         }
-        let gen = AVAssetImageGenerator(asset: asset)
-        gen.appliesPreferredTrackTransform = true
-        gen.maximumSize = CGSize(width: 1920, height: 1080)   // 限尺寸，快
-        let time = player?.currentTime() ?? .zero
-        gen.generateCGImagesAsynchronously(forTimes: [NSValue(time: time)]) { [weak self] _, cgImage, _, result, _ in
-            guard result == .succeeded, let cg = cgImage else { return }
-            DispatchQueue.main.async {
-                // 仅当遮罩仍可见（正在切换）才铺快照，避免慢回调污染已淡出的遮罩
-                if let self, self.switchCover.alpha > 0.01 {
-                    self.coverImageView.image = UIImage(cgImage: cg)
-                }
-            }
+
+        // 后续：备用槽应已预载 engine.index（上次 preloadNext）。若没装，现装（静音）。
+        let standby = standbySlot
+        if standby.index != engine.index {
+            load(slot: standby, index: engine.index, muted: true)
+        }
+        slideTransition(to: standby, index: engine.index, direction: engine.index > previousIndex ? .down : .up)
+        preloadNext(around: engine.index)
+    }
+
+    /// 预加载下一条到备用槽（静音、只缓冲 3 秒）。
+    private func preloadNext(around index: Int) {
+        let standby = standbySlot
+        if let next = itemURL(at: index + 1), standby.index != index + 1 {
+            load(slot: standby, index: index + 1, muted: true)
         }
     }
 
-    /// 新源 readyToPlay 后【强制延迟 100ms】再 0.2s 淡出遮罩——哪怕底层黑一帧也被快照挡住。
-    private func scheduleFadeOut() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            UIView.animate(withDuration: 0.2, animations: { [weak self] in
-                self?.switchCover.alpha = 0
-            })
+    // MARK: - 垂直滑动过渡
+
+    private enum SlideDir { case down, up }
+
+    /// 把 standby（已装载 index）滑入前台，active 滑出；down=下滑入(下一个) up=上滑入(上一个)。
+    private func slideTransition(to incoming: DYPlayerSlot, index: Int, direction: SlideDir) {
+        guard !isAnimating else { return }
+        isAnimating = true
+        let outgoing = activeSlot
+        let h = screenHeight
+
+        // 入场起点：下一个从下方来，上一个从上方来
+        let incomingStartY: CGFloat = direction == .down ? h : -h
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)   // 关掉隐式动画，位置由我们控制
+        incoming.layer.transform = CATransform3DMakeTranslation(0, incomingStartY, 0)
+        incoming.layer.zPosition = 2            // 入场层在最上
+        outgoing.layer.zPosition = 1
+        CATransaction.commit()
+
+        // 滑到前台 → 取消静音出声
+        incoming.player.isMuted = false
+        incoming.player.play()
+
+        DYLog.shared.log("DUAL slide \(direction == .down ? "next" : "prev") -> idx=\(index)")
+        UIView.animate(withDuration: animDuration, delay: 0, options: [.curveEaseInOut]) { [weak self] in
+            guard let self else { return }
+            // 入场滑到中央
+            self.applyTranslation(y: 0, to: incoming.layer)
+            // 出场滑向对侧（下一个→往上出；上一个→往下出）
+            let outY: CGFloat = direction == .down ? -h : h
+            self.applyTranslation(y: outY, to: outgoing.layer)
+        } completion: { [weak self] _ in
+            guard let self else { return }
+            // 收尾：旧槽暂停、复位到屏幕下方待命
+            outgoing.player.pause()
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            outgoing.layer.transform = CATransform3DMakeTranslation(0, self.screenHeight, 0)
+            outgoing.layer.zPosition = 0
+            CATransaction.commit()
+
+            self.activeIdx = self.slots.firstIndex(where: { $0 === incoming }) ?? 0
+            self.isAnimating = false
+
+            // 内存纪律：滑出屏外的旧槽若已不在保活范围（index 落到新位置之后）→ 清资源防溢出
+            if outgoing.index > self.currentIndex {
+                outgoing.clear()
+            }
+            // 立即预载下一条到刚腾出的备用槽
+            self.preloadNext(around: self.currentIndex)
+            DYLog.shared.log("DUAL slide done activeIdx=\(self.activeIdx) idx=\(index)")
         }
     }
 
-    private func preloadNeighbors(around index: Int) {
-        for offset in -preloadRadius...preloadRadius where offset != 0 {
-            let i = index + offset
-            if PlaybackEngine.shared.urls.indices.contains(i), let it = item(at: i) {
-                // 关键：让邻居 item 在后台真正缓冲（否则切过去才缓冲→黑屏 1-2s）。
-                // 正向多缓冲（下一个），反向少缓冲（上一个）。
-                it.preferredForwardBufferDuration = offset > 0 ? 8 : 2
-                if let asset = it.asset as? AVURLAsset {
-                    asset.loadValuesAsynchronously(forKeys: ["playable"])   // 后台预解析可播性
-                }
-            }
-        }
+    private func applyTranslation(y: CGFloat, to layer: CALayer) {
+        layer.transform = CATransform3DMakeTranslation(0, y, 0)
     }
+
+    // MARK: - 导航
 
     private func advance() {
         PlaybackEngine.shared.next()
         reloadIfNeeded()
     }
+
+    private func rewind() {
+        PlaybackEngine.shared.prev()
+        reloadIfNeeded()
+    }
+
+    // MARK: - 遥控（双 player 自管，需自行接键）
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
@@ -200,8 +277,13 @@ final class DYPlayerViewController: AVPlayerViewController {
                 advance()
                 return
             case .upArrow:
-                PlaybackEngine.shared.prev()
-                reloadIfNeeded()
+                rewind()
+                return
+            case .leftArrow, .rightArrow:
+                seek(by: press.type == .rightArrow ? 10 : -10)
+                return
+            case .playPause:
+                togglePlayPause()
                 return
             default:
                 break
@@ -209,9 +291,22 @@ final class DYPlayerViewController: AVPlayerViewController {
         }
         super.pressesBegan(presses, with: event)
     }
+
+    private func seek(by seconds: Double) {
+        let p = activeSlot.player
+        guard let t = p.currentItem?.currentTime().seconds, t.isFinite else { return }
+        let target = max(0, t + seconds)
+        p.seek(to: CMTime(seconds: target, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero)
+        DYLog.shared.log("DUAL seek \(seconds)s -> \(target)")
+    }
+
+    private func togglePlayPause() {
+        let p = activeSlot.player
+        if p.timeControlStatus == .playing { p.pause() } else { p.play() }
+    }
 }
 
-/// SwiftUI 包装：全屏原生播放器（居中、不裁切、周围留白）。
+/// SwiftUI 包装：双播放器池全屏原生播放器（垂直滑动切换）。
 struct NativePlayerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> DYPlayerViewController {
         DYPlayerViewController()
