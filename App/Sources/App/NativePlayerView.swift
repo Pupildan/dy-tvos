@@ -176,6 +176,20 @@ final class PlayerManager {
             // failed 时保持封面、不 play，等用户手动按↓跳过。
             guard it.status == .readyToPlay else { return }
             DispatchQueue.main.async {
+                // 编码诊断：查视频轨编码格式，确认黑屏是否 HEVC 解不出
+                var codec = "none"
+                if let track = it.asset?.tracks(withMediaType: .video).first {
+                    codec = track.formatDescriptions.map { desc -> String in
+                        if let cm = desc as? CMFormatDescription, let type = CMFormatDescriptionGetMediaSubType(cm) as String? {
+                            return type
+                        }
+                        return "?"
+                    }.joined(separator: ",")
+                    if codec.isEmpty { codec = "empty" }
+                } else {
+                    codec = "no-video-track"
+                }
+                DYLog.shared.log("CODEC idx=\(index) codec=\(codec)")
                 self?.onPlayerReady?(index)
                 DYLog.shared.log("MGR ready idx=\(index)")
             }
@@ -235,29 +249,34 @@ final class DYPlayerViewController: UIViewController {
         stallTimer?.invalidate()
     }
 
-    /// 黑屏探测：居中 player 应在播放，但视频时间连续 2 次不走 → 判定黑屏，跳下一条。
+    /// 黑屏探测：居中 player 的视频时间连续不走（无论 readyToPlay 还是 playing）→ 判定黑屏，跳下一条。
+    /// 不要求 .playing——黑屏视频(Cannot Open/无权限/HEVC)常进不到 playing，只看时间走不走。
     private func checkStall() {
         guard let cell = centeredCell(),
               let ip = collectionView.indexPath(for: cell),
-              let p = cell.player, p.timeControlStatus == .playing else {
+              let p = cell.player else {
             return
         }
+        // 只看当前居中的这条
+        guard ip.item == currentIndex else { return }
         let idx = ip.item
         let t = p.currentTime().seconds
         let last = lastObservedTime[p] ?? -1
-        if t.isFinite, abs(t - last) < 0.05 {
-            let c = (stallCounts[p] ?? 0) + 1
-            stallCounts[p] = c
-            DYLog.shared.log("STALL idx=\(idx) t=\(t) count=\(c)")
-            if c >= 2 {
-                stallCounts[p] = 0
-                DYLog.shared.log("STALL idx=\(idx) confirmed black -> skip")
-                advance()
-            }
-        } else {
+        // 时间前进（含刚重置-1）→ 正常，重置计数
+        if t.isFinite, abs(t - last) >= 0.05 {
             stallCounts[p] = 0
+            lastObservedTime[p] = t
+            return
         }
-        lastObservedTime[p] = t
+        // 时间不走：累加停滞计数（间隔 1.5s，连续 2 次 = 3s 无进展）
+        let c = (stallCounts[p] ?? 0) + 1
+        stallCounts[p] = c
+        DYLog.shared.log("STALL idx=\(idx) t=\(t) count=\(c) status=\(p.timeControlStatus.rawValue)")
+        if c >= 2 {
+            stallCounts[p] = 0
+            DYLog.shared.log("STALL idx=\(idx) confirmed black -> skip")
+            advance()
+        }
     }
 
     override func viewDidLayoutSubviews() {
