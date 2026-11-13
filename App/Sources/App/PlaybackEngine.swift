@@ -111,6 +111,17 @@ final class PlaybackEngine: ObservableObject {
         DYLog.shared.log("ENGINE prev -> index=\(index)")
     }
 
+    /// 直接把索引设到 i（滑动吸附用）：不逐格 next/prev，无跳号；接近末尾照常翻页。
+    func setIndex(_ i: Int) {
+        guard urls.indices.contains(i) else { return }
+        index = i
+        currentAwemeId = awemeOrder.indices.contains(i) ? awemeOrder[i] : ""
+        if index >= urls.count - needMoreThreshold {
+            triggerNeedMore()
+        }
+        DYLog.shared.log("ENGINE setIndex -> index=\(index)")
+    }
+
     /// 当前 URL 是否已过期（整批超时）。
     var isStale: Bool {
         Date().timeIntervalSince(fetchedAt) > staleInterval

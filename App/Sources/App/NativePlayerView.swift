@@ -43,8 +43,20 @@ final class PlayerCell: UICollectionViewCell {
     }
 
     /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
+    private var player: AVPlayer?
     func bind(player: AVPlayer) {
+        self.player = player
         playerLayerView.player = player
+    }
+    /// 当前时间（seek 用）。
+    func currentTime() -> CMTime {
+        player?.currentItem?.currentTime() ?? .zero
+    }
+    func seek(to t: CMTime) {
+        player?.seek(to: t, toleranceBefore: .zero, toleranceAfter: .zero)
+    }
+    var isPlaying: Bool {
+        player?.timeControlStatus == .playing
     }
     /// 设置封面兜底图。
     func setCover(_ image: UIImage?) {
@@ -262,17 +274,10 @@ final class DYPlayerViewController: UIViewController {
         let targetY = min(CGFloat(clampedIndex) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clampedIndex
-        // 对齐引擎索引 + 接近末尾翻页
+        // 引擎索引对齐用 setIndex（直接设、不逐格 next/prev）——旧的 for{next()} 循环是跳号元凶
         let engine = PlaybackEngine.shared
-        if clampedIndex > engine.index {
-            for _ in engine.index..<clampedIndex { engine.next() }
-        } else if clampedIndex < engine.index {
-            for _ in clampedIndex..<engine.index { engine.prev() }
-        }
-        if engine.count > 0, clampedIndex >= engine.count - 7 {
-            engine.triggerNeedMore()
-        }
-        // 核心：让 PlayerManager 只保留 [idx-1, idx+1] 三个 player，超范围驱逐回收解码器
+        engine.setIndex(clampedIndex)
+        // 核心：让 PlayerManager 只保留 [idx-2, idx+2] player，超范围驱逐回收解码器
         PlayerManager.shared.prepare(center: clampedIndex)
         DYLog.shared.log("FEEDCOLL scrollTo idx=\(clampedIndex) y=\(targetY) items=\(count)")
         // 滚动到位刷新播放态 + 封面显隐
@@ -337,30 +342,36 @@ final class DYPlayerViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
-    private func advance() {
-        scrollTo(index: centeredIndex() + 1, animated: true)
-    }
-    private func rewind() {
-        scrollTo(index: max(0, centeredIndex() - 1), animated: true)
+    private func centeredCell() -> PlayerCell? {
+        let ci = centeredIndex()
+        for cell in collectionView.visibleCells {
+            if let c = cell as? PlayerCell,
+               let ip = collectionView.indexPath(for: c), ip.item == ci {
+                return c
+            }
+        }
+        return nil
     }
 
     private func seek(by seconds: Double) {
-        guard let p = PlayerManager.shared.player(at: centeredIndex()),
-              let t = p.currentItem?.currentTime().seconds, t.isFinite else { return }
+        guard let c = centeredCell() else { return }
+        let t = c.currentTime().seconds
+        guard t.isFinite else { return }
         let target = max(0, t + seconds)
-        p.seek(to: CMTime(seconds: target, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero)
+        c.seek(to: CMTime(seconds: target, preferredTimescale: 600))
         DYLog.shared.log("FEEDCOLL seek \(seconds)s -> \(target)")
     }
     private func togglePlayPause() {
-        guard let p = PlayerManager.shared.player(at: centeredIndex()) else { return }
-        if p.timeControlStatus == .playing { p.pause() } else { p.play() }
+        guard let c = centeredCell() else { return }
+        if c.isPlaying { c.pause() } else { c.play() }
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
             switch press.type {
-            case .downArrow: advance(); return
-            case .upArrow: rewind(); return
+            // 按键精确 ±1：只调 engine.next()/prev()，渲染由 $index sink 统一驱动（绝无跳号）
+            case .downArrow: PlaybackEngine.shared.next(); return
+            case .upArrow: PlaybackEngine.shared.prev(); return
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
             case .playPause: togglePlayPause(); return
