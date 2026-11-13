@@ -138,7 +138,14 @@ final class DYPlayerViewController: AVPlayerViewController {
     private func preloadNeighbors(around index: Int) {
         for offset in -preloadRadius...preloadRadius where offset != 0 {
             let i = index + offset
-            if PlaybackEngine.shared.urls.indices.contains(i) { _ = item(at: i) }
+            if PlaybackEngine.shared.urls.indices.contains(i), let it = item(at: i) {
+                // 关键：让邻居 item 在后台真正缓冲（否则切过去才缓冲→黑屏 1-2s）。
+                // 正向多缓冲（下一个），反向少缓冲（上一个）。
+                it.preferredForwardBufferDuration = offset > 0 ? 8 : 2
+                if let asset = it.asset as? AVURLAsset {
+                    asset.loadValuesAsynchronously(forKeys: ["playable"])   // 后台预解析可播性
+                }
+            }
         }
     }
 
