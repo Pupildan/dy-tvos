@@ -165,7 +165,6 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
-        var candidates: [[URL]] = []
         var loggedFirst = false
         var ei = 0
         for entry in awemeEntries {
@@ -188,22 +187,13 @@ final class DYFeedClient {
                 // 故优先 field 8，退化 field 1（含 field 9 兜底）。
                 var pa: Proto? = nil
                 for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
-                    guard let cand = Proto.parse(pb) else { continue }
-                    // 过滤慢重定向端点（api-play 视频轨道不解码→黑屏有声），只认 CDN 直链
-                    let hasCDN = Proto.urlList(cand, 0).contains { u in
-                        let lo = u.lowercased()
-                        return (lo.hasPrefix("https://") || lo.hasPrefix("http://"))
-                            && !lo.contains("/aweme/v1/play/") && !lo.contains("api-play")
-                    }
-                    if hasCDN { pa = cand; break }
+                    if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
                 }
                 if let playAddr = pa {
                     for raw in Proto.urlList(playAddr, 0) {
                         var u = raw
                         if u.hasPrefix("//") { u = "https:" + u }
-                        let lo = u.lowercased()
-                        guard lo.hasPrefix("https://") || lo.hasPrefix("http://") else { continue }
-                        guard !lo.contains("/aweme/v1/play/"), !lo.contains("api-play") else { continue }
+                        guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
                         if let url = URL(string: u) { chosen = url; break }
                     }
                 }
@@ -211,31 +201,9 @@ final class DYFeedClient {
             DYLog.shared.log("FEED loop a[\(ei)] final chosen=\(chosen != nil)")
             if let url = chosen {
                 ids.append(id); urls.append(url)
-                // 收集该视频全部 CDN 候选（主链 HEVC 播不出时切备用，治黑屏）：
-                // bit_rate 各档 + 默认 play_addr 各 field 的所有 CDN 直链，去重。
-                var cands: [URL] = [url]
-                func addCand(_ raws: [String]) {
-                    for raw in raws {
-                        var u = raw
-                        if u.hasPrefix("//") { u = "https:" + u }
-                        let lo = u.lowercased()
-                        guard lo.hasPrefix("https://") || lo.hasPrefix("http://") else { continue }
-                        guard !lo.contains("/aweme/v1/play/"), !lo.contains("api-play") else { continue }
-                        if let cu = URL(string: u), !cands.contains(cu) { cands.append(cu) }
-                    }
-                }
-                for e in video.bytesFields(21) + video.bytesFields(31) {
-                    if let br = Proto.parse(e), let paB = br.bytesFields(4).first, let pa = Proto.parse(paB) {
-                        addCand(Proto.urlList(pa, 0))
-                    }
-                }
-                for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
-                    if let cand = Proto.parse(pb) { addCand(Proto.urlList(cand, 0)) }
-                }
-                candidates.append(cands)
                 if !loggedFirst {
                     loggedFirst = true
-                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140)) cands=\(cands.count)")
+                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
                 }
             }
             ei += 1
@@ -250,8 +218,7 @@ final class DYFeedClient {
         PlaybackEngine.shared.merge(ids: ids, urls: urls,
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
-                                    refresh: false,
-                                    allCandidates: candidates)
+                                    refresh: false)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {
@@ -305,12 +272,8 @@ final class DYFeedClient {
             // playAddr = field 4，取其 url_list
             guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else { continue }
             let urls = Proto.urlList(pa, 0)
-            // 过滤慢速重定向端点（api-play/aweme/v1/play/ 视频轨道迟迟不解码→黑屏有声），只留 CDN 直链
-            guard let raw = urls.first(where: { u in
-                let lo = u.lowercased()
-                return (lo.hasPrefix("https://") || lo.hasPrefix("http://"))
-                    && !lo.contains("/aweme/v1/play/") && !lo.contains("api-play")
-            }), let url = URL(string: raw) else { continue }
+            guard let raw = urls.first(where: { $0.lowercased().hasPrefix("https://") || $0.lowercased().hasPrefix("http://") }),
+                  let url = URL(string: raw) else { continue }
             // bitRateValue = field 5，退化 7
             let bitrate = Int(br.varint(5) ?? br.varint(7) ?? 0)
             variants.append(Variant(url: url, w: w, h: h, fps: 0, bitrate: bitrate, gear: gear))
@@ -318,16 +281,7 @@ final class DYFeedClient {
         guard !variants.isEmpty else { return nil }
 
         // highestQualityBitRate：分辨率 h*w → fps → bitRateValue → gearName!=adapt_lowest，取最大
-        // 追加：疑似 HEVC/H.265 档降权（tvOS AVPlayer 对部分 HEVC 解不出视频轨→黑屏有声），优先 H.264/AVC。
-        // douyinvod CDN URL 里 hevc 档常含 hevc/h265 字样；按 URL 启发式判断，不碰字段解析。
-        func isHEVC(_ u: URL) -> Bool {
-            let lo = u.absoluteString.lowercased()
-            return lo.contains("hevc") || lo.contains("h265") || lo.contains("h_265")
-        }
         let best = variants.max { a, b in
-            let hevcA = isHEVC(a.url), hevcB = isHEVC(b.url)
-            if hevcA != hevcB { return hevcA   // HEVC 排后（max 里 true 表示 a 更小）
-            }
             let resA = a.h * a.w, resB = b.h * b.w
             if resA != resB { return resA < resB }
             if a.fps != b.fps { return a.fps < b.fps }
@@ -337,7 +291,7 @@ final class DYFeedClient {
             return lowA < lowB
         }
         if let b = best {
-            DYLog.shared.log("FEED quality pick \(b.w)x\(b.h) bitrate=\(b.bitrate) gear=\(b.gear) hevc=\(isHEVC(b.url)) of \(variants.count) variants")
+            DYLog.shared.log("FEED quality pick \(b.w)x\(b.h) bitrate=\(b.bitrate) gear=\(b.gear) of \(variants.count) variants")
         }
         return best?.url
     }
