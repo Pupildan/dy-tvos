@@ -187,13 +187,22 @@ final class DYFeedClient {
                 // 故优先 field 8，退化 field 1（含 field 9 兜底）。
                 var pa: Proto? = nil
                 for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
-                    if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
+                    guard let cand = Proto.parse(pb) else { continue }
+                    // 过滤慢重定向端点（api-play 视频轨道不解码→黑屏有声），只认 CDN 直链
+                    let hasCDN = Proto.urlList(cand, 0).contains { u in
+                        let lo = u.lowercased()
+                        return (lo.hasPrefix("https://") || lo.hasPrefix("http://"))
+                            && !lo.contains("/aweme/v1/play/") && !lo.contains("api-play")
+                    }
+                    if hasCDN { pa = cand; break }
                 }
                 if let playAddr = pa {
                     for raw in Proto.urlList(playAddr, 0) {
                         var u = raw
                         if u.hasPrefix("//") { u = "https:" + u }
-                        guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
+                        let lo = u.lowercased()
+                        guard lo.hasPrefix("https://") || lo.hasPrefix("http://") else { continue }
+                        guard !lo.contains("/aweme/v1/play/"), !lo.contains("api-play") else { continue }
                         if let url = URL(string: u) { chosen = url; break }
                     }
                 }
