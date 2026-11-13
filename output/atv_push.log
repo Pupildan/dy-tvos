@@ -33086,3 +33086,230 @@
 17:34:38  [17:34:38] MGR ready idx=158
 17:34:39  [17:34:39] MGR ready idx=156
 17:34:39  [17:34:39] MGR ready idx=157
+17:48:01  [17:48:00] DYTV v109 launched
+17:48:01  [17:48:00] SIGNER init start
+17:48:01  [17:48:00] LOGSRV ready on port 8765
+17:48:01  [17:48:00] SIGNER load shim ok
+17:48:01  [17:48:00] SIGNER load abogus ok
+17:48:01  [17:48:00] LOGSRV advertising as DYTV-800
+17:48:01  [17:48:00] SIGNER load sign ok
+17:48:01  [17:48:01] FEEDCOLL viewDidLoad
+17:48:01  [17:48:01] ROOT auto-start v109
+17:48:01  [17:48:01] SIGNER load abogus_dy ok
+17:48:01  [17:48:01] SIGNER extras sign=true dy=true
+17:48:01  [17:48:01] SIGNER bdms=yes
+17:48:01  [17:48:01] SIGNER initABogus=true
+17:48:01  [17:48:01] SIGNER fns=AB (期望 AB)
+17:48:01  [17:48:01] SIGNER smoke={"ok":true,"value":"QfR0/RhXmEDTXfyk5XdLfY3qVW33YsWt0SVkMDhezVfP4L39HMPw9exEfJXvPufeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+17:48:01  [17:48:01] SIGNER READY a_bogus len=180
+17:48:01  [17:48:01] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+17:48:01  [17:48:01] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+17:48:01  [17:48:01] LOGSRV Bonjour published: DYTV-800
+17:48:03  [17:48:03] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+17:48:03  [17:48:03] FEED loop a[0] begin bytes=76303
+17:48:03  [17:48:03] FEED loop a[0] aweme-ok
+17:48:03  [17:48:03] FEED loop a[0] video-ok
+17:48:03  [17:48:03] FEED loop a[0] id=7706056965923370084 pick-start
+17:48:03  [17:48:03] FEED loop a[0] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[0] final chosen=true
+17:48:03  [17:48:03] FEED first url[7706056965923370084]: https://v95-bjb-mc-cold.douyinvod.com/1c28ecddf91f24508e991998582fcdeb/6af97fe2/video/tos/cn/tos-cn-ve-15/osf9VKCHWq0fQgEV1LuF3A1DB4Hs8I9im9
+17:48:03  [17:48:03] FEED loop a[1] begin bytes=112824
+17:48:03  [17:48:03] FEED loop a[1] aweme-ok
+17:48:03  [17:48:03] FEED loop a[1] video-ok
+17:48:03  [17:48:03] FEED loop a[1] id=7697275140476875466 pick-start
+17:48:03  [17:48:03] FEED loop a[1] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[1] final chosen=true
+17:48:03  [17:48:03] FEED loop a[2] begin bytes=51996
+17:48:03  [17:48:03] FEED loop a[2] aweme-ok
+17:48:03  [17:48:03] FEED loop a[2] video-ok
+17:48:03  [17:48:03] FEED loop a[2] id=7702831112628974002 pick-start
+17:48:03  [17:48:03] FEED loop a[2] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[2] final chosen=true
+17:48:03  [17:48:03] FEED loop a[3] begin bytes=64909
+17:48:03  [17:48:03] FEED loop a[3] aweme-ok
+17:48:03  [17:48:03] FEED loop a[3] video-ok
+17:48:03  [17:48:03] FEED loop a[3] id=7702734298529654203 pick-start
+17:48:03  [17:48:03] FEED loop a[3] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[3] final chosen=true
+17:48:03  [17:48:03] FEED loop a[4] begin bytes=49824
+17:48:03  [17:48:03] FEED loop a[4] aweme-ok
+17:48:03  [17:48:03] FEED loop a[4] video-ok
+17:48:03  [17:48:03] FEED loop a[4] id=7706462420848866281 pick-start
+17:48:03  [17:48:03] FEED loop a[4] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[4] final chosen=true
+17:48:03  [17:48:03] FEED loop a[5] begin bytes=71529
+17:48:03  [17:48:03] FEED loop a[5] aweme-ok
+17:48:03  [17:48:03] FEED loop a[5] video-ok
+17:48:03  [17:48:03] FEED loop a[5] id=7696830626875313458 pick-start
+17:48:03  [17:48:03] FEED loop a[5] pick-done chosen=false
+17:48:03  [17:48:03] FEED loop a[5] final chosen=true
+17:48:03  [17:48:03] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+17:48:03  [17:48:03] ENGINE merge total=6 index=0 replace=false auto=true
+17:48:03  [17:48:03] ENGINE needMore (index=0 count=6)
+17:48:03  [17:48:03] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+17:48:03  [17:48:03] ENGINE setIndex -> index=0
+17:48:03  [17:48:03] MGR acquire idx=0 total=1
+17:48:03  [17:48:03] MGR acquire idx=1 total=2
+17:48:03  [17:48:03] MGR acquire idx=2 total=3
+17:48:03  [17:48:03] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+17:48:04  [17:48:03] MGR ready idx=0
+17:48:04  [17:48:04] MGR ready idx=2
+17:48:05  [17:48:05] MGR ready idx=1
+17:48:05  [17:48:05] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+17:48:05  [17:48:05] FEED loop a[0] begin bytes=57864
+17:48:05  [17:48:05] FEED loop a[0] aweme-ok
+17:48:05  [17:48:05] FEED loop a[0] video-ok
+17:48:05  [17:48:05] FEED loop a[0] id=7701954078566128997 pick-start
+17:48:05  [17:48:05] FEED loop a[0] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[0] final chosen=true
+17:48:05  [17:48:05] FEED first url[7701954078566128997]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbhdbq7og65tofhgbuq0&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&imp
+17:48:05  [17:48:05] FEED loop a[1] begin bytes=60678
+17:48:05  [17:48:05] FEED loop a[1] aweme-ok
+17:48:05  [17:48:05] FEED loop a[1] video-ok
+17:48:05  [17:48:05] FEED loop a[1] id=7705776189747403194 pick-start
+17:48:05  [17:48:05] FEED loop a[1] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[1] final chosen=true
+17:48:05  [17:48:05] FEED loop a[2] begin bytes=66014
+17:48:05  [17:48:05] FEED loop a[2] aweme-ok
+17:48:05  [17:48:05] FEED loop a[2] video-ok
+17:48:05  [17:48:05] FEED loop a[2] id=7703061135444223611 pick-start
+17:48:05  [17:48:05] FEED loop a[2] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[2] final chosen=true
+17:48:05  [17:48:05] FEED loop a[3] begin bytes=51093
+17:48:05  [17:48:05] FEED loop a[3] aweme-ok
+17:48:05  [17:48:05] FEED loop a[3] video-ok
+17:48:05  [17:48:05] FEED loop a[3] id=7704670863737019121 pick-start
+17:48:05  [17:48:05] FEED loop a[3] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[3] final chosen=true
+17:48:05  [17:48:05] FEED loop a[4] begin bytes=75211
+17:48:05  [17:48:05] FEED loop a[4] aweme-ok
+17:48:05  [17:48:05] FEED loop a[4] video-ok
+17:48:05  [17:48:05] FEED loop a[4] id=7705584644453276667 pick-start
+17:48:05  [17:48:05] FEED loop a[4] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[4] final chosen=true
+17:48:05  [17:48:05] FEED loop a[5] begin bytes=69874
+17:48:05  [17:48:05] FEED loop a[5] aweme-ok
+17:48:05  [17:48:05] FEED loop a[5] video-ok
+17:48:05  [17:48:05] FEED loop a[5] id=7707062157335497083 pick-start
+17:48:05  [17:48:05] FEED loop a[5] pick-done chosen=false
+17:48:05  [17:48:05] FEED loop a[5] final chosen=true
+17:48:05  [17:48:05] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+17:48:05  [17:48:05] ENGINE merge total=12 index=0 replace=false auto=false
+17:48:08  [17:48:08] ENGINE next -> index=1
+17:48:12  [17:48:12] ENGINE next -> index=2
+17:48:17  [17:48:17] ENGINE next -> index=3
+17:48:18  [17:48:18] MGR acquire idx=3 total=4
+17:48:18  [17:48:18] MGR ready idx=3
+17:48:21  [17:48:21] ENGINE next -> index=4
+17:48:22  [17:48:22] MGR acquire idx=4 total=5
+17:48:22  [17:48:22] MGR ready idx=4
+17:48:25  [17:48:25] ENGINE next -> index=5
+17:48:26  [17:48:26] MGR acquire idx=5 total=6
+17:48:27  [17:48:26] MGR ready idx=5
+17:48:27  [17:48:27] ENGINE needMore (index=5 count=12)
+17:48:27  [17:48:27] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+17:48:27  [17:48:27] ENGINE next -> index=6
+17:48:29  [17:48:29] MGR acquire idx=6 total=7
+17:48:29  [17:48:29] MGR ready idx=6
+17:48:30  [17:48:30] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+17:48:30  [17:48:30] FEED loop a[0] begin bytes=57970
+17:48:30  [17:48:30] FEED loop a[0] aweme-ok
+17:48:30  [17:48:30] FEED loop a[0] video-ok
+17:48:30  [17:48:30] FEED loop a[0] id=7699076799892949881 pick-start
+17:48:30  [17:48:30] FEED loop a[0] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[0] final chosen=true
+17:48:30  [17:48:30] FEED first url[7699076799892949881]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbc9q4vog65qpejiki8g&line=0&ratio=1080p&watermark=1&media_type=4&vr_type=0&im
+17:48:30  [17:48:30] FEED loop a[1] begin bytes=50014
+17:48:30  [17:48:30] FEED loop a[1] aweme-ok
+17:48:30  [17:48:30] FEED loop a[1] video-ok
+17:48:30  [17:48:30] FEED loop a[1] id=7706896438399175990 pick-start
+17:48:30  [17:48:30] FEED loop a[1] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[1] final chosen=true
+17:48:30  [17:48:30] FEED loop a[2] begin bytes=45280
+17:48:30  [17:48:30] FEED loop a[2] aweme-ok
+17:48:30  [17:48:30] FEED loop a[2] video-ok
+17:48:30  [17:48:30] FEED loop a[2] id=7706782146527550586 pick-start
+17:48:30  [17:48:30] FEED loop a[2] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[2] final chosen=true
+17:48:30  [17:48:30] FEED loop a[3] begin bytes=63176
+17:48:30  [17:48:30] FEED loop a[3] aweme-ok
+17:48:30  [17:48:30] FEED loop a[3] video-ok
+17:48:30  [17:48:30] FEED loop a[3] id=7694683372039878129 pick-start
+17:48:30  [17:48:30] FEED loop a[3] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[3] final chosen=true
+17:48:30  [17:48:30] FEED loop a[4] begin bytes=47016
+17:48:30  [17:48:30] FEED loop a[4] aweme-ok
+17:48:30  [17:48:30] FEED loop a[4] video-ok
+17:48:30  [17:48:30] FEED loop a[4] id=7703455033166299633 pick-start
+17:48:30  [17:48:30] FEED loop a[4] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[4] final chosen=true
+17:48:30  [17:48:30] FEED loop a[5] begin bytes=50371
+17:48:30  [17:48:30] FEED loop a[5] aweme-ok
+17:48:30  [17:48:30] FEED loop a[5] video-ok
+17:48:30  [17:48:30] FEED loop a[5] id=7698574563227119333 pick-start
+17:48:30  [17:48:30] FEED loop a[5] pick-done chosen=false
+17:48:30  [17:48:30] FEED loop a[5] final chosen=true
+17:48:30  [17:48:30] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+17:48:30  [17:48:30] ENGINE merge total=18 index=6 replace=false auto=false
+17:48:32  [17:48:32] ENGINE next -> index=7
+17:48:33  [17:48:33] MGR acquire idx=7 total=8
+17:48:34  [17:48:33] MGR ready idx=7
+17:48:34  [17:48:34] ENGINE next -> index=8
+17:48:34  [17:48:34] ENGINE next -> index=9
+17:48:35  [17:48:35] MGR acquire idx=9 total=9
+17:48:35  [17:48:35] MGR acquire idx=8 total=10
+17:48:35  [17:48:35] MGR ready idx=8
+17:48:35  [17:48:35] ENGINE next -> index=10
+17:48:36  [17:48:36] ENGINE next -> index=11
+17:48:37  [17:48:37] MGR acquire idx=10 total=11
+17:48:37  [17:48:37] MGR acquire idx=11 total=12
+17:48:37  [17:48:37] MGR ready idx=10
+17:48:37  [17:48:37] MGR ready idx=11
+17:48:38  [17:48:38] ENGINE needMore (index=11 count=18)
+17:48:38  [17:48:38] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+17:48:38  [17:48:38] ENGINE next -> index=12
+17:48:38  [17:48:38] ENGINE next -> index=13
+17:48:40  [17:48:40] MGR acquire idx=13 total=13
+17:48:40  [17:48:40] MGR acquire idx=12 total=14
+17:48:40  [17:48:40] MGR ready idx=13
+17:48:40  [17:48:40] MGR ready idx=12
+17:48:40  [17:48:40] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+17:48:40  [17:48:40] FEED loop a[0] begin bytes=43558
+17:48:40  [17:48:40] FEED loop a[0] aweme-ok
+17:48:40  [17:48:40] FEED loop a[0] video-ok
+17:48:40  [17:48:40] FEED loop a[0] id=7707244142665450217 pick-start
+17:48:40  [17:48:40] FEED loop a[0] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[0] final chosen=true
+17:48:40  [17:48:40] FEED first url[7707244142665450217]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbqq36vog65ip73ojqs0&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&imp
+17:48:40  [17:48:40] FEED loop a[1] begin bytes=49121
+17:48:40  [17:48:40] FEED loop a[1] aweme-ok
+17:48:40  [17:48:40] FEED loop a[1] video-ok
+17:48:40  [17:48:40] FEED loop a[1] id=7705422068838345209 pick-start
+17:48:40  [17:48:40] FEED loop a[1] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[1] final chosen=true
+17:48:40  [17:48:40] FEED loop a[2] begin bytes=67371
+17:48:40  [17:48:40] FEED loop a[2] aweme-ok
+17:48:40  [17:48:40] FEED loop a[2] video-ok
+17:48:40  [17:48:40] FEED loop a[2] id=7705795521320342440 pick-start
+17:48:40  [17:48:40] FEED loop a[2] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[2] final chosen=true
+17:48:40  [17:48:40] FEED loop a[3] begin bytes=74165
+17:48:40  [17:48:40] FEED loop a[3] aweme-ok
+17:48:40  [17:48:40] FEED loop a[3] video-ok
+17:48:40  [17:48:40] FEED loop a[3] id=7694889265506913586 pick-start
+17:48:40  [17:48:40] FEED loop a[3] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[3] final chosen=true
+17:48:40  [17:48:40] FEED loop a[4] begin bytes=45974
+17:48:40  [17:48:40] FEED loop a[4] aweme-ok
+17:48:40  [17:48:40] FEED loop a[4] video-ok
+17:48:40  [17:48:40] FEED loop a[4] id=7705051179701196239 pick-start
+17:48:40  [17:48:40] FEED loop a[4] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[4] final chosen=true
+17:48:40  [17:48:40] FEED loop a[5] begin bytes=48928
+17:48:40  [17:48:40] FEED loop a[5] aweme-ok
+17:48:40  [17:48:40] FEED loop a[5] video-ok
+17:48:40  [17:48:40] FEED loop a[5] id=7704737389764377034 pick-start
+17:48:40  [17:48:40] FEED loop a[5] pick-done chosen=false
+17:48:40  [17:48:40] FEED loop a[5] final chosen=true
+17:48:40  [17:48:40] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+17:48:40  [17:48:40] ENGINE merge total=24 index=13 replace=false auto=false
