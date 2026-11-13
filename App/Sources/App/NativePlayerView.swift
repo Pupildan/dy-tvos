@@ -18,6 +18,12 @@ final class PlayerLayerView: UIView {
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
 final class PlayerCell: UICollectionViewCell {
     let playerLayerView = PlayerLayerView()
+    /// 当前绑定的 player（看门狗读播放时间用）
+    var player: AVPlayer? { playerLayerView.player }
+    /// 当前播放时间（黑屏看门狗判断时间是否前进）
+    func currentTime() -> Double {
+        player?.currentTime().seconds ?? 0
+    }
     /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
     let coverImageView: UIImageView = {
         let iv = UIImageView()
@@ -187,6 +193,10 @@ final class DYPlayerViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
+    // 黑屏探测看门狗：居中 player 进入 playing 后，若视频时间连续不走（黑屏特征）则跳下一条
+    private var lastObservedTime: [AVPlayer: Double] = [:]
+    private var stallCounts: [AVPlayer: Int] = [:]
+    private var stallTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -215,6 +225,39 @@ final class DYPlayerViewController: UIViewController {
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
         }
+        // 黑屏看门狗：每 1.5s 查居中 player 视频时间是否前进，连续停滞则跳过
+        stallTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
+            self?.checkStall()
+        }
+    }
+
+    deinit {
+        stallTimer?.invalidate()
+    }
+
+    /// 黑屏探测：居中 player 应在播放，但视频时间连续 2 次不走 → 判定黑屏，跳下一条。
+    private func checkStall() {
+        guard let cell = centeredCell(),
+              let ip = collectionView.indexPath(for: cell),
+              let p = cell.player, p.timeControlStatus == .playing else {
+            return
+        }
+        let idx = ip.item
+        let t = p.currentTime().seconds
+        let last = lastObservedTime[p] ?? -1
+        if t.isFinite, abs(t - last) < 0.05 {
+            let c = (stallCounts[p] ?? 0) + 1
+            stallCounts[p] = c
+            DYLog.shared.log("STALL idx=\(idx) t=\(t) count=\(c)")
+            if c >= 2 {
+                stallCounts[p] = 0
+                DYLog.shared.log("STALL idx=\(idx) confirmed black -> skip")
+                advance()
+            }
+        } else {
+            stallCounts[p] = 0
+        }
+        lastObservedTime[p] = t
     }
 
     override func viewDidLayoutSubviews() {
@@ -357,6 +400,18 @@ final class DYPlayerViewController: UIViewController {
         let center = CGPoint(x: collectionView.bounds.midX, y: collectionView.bounds.midY)
         if let ip = collectionView.indexPathForItem(at: center) { return ip.item }
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
+    }
+
+    /// 当前居中的 Cell（黑屏看门狗用）。
+    private func centeredCell() -> PlayerCell? {
+        let ci = centeredIndex()
+        for cell in collectionView.visibleCells {
+            if let c = cell as? PlayerCell,
+               let ip = collectionView.indexPath(for: c), ip.item == ci {
+                return c
+            }
+        }
+        return nil
     }
 
     private func advance() {
