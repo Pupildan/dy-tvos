@@ -72,9 +72,11 @@ final class PlayerManager {
 
     private init() {}
 
-    /// 滑动到 idx：确保 [idx-1, idx+1] 有 player，驱逐范围外的（pause + 置空 item 回收解码器）。
+    /// 滑动到 idx：确保 [idx-2, idx+2] 有 player，驱逐范围外的（pause + 置空 item 回收解码器）。
+    /// 窗口放宽到 ±2：来回微抖时有缓冲余量，不会一抖就 evict 刚 ready 的（±1 会抖动→黑屏）。
+    /// 只从 scrollTo(最终目标 index) 调用；updatePlaybackStates/willDisplay 只查池不触驱逐（杜绝双 center 打架抖动）。
     func prepare(center idx: Int) {
-        let desired = [idx - 1, idx, idx + 1].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
+        let desired = [idx - 2, idx - 1, idx, idx + 1, idx + 2].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
         // 1) 驱逐范围外的 player：pause + replaceCurrentItem(nil) 强制回收解码器
         for (i, p) in players where !desired.contains(i) {
             p.pause()
@@ -95,6 +97,11 @@ final class PlayerManager {
         if let p = players[index] { return p }
         guard PlaybackEngine.shared.urls.indices.contains(index) else { return nil }
         return acquire(index: index)
+    }
+
+    /// 纯查询（不 acquire、不驱逐）：池里有就返回，没有返回 nil。willDisplay 用它，避免快速滑动撑大池。
+    func peekPlayer(at index: Int) -> AVPlayer? {
+        players[index]
     }
 
     /// index 的封面兜底图（异步生成，未就绪返回 nil，生成完回调刷新）。
@@ -252,8 +259,8 @@ final class DYPlayerViewController: UIViewController {
     }
 
     /// 居中 Cell 播放（player 已 ready），非居中暂停；未 ready 的显示封面兜底，绝不强行 play。
+    /// 不调 prepare（那会用 centeredIndex 和 scrollTo 的目标 index 打架→池抖动→黑屏）；只查池控播放态。
     private func updatePlaybackStates(center index: Int) {
-        PlayerManager.shared.prepare(center: index)   // 确保池正确（current±1）
         for cell in collectionView.visibleCells {
             guard let c = cell as? PlayerCell,
                   let ip = collectionView.indexPath(for: c) else { continue }
@@ -361,7 +368,8 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
         c.playerLayerView.frame = c.contentView.bounds
         c.coverImageView.frame = c.contentView.bounds
         let idx = indexPath.item
-        if let p = PlayerManager.shared.player(at: idx) {
+        // peekPlayer 纯查询不 acquire——避免快速滑动时 willDisplay 把池撑大（抖动→黑屏）
+        if let p = PlayerManager.shared.peekPlayer(at: idx) {
             c.bind(player: p)
             let ready = (p.currentItem?.status == .readyToPlay)
             c.setCoverVisible(!ready)
