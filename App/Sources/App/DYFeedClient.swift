@@ -272,8 +272,12 @@ final class DYFeedClient {
             // playAddr = field 4，取其 url_list
             guard let paBytes = br.bytesFields(4).first, let pa = Proto.parse(paBytes) else { continue }
             let urls = Proto.urlList(pa, 0)
-            guard let raw = urls.first(where: { $0.lowercased().hasPrefix("https://") || $0.lowercased().hasPrefix("http://") }),
-                  let url = URL(string: raw) else { continue }
+            // 过滤慢速重定向端点（api-play/aweme/v1/play/ 视频轨道迟迟不解码→黑屏有声），只留 CDN 直链
+            guard let raw = urls.first(where: { u in
+                let lo = u.lowercased()
+                return (lo.hasPrefix("https://") || lo.hasPrefix("http://"))
+                    && !lo.contains("/aweme/v1/play/") && !lo.contains("api-play")
+            }), let url = URL(string: raw) else { continue }
             // bitRateValue = field 5，退化 7
             let bitrate = Int(br.varint(5) ?? br.varint(7) ?? 0)
             variants.append(Variant(url: url, w: w, h: h, fps: 0, bitrate: bitrate, gear: gear))
