@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v95"
-    static let changes = "v95: 修有声无画面——pickHighestQuality过滤api-play//aweme/v1/play/慢重定向链(视频轨道不解码→黑屏),只留CDN直链"
+    static let version = "v96"
+    static let changes = "v96: 修有声画面冻结复发—— currentItem.status KVO 等 readyToPlay 且仍是当前槽才 play,不再靠固定延时赌解码时机"
 }

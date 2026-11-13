@@ -45,6 +45,12 @@ final class DYPlayerViewController: UIViewController {
     private lazy var playerPool: [AVPlayer] = (0..<3).map { _ in AVPlayer() }
     /// 每个 player 当前装载的 index（池复用依据）
     private var playerIndex: [AVPlayer: Int] = [:]
+    /// 每个 player 的 currentItem.status KVO（ready 了才 play，治"有声画面冻结"）
+    private var statusObservers: [AVPlayer: NSKeyValueObservation] = [:]
+
+    deinit {
+        for obs in statusObservers.values { obs.invalidate() }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,6 +185,18 @@ final class DYPlayerViewController: UIViewController {
         player.pause()
         player.isMuted = true
         playerIndex[player] = index
+        // KVO 等 item 真正 readyToPlay 且它仍是当前居中槽才 play——固定延时赌不准解码时机（有声画面冻结真根因）
+        statusObservers[player]?.invalidate()
+        statusObservers[player] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+            guard let self, it.status == .readyToPlay else { return }
+            DispatchQueue.main.async {
+                guard self.playerIndex[player] == index,
+                      self.currentIndex == index else { return }
+                player.isMuted = false
+                player.play()
+                DYLog.shared.log("POOL readyPlay idx=\(index)")
+            }
+        }
         DYLog.shared.log("POOL load idx=\(index)")
     }
 
@@ -187,8 +205,11 @@ final class DYPlayerViewController: UIViewController {
         for p in playerPool {
             guard let pi = playerIndex[p] else { continue }
             if pi == index {
-                p.isMuted = false   // 居中槽解除静音（load 时置 true，此处恢复出声）
-                p.play()
+                // 只在 item 已 readyToPlay 时才 play；未 ready 交给 load 里的 KVO（对没解码好的 item 调 play→有声画面冻结）
+                if p.currentItem?.status == .readyToPlay {
+                    p.isMuted = false   // 居中槽解除静音（load 时置 true，此处恢复出声）
+                    p.play()
+                }
             } else {
                 p.pause()
                 p.isMuted = true
