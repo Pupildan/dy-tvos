@@ -20,6 +20,11 @@ final class DYPlayerSlot {
     private var endObserver: NSObjectProtocol?
 
     var currentItem: AVPlayerItem? { player.currentItem }
+    /// 封面兜底图（滑动起步时防黑帧，视频层出帧后被盖住）
+    var cover: UIImage? {
+        get { coverImage.image }
+        set { coverImage.image = newValue }
+    }
 
     init() {
         player = AVPlayer()
