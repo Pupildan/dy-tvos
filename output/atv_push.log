@@ -13754,3 +13754,81 @@
 13:52:12  [13:52:12] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
 13:52:13  [13:52:13] LOGSRV Bonjour published: DYTV-966
 13:52:14  [13:52:14] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+14:06:05  [14:06:05] DYTV v90 launched
+14:06:05  [14:06:05] SIGNER init start
+14:06:05  [14:06:05] LOGSRV ready on port 8765
+14:06:05  [14:06:05] SIGNER load shim ok
+14:06:05  [14:06:05] SIGNER load abogus ok
+14:06:05  [14:06:05] LOGSRV advertising as DYTV-417
+14:06:05  [14:06:05] SIGNER load sign ok
+14:06:05  [14:06:05] FEEDCOLL viewDidLoad
+14:06:05  [14:06:05] ROOT auto-start v90
+14:06:05  [14:06:05] SIGNER load abogus_dy ok
+14:06:05  [14:06:05] SIGNER extras sign=true dy=true
+14:06:05  [14:06:05] SIGNER bdms=yes
+14:06:05  [14:06:05] SIGNER initABogus=true
+14:06:05  [14:06:05] SIGNER fns=AB (期望 AB)
+14:06:05  [14:06:05] SIGNER smoke={"ok":true,"value":"QJ8M/RhvDD2T6fSk5XALfY3qVW33Yslj0SVkMDhezVfPwy39HMPq9exEv0iv1aueF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+14:06:05  [14:06:05] SIGNER READY a_bogus len=180
+14:06:05  [14:06:05] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+14:06:05  [14:06:05] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+14:06:05  [14:06:05] LOGSRV Bonjour published: DYTV-417
+14:06:07  [14:06:07] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+14:06:07  [14:06:07] FEED loop a[0] begin bytes=52330
+14:06:07  [14:06:07] FEED loop a[0] aweme-ok
+14:06:07  [14:06:07] FEED loop a[0] video-ok
+14:06:07  [14:06:07] FEED loop a[0] id=7705027945283589476 pick-start
+14:06:07  [14:06:07] FEED loop a[0] pick-done chosen=false
+14:06:07  [14:06:07] FEED loop a[0] final chosen=true
+14:06:07  [14:06:07] FEED first url[7705027945283589476]: https://v26-colda.douyinvod.com/58fdc484f95cb23ec58bf31a319c653d/6af94bd5/video/tos/cn/tos-cn-ve-15/o0qV2QMeIBCQBbeI8BAAExmWe4tp5DFQi1v7Ew/?
+14:06:07  [14:06:07] FEED loop a[1] begin bytes=52353
+14:06:07  [14:06:07] FEED loop a[1] aweme-ok
+14:06:07  [14:06:07] FEED loop a[1] video-ok
+14:06:07  [14:06:07] FEED loop a[1] id=7699776730688408875 pick-start
+14:06:07  [14:06:07] FEED loop a[1] pick-done chosen=false
+14:06:07  [14:06:07] FEED loop a[1] final chosen=true
+14:06:07  [14:06:07] FEED loop a[2] begin bytes=98271
+14:06:07  [14:06:07] FEED loop a[2] aweme-ok
+14:06:07  [14:06:07] FEED loop a[2] video-ok
+14:06:07  [14:06:07] FEED loop a[2] id=7700558293903471353 pick-start
+14:06:07  [14:06:07] FEED loop a[2] pick-done chosen=false
+14:06:07  [14:06:07] FEED loop a[2] final chosen=true
+14:06:09  [14:06:09] DYTV v90 launched
+14:06:09  [14:06:09] SIGNER init start
+14:06:09  [14:06:09] LOGSRV ready on port 8765
+14:06:09  [14:06:09] LOGSRV advertising as DYTV-979
+14:06:09  [14:06:09] SIGNER load shim ok
+14:06:09  [14:06:09] SIGNER load abogus ok
+14:06:09  [14:06:09] SIGNER load sign ok
+14:06:09  [14:06:09] FEEDCOLL viewDidLoad
+14:06:09  [14:06:09] ROOT auto-start v90
+14:06:09  [14:06:09] SIGNER load abogus_dy ok
+14:06:09  [14:06:09] SIGNER extras sign=true dy=true
+14:06:09  [14:06:09] SIGNER bdms=yes
+14:06:09  [14:06:09] SIGNER initABogus=true
+14:06:09  [14:06:09] SIGNER fns=AB (期望 AB)
+14:06:09  [14:06:09] SIGNER smoke={"ok":true,"value":"EyW0MQgfDkfpkfWh5XALfY3qVW33Yslj0SVkMDhezVfPiy39HMPv9exEv0iv3SEeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+14:06:09  [14:06:09] SIGNER READY a_bogus len=180
+14:06:09  [14:06:09] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+14:06:09  [14:06:09] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+14:06:09  [14:06:09] LOGSRV Bonjour published: DYTV-979
+14:06:11  [14:06:11] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+14:06:11  [14:06:11] FEED loop a[0] begin bytes=44235
+14:06:11  [14:06:11] FEED loop a[0] aweme-ok
+14:06:11  [14:06:11] FEED loop a[0] video-ok
+14:06:11  [14:06:11] FEED loop a[0] id=7707219564627287680 pick-start
+14:06:11  [14:06:11] FEED loop a[0] pick-done chosen=false
+14:06:11  [14:06:11] FEED loop a[0] final chosen=true
+14:06:11  [14:06:11] FEED first url[7707219564627287680]: https://v95-bjb-mc-cold.douyinvod.com/0ee5d963ceb0faa0f2cd8a5b83a3366a/6af94be5/video/tos/cn/tos-cn-ve-15/ooIR79Bq091jsFuG8TjDQgQAC4AfA03HhE
+14:06:11  [14:06:11] FEED loop a[1] begin bytes=87600
+14:06:11  [14:06:11] FEED loop a[1] aweme-ok
+14:06:11  [14:06:11] FEED loop a[1] video-ok
+14:06:11  [14:06:11] FEED loop a[1] id=7707208986608649075 pick-start
+14:06:11  [14:06:11] FEED loop a[1] pick-done chosen=false
+14:06:11  [14:06:11] FEED loop a[1] final chosen=true
+14:06:11  [14:06:11] FEED loop a[2] begin bytes=41349
+14:06:11  [14:06:11] FEED loop a[2] aweme-ok
+14:06:11  [14:06:11] FEED loop a[2] video-ok
+14:06:11  [14:06:11] FEED loop a[2] id=7705036283671858447 pick-start
+14:06:11  [14:06:11] FEED loop a[2] pick-done chosen=false
+14:06:11  [14:06:11] FEED loop a[2] final chosen=true

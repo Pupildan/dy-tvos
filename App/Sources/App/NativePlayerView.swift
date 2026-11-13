@@ -89,6 +89,34 @@ final class DYPlayerViewController: UIViewController {
         scrollTo(index: PlaybackEngine.shared.index, animated: false)
     }
 
+    // MARK: - 滚动驱动
+
+    /// 目标 index 是否可安全 scrollToItem：collectionView 已 layout、item 数覆盖 index。
+    /// 崩溃根因（.ips 堆栈）：首次 urls 到达时 flow layout 未算出 contentSize，
+    /// scrollToItem 判定 indexPath 越界 → _validateScrollingTargetIndexPath 抛 NSException → SIGABRT。
+    private func canScrollTo(index: Int) -> Bool {
+        guard collectionView.bounds.height > 0, collectionView.window != nil else { return false }
+        // 强制 layout 让 flow layout 算出真实 contentSize / item 数
+        collectionView.layoutIfNeeded()
+        let items = collectionView.numberOfItems(inSection: 0)
+        return index >= 0 && index < items
+    }
+
+    private func scrollTo(index: Int, animated: Bool) {
+        guard canScrollTo(index: index) else {
+            DYLog.shared.log("FEEDCOLL scrollTo SKIP idx=\(index) (not laid out / idx out of range)")
+            return
+        }
+        let ip = IndexPath(item: index, section: 0)
+        collectionView.scrollToItem(at: ip, at: .centeredVertically, animated: animated)
+        currentIndex = index
+        // 关键：滚动一开始就预载目标±1（不等滚动结束），让滑动时相邻已缓冲不卡
+        preloadAdjacent(around: index)
+        DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
+            self?.updatePlaybackStates(center: index)
+        }
+    }
+
     // MARK: - PlayerPool
 
     /// 取一个 player 装载 index（复用已装载该 index 的；否则取离中心最远的）。
@@ -141,20 +169,6 @@ final class DYPlayerViewController: UIViewController {
                }) {
                 load(player: free, index: adj)
             }
-        }
-    }
-
-    // MARK: - 滚动驱动
-
-    private func scrollTo(index: Int, animated: Bool) {
-        guard index >= 0, index < PlaybackEngine.shared.urls.count, collectionView.bounds.height > 0 else { return }
-        let ip = IndexPath(item: index, section: 0)
-        collectionView.scrollToItem(at: ip, at: .centeredVertically, animated: animated)
-        currentIndex = index
-        // 关键：滚动一开始就预载目标±1（不等滚动结束），让滑动时相邻已缓冲不卡
-        preloadAdjacent(around: index)
-        DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
-            self?.updatePlaybackStates(center: index)
         }
     }
 
