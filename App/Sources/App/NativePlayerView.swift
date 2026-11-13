@@ -80,6 +80,8 @@ final class PlayerManager {
     /// 只从 scrollTo(最终目标 index) 调用；updatePlaybackStates/willDisplay 只查池不触驱逐（杜绝双 center 打架抖动）。
     func prepare(center idx: Int) {
         let desired = [idx - 2, idx - 1, idx, idx + 1, idx + 2].filter { $0 >= 0 && PlaybackEngine.shared.urls.indices.contains($0) }
+        // 1) 驱逐范围外的 player：pause + replaceCurrentItem(nil) 强制回收解码器
+        for (i, p) in players where !desired.contains(i) {
             p.pause()
             p.replaceCurrentItem(with: nil)   // 关键：置空 item，系统瞬间回收解码器
             readyObservers[i]?.invalidate()
