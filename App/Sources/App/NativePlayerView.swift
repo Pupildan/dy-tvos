@@ -209,10 +209,33 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
+    private var lastKnownCount = 0
+
     private func reloadIfNeeded() {
-        guard !PlaybackEngine.shared.urls.isEmpty else { return }
-        collectionView.reloadData()
-        scrollTo(index: PlaybackEngine.shared.index, animated: false)
+        let newCount = PlaybackEngine.shared.urls.count
+        guard newCount > 0 else { return }
+        let oldCount = lastKnownCount
+        if oldCount == 0 {
+            // 首批：全量建池（一次性）
+            collectionView.reloadData()
+            lastKnownCount = newCount
+            scrollTo(index: PlaybackEngine.shared.index, animated: false)
+            return
+        }
+        guard newCount > oldCount else { return }
+        // 翻页增量插入：只插入新增的 index，不动已有 cell/player 池（避免 reloadData 全量重建
+        // 摧毁已缓冲 player → 居中瞬黑屏，且刷越多页 merge 越频繁黑屏概率越大）
+        var newIdx: [IndexPath] = []
+        for i in oldCount..<newCount { newIdx.append(IndexPath(item: i, section: 0)) }
+        collectionView.performBatchUpdates({
+            collectionView.insertItems(at: newIdx)
+        }, completion: nil)
+        lastKnownCount = newCount
+        // 引擎 index 已在新增范围外时（罕见）校正，正常翻页 index 落在已有区间无需滚动
+        let idx = PlaybackEngine.shared.index
+        if idx >= newCount {
+            scrollTo(index: newCount - 1, animated: false)
+        }
     }
 
     // MARK: - 滚动驱动
