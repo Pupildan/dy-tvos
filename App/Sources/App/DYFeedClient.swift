@@ -165,34 +165,36 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
-        var dumped = false
+        var loggedFirst = false
         for entry in awemeEntries {
             guard let aweme = Proto.parse(entry) else { continue }
-            guard let id = aweme.string(1) ?? aweme.string(2), !id.isEmpty else { continue }
-            // 诊断：先 dump aweme 顶层字段骨架（字段号:类型:长度），定位 video 在第几号
-            if !dumped {
-                dumped = true
-                DYLog.shared.log("FEED TOPFIELDS[\(id)]: \(Proto.topSkeleton(aweme))")
-            }
-            // video = aweme field 7/8；play_addr = video field 1/9；url_list = play_addr field 1/9
+            // aweme_id = field 1（s13.b 优先 str，退化为 varint）
+            guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { continue }
+            // video = aweme field 7，退化 field 8（s13.e:229）
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { continue }
-            var playAddr: Proto? = nil
-            for fb in video.bytesFields(1) + video.bytesFields(9) {
-                if let pa = Proto.parse(fb), !(pa.strings(1) + pa.strings(9)).isEmpty { playAddr = pa; break }
+            // play_addr = video field 1，退化 field 9（s13.e:229-245）；要求 urlList 非空
+            var pa: Proto? = nil
+            for pb in video.bytesFields(1) + video.bytesFields(9) {
+                if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
             }
-            guard let pa = playAddr else { continue }
-            let candidates = pa.strings(1) + pa.strings(9)
-            // 优先挑完整 http(s) URL；uri 不可直接播
+            guard let playAddr = pa else { continue }
+            // urlList 提取（s13.a / g）：优先 field 2 → field 1 → 递归子消息，只要 http(s) URL
+            let candidates = Proto.urlList(playAddr, 0)
             var chosen: URL? = nil
             for raw in candidates {
                 var u = raw
                 if u.hasPrefix("//") { u = "https:" + u }
                 guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
-                if u.contains("/aweme/v1/play/") { continue }
                 if let url = URL(string: u) { chosen = url; break }
             }
-            if let url = chosen { ids.append(id); urls.append(url) }
+            if let url = chosen {
+                ids.append(id); urls.append(url)
+                if !loggedFirst {
+                    loggedFirst = true
+                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
+                }
+            }
         }
         consumedIds.append(contentsOf: ids)
         DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) total_seen=\(consumedIds.count)")
@@ -339,52 +341,31 @@ struct Proto {
     }
     func string(_ n: Int) -> String? { strings(n).first }
 
-    /// 递归 dump proto 树（诊断用）：字段号 + wire 类型 + 字符串/嵌套结构。
-    static func dump(_ msg: Proto, depth: Int, maxDepth: Int) -> String {
-        guard depth <= maxDepth else { return "…" }
-        var out: [String] = []
-        for key in msg.fields.keys.sorted() {
-            for v in msg.fields[key] ?? [] {
-                switch v {
-                case .varint(let n):
-                    out.append("\(key):int=\(n)")
-                case .bytes(let b):
-                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
-                        out.append("\(key):str=\"\(s.prefix(80))\"")
-                    } else if let nested = parse(b) {
-                        let child = dump(nested, depth: depth + 1, maxDepth: maxDepth)
-                        out.append("\(key):msg{\(child)}")
-                    } else {
-                        out.append("\(key):bytes[\(b.count)]")
+    /// 是否 http(s) 开头（s13.d）。
+    private static func isHttp(_ s: String) -> Bool {
+        s.hasPrefix("http://") || s.hasPrefix("https://")
+    }
+
+    /// 提取 PlayAddr.urlList，严格照抄 s13.a 的字段优先级：
+    /// field 2 →（depth<2 时）递归子消息 → field 1。每步只收 http(s) 开头的串（s13.d）。
+    /// field 1 装的是 uri（如 v0300fg…），真正可播的 http CDN URL 在 field 2。
+    static func urlList(_ msg: Proto, _ depth: Int) -> [String] {
+        // 1) field 2
+        let f2 = msg.strings(2).filter(isHttp)
+        if !f2.isEmpty { return f2 }
+        // 2) 递归子消息（所有 bytes 字段尝试解析，按字段号序）
+        if depth < 2 {
+            var rec: [String] = []
+            for key in msg.fields.keys.sorted() {
+                for case .bytes(let b) in (msg.fields[key] ?? []) {
+                    if let nested = parse(b) {
+                        rec.append(contentsOf: urlList(nested, depth + 1))
                     }
                 }
             }
+            if !rec.isEmpty { return rec }
         }
-        return out.joined(separator: " ")
-    }
-
-    private static func isPrintable(_ s: String) -> Bool {
-        guard !s.isEmpty else { return false }
-        return s.allSatisfy { ($0.isASCII && !$0.isNewline && $0.unicodeScalars.allSatisfy { $0.value >= 32 }) }
-    }
-
-    /// 只列顶层字段骨架（诊断用）：字段号:类型:字节长度[:字符串前 40]。
-    static func topSkeleton(_ msg: Proto) -> String {
-        var out: [String] = []
-        for key in msg.fields.keys.sorted() {
-            for v in msg.fields[key] ?? [] {
-                switch v {
-                case .varint(let n):
-                    out.append("\(key):int=\(n)")
-                case .bytes(let b):
-                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
-                        out.append("\(key):str[\(b.count)]=\"\(s.prefix(40))\"")
-                    } else {
-                        out.append("\(key):bytes[\(b.count)]")
-                    }
-                }
-            }
-        }
-        return out.joined(separator: " ")
+        // 3) field 1
+        return msg.strings(1).filter(isHttp)
     }
 }
