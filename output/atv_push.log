@@ -33313,3 +33313,443 @@
 17:48:40  [17:48:40] FEED loop a[5] final chosen=true
 17:48:40  [17:48:40] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
 17:48:40  [17:48:40] ENGINE merge total=24 index=13 replace=false auto=false
+18:02:11  [18:02:11] DYTV v110 launched
+18:02:11  [18:02:11] SIGNER init start
+18:02:11  [18:02:11] LOGSRV ready on port 8765
+18:02:11  [18:02:11] SIGNER load shim ok
+18:02:11  [18:02:11] SIGNER load abogus ok
+18:02:11  [18:02:11] LOGSRV advertising as DYTV-321
+18:02:11  [18:02:11] SIGNER load sign ok
+18:02:11  [18:02:11] SIGNER load abogus_dy ok
+18:02:11  [18:02:11] SIGNER extras sign=true dy=true
+18:02:11  [18:02:11] SIGNER bdms=yes
+18:02:11  [18:02:11] SIGNER initABogus=true
+18:02:11  [18:02:11] SIGNER fns=AB (期望 AB)
+18:02:11  [18:02:11] SIGNER smoke={"ok":true,"value":"xjWMMVg6DiIiXf6h5XdLfY3qVW33YsWY0SVkMDhezVfPl639HMPd9exEfjkvz5SeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+18:02:11  [18:02:11] SIGNER READY a_bogus len=180
+18:02:11  [18:02:11] PLAYER viewDidLoad
+18:02:12  [18:02:11] PLAYER no url at index=0 (will retry)
+18:02:12  [18:02:11] ROOT auto-start v110
+18:02:12  [18:02:11] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+18:02:12  [18:02:11] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+18:02:12  [18:02:11] PLAYER no url at index=0 (will retry)
+18:02:12  [18:02:11] PLAYER no url at index=0 (will retry)
+18:02:12  [18:02:12] LOGSRV Bonjour published: DYTV-321
+18:02:14  [18:02:14] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+18:02:14  [18:02:14] FEED loop a[0] begin bytes=52389
+18:02:14  [18:02:14] FEED loop a[0] aweme-ok
+18:02:14  [18:02:14] FEED loop a[0] video-ok
+18:02:14  [18:02:14] FEED loop a[0] id=7704163075868049125 pick-start
+18:02:14  [18:02:14] FEED loop a[0] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[0] final chosen=true
+18:02:14  [18:02:14] FEED first url[7704163075868049125]: https://v9-chc.douyinvod.com/f951d45201910c6c82247ad3825f1e7c/6af98330/video/cn/mps/logo/r/p/v2700fgi0000dblatfnog65jdvn65fl0/4bdddf7b60674e
+18:02:14  [18:02:14] FEED loop a[1] begin bytes=50290
+18:02:14  [18:02:14] FEED loop a[1] aweme-ok
+18:02:14  [18:02:14] FEED loop a[1] video-ok
+18:02:14  [18:02:14] FEED loop a[1] id=7705042702446415281 pick-start
+18:02:14  [18:02:14] FEED loop a[1] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[1] final chosen=true
+18:02:14  [18:02:14] FEED loop a[2] begin bytes=50439
+18:02:14  [18:02:14] FEED loop a[2] aweme-ok
+18:02:14  [18:02:14] FEED loop a[2] video-ok
+18:02:14  [18:02:14] FEED loop a[2] id=7706167074745290022 pick-start
+18:02:14  [18:02:14] FEED loop a[2] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[2] final chosen=true
+18:02:14  [18:02:14] FEED loop a[3] begin bytes=66155
+18:02:14  [18:02:14] FEED loop a[3] aweme-ok
+18:02:14  [18:02:14] FEED loop a[3] video-ok
+18:02:14  [18:02:14] FEED loop a[3] id=7699363651211234595 pick-start
+18:02:14  [18:02:14] FEED loop a[3] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[3] final chosen=true
+18:02:14  [18:02:14] FEED loop a[4] begin bytes=53076
+18:02:14  [18:02:14] FEED loop a[4] aweme-ok
+18:02:14  [18:02:14] FEED loop a[4] video-ok
+18:02:14  [18:02:14] FEED loop a[4] id=7701570291575539785 pick-start
+18:02:14  [18:02:14] FEED loop a[4] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[4] final chosen=true
+18:02:14  [18:02:14] FEED loop a[5] begin bytes=58361
+18:02:14  [18:02:14] FEED loop a[5] aweme-ok
+18:02:14  [18:02:14] FEED loop a[5] video-ok
+18:02:14  [18:02:14] FEED loop a[5] id=7705098385036477257 pick-start
+18:02:14  [18:02:14] FEED loop a[5] pick-done chosen=false
+18:02:14  [18:02:14] FEED loop a[5] final chosen=true
+18:02:14  [18:02:14] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+18:02:14  [18:02:14] ENGINE merge total=6 index=0 replace=false auto=true
+18:02:14  [18:02:14] PLAYER play index=0 url=https://v9-chc.douyinvod.com/f951d45201910c6c82247ad3825f1e7c/6af98330/video/cn/
+18:02:19  [18:02:19] ENGINE needMore (index=0 count=6)
+18:02:19  [18:02:19] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+18:02:19  [18:02:19] ENGINE next -> index=1
+18:02:19  [18:02:19] PLAYER play index=1 url=https://v11-cold.douyinvod.com/5249a41257ca6b583fc9428dc53b2ff5/6af9832c/video/t
+18:02:20  [18:02:20] ENGINE next -> index=2
+18:02:20  [18:02:20] PLAYER play index=2 url=https://v11-cold.douyinvod.com/25c3b0a33a60c1906466c60fc0a55aa9/6af9832b/video/t
+18:02:21  [18:02:21] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+18:02:21  [18:02:21] FEED loop a[0] begin bytes=43723
+18:02:21  [18:02:21] FEED loop a[0] aweme-ok
+18:02:21  [18:02:21] FEED loop a[0] video-ok
+18:02:21  [18:02:21] FEED loop a[0] id=7701584918384607844 pick-start
+18:02:21  [18:02:21] FEED loop a[0] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[0] final chosen=true
+18:02:21  [18:02:21] FEED first url[7701584918384607844]: https://v5-ex-music.douyinstatic.com/a2f63a9717c4f04db66bb20e8d2fe69f/6b1e6d4b/video/tos/cn/tos-cn-v-2178/174f42305d8e4e74a3096aeb0374b307/?
+18:02:21  [18:02:21] FEED loop a[1] begin bytes=68423
+18:02:21  [18:02:21] FEED loop a[1] aweme-ok
+18:02:21  [18:02:21] FEED loop a[1] video-ok
+18:02:21  [18:02:21] FEED loop a[1] id=7704350133164489330 pick-start
+18:02:21  [18:02:21] FEED loop a[1] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[1] final chosen=true
+18:02:21  [18:02:21] FEED loop a[2] begin bytes=176798
+18:02:21  [18:02:21] FEED loop a[2] aweme-ok
+18:02:21  [18:02:21] FEED loop a[2] video-ok
+18:02:21  [18:02:21] FEED loop a[2] id=7698352941053712997 pick-start
+18:02:21  [18:02:21] FEED loop a[2] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[2] final chosen=true
+18:02:21  [18:02:21] FEED loop a[3] begin bytes=101768
+18:02:21  [18:02:21] FEED loop a[3] aweme-ok
+18:02:21  [18:02:21] FEED loop a[3] video-ok
+18:02:21  [18:02:21] FEED loop a[3] id=7698334303532846330 pick-start
+18:02:21  [18:02:21] FEED loop a[3] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[3] final chosen=true
+18:02:21  [18:02:21] FEED loop a[4] begin bytes=55370
+18:02:21  [18:02:21] FEED loop a[4] aweme-ok
+18:02:21  [18:02:21] FEED loop a[4] video-ok
+18:02:21  [18:02:21] FEED loop a[4] id=7703501941162624249 pick-start
+18:02:21  [18:02:21] FEED loop a[4] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[4] final chosen=true
+18:02:21  [18:02:21] FEED loop a[5] begin bytes=66784
+18:02:21  [18:02:21] FEED loop a[5] aweme-ok
+18:02:21  [18:02:21] FEED loop a[5] video-ok
+18:02:21  [18:02:21] FEED loop a[5] id=7699934216221895290 pick-start
+18:02:21  [18:02:21] FEED loop a[5] pick-done chosen=false
+18:02:21  [18:02:21] FEED loop a[5] final chosen=true
+18:02:21  [18:02:21] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+18:02:21  [18:02:21] ENGINE merge total=12 index=2 replace=false auto=false
+18:02:21  [18:02:21] ENGINE next -> index=3
+18:02:21  [18:02:21] PLAYER play index=3 url=https://v13-dyseries.douyinvod.com/19627668b88fddb18b00d0c7ac07b80f/6af983c8/vid
+18:02:22  [18:02:22] ENGINE next -> index=4
+18:02:23  [18:02:22] PLAYER play index=4 url=https://v99-coldx.douyinvod.com/073c28778d6433454e1b65ece120a142/6af98332/video/
+18:02:23  [18:02:23] ENGINE next -> index=5
+18:02:23  [18:02:23] PLAYER play index=5 url=https://v9-chc.douyinvod.com/7dd1c52da0eb001d0902933c6bceb4ad/6af9832f/video/cn/
+18:02:24  [18:02:24] ENGINE needMore (index=5 count=12)
+18:02:24  [18:02:24] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+18:02:24  [18:02:24] ENGINE next -> index=6
+18:02:24  [18:02:24] PLAYER play index=6 url=https://v5-ex-music.douyinstatic.com/a2f63a9717c4f04db66bb20e8d2fe69f/6b1e6d4b/v
+18:02:24  [18:02:24] PLAYER item FAILED index=6 err=Cannot Open
+18:02:24  [18:02:24] ENGINE next -> index=7
+18:02:24  [18:02:24] PLAYER play index=7 url=https://v5-ex-dyseries.douyinvod.com/35f1f4bbb0b8743473ec3ea7d2c76b0c/6af98336/v
+18:02:25  [18:02:25] ENGINE next -> index=8
+18:02:25  [18:02:25] PLAYER play index=8 url=https://v5-ex-music.douyinstatic.com/0572f47fa689290d990b356acf2530d4/6b1e6d4b/v
+18:02:25  [18:02:25] PLAYER item FAILED index=8 err=Cannot Open
+18:02:25  [18:02:25] ENGINE refresh (stale=false)
+18:02:25  [18:02:25] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+18:02:25  [18:02:25] ENGINE next -> index=9
+18:02:25  [18:02:25] PLAYER play index=9 url=https://v5-se.zjyd.zcidclink.com/728696d4992e4c628f06b8510984dc28/6af98333/video
+18:02:25  [18:02:25] ENGINE next -> index=10
+18:02:25  [18:02:25] PLAYER play index=10 url=https://v5-ex-music.douyinstatic.com/80e366daafc5c7495e419cffe90aba64/6b1e6d50/v
+18:02:25  [18:02:25] PLAYER item FAILED index=10 err=Cannot Open
+18:02:25  [18:02:25] ENGINE next -> index=11
+18:02:25  [18:02:25] PLAYER play index=11 url=https://v9-chc.douyinvod.com/881277b07e84a474bfe67f7bea0a184f/6af98336/video/cn/
+18:02:26  [18:02:26] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+18:02:26  [18:02:26] FEED loop a[0] begin bytes=64923
+18:02:26  [18:02:26] FEED loop a[0] aweme-ok
+18:02:26  [18:02:26] FEED loop a[0] video-ok
+18:02:26  [18:02:26] FEED loop a[0] id=7704289271858924834 pick-start
+18:02:26  [18:02:26] FEED loop a[0] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[0] final chosen=true
+18:02:26  [18:02:26] FEED first url[7704289271858924834]: https://v5-daily-cm-dyseries.douyinvod.com/8e1a4e022f7cdebb0e6bb29351fb1056/6af9846f/video/tos/cn/tos-cn-ve-15/oIADZxIgNXAiTiZIb4et8dfXXDBkA
+18:02:26  [18:02:26] FEED loop a[1] begin bytes=49331
+18:02:26  [18:02:26] FEED loop a[1] aweme-ok
+18:02:26  [18:02:26] FEED loop a[1] video-ok
+18:02:26  [18:02:26] FEED loop a[1] id=7704635578579556858 pick-start
+18:02:26  [18:02:26] FEED loop a[1] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[1] final chosen=true
+18:02:26  [18:02:26] FEED loop a[2] begin bytes=49766
+18:02:26  [18:02:26] FEED loop a[2] aweme-ok
+18:02:26  [18:02:26] FEED loop a[2] video-ok
+18:02:26  [18:02:26] FEED loop a[2] id=7703203250069248922 pick-start
+18:02:26  [18:02:26] FEED loop a[2] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[2] final chosen=true
+18:02:26  [18:02:26] FEED loop a[3] begin bytes=49642
+18:02:26  [18:02:26] FEED loop a[3] aweme-ok
+18:02:26  [18:02:26] FEED loop a[3] video-ok
+18:02:26  [18:02:26] FEED loop a[3] id=7705744088439484266 pick-start
+18:02:26  [18:02:26] FEED loop a[3] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[3] final chosen=true
+18:02:26  [18:02:26] FEED loop a[4] begin bytes=50729
+18:02:26  [18:02:26] FEED loop a[4] aweme-ok
+18:02:26  [18:02:26] FEED loop a[4] video-ok
+18:02:26  [18:02:26] FEED loop a[4] id=7700907852764769531 pick-start
+18:02:26  [18:02:26] FEED loop a[4] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[4] final chosen=true
+18:02:26  [18:02:26] FEED loop a[5] begin bytes=50454
+18:02:26  [18:02:26] FEED loop a[5] aweme-ok
+18:02:26  [18:02:26] FEED loop a[5] video-ok
+18:02:26  [18:02:26] FEED loop a[5] id=7706479606286976576 pick-start
+18:02:26  [18:02:26] FEED loop a[5] pick-done chosen=false
+18:02:26  [18:02:26] FEED loop a[5] final chosen=true
+18:02:26  [18:02:26] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+18:02:26  [18:02:26] ENGINE merge total=18 index=11 replace=false auto=false
+18:02:27  [18:02:27] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+18:02:27  [18:02:27] FEED loop a[0] begin bytes=58240
+18:02:27  [18:02:27] FEED loop a[0] aweme-ok
+18:02:27  [18:02:27] FEED loop a[0] video-ok
+18:02:27  [18:02:27] FEED loop a[0] id=7702746370461443813 pick-start
+18:02:27  [18:02:27] FEED loop a[0] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[0] final chosen=true
+18:02:27  [18:02:27] FEED first url[7702746370461443813]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbiqclfog65jbmte1mig&line=0&ratio=720p&watermark=1&media_type=4&vr_type=0&imp
+18:02:27  [18:02:27] FEED loop a[1] begin bytes=54434
+18:02:27  [18:02:27] FEED loop a[1] aweme-ok
+18:02:27  [18:02:27] FEED loop a[1] video-ok
+18:02:27  [18:02:27] FEED loop a[1] id=7691576483449490707 pick-start
+18:02:27  [18:02:27] FEED loop a[1] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[1] final chosen=true
+18:02:27  [18:02:27] FEED loop a[2] begin bytes=55769
+18:02:27  [18:02:27] FEED loop a[2] aweme-ok
+18:02:27  [18:02:27] FEED loop a[2] video-ok
+18:02:27  [18:02:27] FEED loop a[2] id=7698723260536085674 pick-start
+18:02:27  [18:02:27] FEED loop a[2] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[2] final chosen=true
+18:02:27  [18:02:27] FEED loop a[3] begin bytes=57240
+18:02:27  [18:02:27] FEED loop a[3] aweme-ok
+18:02:27  [18:02:27] FEED loop a[3] video-ok
+18:02:27  [18:02:27] FEED loop a[3] id=7705410355861866875 pick-start
+18:02:27  [18:02:27] FEED loop a[3] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[3] final chosen=true
+18:02:27  [18:02:27] FEED loop a[4] begin bytes=48259
+18:02:27  [18:02:27] FEED loop a[4] aweme-ok
+18:02:27  [18:02:27] FEED loop a[4] video-ok
+18:02:27  [18:02:27] FEED loop a[4] id=7704897651968183930 pick-start
+18:02:27  [18:02:27] FEED loop a[4] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[4] final chosen=true
+18:02:27  [18:02:27] FEED loop a[5] begin bytes=51099
+18:02:27  [18:02:27] FEED loop a[5] aweme-ok
+18:02:27  [18:02:27] FEED loop a[5] video-ok
+18:02:27  [18:02:27] FEED loop a[5] id=7700907852764769531 pick-start
+18:02:27  [18:02:27] FEED loop a[5] pick-done chosen=false
+18:02:27  [18:02:27] FEED loop a[5] final chosen=true
+18:02:27  [18:02:27] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=24
+18:02:27  [18:02:27] ENGINE merge total=23 index=11 replace=false auto=false
+18:02:28  [18:02:28] ENGINE next -> index=12
+18:02:28  [18:02:28] PLAYER play index=12 url=https://v5-daily-cm-dyseries.douyinvod.com/8e1a4e022f7cdebb0e6bb29351fb1056/6af9
+18:02:29  [18:02:29] ENGINE next -> index=13
+18:02:29  [18:02:29] PLAYER play index=13 url=https://v95-bjb-mc-cold.douyinvod.com/7cff8fd6c6636179364724c6602af5ce/6af9833b/
+18:02:29  [18:02:29] ENGINE next -> index=14
+18:02:29  [18:02:29] PLAYER play index=14 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbjkcqvog65ppfkcg
+18:02:32  [18:02:32] ENGINE next -> index=15
+18:02:32  [18:02:32] PLAYER play index=15 url=https://v11-cold1.douyinvod.com/cd1c4091376ca6f394027bbd772de74f/6af98339/video/
+18:02:33  [18:02:33] ENGINE next -> index=16
+18:02:34  [18:02:33] PLAYER play index=16 url=https://v99-coldx.douyinvod.com/fb4e3a0d6f3e55c4f24aa243573a0ce9/6af9833e/video/
+18:02:35  [18:02:35] ENGINE needMore (index=16 count=23)
+18:02:35  [18:02:35] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=24
+18:02:35  [18:02:35] ENGINE next -> index=17
+18:02:35  [18:02:35] PLAYER play index=17 url=https://v5-gz-colda.douyinvod.com/98910c329c079188843f851f2f8d8665/6af98337/vide
+18:02:36  [18:02:36] ENGINE next -> index=18
+18:02:36  [18:02:36] PLAYER play index=18 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbiqclfog65jbmte1
+18:02:37  [18:02:37] ENGINE next -> index=19
+18:02:37  [18:02:37] PLAYER play index=19 url=https://v5-se-bd-daily-cold.douyinvod.com/19251d3aef5a8f1d0030ba18a5819427/6af98
+18:02:37  [18:02:37] ENGINE next -> index=20
+18:02:37  [18:02:37] PLAYER play index=20 url=https://v99-coldx.douyinvod.com/3134b99e56324a5b3c3426ae8f54af81/6af9833a/video/
+18:02:38  [18:02:37] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+18:02:38  [18:02:37] FEED loop a[0] begin bytes=45387
+18:02:38  [18:02:37] FEED loop a[0] aweme-ok
+18:02:38  [18:02:37] FEED loop a[0] video-ok
+18:02:38  [18:02:37] FEED loop a[0] id=7707554915090797439 pick-start
+18:02:38  [18:02:37] FEED loop a[0] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[0] final chosen=true
+18:02:38  [18:02:37] FEED first url[7707554915090797439]: https://v95-bjb-mc-cold.douyinvod.com/03c6c64e7fb874bd3b1af290f44603d2/6af98345/video/tos/cn/tos-cn-ve-15/ocOAXrieOIBYtwQA3PSgf4i9q2Ej9AqACC
+18:02:38  [18:02:37] FEED loop a[1] begin bytes=60028
+18:02:38  [18:02:37] FEED loop a[1] aweme-ok
+18:02:38  [18:02:37] FEED loop a[1] video-ok
+18:02:38  [18:02:37] FEED loop a[1] id=7701852164188448482 pick-start
+18:02:38  [18:02:37] FEED loop a[1] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[1] final chosen=true
+18:02:38  [18:02:37] FEED loop a[2] begin bytes=50666
+18:02:38  [18:02:37] FEED loop a[2] aweme-ok
+18:02:38  [18:02:37] FEED loop a[2] video-ok
+18:02:38  [18:02:37] FEED loop a[2] id=7706578340019721590 pick-start
+18:02:38  [18:02:37] FEED loop a[2] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[2] final chosen=true
+18:02:38  [18:02:37] FEED loop a[3] begin bytes=55460
+18:02:38  [18:02:37] FEED loop a[3] aweme-ok
+18:02:38  [18:02:37] FEED loop a[3] video-ok
+18:02:38  [18:02:37] FEED loop a[3] id=7701697411031082658 pick-start
+18:02:38  [18:02:37] FEED loop a[3] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[3] final chosen=true
+18:02:38  [18:02:37] FEED loop a[4] begin bytes=46882
+18:02:38  [18:02:37] FEED loop a[4] aweme-ok
+18:02:38  [18:02:37] FEED loop a[4] video-ok
+18:02:38  [18:02:37] FEED loop a[4] id=7701928639515910244 pick-start
+18:02:38  [18:02:37] FEED loop a[4] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[4] final chosen=true
+18:02:38  [18:02:37] FEED loop a[5] begin bytes=55547
+18:02:38  [18:02:37] FEED loop a[5] aweme-ok
+18:02:38  [18:02:37] FEED loop a[5] video-ok
+18:02:38  [18:02:37] FEED loop a[5] id=7705441042992733282 pick-start
+18:02:38  [18:02:37] FEED loop a[5] pick-done chosen=false
+18:02:38  [18:02:37] FEED loop a[5] final chosen=true
+18:02:38  [18:02:37] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=30
+18:02:38  [18:02:37] ENGINE merge total=29 index=20 replace=false auto=false
+18:02:39  [18:02:39] ENGINE next -> index=21
+18:02:39  [18:02:39] PLAYER play index=21 url=https://v9-chc.douyinvod.com/c93cc4849a8ca3479c3f4ccc27a4d46b/6af98343/video/cn/
+18:02:39  [18:02:39] ENGINE next -> index=22
+18:02:39  [18:02:39] PLAYER play index=22 url=https://v9-chc.douyinvod.com/96b6751ca41c16e392a057fdf5875a8f/6af9833e/video/cn/
+18:02:40  [18:02:40] ENGINE next -> index=23
+18:02:40  [18:02:40] PLAYER play index=23 url=https://v95-bjb-mc-cold.douyinvod.com/03c6c64e7fb874bd3b1af290f44603d2/6af98345/
+18:02:41  [18:02:41] ENGINE needMore (index=23 count=29)
+18:02:41  [18:02:41] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=30
+18:02:41  [18:02:41] ENGINE next -> index=24
+18:02:41  [18:02:41] PLAYER play index=24 url=https://v95-bjb-mc-cold.douyinvod.com/d3193489a118d42db0766c052caa344a/6af9849b/
+18:02:42  [18:02:42] ENGINE next -> index=25
+18:02:42  [18:02:42] PLAYER play index=25 url=https://v5-gz2-colda.douyinvod.com/044a9236a6968ae5d8e586ceaebcbb00/6af98346/vid
+18:02:43  [18:02:43] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+18:02:43  [18:02:43] FEED loop a[0] begin bytes=58093
+18:02:43  [18:02:43] FEED loop a[0] aweme-ok
+18:02:43  [18:02:43] FEED loop a[0] video-ok
+18:02:43  [18:02:43] FEED loop a[0] id=7705625753974682825 pick-start
+18:02:43  [18:02:43] FEED loop a[0] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[0] final chosen=true
+18:02:43  [18:02:43] FEED first url[7705625753974682825]: https://v9-chc.douyinvod.com/c84fd15dbc1af2198280778d51e2f4d6/6af9834c/video/cn/mps/logo/r/p/v0300fg10000dbnu2qvog65jmucfi090/6f74b60f72e042
+18:02:43  [18:02:43] FEED loop a[1] begin bytes=58964
+18:02:43  [18:02:43] FEED loop a[1] aweme-ok
+18:02:43  [18:02:43] FEED loop a[1] video-ok
+18:02:43  [18:02:43] FEED loop a[1] id=7705416628389070181 pick-start
+18:02:43  [18:02:43] FEED loop a[1] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[1] final chosen=true
+18:02:43  [18:02:43] FEED loop a[2] begin bytes=86019
+18:02:43  [18:02:43] FEED loop a[2] aweme-ok
+18:02:43  [18:02:43] FEED loop a[2] video-ok
+18:02:43  [18:02:43] FEED loop a[2] id=7704075640437847976 pick-start
+18:02:43  [18:02:43] FEED loop a[2] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[2] final chosen=true
+18:02:43  [18:02:43] FEED loop a[3] begin bytes=82152
+18:02:43  [18:02:43] FEED loop a[3] aweme-ok
+18:02:43  [18:02:43] FEED loop a[3] video-ok
+18:02:43  [18:02:43] FEED loop a[3] id=7706515752015276645 pick-start
+18:02:43  [18:02:43] FEED loop a[3] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[3] final chosen=true
+18:02:43  [18:02:43] FEED loop a[4] begin bytes=50311
+18:02:43  [18:02:43] FEED loop a[4] aweme-ok
+18:02:43  [18:02:43] FEED loop a[4] video-ok
+18:02:43  [18:02:43] FEED loop a[4] id=7704284069601103439 pick-start
+18:02:43  [18:02:43] FEED loop a[4] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[4] final chosen=true
+18:02:43  [18:02:43] FEED loop a[5] begin bytes=66567
+18:02:43  [18:02:43] FEED loop a[5] aweme-ok
+18:02:43  [18:02:43] FEED loop a[5] video-ok
+18:02:43  [18:02:43] FEED loop a[5] id=7706554213010132278 pick-start
+18:02:43  [18:02:43] FEED loop a[5] pick-done chosen=false
+18:02:43  [18:02:43] FEED loop a[5] final chosen=true
+18:02:43  [18:02:43] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=36
+18:02:43  [18:02:43] ENGINE merge total=35 index=25 replace=false auto=false
+18:02:43  [18:02:43] ENGINE next -> index=26
+18:02:43  [18:02:43] PLAYER play index=26 url=https://v99-coldx.douyinvod.com/e5c79041dcac4645a4888494a1de81bc/6af98348/video/
+18:02:45  [18:02:44] ENGINE next -> index=27
+18:02:45  [18:02:44] PLAYER play index=27 url=https://v5-ex-music.douyinstatic.com/0ca5408de683b078c13cea011e0eecd9/6b1e6d5f/v
+18:02:47  [18:02:47] ENGINE next -> index=28
+18:02:47  [18:02:47] PLAYER play index=28 url=https://v5-se-sjy-daily-cold.douyinvod.com/8b4b67a0410ab00a425ee630ed52f207/6af9
+18:02:48  [18:02:48] ENGINE needMore (index=28 count=35)
+18:02:48  [18:02:48] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=36
+18:02:48  [18:02:48] ENGINE next -> index=29
+18:02:48  [18:02:48] PLAYER play index=29 url=https://v9-chc.douyinvod.com/c84fd15dbc1af2198280778d51e2f4d6/6af9834c/video/cn/
+18:02:50  [18:02:50] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+18:02:50  [18:02:50] FEED loop a[0] begin bytes=51557
+18:02:50  [18:02:50] FEED loop a[0] aweme-ok
+18:02:50  [18:02:50] FEED loop a[0] video-ok
+18:02:50  [18:02:50] FEED loop a[0] id=7705262035520781434 pick-start
+18:02:50  [18:02:50] FEED loop a[0] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[0] final chosen=true
+18:02:50  [18:02:50] FEED first url[7705262035520781434]: https://v95-bjb-mc-cold.douyinvod.com/d28946ae299b9f23317610c71983254f/6af98355/video/tos/cn/tos-cn-ve-15c000-ce/oIaXEK87aBgSnPGKJCgLe3xzIel
+18:02:50  [18:02:50] FEED loop a[1] begin bytes=56393
+18:02:50  [18:02:50] FEED loop a[1] aweme-ok
+18:02:50  [18:02:50] FEED loop a[1] video-ok
+18:02:50  [18:02:50] FEED loop a[1] id=7703595734269178980 pick-start
+18:02:50  [18:02:50] FEED loop a[1] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[1] final chosen=true
+18:02:50  [18:02:50] FEED loop a[2] begin bytes=47761
+18:02:50  [18:02:50] FEED loop a[2] aweme-ok
+18:02:50  [18:02:50] FEED loop a[2] video-ok
+18:02:50  [18:02:50] FEED loop a[2] id=7705731936296609387 pick-start
+18:02:50  [18:02:50] FEED loop a[2] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[2] final chosen=true
+18:02:50  [18:02:50] FEED loop a[3] begin bytes=45949
+18:02:50  [18:02:50] FEED loop a[3] aweme-ok
+18:02:50  [18:02:50] FEED loop a[3] video-ok
+18:02:50  [18:02:50] FEED loop a[3] id=7707128654912663718 pick-start
+18:02:50  [18:02:50] FEED loop a[3] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[3] final chosen=true
+18:02:50  [18:02:50] FEED loop a[4] begin bytes=50812
+18:02:50  [18:02:50] FEED loop a[4] aweme-ok
+18:02:50  [18:02:50] FEED loop a[4] video-ok
+18:02:50  [18:02:50] FEED loop a[4] id=7697181205372497833 pick-start
+18:02:50  [18:02:50] FEED loop a[4] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[4] final chosen=true
+18:02:50  [18:02:50] FEED loop a[5] begin bytes=72367
+18:02:50  [18:02:50] FEED loop a[5] aweme-ok
+18:02:50  [18:02:50] FEED loop a[5] video-ok
+18:02:50  [18:02:50] FEED loop a[5] id=7706923865976442138 pick-start
+18:02:50  [18:02:50] FEED loop a[5] pick-done chosen=false
+18:02:50  [18:02:50] FEED loop a[5] final chosen=true
+18:02:50  [18:02:50] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=42
+18:02:50  [18:02:50] ENGINE merge total=41 index=29 replace=false auto=false
+18:02:52  [18:02:52] ENGINE next -> index=30
+18:02:52  [18:02:52] PLAYER play index=30 url=https://v5-se.zjyd.zcidclink.com/d62400e01671c04c9d37dbccf3c3b350/6af98424/video
+18:02:53  [18:02:53] ENGINE next -> index=31
+18:02:53  [18:02:53] PLAYER play index=31 url=https://v13-dyseries.douyinvod.com/0790d031499e2d4990f18343a5bb6d2e/6af9834e/vid
+18:02:54  [18:02:54] ENGINE next -> index=32
+18:02:54  [18:02:54] PLAYER play index=32 url=https://v5-ex-music.douyinstatic.com/9c50712f5ac9ff852a4740f7435a4b04/6b1e6d62/v
+18:02:56  [18:02:56] ENGINE next -> index=33
+18:02:56  [18:02:56] PLAYER play index=33 url=https://v9-chc.douyinvod.com/0b6cd31cd148141e77a6d3c62eec24b9/6af9834a/video/cn/
+18:02:58  [18:02:58] ENGINE prev -> index=32
+18:02:58  [18:02:58] PLAYER play index=32 url=https://v5-ex-music.douyinstatic.com/9c50712f5ac9ff852a4740f7435a4b04/6b1e6d62/v
+18:02:59  [18:02:59] ENGINE next -> index=33
+18:02:59  [18:02:59] PLAYER play index=33 url=https://v9-chc.douyinvod.com/0b6cd31cd148141e77a6d3c62eec24b9/6af9834a/video/cn/
+18:03:00  [18:03:00] ENGINE next -> index=34
+18:03:00  [18:03:00] PLAYER play index=34 url=https://v5-daily-cm-dyseries.douyinvod.com/bae5f822c7d23a7b56e17bc757cc9e12/6af9
+18:03:01  [18:03:01] ENGINE needMore (index=34 count=41)
+18:03:01  [18:03:01] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=42
+18:03:01  [18:03:01] ENGINE next -> index=35
+18:03:01  [18:03:01] PLAYER play index=35 url=https://v95-bjb-mc-cold.douyinvod.com/d28946ae299b9f23317610c71983254f/6af98355/
+18:03:02  [18:03:02] ENGINE next -> index=36
+18:03:02  [18:03:02] PLAYER play index=36 url=https://v9-chc.douyinvod.com/368f817ac6d03321e8ca47e3ee0cbe87/6af98350/video/cn/
+18:03:03  [18:03:03] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+18:03:03  [18:03:03] FEED loop a[0] begin bytes=50140
+18:03:03  [18:03:03] FEED loop a[0] aweme-ok
+18:03:03  [18:03:03] FEED loop a[0] video-ok
+18:03:03  [18:03:03] FEED loop a[0] id=7704499391000236234 pick-start
+18:03:03  [18:03:03] FEED loop a[0] pick-done chosen=false
+18:03:03  [18:03:03] FEED loop a[0] final chosen=true
+18:03:03  [18:03:03] FEED first url[7704499391000236234]: https://v5-se-ex-mc-cold.douyinvod.com/0026735216c6d51207c1dfa0d299f14d/6af98363/video/tos/cn/tos-cn-ve-15/oUIaru4DiPrivABEAyFBQPAbgIPLQWuVl
+18:03:03  [18:03:03] FEED loop a[1] begin bytes=55277
+18:03:03  [18:03:03] FEED loop a[1] aweme-ok
+18:03:03  [18:03:03] FEED loop a[1] video-ok
+18:03:03  [18:03:03] FEED loop a[1] id=7703802632325926159 pick-start
+18:03:03  [18:03:03] FEED loop a[1] pick-done chosen=false
+18:03:03  [18:03:03] FEED loop a[1] final chosen=true
+18:03:03  [18:03:03] FEED loop a[2] begin bytes=49129
+18:03:03  [18:03:03] FEED loop a[2] aweme-ok
+18:03:03  [18:03:03] FEED loop a[2] video-ok
+18:03:03  [18:03:03] FEED loop a[2] id=7706540245092781353 pick-start
+18:03:03  [18:03:03] FEED loop a[2] pick-done chosen=false
+18:03:03  [18:03:03] FEED loop a[2] final chosen=true
+18:03:03  [18:03:03] FEED loop a[3] begin bytes=59053
+18:03:03  [18:03:03] FEED loop a[3] aweme-ok
+18:03:04  [18:03:03] FEED loop a[3] video-ok
+18:03:04  [18:03:03] FEED loop a[3] id=7703959835078921512 pick-start
+18:03:04  [18:03:03] FEED loop a[3] pick-done chosen=false
+18:03:04  [18:03:03] FEED loop a[3] final chosen=true
+18:03:04  [18:03:03] FEED loop a[4] begin bytes=57649
+18:03:04  [18:03:03] FEED loop a[4] aweme-ok
+18:03:04  [18:03:03] FEED loop a[4] video-ok
+18:03:04  [18:03:03] FEED loop a[4] id=7697007774077182891 pick-start
+18:03:04  [18:03:03] FEED loop a[4] pick-done chosen=false
+18:03:04  [18:03:03] FEED loop a[4] final chosen=true
+18:03:04  [18:03:03] FEED loop a[5] begin bytes=53559
+18:03:04  [18:03:03] FEED loop a[5] aweme-ok
+18:03:04  [18:03:03] FEED loop a[5] video-ok
+18:03:04  [18:03:03] FEED loop a[5] id=7698649502878522191 pick-start
+18:03:04  [18:03:03] FEED loop a[5] pick-done chosen=false
+18:03:04  [18:03:03] FEED loop a[5] final chosen=true
+18:03:04  [18:03:03] FEED mobile page refresh_index=7: awemes=6 usable=6 total_seen=48
+18:03:04  [18:03:03] ENGINE merge total=47 index=36 replace=false auto=false
+18:03:05  [18:03:05] ENGINE next -> index=37
+18:03:05  [18:03:05] PLAYER play index=37 url=https://v5-ex-music.douyinstatic.com/a938efc7bf411c0b3dd8b472ff53156e/6b1e6d68/v
+18:03:07  [18:03:07] ENGINE next -> index=38
+18:03:07  [18:03:07] PLAYER play index=38 url=https://v13-cold-y.douyinvod.com/013a43cd98e7d7f58f647d123e651aec/6af9836f/video
