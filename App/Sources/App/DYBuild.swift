@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v66"
-    static let changes = "v66: 加 QDIAG 诊断——video 字段骨架+bit_rate 每档详情,定位最高画质为何未命中(黑屏/非高清同源:默认重定向地址)"
+    static let version = "v67"
+    static let changes = "v67: VIDEOTREE dump——移动端 video field21 是 varint 非 bytes,与网页版 s13 不符;dump 真实结构定位 bit_rate"
 }

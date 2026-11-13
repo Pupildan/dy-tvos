@@ -24,6 +24,8 @@ final class DYFeedClient {
     private var isFirstPage = true
     /// 已消费 aweme id（去重 + rec_raw_data 的 like/min）
     private var consumedIds: [String] = []
+    /// 已 dump 过 video 树的 aweme id（诊断去重，避免刷屏）
+    private var loggedTreeIds: Set<String> = []
 
     private init() {
         let cfg = URLSessionConfiguration.default
@@ -256,6 +258,13 @@ final class DYFeedClient {
         let skeleton = video.fields.keys.sorted().map { "\($0)[\(video.fields[$0]!.count)]" }.joined(separator: ",")
         DYLog.shared.log("FEED QDIAG[\(awemeId.prefix(8))] videoFields=\(skeleton) f21=\(video.bytesFields(21).count) f31=\(video.bytesFields(31).count)")
 
+        // 诊断：video 子消息完整树 dump（移动端结构与网页版 s13 不同，直接看真实布局）
+        if !loggedTreeIds.contains(awemeId) {
+            loggedTreeIds.insert(awemeId)
+            let tree = Proto.dump(video, depth: 0, maxDepth: 3)
+            DYLog.shared.log("FEED VIDEOTREE[\(awemeId.prefix(8))]: \(tree.prefix(1800))")
+        }
+
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
         for (idx, e) in entries.enumerated() {
@@ -425,5 +434,34 @@ struct Proto {
         }
         // 3) field 1
         return msg.strings(1).filter(isHttp)
+    }
+
+    /// 递归 dump proto 树（诊断用）：字段号 + wire 类型 + 字符串/嵌套结构。
+    static func dump(_ msg: Proto, depth: Int, maxDepth: Int) -> String {
+        guard depth <= maxDepth else { return "…" }
+        var out: [String] = []
+        for key in msg.fields.keys.sorted() {
+            for v in msg.fields[key] ?? [] {
+                switch v {
+                case .varint(let n):
+                    out.append("\(key):int=\(n)")
+                case .bytes(let b):
+                    if let s = String(data: Data(b), encoding: .utf8), isPrintable(s) {
+                        out.append("\(key):str=\"\(s.prefix(60))\"")
+                    } else if let nested = parse(b) {
+                        let child = dump(nested, depth: depth + 1, maxDepth: maxDepth)
+                        out.append("\(key):msg{\(child)}")
+                    } else {
+                        out.append("\(key):bytes[\(b.count)]")
+                    }
+                }
+            }
+        }
+        return out.joined(separator: " ")
+    }
+
+    private static func isPrintable(_ s: String) -> Bool {
+        guard !s.isEmpty else { return false }
+        return s.allSatisfy { ($0.isASCII && !$0.isNewline && $0.unicodeScalars.allSatisfy { $0.value >= 32 }) }
     }
 }

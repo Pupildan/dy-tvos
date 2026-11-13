@@ -6809,3 +6809,126 @@
 09:08:13  [09:08:13] FEED first url[7700264063629055656]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbed9pvog65ikjpq7d60&line=0&file_id=e280c35bd1134448a3ba960f56777a5f&sign=587
 09:08:13  [09:08:13] FEED mobile page refresh_index=11: awemes=6 usable=6 total_seen=64
 09:08:13  [09:08:13] ENGINE merge total=64 index=52 replace=false auto=false
+09:15:39  [09:15:39] DYTV v66 launched
+09:15:39  [09:15:39] SIGNER init start
+09:15:39  [09:15:39] LOGSRV ready on port 8765
+09:15:39  [09:15:39] SIGNER load shim ok
+09:15:39  [09:15:39] SIGNER load abogus ok
+09:15:39  [09:15:39] LOGSRV advertising as DYTV-552
+09:15:39  [09:15:39] SIGNER load sign ok
+09:15:39  [09:15:39] SIGNER load abogus_dy ok
+09:15:39  [09:15:39] SIGNER extras sign=true dy=true
+09:15:39  [09:15:39] SIGNER bdms=yes
+09:15:39  [09:15:39] SIGNER initABogus=true
+09:15:39  [09:15:39] SIGNER fns=AB (期望 AB)
+09:15:39  [09:15:39] SIGNER smoke={"ok":true,"value":"mXR0Q58hDi6kDd6h5X5LfY3qVW33YsWQ0SVkMDhezVfPN639HMTX9exEvVsvvdWeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+09:15:39  [09:15:39] SIGNER READY a_bogus len=180
+09:15:39  [09:15:39] PLAYER viewDidLoad
+09:15:39  [09:15:39] PLAYER no url at index=0 (will retry)
+09:15:39  [09:15:39] ROOT auto-start v66
+09:15:39  [09:15:39] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+09:15:39  [09:15:39] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+09:15:39  [09:15:39] PLAYER no url at index=0 (will retry)
+09:15:39  [09:15:39] PLAYER no url at index=0 (will retry)
+09:15:39  [09:15:39] LOGSRV Bonjour published: DYTV-552
+09:15:41  [09:15:41] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+09:15:41  [09:15:41] FEED QDIAG[76979514] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[2],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED first url[7697951408922934694]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dba9s0vog65un98jaje0&line=0&file_id=5a7bca88c4d0423bae595dca19a561b3&sign=1da
+09:15:41  [09:15:41] FEED QDIAG[76983047] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED QDIAG[77065098] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED QDIAG[77060785] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED QDIAG[77024088] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED QDIAG[77009655] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:15:41  [09:15:41] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+09:15:41  [09:15:41] ENGINE merge total=6 index=0 replace=false auto=true
+09:15:41  [09:15:41] PLAYER play index=0 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dba9s0vog65un98ja
+09:15:46  [09:15:46] ENGINE needMore (index=0 count=6)
+09:15:46  [09:15:46] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+09:15:46  [09:15:46] ENGINE next -> index=1
+09:15:46  [09:15:46] PLAYER play index=1 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbatsmfog65oevv3b
+09:15:46  [09:15:46] ENGINE next -> index=2
+09:15:46  [09:15:46] PLAYER play index=2 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbpgb6nog65q0tohj
+09:15:48  [09:15:48] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+09:15:48  [09:15:48] FEED QDIAG[77041304] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED first url[7704130489929501988]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbl8m5nog65v9i6a3tb0&line=0&file_id=a0d83be2ce484459aacad3afda72bb54&sign=02a
+09:15:48  [09:15:48] FEED QDIAG[76976466] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[2],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED QDIAG[77012423] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED QDIAG[77059829] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED QDIAG[77031638] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED QDIAG[77041833] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:15:48  [09:15:48] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+09:15:48  [09:15:48] ENGINE merge total=12 index=2 replace=false auto=false
+09:15:53  [09:15:53] ENGINE next -> index=3
+09:15:53  [09:15:53] PLAYER play index=3 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbonqlfog65us4seh
+09:15:53  [09:15:53] ENGINE next -> index=4
+09:15:53  [09:15:53] PLAYER play index=4 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbi77jnog65m9nak7
+09:15:57  [09:15:57] ENGINE next -> index=5
+09:15:58  [09:15:57] PLAYER play index=5 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbfl5rnog65qib1pe
+09:15:58  [09:15:58] ENGINE needMore (index=5 count=12)
+09:15:58  [09:15:58] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+09:15:58  [09:15:58] ENGINE next -> index=6
+09:15:58  [09:15:58] PLAYER play index=6 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbl8m5nog65v9i6a3
+09:16:00  [09:16:00] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+09:16:00  [09:16:00] FEED QDIAG[77068645] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED first url[7706864571264306447]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq4govog65n4g9vsh8g&line=0&file_id=faa661ca84b141a78c0045807635ebea&sign=84f
+09:16:00  [09:16:00] FEED QDIAG[76989518] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[2],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED QDIAG[77004559] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED QDIAG[76968311] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED QDIAG[77064015] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED QDIAG[77038716] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:00  [09:16:00] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+09:16:00  [09:16:00] ENGINE merge total=18 index=6 replace=false auto=false
+09:16:06  [09:16:06] ENGINE next -> index=7
+09:16:06  [09:16:06] PLAYER play index=7 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000db9ogv7og65p8eqen
+09:16:06  [09:16:06] ENGINE next -> index=8
+09:16:07  [09:16:06] PLAYER play index=8 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbg4qkvog65gdmh4u
+09:16:09  [09:16:09] ENGINE next -> index=9
+09:16:09  [09:16:09] PLAYER play index=9 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dboi7ifog65urgmud
+09:16:09  [09:16:09] ENGINE next -> index=10
+09:16:09  [09:16:09] PLAYER play index=10 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbjhr5fog65nsqn9f
+09:16:13  [09:16:12] ENGINE next -> index=11
+09:16:13  [09:16:12] PLAYER play index=11 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dblc3h7og65r7teku
+09:16:13  [09:16:13] ENGINE needMore (index=11 count=18)
+09:16:13  [09:16:13] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+09:16:13  [09:16:13] ENGINE next -> index=12
+09:16:13  [09:16:13] PLAYER play index=12 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq4govog65n4g9vs
+09:16:15  [09:16:15] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+09:16:15  [09:16:15] FEED QDIAG[77009584] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED first url[7700958408996073073]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbfkokvog65t2e2nnk6g&line=0&file_id=1fb5fe5934964f7ea467945453de7a9e&sign=cab
+09:16:15  [09:16:15] FEED QDIAG[77064644] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED QDIAG[77061990] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED QDIAG[77071842] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED QDIAG[77065440] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[2],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED QDIAG[77072655] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:15  [09:16:15] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+09:16:15  [09:16:15] ENGINE merge total=24 index=12 replace=false auto=false
+09:16:16  [09:16:16] ENGINE next -> index=13
+09:16:16  [09:16:16] PLAYER play index=13 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbc2mnvog65pb74u4
+09:16:18  [09:16:18] ENGINE next -> index=14
+09:16:19  [09:16:18] PLAYER play index=14 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbeo6u7og65kp7j7l
+09:16:26  [09:16:25] ENGINE next -> index=15
+09:16:26  [09:16:25] PLAYER play index=15 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000db8a287og65hiuh7j
+09:16:26  [09:16:26] ENGINE next -> index=16
+09:16:26  [09:16:26] PLAYER play index=16 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbpa6gvog65s41mv9
+09:16:28  [09:16:28] ENGINE next -> index=17
+09:16:28  [09:16:28] PLAYER play index=17 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbkqcffog65r76vpm
+09:16:28  [09:16:28] ENGINE needMore (index=17 count=24)
+09:16:28  [09:16:28] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+09:16:28  [09:16:28] ENGINE next -> index=18
+09:16:28  [09:16:28] PLAYER play index=18 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbfkokvog65t2e2nn
+09:16:28  [09:16:28] ENGINE next -> index=19
+09:16:28  [09:16:28] PLAYER play index=19 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbpdp07og65ug1ea4
+09:16:30  [09:16:30] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+09:16:30  [09:16:30] FEED QDIAG[77068769] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED first url[7706876919630908672]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq55jnog65us7avqa20&line=0&file_id=ed6d5570d5df4a7dbca753cb92d8105d&sign=53b
+09:16:30  [09:16:30] FEED QDIAG[77072616] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED QDIAG[77013218] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED QDIAG[76742850] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[2],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED QDIAG[77061030] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],22[1],23[1],24[1],25[1],26[1],29[1],30[1],33[1],34[1],41[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED QDIAG[77057122] videoFields=1[1],2[1],3[1],4[1],5[1],6[1],7[1],8[1],9[1],10[1],11[1],13[1],14[1],15[1],16[1],17[1],18[1],21[1],24[1],25[1],26[1],30[1],33[1],34[1],44[1] f21=0 f31=0
+09:16:30  [09:16:30] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=30
+09:16:30  [09:16:30] ENGINE merge total=30 index=19 replace=false auto=false
+09:16:31  [09:16:31] ENGINE next -> index=20
+09:16:31  [09:16:31] PLAYER play index=20 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dboum5nog65sllnas
+09:16:31  [09:16:31] ENGINE next -> index=21
+09:16:31  [09:16:31] PLAYER play index=21 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbqmjn7og65r0li5o
