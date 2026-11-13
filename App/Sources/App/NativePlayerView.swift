@@ -14,6 +14,16 @@ final class DYPlayerViewController: AVPlayerViewController {
     private var preloadCache: [Int: AVPlayerItem] = [:]
     private let preloadRadius = 2
 
+    /// 无缝切换遮罩：换源瞬间盖黑，新源 readyToPlay 后 0.2s 淡出（消灭黑屏转圈）。
+    private let switchCover: UIView = {
+        let v = UIView()
+        v.backgroundColor = .black
+        v.alpha = 0
+        v.isUserInteractionEnabled = false   // 绝不抢遥控器焦点
+        return v
+    }()
+    private var isSwitching = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
         try? AVAudioSession.sharedInstance().setCategory(.playback)
@@ -34,6 +44,17 @@ final class DYPlayerViewController: AVPlayerViewController {
             .store(in: &cancellables)
 
         reloadIfNeeded()
+
+        // 无缝切换遮罩：盖在最上层（AVPlayerViewController 的视频层之上）
+        view.addSubview(switchCover)
+        switchCover.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            switchCover.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            switchCover.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            switchCover.topAnchor.constraint(equalTo: view.topAnchor),
+            switchCover.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        view.bringSubviewToFront(switchCover)
     }
 
     private func item(at index: Int) -> AVPlayerItem? {
@@ -69,11 +90,17 @@ final class DYPlayerViewController: AVPlayerViewController {
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         guard let item = object as? AVPlayerItem else { return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context) }
-        if keyPath == "status", item.status == .failed {
-            let idx = preloadCache.first(where: { $0.value == item })?.key ?? -1
-            DYLog.shared.log("PLAYER item FAILED index=\(idx) err=\(item.error?.localizedDescription ?? "?")")
-            PlaybackEngine.shared.reportFailure() // 连续失败/过期 → 触发页面重拉新直链
-            if item == player?.currentItem { advance() }
+        if keyPath == "status" {
+            if item.status == .readyToPlay, item == player?.currentItem {
+                // 新源首帧可播 → 淡出切换遮罩
+                fadeOutCover()
+            }
+            if item.status == .failed {
+                let idx = preloadCache.first(where: { $0.value == item })?.key ?? -1
+                DYLog.shared.log("PLAYER item FAILED index=\(idx) err=\(item.error?.localizedDescription ?? "?")")
+                PlaybackEngine.shared.reportFailure() // 连续失败/过期 → 触发页面重拉新直链
+                if item == player?.currentItem { advance() }
+            }
         }
     }
 
@@ -88,9 +115,24 @@ final class DYPlayerViewController: AVPlayerViewController {
         }
         currentIndex = engine.index
         DYLog.shared.log("PLAYER play index=\(currentIndex) url=\((it.asset as? AVURLAsset)?.url.absoluteString.prefix(80) ?? "?")")
+        // 换源瞬间盖黑（无缝切换），等新源 readyToPlay 后淡出
+        isSwitching = true
+        view.bringSubviewToFront(switchCover)
+        switchCover.alpha = 1
         player?.replaceCurrentItem(with: it)
         player?.play()
         preloadNeighbors(around: currentIndex)
+        // 兜底：若 item 已 ready（预加载命中），立即淡出
+        if it.status == .readyToPlay { fadeOutCover() }
+    }
+
+    /// 新源首帧可播 → 0.2s 淡出遮罩。
+    private func fadeOutCover() {
+        guard isSwitching else { return }
+        isSwitching = false
+        UIView.animate(withDuration: 0.2, animations: { [weak self] in
+            self?.switchCover.alpha = 0
+        })
     }
 
     private func preloadNeighbors(around index: Int) {
