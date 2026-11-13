@@ -11608,3 +11608,533 @@
 11:36:57  [11:36:56] SLOT idx=4 readyToPlay muted=true
 11:36:57  [11:36:56] DUAL standby ready idx=4 keepMuted=false
 11:36:57  [11:36:57] SLOT cleared (resource released)
+12:00:00  [12:00:00] DYTV v82 launched
+12:00:00  [12:00:00] SIGNER init start
+12:00:00  [12:00:00] LOGSRV ready on port 8765
+12:00:00  [12:00:00] SIGNER load shim ok
+12:00:00  [12:00:00] SIGNER load abogus ok
+12:00:00  [12:00:00] LOGSRV advertising as DYTV-758
+12:00:00  [12:00:00] SIGNER load sign ok
+12:00:01  [12:00:00] SIGNER load abogus_dy ok
+12:00:01  [12:00:00] SIGNER extras sign=true dy=true
+12:00:01  [12:00:00] SIGNER bdms=yes
+12:00:01  [12:00:00] SIGNER initABogus=true
+12:00:01  [12:00:00] SIGNER fns=AB (期望 AB)
+12:00:01  [12:00:01] SIGNER smoke={"ok":true,"value":"xvm0/QhgDigskD6f5XALfY3qVW33YsUS0SVkMDhezVfPDy39HMPU9exEvhvvnaWeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+12:00:01  [12:00:01] SIGNER READY a_bogus len=180
+12:00:01  [12:00:01] PLAYER viewDidLoad
+12:00:01  [12:00:01] PLAYER no url at index=0 (will retry)
+12:00:01  [12:00:01] ROOT auto-start v82
+12:00:01  [12:00:01] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+12:00:01  [12:00:01] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+12:00:01  [12:00:01] PLAYER no url at index=0 (will retry)
+12:00:01  [12:00:01] PLAYER no url at index=0 (will retry)
+12:00:01  [12:00:01] LOGSRV Bonjour published: DYTV-758
+12:00:03  [12:00:03] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+12:00:03  [12:00:03] FEED first url[7699165222053537251]: https://v11-awememusicpgc.amemv.com/dc4ba5c50799b324ca91b7c181260dd1/6b1e190f/video/tos/cn/tos-cn-ve-2774/o0ksPDhwFDyJBYhSWUaMDzQIztBJfAQGsA
+12:00:03  [12:00:03] FEED mobile page refresh_index=1: awemes=6 usable=6 total_seen=6
+12:00:03  [12:00:03] ENGINE merge total=6 index=0 replace=false auto=true
+12:00:03  [12:00:03] PLAYER play index=0 url=https://v11-awememusicpgc.amemv.com/dc4ba5c50799b324ca91b7c181260dd1/6b1e190f/vi
+12:00:07  [12:00:07] ENGINE needMore (index=0 count=6)
+12:00:08  [12:00:07] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+12:00:08  [12:00:07] ENGINE next -> index=1
+12:00:08  [12:00:07] PLAYER play index=1 url=https://v5-se.zjyd.zcidclink.com/42778cf1b0add6a67a3981b29817d95d/6af92e46/video
+12:00:10  [12:00:09] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+12:00:10  [12:00:09] FEED first url[7696705314908843249]: https://v5-ex-music.douyinstatic.com/fca1ebdc6b7b598d55feb60035391266/6b1e187f/video/tos/cn/tos-cn-ve-2178-volc/oYwgk6sELIVpE7LAs0YQAk4ie9qG
+12:00:10  [12:00:09] FEED mobile page refresh_index=2: awemes=6 usable=6 total_seen=12
+12:00:10  [12:00:09] ENGINE merge total=12 index=1 replace=false auto=false
+12:00:11  [12:00:11] ENGINE next -> index=2
+12:00:11  [12:00:11] PLAYER play index=2 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbkt7kvog65mr2tk4
+12:00:12  [12:00:12] ENGINE next -> index=3
+12:00:12  [12:00:12] PLAYER play index=3 url=https://v9-chc.douyinvod.com/098fa21a4a4485d73960427fb6647786/6af92e4a/video/cn/
+12:00:12  [12:00:12] ENGINE next -> index=4
+12:00:12  [12:00:12] PLAYER play index=4 url=https://v5-ex-music.douyinstatic.com/5981cd851d3ed976e5b3c6c90e327dbf/6b1e18a2/v
+12:00:14  [12:00:14] ENGINE next -> index=5
+12:00:14  [12:00:14] PLAYER play index=5 url=https://v9-chc.douyinvod.com/0c55a3c1f34259d97a7c1a15d616c63f/6af92e55/video/cn/
+12:00:14  [12:00:14] ENGINE needMore (index=5 count=12)
+12:00:15  [12:00:14] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=12
+12:00:15  [12:00:14] ENGINE next -> index=6
+12:00:15  [12:00:14] PLAYER play index=6 url=https://v5-ex-music.douyinstatic.com/fca1ebdc6b7b598d55feb60035391266/6b1e187f/v
+12:00:17  [12:00:17] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+12:00:17  [12:00:17] FEED first url[7703473258036776232]: https://v26-cold-y.douyinvod.com/8616b2642b4a6d7a1e62ac07c749dcec/6af92e6f/video/tos/cn/tos-cn-ve-15/o8RnufQwIEYjYmKADPqAoDFB6EbsDNEfgAxFT9/
+12:00:17  [12:00:17] FEED mobile page refresh_index=3: awemes=6 usable=6 total_seen=18
+12:00:17  [12:00:17] ENGINE merge total=18 index=6 replace=false auto=false
+12:00:17  [12:00:17] ENGINE next -> index=7
+12:00:17  [12:00:17] PLAYER play index=7 url=https://v99-coldx.douyinvod.com/9bec2281e7b72ac403c2c5ca97ee86e4/6af92e54/video/
+12:00:17  [12:00:17] ENGINE next -> index=8
+12:00:17  [12:00:17] PLAYER play index=8 url=https://v5-se.zjyd.zcidclink.com/1fc507d5f7b41545a31628a4b5b83455/6af92e50/video
+12:00:20  [12:00:20] ENGINE next -> index=9
+12:00:20  [12:00:20] PLAYER play index=9 url=https://v99-coldx.douyinvod.com/7e5eeca1ffef04c58967e4bffef754dd/6af92e51/video/
+12:00:22  [12:00:22] ENGINE next -> index=10
+12:00:22  [12:00:22] PLAYER play index=10 url=https://v5-se.zjyd.zcidclink.com/cfc04d507babac71c19d27adef18fa35/6af92e4e/video
+12:00:24  [12:00:24] ENGINE next -> index=11
+12:00:24  [12:00:24] PLAYER play index=11 url=https://v9-awememusicpgc.amemv.com/672557aeeff372ba261d7b61d8f35a52/6b1e1865/vid
+12:00:26  [12:00:26] ENGINE needMore (index=11 count=18)
+12:00:26  [12:00:26] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=18
+12:00:26  [12:00:26] ENGINE next -> index=12
+12:00:26  [12:00:26] PLAYER play index=12 url=https://v26-cold-y.douyinvod.com/8616b2642b4a6d7a1e62ac07c749dcec/6af92e6f/video
+12:00:28  [12:00:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+12:00:28  [12:00:28] FEED first url[7705361514932349171]: https://v5-ex-music.douyinstatic.com/af56f094fb84eafc4e16e26ef3891149/6b1e18c0/video/tos/cn/tos-cn-ve-2178-ce/oMfQJ258UwE1OhxLHaKIgexl0gIpUC
+12:00:28  [12:00:28] FEED mobile page refresh_index=4: awemes=6 usable=6 total_seen=24
+12:00:28  [12:00:28] ENGINE merge total=24 index=12 replace=false auto=false
+12:00:28  [12:00:28] ENGINE next -> index=13
+12:00:28  [12:00:28] PLAYER play index=13 url=https://v99-coldx.douyinvod.com/e02da9907a398f62a8526210cacf0166/6af92e5c/video/
+12:00:29  [12:00:28] ENGINE next -> index=14
+12:00:29  [12:00:28] PLAYER play index=14 url=https://v5-daily-cm-dyseries.douyinvod.com/b92f8df1c466160137a83d055f241bdf/6af9
+12:00:31  [12:00:31] ENGINE next -> index=15
+12:00:31  [12:00:31] PLAYER play index=15 url=https://v6-cold.douyinvod.com/d219e46563d4f56210e04d66e914f376/6af92e58/video/to
+12:00:32  [12:00:32] ENGINE next -> index=16
+12:00:32  [12:00:32] PLAYER play index=16 url=https://v99-coldx.douyinvod.com/efe23fa9c53b0bb8e6719c3b430a30cf/6af92e5b/video/
+12:00:34  [12:00:34] ENGINE next -> index=17
+12:00:34  [12:00:34] PLAYER play index=17 url=https://v9-chc.douyinvod.com/eea13c2f5929938cd581622175c3c1ee/6af92e66/video/cn/
+12:00:36  [12:00:36] ENGINE needMore (index=17 count=24)
+12:00:36  [12:00:36] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=24
+12:00:36  [12:00:36] ENGINE next -> index=18
+12:00:36  [12:00:36] PLAYER play index=18 url=https://v5-ex-music.douyinstatic.com/af56f094fb84eafc4e16e26ef3891149/6b1e18c0/v
+12:00:38  [12:00:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+12:00:38  [12:00:38] FEED first url[7697864718001687823]: https://v5-ex-dyseries.douyinvod.com/caddbd8faa2c36fd1bb9768d1477393a/6af92e85/video/tos/cn/tos-cn-ve-15/oIIAUFqcEBJLAMDBEfN8TDQgEuTV31v7fz2
+12:00:38  [12:00:38] FEED mobile page refresh_index=5: awemes=6 usable=6 total_seen=30
+12:00:38  [12:00:38] ENGINE merge total=30 index=18 replace=false auto=false
+12:00:38  [12:00:38] ENGINE next -> index=19
+12:00:38  [12:00:38] PLAYER play index=19 url=https://v13-cold-y.douyinvod.com/c0348d64a8246bf5507f8b4afd309dce/6af92e62/video
+12:00:40  [12:00:40] ENGINE next -> index=20
+12:00:40  [12:00:40] PLAYER play index=20 url=https://v96-dyseries.douyinvod.com/2e0fc8429af07bfd323ef7fa4d02161e/6af92e66/vid
+12:00:42  [12:00:41] ENGINE next -> index=21
+12:00:42  [12:00:41] PLAYER play index=21 url=https://v9-chc.douyinvod.com/c9445dd96c0edca10fe214820dcd7b26/6af92e7a/video/cn/
+12:00:43  [12:00:43] ENGINE next -> index=22
+12:00:43  [12:00:43] PLAYER play index=22 url=https://v95-bjb-mc-cold.douyinvod.com/8b7dcdf8d4a670271d55dcdde29e0eb8/6af92e62/
+12:00:46  [12:00:46] ENGINE next -> index=23
+12:00:46  [12:00:46] PLAYER play index=23 url=https://v5-ex-dyseries.douyinvod.com/f0531a8679399b61c02ba82b8fab4be1/6af92e66/v
+12:00:47  [12:00:47] ENGINE needMore (index=23 count=30)
+12:00:47  [12:00:47] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=30
+12:00:48  [12:00:47] ENGINE next -> index=24
+12:00:48  [12:00:47] PLAYER play index=24 url=https://v5-ex-dyseries.douyinvod.com/caddbd8faa2c36fd1bb9768d1477393a/6af92e85/v
+12:00:49  [12:00:49] ENGINE next -> index=25
+12:00:49  [12:00:49] PLAYER play index=25 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbq4f0vog65mhi7uk
+12:00:49  [12:00:49] ENGINE next -> index=26
+12:00:49  [12:00:49] PLAYER play index=26 url=https://v95-zjbjx-mc-cold.douyinvod.com/71bbbc0d4d004c1ee434ff0cb309b8a3/6af92e8
+12:00:49  [12:00:49] ENGINE next -> index=27
+12:00:49  [12:00:49] PLAYER play index=27 url=https://v5-daily-cm-dyseries.douyinvod.com/171628859c2e03c935105b6832cee997/6af9
+12:00:49  [12:00:49] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+12:00:50  [12:00:49] FEED first url[7704966049842032107]: https://v5-ex-music.douyinstatic.com/47f28a0bb0acf7248a1e81d90104a644/6b1e18a3/video/tos/cn/tos-cn-ve-2178-ce/okbhQeoE6DCWJ6dAPmFrEJoM5I4wDC
+12:00:50  [12:00:49] FEED mobile page refresh_index=6: awemes=6 usable=6 total_seen=36
+12:00:50  [12:00:49] ENGINE merge total=36 index=27 replace=false auto=false
+12:00:53  [12:00:53] ENGINE next -> index=28
+12:00:53  [12:00:53] PLAYER play index=28 url=https://v5-se-ex-mc-music.douyinstatic.com/b9db1a2de0dce73d0085e848654429b4/6b1e
+12:00:55  [12:00:55] ENGINE next -> index=29
+12:00:55  [12:00:55] PLAYER play index=29 url=https://v5-se-ex-mc-cold.douyinvod.com/67369847345d620525e49c7746abe412/6af92e78
+12:00:55  [12:00:55] ENGINE needMore (index=29 count=36)
+12:00:55  [12:00:55] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=36
+12:00:55  [12:00:55] ENGINE next -> index=30
+12:00:55  [12:00:55] PLAYER play index=30 url=https://v5-ex-music.douyinstatic.com/47f28a0bb0acf7248a1e81d90104a644/6b1e18a3/v
+12:00:58  [12:00:57] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=5 (refresh_index=7)
+12:00:58  [12:00:57] FEED first url[7707298916881960226]: https://v5-cold-y.douyinvod.com/35cff9e39a6478286c906befa097b279/6af92e84/video/tos/cn/tos-cn-ve-15/oYDAQIngE0viTvIADgziPUVPNBwQEYXN6a1pC/?a
+12:00:58  [12:00:57] FEED mobile page refresh_index=7: awemes=5 usable=5 total_seen=41
+12:00:58  [12:00:57] ENGINE merge total=41 index=30 replace=false auto=false
+12:00:58  [12:00:58] ENGINE next -> index=31
+12:00:58  [12:00:58] PLAYER play index=31 url=https://v9-chc.douyinvod.com/bf7ca3dd68cf6f4604a859973ecf1115/6af92e77/video/cn/
+12:00:58  [12:00:58] PLAYER item FAILED index=31 err=You do not have permission to access the requested resource.
+12:00:58  [12:00:58] ENGINE next -> index=32
+12:00:58  [12:00:58] PLAYER play index=32 url=https://sf6-cdn-tos.douyinstatic.com/obj/ies-music/7706814010376686346.mp3
+12:00:58  [12:00:58] ENGINE next -> index=33
+12:00:58  [12:00:58] PLAYER play index=33 url=https://v9-chc.douyinvod.com/d238d5a6a9dcaf9da9f79768612c03e9/6af92e7c/video/cn/
+12:01:02  [12:01:02] ENGINE next -> index=34
+12:01:02  [12:01:02] PLAYER play index=34 url=https://v99-coldx.douyinvod.com/9beac281d954c65d679f760efc4f00d0/6af92e7f/video/
+12:01:02  [12:01:02] ENGINE needMore (index=34 count=41)
+12:01:02  [12:01:02] FEED mobile GET refresh_index=8 cold=0 count=10 bogus_len=180 seen=41
+12:01:02  [12:01:02] ENGINE next -> index=35
+12:01:02  [12:01:02] PLAYER play index=35 url=https://v11-cold.douyinvod.com/64dc6ccb1a2862b1b43ca27556691679/6af92e76/video/t
+12:01:04  [12:01:04] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=8)
+12:01:04  [12:01:04] FEED first url[7706061325793015908]: https://v95-hzyy-thr-daily-colda.douyinvod.com/c43e9731d8610fe8a383f3527e54bbe1/6af92e87/video/tos/cn/tos-cn-ve-15/oEA5MPvQbIGDiOEPtBV4vaIiY
+12:01:04  [12:01:04] FEED mobile page refresh_index=8: awemes=6 usable=6 total_seen=47
+12:01:04  [12:01:04] ENGINE merge total=47 index=35 replace=false auto=false
+12:01:05  [12:01:05] ENGINE next -> index=36
+12:01:05  [12:01:05] PLAYER play index=36 url=https://v5-cold-y.douyinvod.com/35cff9e39a6478286c906befa097b279/6af92e84/video/
+12:01:05  [12:01:05] ENGINE next -> index=37
+12:01:05  [12:01:05] PLAYER play index=37 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbhav1nog65hhleb9
+12:01:09  [12:01:09] ENGINE next -> index=38
+12:01:09  [12:01:09] PLAYER play index=38 url=https://v5-ex-dyseries.douyinvod.com/faab2fba346f0a0f738f1dd44f4e25a2/6af92e8a/v
+12:01:09  [12:01:09] ENGINE next -> index=39
+12:01:09  [12:01:09] PLAYER play index=39 url=https://v26-cold-y.douyinvod.com/4c561dbf4cc0e2c129985682462f2e7b/6af92ea0/video
+12:01:09  [12:01:09] ENGINE next -> index=40
+12:01:09  [12:01:09] PLAYER play index=40 url=https://v9-chc.douyinvod.com/185bb3a5d46e2cec4227bf85dc31f050/6af92e7e/video/cn/
+12:01:14  [12:01:13] ENGINE needMore (index=40 count=47)
+12:01:14  [12:01:13] FEED mobile GET refresh_index=9 cold=0 count=10 bogus_len=180 seen=47
+12:01:14  [12:01:13] ENGINE next -> index=41
+12:01:14  [12:01:13] PLAYER play index=41 url=https://v95-hzyy-thr-daily-colda.douyinvod.com/c43e9731d8610fe8a383f3527e54bbe1/
+12:01:16  [12:01:16] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=9)
+12:01:16  [12:01:16] FEED first url[7705618279293458289]: https://v5-ex-awememusicpgc.amemv.com/58c0aaecceb748d0a004cac03d67772a/6b1e18bf/video/tos/cn/tos-cn-ve-2774/o8VPQyYmVrVr8Bu8iMIGAxaLBWIcawjp
+12:01:16  [12:01:16] FEED mobile page refresh_index=9: awemes=6 usable=6 total_seen=53
+12:01:16  [12:01:16] ENGINE merge total=53 index=41 replace=false auto=false
+12:01:19  [12:01:19] ENGINE next -> index=42
+12:01:19  [12:01:19] PLAYER play index=42 url=https://v5-ex-music.douyinstatic.com/aa04bbd25cd3e9f4e6b53f9db527c454/6b1e18a7/v
+12:01:21  [12:01:20] ENGINE next -> index=43
+12:01:21  [12:01:20] PLAYER play index=43 url=https://v99-coldx.douyinvod.com/83b3e0dd17bd2b2dcbacefad5d144e8d/6af92e89/video/
+12:01:22  [12:01:22] ENGINE next -> index=44
+12:01:22  [12:01:22] PLAYER play index=44 url=https://v5-gz-colda.douyinvod.com/0eafaadf1e86e38b2bb97fa796095b7b/6af92e8b/vide
+12:01:23  [12:01:23] ENGINE next -> index=45
+12:01:23  [12:01:23] PLAYER play index=45 url=https://v5-ex-dyseries.douyinvod.com/cb9f75217f1e04b49c17b8a99c2c0cff/6af92e93/v
+12:01:25  [12:01:25] ENGINE next -> index=46
+12:01:25  [12:01:25] PLAYER play index=46 url=https://v95-bjb-mc-cold.douyinvod.com/d6d707766203e1130477e7c3e835ed03/6af92e93/
+12:01:26  [12:01:26] ENGINE needMore (index=46 count=53)
+12:01:26  [12:01:26] FEED mobile GET refresh_index=10 cold=0 count=10 bogus_len=180 seen=53
+12:01:26  [12:01:26] ENGINE next -> index=47
+12:01:26  [12:01:26] PLAYER play index=47 url=https://v5-ex-awememusicpgc.amemv.com/58c0aaecceb748d0a004cac03d67772a/6b1e18bf/
+12:01:28  [12:01:28] ENGINE next -> index=48
+12:01:28  [12:01:28] PLAYER play index=48 url=https://v5-se-ex-mc-music.douyinstatic.com/9b0872c247f139a6cecd88f9f767d550/6b1e
+12:01:28  [12:01:28] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=10)
+12:01:28  [12:01:28] FEED first url[7703531214800318826]: https://v5-ex-music.douyinstatic.com/0f509da10d3cff3698272b40389855ad/6b1e18b8/video/tos/cn/tos-cn-ve-2178/oYo14xEWEfaZrgx7u5tiwQaCAQMdYQAa6
+12:01:28  [12:01:28] FEED mobile page refresh_index=10: awemes=6 usable=6 total_seen=59
+12:01:28  [12:01:28] ENGINE merge total=59 index=48 replace=false auto=false
+12:01:30  [12:01:30] ENGINE next -> index=49
+12:01:30  [12:01:30] PLAYER play index=49 url=https://v5-se-ex-mc-music.douyinstatic.com/4b89e4390e2fc913e29e9a906dfc4f98/6b1e
+12:01:30  [12:01:30] ENGINE next -> index=50
+12:01:30  [12:01:30] PLAYER play index=50 url=https://v9-chc.douyinvod.com/37d5df410a08e2d787d539c86df58df1/6af92e95/video/cn/
+12:01:32  [12:01:32] ENGINE next -> index=51
+12:01:32  [12:01:32] PLAYER play index=51 url=https://v5-se-ex-mc-music.douyinstatic.com/3889a5217beaa6acf00851dab22691e6/6b1e
+12:01:34  [12:01:34] ENGINE next -> index=52
+12:01:34  [12:01:34] PLAYER play index=52 url=https://v5-gz2-colda.douyinvod.com/270312789ac5682121b90da1dec91a0c/6af92e96/vid
+12:01:36  [12:01:36] ENGINE needMore (index=52 count=59)
+12:01:36  [12:01:36] FEED mobile GET refresh_index=11 cold=0 count=10 bogus_len=180 seen=59
+12:01:36  [12:01:36] ENGINE next -> index=53
+12:01:36  [12:01:36] PLAYER play index=53 url=https://v5-ex-music.douyinstatic.com/0f509da10d3cff3698272b40389855ad/6b1e18b8/v
+12:01:37  [12:01:36] ENGINE next -> index=54
+12:01:37  [12:01:36] PLAYER play index=54 url=https://v9-chc.douyinvod.com/487673debdd2c410c5ceba739dfa6a1e/6af92ea3/video/cn/
+12:01:38  [12:01:38] ENGINE next -> index=55
+12:01:38  [12:01:38] PLAYER play index=55 url=https://v99-coldx.douyinvod.com/cab62d081f1f3b7af8336733f8fe8e30/6af92ea3/video/
+12:01:38  [12:01:38] ENGINE next -> index=56
+12:01:38  [12:01:38] PLAYER play index=56 url=https://v99-coldx.douyinvod.com/cc15128220626caede6a9e91bc5ea863/6af92e9f/video/
+12:01:38  [12:01:38] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=11)
+12:01:38  [12:01:38] FEED first url[7699347898693676195]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbcp80nog65n77prt2qg&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&imp
+12:01:38  [12:01:38] FEED mobile page refresh_index=11: awemes=6 usable=6 total_seen=65
+12:01:38  [12:01:38] ENGINE merge total=65 index=56 replace=false auto=false
+12:01:40  [12:01:40] ENGINE next -> index=57
+12:01:40  [12:01:40] PLAYER play index=57 url=https://v99-coldx.douyinvod.com/42a90e3482f81f59a27943dd8506db17/6af92ea2/video/
+12:01:41  [12:01:41] ENGINE next -> index=58
+12:01:41  [12:01:41] PLAYER play index=58 url=https://v5-ex-awememusicpgc.amemv.com/64fe73fa4b435e8c98bf0ed0f8c13977/6b1e18ab/
+12:01:43  [12:01:43] ENGINE needMore (index=58 count=65)
+12:01:43  [12:01:43] FEED mobile GET refresh_index=12 cold=0 count=10 bogus_len=180 seen=65
+12:01:43  [12:01:43] ENGINE next -> index=59
+12:01:43  [12:01:43] PLAYER play index=59 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbcp80nog65n77prt
+12:01:43  [12:01:43] ENGINE next -> index=60
+12:01:43  [12:01:43] PLAYER play index=60 url=https://v5-ex-music.douyinstatic.com/c8bcac7570ac57f951a53eb91e83eb62/6b1e18ce/v
+12:01:45  [12:01:45] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=12)
+12:01:45  [12:01:45] FEED first url[7706526838449685625]: https://v26-cold.douyinvod.com/34ea7e6f4d9148f8a6d62f39f8172305/6af92eb4/video/tos/cn/tos-cn-ve-15c000-ce/o8VAHfYzPwv9BGEEQi7iAoCeFEeiIb2Tqt
+12:01:45  [12:01:45] FEED mobile page refresh_index=12: awemes=6 usable=6 total_seen=71
+12:01:45  [12:01:45] ENGINE merge total=71 index=60 replace=false auto=false
+12:01:45  [12:01:45] ENGINE next -> index=61
+12:01:45  [12:01:45] PLAYER play index=61 url=https://v9-chc.douyinvod.com/c290e89d724480e757cda403037e397b/6af92eae/video/cn/
+12:01:45  [12:01:45] PLAYER item FAILED index=61 err=You do not have permission to access the requested resource.
+12:01:45  [12:01:45] ENGINE next -> index=62
+12:01:45  [12:01:45] PLAYER play index=62 url=https://v96-dyseries.douyinvod.com/0f6d07015aa657e4feb42544df772e1b/6af92eb8/vid
+12:01:45  [12:01:45] ENGINE next -> index=63
+12:01:45  [12:01:45] PLAYER play index=63 url=https://v9-awememusicpgc.amemv.com/6c10d3df5367731d2d545cf644cb04bf/6b1e18cf/vid
+12:01:47  [12:01:47] ENGINE next -> index=64
+12:01:47  [12:01:47] PLAYER play index=64 url=https://v5-ex-music.douyinstatic.com/f57dd339f47dfc772604df55e8bc4d95/6b1e18bf/v
+12:01:47  [12:01:47] ENGINE next -> index=65
+12:01:47  [12:01:47] PLAYER play index=65 url=https://v26-cold.douyinvod.com/34ea7e6f4d9148f8a6d62f39f8172305/6af92eb4/video/t
+12:01:50  [12:01:50] ENGINE needMore (index=65 count=71)
+12:01:50  [12:01:50] FEED mobile GET refresh_index=13 cold=0 count=10 bogus_len=180 seen=71
+12:01:50  [12:01:50] ENGINE next -> index=66
+12:01:50  [12:01:50] PLAYER play index=66 url=https://v9-chc.douyinvod.com/a2e6f9c64e6bbfc928e33c1568b2f80e/6af92eaf/video/cn/
+12:01:50  [12:01:50] ENGINE next -> index=67
+12:01:50  [12:01:50] PLAYER play index=67 url=https://v99-coldx.douyinvod.com/584d6d37c892341ae8913b72984a7e08/6af92eb5/video/
+12:01:50  [12:01:50] PLAYER item FAILED index=66 err=You do not have permission to access the requested resource.
+12:01:50  [12:01:50] ENGINE refresh (stale=false)
+12:01:50  [12:01:50] FEED mobile GET refresh_index=13 cold=0 count=10 bogus_len=180 seen=71
+12:01:52  [12:01:52] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=13)
+12:01:52  [12:01:52] FEED first url[7706112516857875763]: https://v96-dyseries.douyinvod.com/e40d3e838190997c9901fd096c883b23/6af92f98/video/tos/cn/tos-cn-ve-15/osOAXEcDgtFBAX9Ffkq9AjAlQUjEf8I6ZmFP2
+12:01:52  [12:01:52] FEED mobile page refresh_index=13: awemes=6 usable=6 total_seen=77
+12:01:52  [12:01:52] ENGINE merge total=77 index=67 replace=false auto=false
+12:01:52  [12:01:52] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=13)
+12:01:52  [12:01:52] FEED first url[7705223341847073257]: https://v11-awememusicpgc.amemv.com/09efe5c5377555330c6d4378815b1b7a/6b1e1984/video/tos/cn/tos-cn-ve-2774/o4LneBvROtQkWEvBQgGeDbAaD1gVjoCgSA
+12:01:52  [12:01:52] FEED mobile page refresh_index=13: awemes=6 usable=6 total_seen=83
+12:01:52  [12:01:52] ENGINE merge total=81 index=67 replace=false auto=false
+12:01:52  [12:01:52] ENGINE next -> index=68
+12:01:52  [12:01:52] PLAYER play index=68 url=https://v9-chc.douyinvod.com/ef00350ba88c937b0cd78127e2910856/6af92eaf/video/cn/
+12:01:56  [12:01:56] ENGINE next -> index=69
+12:01:56  [12:01:56] PLAYER play index=69 url=https://v9-awememusicpgc.amemv.com/630aef2790563c16167a4db103b70750/6b1e18be/vid
+12:01:56  [12:01:56] ENGINE next -> index=70
+12:01:56  [12:01:56] PLAYER play index=70 url=https://v5-gz2-colda.douyinvod.com/b9333bbb53d6c1af7423f8905ed1ae07/6af92eb3/vid
+12:01:57  [12:01:57] ENGINE next -> index=71
+12:01:57  [12:01:57] PLAYER play index=71 url=https://v96-dyseries.douyinvod.com/e40d3e838190997c9901fd096c883b23/6af92f98/vid
+12:01:59  [12:01:58] ENGINE next -> index=72
+12:01:59  [12:01:58] PLAYER play index=72 url=https://v9-chc.douyinvod.com/43d51a391530fdf1116ea66e8dd81c2b/6af92ec2/video/cn/
+12:01:59  [12:01:58] PLAYER item FAILED index=72 err=You do not have permission to access the requested resource.
+12:01:59  [12:01:58] ENGINE next -> index=73
+12:01:59  [12:01:58] PLAYER play index=73 url=https://v9-chc.douyinvod.com/897a19518eed26a729e28d7b62562ddb/6af92eb7/video/cn/
+12:02:01  [12:02:00] ENGINE next -> index=74
+12:02:01  [12:02:00] PLAYER play index=74 url=https://v5-se.zjyd.zcidclink.com/6e052ba66172ef8cde13affdaef2cf3e/6af92eb5/video
+12:02:03  [12:02:02] ENGINE needMore (index=74 count=81)
+12:02:03  [12:02:03] FEED mobile GET refresh_index=14 cold=0 count=10 bogus_len=180 seen=83
+12:02:03  [12:02:03] ENGINE next -> index=75
+12:02:03  [12:02:03] PLAYER play index=75 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbqfv67og65r3l0j1
+12:02:03  [12:02:03] ENGINE next -> index=76
+12:02:03  [12:02:03] PLAYER play index=76 url=https://v95-bjb-mc-cold.douyinvod.com/dfc59ceb34333275fbcd7cda0812e175/6af92eba/
+12:02:04  [12:02:04] ENGINE next -> index=77
+12:02:04  [12:02:04] PLAYER play index=77 url=https://v11-awememusicpgc.amemv.com/09efe5c5377555330c6d4378815b1b7a/6b1e1984/vi
+12:02:04  [12:02:04] ENGINE next -> index=78
+12:02:04  [12:02:04] PLAYER play index=78 url=https://v99-coldx.douyinvod.com/5ed303481282ac7caa36ba07004a5a49/6af92ebf/video/
+12:02:05  [12:02:05] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=14)
+12:02:05  [12:02:05] FEED first url[7697099742743891243]: https://v5-gz2-colda.douyinvod.com/2a85f7b1cf753446d135d60d3162d49b/6af92ecf/video/tos/cn/tos-cn-ve-15/okVNEmRq9C0QyAL7SBLIMOWgUoBfAgef6tmGI
+12:02:05  [12:02:05] FEED mobile page refresh_index=14: awemes=6 usable=6 total_seen=89
+12:02:05  [12:02:05] ENGINE merge total=87 index=78 replace=false auto=false
+12:02:05  [12:02:05] ENGINE next -> index=79
+12:02:05  [12:02:05] PLAYER play index=79 url=https://v5-se-sjy-daily-cold.douyinvod.com/2a784072ac56bb8d55cce0b6e55003bc/6af9
+12:02:07  [12:02:07] ENGINE next -> index=80
+12:02:07  [12:02:07] PLAYER play index=80 url=https://v99-coldx.douyinvod.com/8d602058dd14643f6c9a33aa9a62fc93/6af92eb7/video/
+12:02:08  [12:02:08] ENGINE needMore (index=80 count=87)
+12:02:08  [12:02:08] FEED mobile GET refresh_index=15 cold=0 count=10 bogus_len=180 seen=89
+12:02:08  [12:02:08] ENGINE next -> index=81
+12:02:08  [12:02:08] PLAYER play index=81 url=https://v5-gz2-colda.douyinvod.com/2a85f7b1cf753446d135d60d3162d49b/6af92ecf/vid
+12:02:08  [12:02:08] ENGINE next -> index=82
+12:02:08  [12:02:08] PLAYER play index=82 url=https://v5-daily-cm-dyseries.douyinvod.com/e2bcc9236c8cb9c8a0c791a512822807/6af9
+12:02:09  [12:02:09] ENGINE next -> index=83
+12:02:09  [12:02:09] PLAYER play index=83 url=https://v9-chc.douyinvod.com/d3dc95a8922249bc3f1dc478a0ebc6d5/6af92ec2/video/cn/
+12:02:09  [12:02:09] ENGINE next -> index=84
+12:02:10  [12:02:09] PLAYER play index=84 url=https://v95-bjb-mc-cold.douyinvod.com/73668ce14d82890a3736cdc5f561b5f5/6af92ed0/
+12:02:10  [12:02:10] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=15)
+12:02:10  [12:02:10] FEED first url[7703801528357063242]: https://v9-chc.douyinvod.com/9c65ae88be80c33918177e44410f7d3f/6af92ec8/video/cn/mps/logo/r/p/v0d00fg10000dbkmd5vog65qim8aensg/874e1fda929242
+12:02:10  [12:02:10] FEED mobile page refresh_index=15: awemes=6 usable=6 total_seen=95
+12:02:10  [12:02:10] ENGINE merge total=93 index=84 replace=false auto=false
+12:02:11  [12:02:10] ENGINE next -> index=85
+12:02:11  [12:02:10] PLAYER play index=85 url=https://v5-ex-dyseries.douyinvod.com/df9de8bf122f7c215655347faa5b5959/6af92ef8/v
+12:02:12  [12:02:12] ENGINE next -> index=86
+12:02:12  [12:02:12] PLAYER play index=86 url=https://v5-ex-music.douyinstatic.com/0f7074cfe87e22bd03ca967ade60ac31/6b1e18d6/v
+12:02:12  [12:02:12] ENGINE next -> index=87
+12:02:12  [12:02:12] PLAYER play index=87 url=https://v9-chc.douyinvod.com/9c65ae88be80c33918177e44410f7d3f/6af92ec8/video/cn/
+12:02:13  [12:02:13] ENGINE next -> index=88
+12:02:13  [12:02:13] PLAYER play index=88 url=https://v5-ex-music.douyinstatic.com/f833a82edf1da9fc9a15080ad4959e4b/6b1e1928/v
+12:02:13  [12:02:13] ENGINE next -> index=89
+12:02:13  [12:02:13] PLAYER play index=89 url=https://v5-gz2-colda.douyinvod.com/05acc3cfae84ed1e86d3ab7b997c1d8d/6af92ece/vid
+12:02:14  [12:02:14] ENGINE needMore (index=89 count=93)
+12:02:14  [12:02:14] FEED mobile GET refresh_index=16 cold=0 count=10 bogus_len=180 seen=95
+12:02:14  [12:02:14] ENGINE next -> index=90
+12:02:14  [12:02:14] PLAYER play index=90 url=https://v96-dyseries.douyinvod.com/ad11c169f9d1f932b8c7c65194389c34/6af92ec9/vid
+12:02:14  [12:02:14] ENGINE next -> index=91
+12:02:14  [12:02:14] PLAYER play index=91 url=https://v99-coldx.douyinvod.com/af55c8c7757d0c67491654efeb566338/6af92ed6/video/
+12:02:15  [12:02:15] ENGINE next -> index=92
+12:02:15  [12:02:15] PLAYER play index=92 url=https://v9-chc.douyinvod.com/200770bef7a4630bda70b39ce81f1617/6af92ec6/video/cn/
+12:02:16  [12:02:16] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=16)
+12:02:16  [12:02:16] FEED first url[7706745556928802218]: https://v99-coldx.douyinvod.com/722535b166313d3493b6a9d3dbfd6d70/6af92ecd/video/tos/cn/tos-cn-ve-15/ogGa5w67WQ87B3zBIV7ABgGeL3egACEDfI3zda/?
+12:02:16  [12:02:16] FEED mobile page refresh_index=16: awemes=6 usable=6 total_seen=101
+12:02:16  [12:02:16] ENGINE merge total=99 index=92 replace=false auto=false
+12:02:17  [12:02:17] ENGINE next -> index=93
+12:02:17  [12:02:17] PLAYER play index=93 url=https://v99-coldx.douyinvod.com/722535b166313d3493b6a9d3dbfd6d70/6af92ecd/video/
+12:02:17  [12:02:17] ENGINE next -> index=94
+12:02:17  [12:02:17] PLAYER play index=94 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbe3v8nog65h7oa41
+12:02:17  [12:02:17] ENGINE next -> index=95
+12:02:17  [12:02:17] PLAYER play index=95 url=https://v11-cold.douyinvod.com/8e652fb4ff622abb77798b031f70c8ee/6af92ed1/video/t
+12:02:19  [12:02:19] ENGINE next -> index=96
+12:02:19  [12:02:19] PLAYER play index=96 url=https://v5-se-ws-cold.douyinvod.com/d6a2fb3f0d43f74ff8e9a5ab748444ee/6af92ecc/vi
+12:02:19  [12:02:19] ENGINE next -> index=97
+12:02:19  [12:02:19] PLAYER play index=97 url=https://v9-awememusicpgc.amemv.com/c8e7c057638a108f1fde666e4ac4ce62/6b1e1937/vid
+12:02:20  [12:02:20] ENGINE needMore (index=97 count=99)
+12:02:21  [12:02:20] FEED mobile GET refresh_index=17 cold=0 count=10 bogus_len=180 seen=101
+12:02:21  [12:02:20] ENGINE next -> index=98
+12:02:21  [12:02:20] PLAYER play index=98 url=https://v9-chc.douyinvod.com/80fa9461f2fa7825a98b21ef7afadd63/6af92ecd/video/cn/
+12:02:23  [12:02:23] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=17)
+12:02:23  [12:02:23] FEED first url[7705035366760164841]: https://v95-bjb-mc-cold.douyinvod.com/bc67a16ae9e1054333b2ec6794ae66c0/6af92ed2/video/tos/cn/tos-cn-ve-15c000-ce/ocADEAOqoEZQC90Eh5tfBFy7DDd
+12:02:23  [12:02:23] FEED mobile page refresh_index=17: awemes=6 usable=6 total_seen=107
+12:02:23  [12:02:23] ENGINE merge total=105 index=98 replace=false auto=false
+12:02:23  [12:02:23] ENGINE next -> index=99
+12:02:23  [12:02:23] PLAYER play index=99 url=https://v95-bjb-mc-cold.douyinvod.com/bc67a16ae9e1054333b2ec6794ae66c0/6af92ed2/
+12:02:25  [12:02:25] ENGINE next -> index=100
+12:02:25  [12:02:25] PLAYER play index=100 url=https://v5-se-ex-mc-cold.douyinvod.com/b6eb2cd2584962972ffa36aa47c763ac/6af92ed9
+12:02:25  [12:02:25] ENGINE next -> index=101
+12:02:25  [12:02:25] PLAYER play index=101 url=https://v95-bjb-mc-cold.douyinvod.com/c6d7a5869f05f02a62860a910a941e87/6af92edd/
+12:02:25  [12:02:25] ENGINE next -> index=102
+12:02:25  [12:02:25] PLAYER play index=102 url=https://v26-music.douyinstatic.com/df51a19713ce8fe9d374b46a38e1e5a7/6b1e18e5/vid
+12:02:27  [12:02:27] ENGINE needMore (index=102 count=105)
+12:02:27  [12:02:27] FEED mobile GET refresh_index=18 cold=0 count=10 bogus_len=180 seen=107
+12:02:27  [12:02:27] ENGINE next -> index=103
+12:02:27  [12:02:27] PLAYER play index=103 url=https://v9-chc.douyinvod.com/7731a753819c190f747a4d73550440a8/6af92ed9/video/cn/
+12:02:27  [12:02:27] ENGINE next -> index=104
+12:02:27  [12:02:27] PLAYER play index=104 url=https://v5-gz-colda.douyinvod.com/6ea389081bc0551a39b2308026b61a40/6af92edd/vide
+12:02:29  [12:02:29] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=18)
+12:02:29  [12:02:29] FEED first url[7702841372239580578]: https://v11-coldf.douyinvod.com/6d85ab2ad3b3a41756261d76dc884f96/6af92eda/video/tos/cn/tos-cn-ve-15/oQDHKRQA0HALMIff3t2ufleHngG2CESINYXrwL/?
+12:02:29  [12:02:29] FEED mobile page refresh_index=18: awemes=6 usable=6 total_seen=113
+12:02:29  [12:02:29] ENGINE merge total=111 index=104 replace=false auto=false
+12:02:30  [12:02:30] ENGINE next -> index=105
+12:02:30  [12:02:30] PLAYER play index=105 url=https://v11-coldf.douyinvod.com/6d85ab2ad3b3a41756261d76dc884f96/6af92eda/video/
+12:02:32  [12:02:32] ENGINE needMore (index=105 count=111)
+12:02:32  [12:02:32] FEED mobile GET refresh_index=19 cold=0 count=10 bogus_len=180 seen=113
+12:02:32  [12:02:32] ENGINE next -> index=106
+12:02:32  [12:02:32] PLAYER play index=106 url=https://v99-coldx.douyinvod.com/04598b16dccd832bbf31ec1b82920a4e/6af92ede/video/
+12:02:34  [12:02:34] ENGINE next -> index=107
+12:02:34  [12:02:34] PLAYER play index=107 url=https://v95-bjb-mc-cold.douyinvod.com/0aec87c1450b61b327a7ff0c24b7950a/6af92edc/
+12:02:34  [12:02:34] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=19)
+12:02:34  [12:02:34] FEED first url[7707219890108906058]: https://v9-chc.douyinvod.com/6b7d71e9132d3d667c1a508293c90451/6af92ee2/video/cn/mps/logo/r/p/v0d00fg10000dbqolrnog65k9ro0sehg/8d6af155f75447
+12:02:34  [12:02:34] FEED mobile page refresh_index=19: awemes=6 usable=6 total_seen=119
+12:02:34  [12:02:34] ENGINE merge total=117 index=107 replace=false auto=false
+12:02:35  [12:02:35] ENGINE next -> index=108
+12:02:35  [12:02:35] PLAYER play index=108 url=https://v99-coldx.douyinvod.com/ed1cc5b4ed327fc5023fac9f343ca2f6/6af92ee1/video/
+12:02:36  [12:02:36] ENGINE prev -> index=107
+12:02:36  [12:02:36] PLAYER play index=107 url=https://v95-bjb-mc-cold.douyinvod.com/0aec87c1450b61b327a7ff0c24b7950a/6af92edc/
+12:02:38  [12:02:38] ENGINE next -> index=108
+12:02:38  [12:02:38] PLAYER play index=108 url=https://v99-coldx.douyinvod.com/ed1cc5b4ed327fc5023fac9f343ca2f6/6af92ee1/video/
+12:02:38  [12:02:38] ENGINE next -> index=109
+12:02:38  [12:02:38] PLAYER play index=109 url=https://v5-ex-dyseries.douyinvod.com/790b881b9b2a006cb9e53bb414ee474b/6af92f0d/v
+12:02:41  [12:02:41] ENGINE next -> index=110
+12:02:41  [12:02:41] PLAYER play index=110 url=https://v95-bjb-mc-cold.douyinvod.com/28d11069df37b729dc3e06f6ecfcab3f/6af92ee3/
+12:02:41  [12:02:41] ENGINE needMore (index=110 count=117)
+12:02:41  [12:02:41] FEED mobile GET refresh_index=20 cold=0 count=10 bogus_len=180 seen=119
+12:02:41  [12:02:41] ENGINE next -> index=111
+12:02:41  [12:02:41] PLAYER play index=111 url=https://v9-chc.douyinvod.com/6b7d71e9132d3d667c1a508293c90451/6af92ee2/video/cn/
+12:02:43  [12:02:43] ENGINE next -> index=112
+12:02:43  [12:02:43] PLAYER play index=112 url=https://v13-cold-y.douyinvod.com/40dd5eea9d8dcdb2c5c56a79c898871a/6af92ee3/video
+12:02:43  [12:02:43] ENGINE next -> index=113
+12:02:43  [12:02:43] PLAYER play index=113 url=https://v99-coldx.douyinvod.com/a60bd6937f48808c3ad9ed8ac893a864/6af92ee5/video/
+12:02:43  [12:02:43] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=20)
+12:02:44  [12:02:43] FEED first url[7702428378956462259]: https://v5-ex-music.douyinstatic.com/d1484d000ff3e9dc066f7cc05bad48ff/6b1e1901/video/tos/cn/tos-cn-ve-2178/oIDUrv6IeoTYOwjgxCLNEBCGAgGJeBjae
+12:02:44  [12:02:43] FEED mobile page refresh_index=20: awemes=6 usable=6 total_seen=125
+12:02:44  [12:02:43] ENGINE merge total=123 index=113 replace=false auto=false
+12:02:44  [12:02:44] ENGINE next -> index=114
+12:02:44  [12:02:44] PLAYER play index=114 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbnvq97og65r6ht3s
+12:02:45  [12:02:45] ENGINE next -> index=115
+12:02:45  [12:02:45] PLAYER play index=115 url=https://v95-bjb-mc-cold.douyinvod.com/571f2624f91bfaac7e8962dad9a32962/6af92ee1/
+12:02:47  [12:02:46] ENGINE next -> index=116
+12:02:47  [12:02:46] PLAYER play index=116 url=https://v5-ex-music.douyinstatic.com/959ad1e90f352de9a3cbc68d94254c0e/6b1e18ee/v
+12:02:47  [12:02:47] ENGINE needMore (index=116 count=123)
+12:02:47  [12:02:47] FEED mobile GET refresh_index=21 cold=0 count=10 bogus_len=180 seen=125
+12:02:47  [12:02:47] ENGINE next -> index=117
+12:02:47  [12:02:47] PLAYER play index=117 url=https://v5-ex-music.douyinstatic.com/d1484d000ff3e9dc066f7cc05bad48ff/6b1e1901/v
+12:02:49  [12:02:49] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=21)
+12:02:49  [12:02:49] FEED first url[7704569045962121657]: https://v5-awememusicpgc.amemv.com/c3d21ebf91a9fcd99586bf3f08d74691/6b1e190b/video/tos/cn/tos-cn-ve-2774/oMBs1WiSTWGahwhgWSEBwpQIBfBKigEJ2At
+12:02:49  [12:02:49] FEED mobile page refresh_index=21: awemes=6 usable=6 total_seen=131
+12:02:49  [12:02:49] ENGINE merge total=129 index=117 replace=false auto=false
+12:02:49  [12:02:49] ENGINE next -> index=118
+12:02:49  [12:02:49] PLAYER play index=118 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbpv00nog65matjvo
+12:02:50  [12:02:50] ENGINE next -> index=119
+12:02:50  [12:02:50] PLAYER play index=119 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbjg197og65qpag8b
+12:02:50  [12:02:50] ENGINE next -> index=120
+12:02:50  [12:02:50] PLAYER play index=120 url=https://v5-ex-music.douyinstatic.com/6a6bd26ce98007d50ceecdd0a1717608/6b1e18fd/v
+12:02:50  [12:02:50] ENGINE next -> index=121
+12:02:50  [12:02:50] PLAYER play index=121 url=https://v9-chc.douyinvod.com/c47258414f1572c904b4489287bb1a28/6af92eef/video/cn/
+12:02:51  [12:02:51] PLAYER item FAILED index=121 err=You do not have permission to access the requested resource.
+12:02:51  [12:02:51] ENGINE next -> index=122
+12:02:51  [12:02:51] PLAYER play index=122 url=https://v95-hzyy-thr-daily-dyseries.douyinvod.com/b75afce0b6c90514091e5988990e10
+12:02:53  [12:02:52] ENGINE needMore (index=122 count=129)
+12:02:53  [12:02:53] FEED mobile GET refresh_index=22 cold=0 count=10 bogus_len=180 seen=131
+12:02:53  [12:02:53] ENGINE next -> index=123
+12:02:53  [12:02:53] PLAYER play index=123 url=https://v5-awememusicpgc.amemv.com/c3d21ebf91a9fcd99586bf3f08d74691/6b1e190b/vid
+12:02:55  [12:02:55] ENGINE next -> index=124
+12:02:55  [12:02:55] PLAYER play index=124 url=https://v5-se-bjtc-music.douyinstatic.com/98fed750aaa0dbe613f2e8e1e702bec4/6b1e1
+12:02:55  [12:02:55] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=22)
+12:02:55  [12:02:55] FEED first url[7700571736199550130]: https://v9-chc.douyinvod.com/c42f3bc5e756031e317e3c8a32d6f8f7/6af92efa/video/cn/mps/logo/r/p/v0200fg10000dbeuoovog65sbdjs90p0/d0c373bd1e7940
+12:02:55  [12:02:55] FEED mobile page refresh_index=22: awemes=6 usable=6 total_seen=137
+12:02:55  [12:02:55] ENGINE merge total=135 index=124 replace=false auto=false
+12:02:56  [12:02:56] ENGINE next -> index=125
+12:02:56  [12:02:56] PLAYER play index=125 url=https://v5-ex-dyseries.douyinvod.com/15f603d3b23891bfba62ae548736fa19/6af92ef2/v
+12:02:57  [12:02:57] ENGINE next -> index=126
+12:02:57  [12:02:57] PLAYER play index=126 url=https://v95-bjb-mc-cold.douyinvod.com/f27bad47c753e521793a937340b21588/6af92ef3/
+12:02:57  [12:02:57] ENGINE next -> index=127
+12:02:57  [12:02:57] PLAYER play index=127 url=https://v5-daily-cm-dyseries.douyinvod.com/aae329246a72fb8de3376c619444c825/6af9
+12:02:59  [12:02:59] ENGINE next -> index=128
+12:02:59  [12:02:59] PLAYER play index=128 url=https://v9-chc.douyinvod.com/e8ea4720470e0b65b7d04b8148e7272b/6af92efa/video/cn/
+12:02:59  [12:02:59] ENGINE needMore (index=128 count=135)
+12:02:59  [12:02:59] FEED mobile GET refresh_index=23 cold=0 count=10 bogus_len=180 seen=137
+12:02:59  [12:02:59] ENGINE next -> index=129
+12:02:59  [12:02:59] PLAYER play index=129 url=https://v9-chc.douyinvod.com/c42f3bc5e756031e317e3c8a32d6f8f7/6af92efa/video/cn/
+12:02:59  [12:02:59] PLAYER item FAILED index=129 err=unknown error
+12:02:59  [12:02:59] ENGINE next -> index=130
+12:02:59  [12:02:59] PLAYER play index=130 url=https://v5-ex-dyseries.douyinvod.com/05a0a5743e172fbfb95400866ea9ac6f/6af92f0f/v
+12:03:01  [12:03:01] ENGINE next -> index=131
+12:03:01  [12:03:01] PLAYER play index=131 url=https://v9-chc.douyinvod.com/b147ba8d6c2f2efb4daf6c2d082a4fca/6af92efa/video/cn/
+12:03:01  [12:03:01] PLAYER item FAILED index=131 err=You do not have permission to access the requested resource.
+12:03:01  [12:03:01] ENGINE refresh (stale=false)
+12:03:01  [12:03:01] FEED mobile GET refresh_index=23 cold=0 count=10 bogus_len=180 seen=137
+12:03:01  [12:03:01] ENGINE next -> index=132
+12:03:01  [12:03:01] PLAYER play index=132 url=https://v11-cold.douyinvod.com/975083b8dc7b00977cb26e713b71f841/6af92ef8/video/t
+12:03:02  [12:03:02] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=23)
+12:03:02  [12:03:02] FEED first url[7698332864743915599]: https://v96-dyseries.douyinvod.com/81336d805b685542ca8c812f8f187fa2/6af92f0a/video/tos/cn/tos-cn-ve-15/oIjqDf1PBEDaISeRKgVAFCurQJ7fAoVi2BTKw
+12:03:02  [12:03:02] FEED mobile page refresh_index=23: awemes=6 usable=6 total_seen=143
+12:03:02  [12:03:02] ENGINE merge total=141 index=132 replace=false auto=false
+12:03:03  [12:03:03] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=23)
+12:03:03  [12:03:03] FEED first url[7707316959331583929]: https://v9-cold-y.douyinvod.com/c6e8487c33dad5866fd75e939708f24a/6af92f02/video/tos/cn/tos-cn-ve-15c000-ce/oYP1cgbRGkff4GjjAIefApA9WL9pKrTDE
+12:03:03  [12:03:03] FEED mobile page refresh_index=23: awemes=6 usable=6 total_seen=149
+12:03:03  [12:03:03] ENGINE merge total=147 index=132 replace=false auto=false
+12:03:06  [12:03:06] ENGINE next -> index=133
+12:03:06  [12:03:06] PLAYER play index=133 url=https://v9-chc.douyinvod.com/594332d5b4d703e548e18dfd300db72b/6af92efa/video/cn/
+12:03:06  [12:03:06] PLAYER item FAILED index=133 err=You do not have permission to access the requested resource.
+12:03:06  [12:03:06] ENGINE next -> index=134
+12:03:06  [12:03:06] PLAYER play index=134 url=https://v99-coldx.douyinvod.com/e943bab89913f332ab41e01a58ed872a/6af92ef9/video/
+12:03:07  [12:03:07] ENGINE next -> index=135
+12:03:07  [12:03:07] PLAYER play index=135 url=https://v96-dyseries.douyinvod.com/81336d805b685542ca8c812f8f187fa2/6af92f0a/vid
+12:03:09  [12:03:09] ENGINE next -> index=136
+12:03:10  [12:03:09] PLAYER play index=136 url=https://v9-chc.douyinvod.com/4a35ff2d7a458bd29eaab636c3245f63/6af92efa/video/cn/
+12:03:11  [12:03:11] ENGINE next -> index=137
+12:03:11  [12:03:11] PLAYER play index=137 url=https://v5-se-ex-mc-music.douyinstatic.com/08e81bcb1cf1557721262c1db4840562/6b1e
+12:03:12  [12:03:12] ENGINE next -> index=138
+12:03:13  [12:03:12] PLAYER play index=138 url=https://v95-hzyy-thr-daily-colda.douyinvod.com/6644e808697b2f42b25b1b648e6776d6/
+12:03:14  [12:03:14] ENGINE next -> index=139
+12:03:14  [12:03:14] PLAYER play index=139 url=https://v9-chc.douyinvod.com/aa60e2c7fec9093ce7be48412ddc3e80/6af92efc/video/cn/
+12:03:15  [12:03:15] ENGINE next -> index=140
+12:03:15  [12:03:15] PLAYER play index=140 url=https://v99-coldx.douyinvod.com/1ec87b055ad2c8091a3d44b4045dbcba/6af92efa/video/
+12:03:15  [12:03:15] ENGINE needMore (index=140 count=147)
+12:03:15  [12:03:15] FEED mobile GET refresh_index=24 cold=0 count=10 bogus_len=180 seen=149
+12:03:15  [12:03:15] ENGINE next -> index=141
+12:03:15  [12:03:15] PLAYER play index=141 url=https://v9-cold-y.douyinvod.com/c6e8487c33dad5866fd75e939708f24a/6af92f02/video/
+12:03:16  [12:03:16] ENGINE next -> index=142
+12:03:16  [12:03:16] PLAYER play index=142 url=https://v5-ex-dyseries.douyinvod.com/6bace71216858d10485bdd5cd6fe8f30/6af92f02/v
+12:03:17  [12:03:17] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=24)
+12:03:17  [12:03:17] FEED first url[7699058810095584106]: https://v95-hzyy-thr-daily-colda.douyinvod.com/e9dd3a1e5d4dd7dc9e9667306c6e8026/6af92f10/video/tos/cn/tos-cn-ve-15c000-ce/osbEZTBxiCsfbjYPbe
+12:03:17  [12:03:17] FEED mobile page refresh_index=24: awemes=6 usable=6 total_seen=155
+12:03:17  [12:03:17] ENGINE merge total=153 index=142 replace=false auto=false
+12:03:17  [12:03:17] ENGINE next -> index=143
+12:03:17  [12:03:17] PLAYER play index=143 url=https://v99-coldx.douyinvod.com/ac7305fee1750cfb4e38e26f5bd32db8/6af92f00/video/
+12:03:18  [12:03:18] ENGINE next -> index=144
+12:03:19  [12:03:18] PLAYER play index=144 url=https://v9-cold-y.douyinvod.com/b73a9e01326458dda3412f465e442f20/6af92efd/video/
+12:03:20  [12:03:20] ENGINE next -> index=145
+12:03:20  [12:03:20] PLAYER play index=145 url=https://v6-chc.douyinvod.com/a8b8d03fe88596bd429bcf8589d13584/6af92efc/video/cn/
+12:03:20  [12:03:20] PLAYER item FAILED index=145 err=You do not have permission to access the requested resource.
+12:03:20  [12:03:20] ENGINE next -> index=146
+12:03:20  [12:03:20] PLAYER play index=146 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbber2vog65k5lbnm
+12:03:20  [12:03:20] ENGINE next -> index=147
+12:03:20  [12:03:20] PLAYER play index=147 url=https://v95-hzyy-thr-daily-colda.douyinvod.com/e9dd3a1e5d4dd7dc9e9667306c6e8026/
+12:03:21  [12:03:21] ENGINE needMore (index=147 count=153)
+12:03:21  [12:03:21] FEED mobile GET refresh_index=25 cold=0 count=10 bogus_len=180 seen=155
+12:03:21  [12:03:21] ENGINE next -> index=148
+12:03:21  [12:03:21] PLAYER play index=148 url=https://v9-chc.douyinvod.com/6dc1db6deb49a4de59c69cfc5a929558/6af92f0f/video/cn/
+12:03:21  [12:03:21] PLAYER item FAILED index=148 err=You do not have permission to access the requested resource.
+12:03:21  [12:03:21] ENGINE refresh (stale=false)
+12:03:21  [12:03:21] FEED mobile GET refresh_index=25 cold=0 count=10 bogus_len=180 seen=155
+12:03:21  [12:03:21] ENGINE next -> index=149
+12:03:21  [12:03:21] PLAYER play index=149 url=https://v9-cold.douyinvod.com/effe5592a0edce01fc3c986d23666031/6af92f10/video/to
+12:03:22  [12:03:22] ENGINE next -> index=150
+12:03:22  [12:03:22] PLAYER play index=150 url=https://v5-ex-dyseries.douyinvod.com/225c03b80c97c95a84b7b9cefbaed9ba/6af9301c/v
+12:03:23  [12:03:23] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=25)
+12:03:23  [12:03:23] FEED first url[7695526119526144442]: https://v5-ex-music.douyinstatic.com/9b0082b6bf888965768adc5e9680172c/6b1e1936/video/tos/cn/tos-cn-ve-2178-ce/oodz787aMg7Kh9GvIVXq4fmfiF8fqe
+12:03:23  [12:03:23] FEED mobile page refresh_index=25: awemes=6 usable=6 total_seen=161
+12:03:23  [12:03:23] ENGINE merge total=159 index=150 replace=false auto=false
+12:03:23  [12:03:23] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=25)
+12:03:23  [12:03:23] FEED first url[7707243039010234873]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbqq1anog65jrjv0qn4g&line=0&ratio=540p&watermark=1&media_type=4&vr_type=0&imp
+12:03:23  [12:03:23] FEED mobile page refresh_index=25: awemes=6 usable=6 total_seen=167
+12:03:23  [12:03:23] ENGINE merge total=162 index=150 replace=false auto=false
+12:03:24  [12:03:23] ENGINE next -> index=151
+12:03:24  [12:03:23] PLAYER play index=151 url=https://v9-chc.douyinvod.com/20137c2aca540560c98a45c2487c90e8/6af92f17/video/cn/
+12:03:24  [12:03:23] PLAYER item FAILED index=151 err=You do not have permission to access the requested resource.
+12:03:24  [12:03:23] ENGINE next -> index=152
+12:03:24  [12:03:23] PLAYER play index=152 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbelqknog65na4ea6
+12:03:25  [12:03:25] ENGINE next -> index=153
+12:03:25  [12:03:25] PLAYER play index=153 url=https://v5-ex-music.douyinstatic.com/9b0082b6bf888965768adc5e9680172c/6b1e1936/v
+12:03:25  [12:03:25] ENGINE next -> index=154
+12:03:25  [12:03:25] PLAYER play index=154 url=https://v95-bjb-mc-cold.douyinvod.com/6fd0e9686d2ba0c609182fdb02a7c694/6af92f18/
+12:03:26  [12:03:26] ENGINE next -> index=155
+12:03:27  [12:03:26] PLAYER play index=155 url=https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbqq1anog65jrjv0q
+12:03:28  [12:03:27] ENGINE needMore (index=155 count=162)
+12:03:28  [12:03:28] FEED mobile GET refresh_index=26 cold=0 count=10 bogus_len=180 seen=167
+12:03:28  [12:03:28] ENGINE next -> index=156
+12:03:28  [12:03:28] PLAYER play index=156 url=https://v5-gz2-colda.douyinvod.com/18a6c868e9cc0e7d3bcdc5f22004adf9/6af92f14/vid
+12:03:29  [12:03:28] ENGINE next -> index=157
+12:03:29  [12:03:28] PLAYER play index=157 url=https://v5-gz-colda.douyinvod.com/8b09f71c0c5dab21ad9631e9e3bfbb47/6af92f11/vide
+12:03:29  [12:03:29] ENGINE next -> index=158
+12:03:29  [12:03:29] PLAYER play index=158 url=https://v9-cold.douyinvod.com/875a20876101b95dc673ce3855778810/6af92f1a/video/to
+12:03:30  [12:03:30] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=26)
+12:03:30  [12:03:30] FEED first url[7706127369698466280]: https://v9-chc.douyinvod.com/781a24d1bb9f1caf9c05260bce3a3d91/6af92f1e/video/cn/mps/logo/r/p/v0200fg10000dboqjdnog65qebss6cl0/ad2fa7c6b2a245
+12:03:30  [12:03:30] FEED mobile page refresh_index=26: awemes=6 usable=6 total_seen=173
+12:03:30  [12:03:30] ENGINE merge total=168 index=158 replace=false auto=false
+12:03:30  [12:03:30] ENGINE next -> index=159
+12:03:30  [12:03:30] PLAYER play index=159 url=https://v95-bjb-mc-cold.douyinvod.com/5b0564a083b4a61e7f1a8557848afc3c/6af92f16/
+12:03:31  [12:03:31] ENGINE next -> index=160
+12:03:31  [12:03:31] PLAYER play index=160 url=https://v5-ex-music.douyinstatic.com/6990ce677656e6d9979f82f1e2980363/6b1e1933/v
