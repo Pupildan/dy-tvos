@@ -170,16 +170,28 @@ final class DYPlayerViewController: UIViewController {
         item.preferredForwardBufferDuration = 8
         asset.loadValuesAsynchronously(forKeys: ["playable"])
         player.replaceCurrentItem(with: item)   // 复用：不销毁 player，仅换 item
-        player.isMuted = false
+        // 换 item 瞬间先静音+暂停：旧帧还挂 layer、新声先解出→"画面卡住只有声音"（v93 病灶）
+        player.pause()
+        player.isMuted = true
         playerIndex[player] = index
         DYLog.shared.log("POOL load idx=\(index)")
     }
 
-    /// 只有居中 cell 播放，其余暂停；并预载相邻。
+    /// 只有居中 cell 播放（解除静音），其余暂停+静音；并预载相邻。
+    /// 居中槽只在 item readyToPlay 时才 play——未 ready 时 play 会"画面卡住只有声音"。
+    /// 滚动会反复触发本方法，未 ready 的槽等下次事件再查（不用 KVO，避免 v96 那套复杂度）。
     private func updatePlaybackStates(center index: Int) {
         for p in playerPool {
             guard let pi = playerIndex[p] else { continue }
-            if pi == index { p.play() } else { p.pause() }
+            if pi == index {
+                if p.currentItem?.status == .readyToPlay {
+                    p.isMuted = false
+                    p.play()
+                }
+            } else {
+                p.pause()
+                p.isMuted = true
+            }
         }
         for adj in [index - 1, index + 1] where adj >= 0 {
             if !playerPool.contains(where: { playerIndex[$0] == adj }),
