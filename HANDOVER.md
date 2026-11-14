@@ -1,304 +1,222 @@
-# DYTV 交接文档（v132 弹幕 · 2026-11-14）
+# DYTV 交接文档（v147 · 2026-11-15 全面重构版）
+
+> **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
-> **v128 真机验收通过（用户："体验有很大提升"）**：三靶点全过，0 级联 0 误杀。
-> **v129 真机验收通过（用户："趋近完美"）**：parse 无感过滤（实际全靠 dur=0 信号；awemeType 信号在此 schema 无效）。
-> **v130 真机验收通过（用户："确实提速了不少"）**：冷启动收敛 + idle 4s→2s。
-> **v131 真机验收通过（用户："水印没了，播放体验趋于完美"）**：选链照抄 myDV（play_addr 优先 + selectBestPlayUrl 四级优先级），f8=download_addr 水印版降兜底。见 §13。
-> **v132 = 弹幕功能上线（探针版）**：数据照抄 myDV u11.K/u11.A；渲染 vendor DanmakuKit(MIT)。见 §14。
-> **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"（见 §8）。
+> **当前版本 v148**。稳定回退点：**v122**（git checkout 三文件）。
+> 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
 
-## 1. 项目背景与铁律
+## 1. 项目概述与铁律
 
-纯原生 tvOS 抖音客户端。两条铁律：
+纯原生 tvOS 抖音客户端（sideload 自用）。三条铁律：
 1. **绝对不使用 WebView 作为 UI**。
 2. **真实视频层滑动是核心体验，必须保留**（不能退回快照假滑动）。
-3. **绝对禁止造轮子**：未知字段/解析/清晰度不准猜，必须翻反编译（`_apk_work/jadx_out_classes`）找 myDV 现成源码照抄。**v94-v99、v111-v124 反复因"造轮子/幻觉"翻车，这是最高教训。**
+3. **绝对禁止造轮子**：未知字段/解析/清晰度不准猜，必须翻反编译（`_apk_work/jadx_out_classes` + `_apk_work/jadx_out`）找 myDV（com.github.mytv.dv, GPL-3.0）现成源码照抄。v94-v99、v111-v124 反复因"造轮子/幻觉"翻车，这是最高教训。
 
-## 2. 环境与构建约束
+## 2. 环境与构建
 
-- **开发机 Windows，无 Xcode** → 无法本地编译，全靠 GitHub Actions CI + 真机。
-- 流水线 `_tools/dy_pipeline.ps1 -Version vX` 一条龙：commit→push→盯 CI→下载未签名 ipa 到 `output/`。
-- 版本号 `DYBuild.version` 每次 +1，禁止重复。
-- ATV 崩溃拿不到堆栈 → 靠"分步日志 + 二分排除"；**崩溃可隔空投送导出 `.ips` 读堆栈**（见 §7）。
-- 日志：ATV 推送到开发机 `output/atv_push.log`（player 前缀 `MGR`/`CODEC`/`STALL`/`ENGINE`/`FEED`）。
+- **开发机 Windows 无 Xcode** → 全靠 GitHub Actions CI + 真机（ATV，tvOS 26）。
+- 流水线 `_tools/dy_pipeline.ps1 -Version vX -CommitMsg "..."`：commit→push→盯 CI→下载 ipa 到 `output/`。版本号 `DYBuild.version` 每次 +1 禁止重复（失败无产物可复用版本号）。
+- **CI 失败**：`_tools/dy_fetch_errors.ps1 -RunId <id>` 抓错误行。
+- **CI 成功但下载抽风**（已知瞬态）：`_tools/dy_download.ps1 -ArtifactId <id> -IpaName "DYTV-tvos-unsigned-vXX.ipa"` 单独重下，**不要重跑整条 pipeline**（会双重 commit/push）。
+- git 在 `C:\Users\Admin\WorkBuddy\fndanmu-tvos\_tools\MinGit\cmd\git.exe`。
+- 日志：ATV 推送到开发机 `output/atv_push.log`（`dy_collector.ps1` 监听 :9988）。**采集器不会常驻**——读日志前 `netstat -ano | findstr :9988` 确认 LISTENING；ATV 只在新日志产生时重连（采集器起来后要操作一下 ATV 触发回灌）；ATV IP 从 9988 的 ESTABLISHED 远端拿。
+- 真机诊断：`curl http://<ATV-IP>:8765/stat`（计数器+事件环）/ `/log`。
+- **开发机验证门（重大流程，用户提议采纳）**：数据获取类改动先用 Node 复刻整条链验证（`_tmp/danmaku_probe.js` / `webfeed_probe.js` / `danmaku_hist_probe.js` / `comment_works_probe.js` 可复用：加载 Signer JS + protobuf 解码 + HTTP 矩阵），数据说话后再进真机——一轮脚本顶 3-4 轮 CI。
 
-## 3. 当前架构（v122 实际状态）
+## 3. 当前架构（v147 实际状态）
 
-- **数据层** `DYFeedClient`：移动端 `aweme.snssdk.com/aweme/v2/feed/` protobuf 直连。`DYSigner` 用 JavaScriptCore 跑 abogus.js 算 4 参签名。响应 protobuf 手工 wire 解码（`Proto` struct）。零 WebView。
-- **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 上限 3 池（current±1）。
-- **播放时现取新鲜 URL（v122 关键，治黑屏有声）**：`PlaybackEngine` 存每条 video 原始 bytes（`rawVideos[index]`），`acquire` 建 player 时用 `resolveFreshURL` 现跑 `pickHighestQuality` 取**当下新鲜 URL**，不用预载静态 URL（会过期→黑屏）。照 myDV `resolveFinalPlayUrl` 播放时现算模式。
-- **跳多页已修**：删 `scrollViewDidEnd` 两委托（动画中途 `centeredIndex()` 反推致正反馈）、`advance/rewind` 直接 `engine.next()/prev()`、`scrollTo` 删 `for{next()}` 对齐循环。
-- **声画不同步已修**：同上（不再有 skip 引发的换源错位）。
-- **冻屏已修**：基本没有。
+- **数据层** `DYFeedClient`：双源。
+  - mobile：`aweme.snssdk.com/aweme/v2/feed/` protobuf 直连（`DYSigner` JavaScriptCore 4 参 getABogus(query,data,path,ua)，`Proto` 手工 wire 解码）。
+  - web（抖音精选）：`www.douyin.com/aweme/v1/web/tab/feed/` JSON（b0 配方 + webCommon + web 签名 + ttwid）。
+  - 源切换：`DYFeedSource` 枚举 + `setSource()`（持久化 UserDefaults dy_feed_source）+ `PlaybackEngine.reset()`。
+- **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 池（±2 窗口驱逐）+ 三层看门狗 + 冷启动收敛 + 源感知请求头 + PC 版 UI（右轨/左下信息区/进度条）。
+- **弹幕**（⏸️暂停）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通、显示端未达点子，详见 §6.1。
+- **快捷悬浮窗**（DYQuickPanel）：确认键**短按**呼出，屏幕底部居中横向卡片（v148），主页/评论/合集(条件)/不感兴趣；确认键**长按 0.6s**=两倍速（v148，撤销 v146 触摸板长按），松开恢复。
+- **评论**（DYCommentClient + DYCommentScreen）：web comment/list，3 页 60 条，玻璃列表屏。
+- **设置面板**（DYSettingsModel + SettingsPanelView）：Menu 呼出，左侧液态玻璃，源切换/弹幕开关/占位项，3s 自动隐藏。
 
-## 4. 已解决的问题（别再重复造）
+## 4. 版本里程碑（压缩史——细节查 git/记忆文件）
 
-| 问题 | 解法 | 版本 |
+| 版本 | 内容 | 状态 |
 |---|---|---|
-| 启动崩溃 `scrollToItem` 抛 NSException | 用 clamp 的 `setContentOffset` 替代；`UICollectionView` 必须 `reloadData` | v91/v92 |
-| 跳多页 | 删 `scrollViewDidEnd` 两委托 + `advance` 直接 `engine.next()` + `scrollTo` 删对齐循环 | v115/v121 |
-| 声画不同步 | 同上（不再有 skip 换源错位） | v121 |
-| 冻屏 | 基本没有 | v108+ |
-| **黑屏有声（大幅减少）** | **播放时现取新鲜 URL**（`resolveFreshURL`+`rawVideos`），不用预载过期静态 URL | **v122** |
+| v122 | 稳定基线（跳多页/声画/冻屏修复） | ✅ 验收，回退点 |
+| v128 | 黑屏三靶点（重定向新鲜 URL/空轨检测/isReadyForDisplay 看门狗） | ✅ "体验有很大提升" |
+| v129 | parse 无感过滤图集/novideo（实际全靠 dur=0 信号） | ✅ "趋近完美" |
+| v130 | 冷启动收敛 + idle 4s→2s | ✅ "提速不少" |
+| v131 | 去水印（play_addr 优先 + selectBestPlayUrl 四级） | ✅ "水印没了，趋于完美" |
+| v132-v142 | 弹幕五轮（数据链打通→样式→断流→自适应切分→平滑发射） | ⏸️ 用户暂停：改法没到点子 |
+| v135 | 设置面板 + 双源 + 液态玻璃 | ✅ 验收全通 |
+| v136/v137 | 面板 3s 隐藏+焦点白描边 / 源持久化 | ✅ |
+| v138/v139/v140 | 弹幕断流三轮（分段/重试/自适应切分）+进度条 | 数据面净，显示面未达点子 |
+| v141 | 显示吞吐提升（34 轨高/75% 区/380px/s） | 仍间歇（后查明=发射器机制） |
+| v142 | 每 tick 限量 6 条平滑发射 + isOverlap | ⏸️ 用户暂停 |
+| v143/v144 | PC 版 UI（右轨/左下信息区/进度条）+ 五点反馈修正 | ✅ 待复验 |
+| v145 | 快捷悬浮窗（OK 呼出四项）+ 间距收紧 + 图标加大 + 时长文本 | ✅ 待复验 |
+| v146 | 触摸板滑动切换 + 长按 1.5s 两倍速 + 头像正圆 | ✅ 待复验 |
+| v147 | 确认键修正（.select）+ 评论功能实装 + 播放/暂停键恢复 | ✅ CI 过，待验收 |
+| v148 | 评论屏闪退修复（tvOS 焦点环境无可聚焦元素，真机日志实锤）+ 两倍速改长按确认键 0.6s + 快捷面板底部居中横排 + 右轨图标加大 | ✅ CI 过，待验收 |
 
-## 5. 未解决问题：黑屏（有声/无声）——唯一遗留（v128 攻坚中）
+## 5. 未解决问题清单（按优先级）
 
-### 5.1 现象（v122 真机实测）
-- **黑屏有声**：有声音、没画面。**v122 已大幅减少**，但仍有残留。
-- **黑屏无声**：既无声音也无画面。较少。
+### 5.1 新视频卡顿（播放体验，用户未拍板方案）
+- **现象**：刷到新视频后过几秒才触发播放（forward ready 0-3s，用户刷速快于预载；回看旧视频走 redirect 0-16s）。
+- **已分析根因**：①每视频不同 CDN 域名 → 每次 acquire 新 DNS+TLS；②驱逐半径 ±2 窄，回看必重取；③v136 idle=2s 有误杀风险（本会话未触发但存在）；④redirect 302 出的 CDN 不可控（16s 尾部）。
+- **候选方案（待拍板）**：A 驱逐半径对称 ±3（解码器 ≤7 仍限内）；B idle 2s→4s 回退；C redirect>5s fallback static 重试；D 预取窗口 [idx-1, idx+3] 前向偏移。建议组合 A+B+D。
 
-### 5.1a v128 攻坚（2026-11-14）——见 §8 三靶点 + §8.5 日志方法
-- 真新鲜 URL（重定向）/ 空轨跳过 / isReadyForDisplay 看门狗，已过 CI 待真机验收。
-- ⚠️ 重要证伪记录：v122 的"播放时现取新鲜 URL"**从未生效**（日志 381 次 fallback static / 0 次成功）——v122 黑屏减少另有原因或会话方差，勿再归功于该机制。
-- ⚠️ field 21 语义修正：是 **URL 生成时刻的时间戳**（epoch 解码 1794753056=2026-11-14 22:30:56≈抓取时刻），不是码率（1.79e9 kbps 荒谬）。
+### 5.2 弹幕间歇空窗（⏸️ 用户暂停，记录完整随时重启）
+- **现象（用户澄清）**：明显的「获取→展示」循环——一段时间一条都没有，过一会儿扎堆出现。
+- **已排除**：数据空窗（直方图探针：1212 条连续无零桶）；数据不全（自适应切分已取全量）；单纯密度问题（v141 吞吐提升后仍间歇）。
+- **遗留疑点（重启时优先查）**：①offset_time 语义（是否真 ms 视频内偏移——周期性空窗与段分布存疑）；②DanmakuTrack 轨道占满/释放时序（cellPlayingStop 是否正常回收）；③isOverlap 观感；④取回/展示时序对齐（先取后播 vs 边取边播）。
+- **已做保留**：数据链全通（web get_v2 + ttwid + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试节流）；样式=纯白字无底无描边；发射器=shotIds 集合扫描；dm_drop/dm_shoot/dm_items 计数器；面板弹幕开关可用。
+- **重启入口**：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + 探针 `_tmp/danmaku_hist_probe.js`（直方图）/ `danmaku_segment_probe.js`。
 
-### 5.2 根因诊断（v124 CODEC 诊断 + video-dump 实锤）
-- 可播视频编码 **全是 `avc1`(H.264)**，无 hvc1(HEVC) → **黑屏不是 HEVC 解不出**（推翻早期 HEVC 假设，别再往解码方向猜）。
-- **黑屏无声**：部分视频 `currentItem.tracks(video)` 为空（无视频轨，如图集/纯音频/无效媒体）→ player ready 但无画面。
-- **黑屏有声**：player 停在 `.idle`（`status=0`、`t=0.0`）→ URL 无效/过期/无权限，拿不到可播媒体。
+### 5.3 作者主页被 UIFID 风控墙（保持占位）
+- **现象**：`/aweme/v1/web/aweme/post/`（u11 参数原样）→ 403 `ArgusSecurityPlugin Uifid Not Found`。myDV 的 mix/listcollection 同样 blocked（其源码注释："blocked，缺少有效的 UIFID"）。
+- **UIFID 链已挖到**：uz0 协程 POST 申请（`X-Secsdk-Csrf-Token: DOWNGRADE` 头 + FormBody，响应写回 sl4），调用方 URL 未挖到；x-secsdk-web-signature 算法已知（MD5(uifid_timestamp_密钥A96D..._params)——蓝本 §5）。
+- **待续**：挖 uz0 调用方拿到 UIFID 申请端点 → 探针验证 → 主页作品列表（UserWorksResponse.aweme_list）→ 作品点击播放。
+- **已有资产**：sec_uid=author f191（实测）；works API 参数表全录；zq5 有 UserWorksResponse 解析参照。
 
-### 5.3 根本困境
-**移动端 protobuf 没有 bit_rate 子消息、没有 is_h265 字段**（video-dump 实锤：field21=单 varint 码率）→ **无法在 parse 阶段预判坏视频**，只能在播放时实测。而"播放时跳过"用 `centeredIndex()` 反推会跳多页，用 `engine.next()` 又要防级联——反复横跳。
+### 5.4 评论功能增强（次要）
+- 当前固定取 3 页 60 条；滚动到底自动加载更多（cursor 分页已支持，加个触底加载即可）。
+- 评论回复（reply_comment）、点赞等未做。
 
-### 5.4 v122 已做的缓解 + 残余
-- **黑屏有声（大幅减少）**：`resolveFreshURL` 播放时现取新鲜 URL（`rawVideos[index]` 现跑选链），不用预载过期静态 URL → `Cannot Open` 大幅减少。
-- **残余黑屏有声**：仍有部分 URL 现取后仍无效（无权限/CDN 节点抖动），待定位。
-- **黑屏无声**：无视频轨视频（`tracks(video)` 空）当前**不跳过**，会停在黑屏。**待办**：见 §8 双层检测方案。
+### 5.5 图集显示（价值中等，待用户决定）
+- mobile proto 图片字段号未知、是否填充未证实；UI 方案已设计好（ImageCell 横滑 pager）；数据侧需 aweme 级 dump 探针。当前图集被 dur=0 信号过滤掉。
 
-## 6. 试过的方法（重点：哪些有效、哪些失败）
+### 5.6 直播 / 登录（面板占位）
+- 直播：myDV 有 LiveWebSocket（kq2.java webRid 弹幕）可参考，需直播间入口数据。
+- 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，被铁律限制为"仅登录用"）——登录后可解锁更清晰度/收藏同步。
 
-### 有效（保留在 v124）
-- **`setContentOffset` 替代 `scrollToItem`**（后者 tvOS 抛 NSException）。
-- **删 `scrollViewDidEnd` 两委托 + `advance` 直接 `engine.next()`** → 治跳多页。
-- **黑屏看门狗**：每 1.5s 查居中 player 时间是否前进，连续 2 次停滞则 `advance()`。能抓"player 停在 idle"的黑屏。
-- **CODEC 诊断**：KVO ready 时查 `currentItem.tracks(video)` 编码，确认非 HEVC。
+## 6. 踩过的坑全集（按类别，务必牢记）
 
-### 失败/被否（别再重复）
-- **双 player 池（v77-v83）**：黑屏/跳号/无声，全败，回退单 player。
-- **`.failed → advance` 自动跳过（v111/v112）**：用 `centeredIndex()` 反推 → 跳多页 + 声画不同步，v121 删除。
-- **按 URL 字样猜 HEVC（v98）**：URL 里无可靠编码标志，失败。
-- **按 JSON 序号套 proto 字段号（v118 awemeType=field6）**：field6 非 awemeType，空操作。
-- **`asset.tracks` 在 readyToPlay 查视频轨（v119）**：track 异步未加载完 → 误返回空 → 误杀好视频 → 黑屏无声增多，v120 删除。
-- **`pickHighestQuality` 读 bit_rate（field21/31）**：移动端 field21 是单 varint 非 bytes，**恒返回 nil**，从没成功过。
+### 6.1 tvOS API 坑
+1. `scrollToItem` 在 flow layout 未就绪时抛 NSException→SIGABRT（.ips 实锤）→ 用 clamp 的 `setContentOffset`。
+2. `UICollectionView` 必须 `reloadData`（否则 numberOfItems 恒 0）。
+3. `isPagingEnabled` 在 tvOS **不可用** → 用 `scrollViewWillEndDragging` 手动 snap。
+4. tvOS blur 样式只有 `.regular/.prominent` 等老款——`systemThinMaterial/systemChromeMaterial` **unavailable in tvOS**（CI 实锤）。
+5. `UIScrollView.isPagingEnabled`、`UIBlurEffect.system*` 之外：`playerPool.min` 返回 Optional 需解包。
+6. tvOS 系统 Button 聚焦有灰色底板（`.plain` 也挡不住，tvOS 26 实锤）→ 自定义 `ButtonStyle`（label 原样返回）。
+7. 子类实现父类 `required init` 写 `required` 不带 `override`（DanmakuKit example 同款）。
+8. `AVPlayerItem.duration` 是属性不是方法；`item.tracks(withMediaType:)` 与属性 tracks 重载冲突（CI 实锤 "non-function type"）→ 用 `asset.loadTracks(withMediaType:)`。
+9. `UIPanGestureRecognizer`/`UILongPressGestureRecognizer` 挂 controller.view 可接收 Siri Remote 触摸面触摸（触摸板手势的正确姿势）。
+10. 跨文件类型 `private` 不可见（PanelRowButtonStyle 实锤）→ 改 internal。
 
-## 7. 踩过的坑（血泪，务必牢记）
+### 6.2 Swift/编译坑
+1. 大段重写类会**覆盖此前的小修复**——v143/v144 两次返工（var railLikeIcon、bind 方法丢失）。**重写后必须 diff 检查历史修复点。**
+2. 编辑残留孤儿代码块（旧方法尾巴没删净）→ 编译失败；提交前自查。
+3. KVO 闭包内 `item` 被外层循环变量遮蔽 → 用 `observedItem`/`playerItem` 无歧义名。
+4. `required init` 子类实现写 `required` 不带 `override`。
+5. `AnyTransition.scale` 参数名是 `scale` 非 `scaleEffect`；`OSAtomicIncrement32` 新 SDK 移除 → NSLock。
+6. PowerShell 编码坑：inline `-Command` 写中文会 mojibake（用 Edit/Write 工具写文件）；`??` 是 PS7 语法 PS5.1 不支持；here-string 内联会炸；`>` 会被 cmd 当重定向吃掉。
+7. 属性重命名后引用未跟上（commentAwemeId→awemeId 实锤）——改名后全局搜索旧名。
 
-1. **tvOS `scrollToItem` 抛 NSException → SIGABRT**：flow layout 未就绪时调用会崩。用 clamp 的 `setContentOffset` 替代。
-2. **`UICollectionView` 必须 `reloadData`**：否则 `numberOfItems` 恒 0 → scrollTo 全 SKIP → 黑屏。
-3. **改代码前必读实际文件**：v79-v124 多版凭记忆打补丁 = 幻觉，被点名批评。**治播放 bug 先问 myDV 原项目怎么做。**
-4. **同一路线连败 3+ 版 → 果断回退稳定底座**，别让用户连续当测试员（v94-99、v111-124 两次翻车）。
-5. **myDV 手机端(protobuf) 与 PC端(JSON) 字段号不通用**：拿 JSON 序号套 proto 必错（BitRate/awemeType 都栽过）。
-6. **AVPlayer 原生解 HEVC**（myDV VideoPlayUrlResolver 证明）→ 黑屏非 HEVC，别再往解码方向猜。
-7. **`item` 变量遮蔽**：KVO 闭包内 `item` 易被外层 `enumerated()` 循环变量遮蔽，导致 `item.tracks` 编译错。用 `playerItem`/`observedItem` 等无歧义名。
+### 6.3 CI/流程坑
+1. CI success 但下载/解压瞬态失败 → `dy_download.ps1 -ArtifactId <id>` 单独重下，**别重跑 pipeline**（双重 push）。
+2. `dy_collector.ps1` 不常驻；启动会重置日志文件；离线期 ATV 连接堆积 → 恢复时 N 条连接各回灌 500 行缓冲（日志 92% 重复，分析前去重，`_tmp/analyze3_v128.ps1` 有现成逻辑）。
+3. 大响应 `curl` 56 截断（分块发送已处理）。
+4. CommitMsg 别带括号/特殊字符（cmd 转义坑）。
+5. 后台跑 pipeline 超 320s 会转后台任务——轮询其输出文件，别重跑。
 
-## 8. v128 三靶点（2026-11-14 实施，基于实锤，与 v123-v127 失败原因逐条对上）
+### 6.4 数据/字段坑（详见 §7 权威表）
+1. **mobile proto 与 web JSON 字段号不通用**——拿 JSON 序号套 proto 必错（BitRate/awemeType/desc 三次栽过）。
+2. field 21（video）= URL 生成时间戳 varint，非 bit_rate（epoch 解码实锤）。
+3. f22（video）= 标志位非时长（曾污染 dur 取值链）；时长 = f13（实证 ms）→ f12 → f32。
+4. awemeType 在 mobile proto 探 {43,55,61} 但对图集返回 0/缺失——**awemeType 过滤实际无效**，dur=0 才是可用的无轨信号。
+5. desc=f2（含内联话题）、纯话题行=f459、省=f279、author f4（f3=昵称、f191=sec_uid、f2=uid 数字）、statistics=f10（f3赞 f2评 f6享 f11藏 f5播）、mix 候选=f14（内含合集名 f5）——**全部 wire 实测**。
+6. `authentication_token` mobile proto 无此字段且**传空能通**（弹幕/评论均验证）。
 
-**已排除的方向（别再重复）**：HEVC（v124 全 avc1）、图集、解码器耗尽（v110）、CDN 域名（同域名 ok/FAIL 交错）。
+### 6.5 架构/流程坑
+1. 同一路线连败 3+ 版 → 果断回退稳定底座，别让用户连续当测试员。
+2. 改代码前必读实际文件+反编译（凭记忆=幻觉）。
+3. `exit(0)` sideload 可用（设置面板 menu#2 退出）。
+4. tvOS 焦点链：面板/列表打开时按键走 SwiftUI（onExitCommand/按钮），VC.pressesBegan 收不到——两套面板的按键处理必须各自实现，且互不干扰（焦点链隔离是特性不是 bug）。
+5. 大响应/多连接的日志重复问题——分析前按行去重。
+6. **tvOS 焦点环境必须时刻含可聚焦元素**（v147 真机实锤闪退）：同一 SwiftUI 事务里移除含聚焦按钮的视图 + 插入无可聚焦元素的新屏 → 焦点引擎异常闪退（日志特征 = 操作后紧跟 ROOT auto-start）。全展示型新屏必须至少一个 Button 兜底（v148 评论行改可聚焦 + 常驻返回按钮 + 关面板后延时 0.4s 分离事务）。
+7. 确认键长按/短按复用：pressesBegan 起 0.6s Timer，pressesEnded 短按走面板/长按走两倍速，pressesCancelled 兜底恢复（v148）。
 
-**v128 为什么不是"第 4 次叠机制"——v123-v127 每次失败的具体原因这次都找到了**：
-| 旧尝试 | 失败原因 | v128 对应修复 |
+## 7. 数据字段权威表（全部 wire/探针实测，禁止猜测）
+
+### 7.1 mobile `/aweme/v2/feed/` protobuf（Proto 解码）
+| 层级 | 字段 | 语义 |
 |---|---|---|
-| v122 resolveFreshURL"存 bytes 现选" | **日志证伪：381 次 fallback static / 0 次成功**。pickHighestQuality 找 bytesFields(21/31) 恒 nil（field 21 是 varint 时间戳非 bit_rate 子消息）；且重解析旧 bytes 本身选不出新 URL（bytes 里只有同一批链接） | **真新鲜**：静态直链 age>90s 改用 `/aweme/v1/play/` 重定向端点（URL 不带时效签名，服务器请求时现场 302 出新鲜直链，AVPlayer 自动跟随）。照 myDV selectBestPlayUrl 第②优先级 |
-| v123 停滞看门狗 | 盯"时间不前进"——黑屏**有声**时音频在走、时间在走，**永远不触发** | **isReadyForDisplay 看门狗**：ready+播放+时间走但首帧渲染不出 2s → 检出（myDV onRenderedFirstFrame 的 AVPlayer 等价信号） |
-| v125 视频轨检测 | 编译失败（item 遮蔽）后陷入回退混乱，**从未真机验证**——不是方案被证伪 | **currentItem.tracks(.video) 空轨检测**：0.6s 复查防误杀，identity 守卫防旧 item 延迟回调误伤 |
+| root | f1/f2 | status_code / msg |
+| root | f5 | aweme_list（bytes 数组） |
+| root | f4 | has_more |
+| aweme | f1 | aweme_id (str) |
+| aweme | f2 | **desc 标题文案**（含内联话题） |
+| aweme | f4/f5 | author / 原声 music author |
+| aweme | f7/f8 | video（f8=play_addr_265/download_addr 家族） |
+| aweme | f10 | **statistics**（f3=digg f2=comment f6=share f11=collect f5=play） |
+| aweme | f14 | **mix/合集候选**（子消息，f5=合集名）——存在即合集 |
+| aweme | f16 | create_time (秒) |
+| aweme | f43/55/61 | awemeType 探测位（实测对图集返回 0/缺失——**不可用作过滤**） |
+| aweme | f459 | **纯话题行**（"#a #b"，desc 去重用） |
+| author(f4) | f1/f2 | uid (str) / uid 数字 |
+| author(f4) | f3 | 昵称 |
+| author(f4) | f5/f6/f7 | 头像（PlayAddr 同构，url_list 取第一个） |
+| author(f4) | f191 | **sec_uid**（MS4wLjAB... 76B） |
+| video(f7/8) | f1/f9 | **play_addr**（无水印播放版） |
+| video(f7/8) | f8 | **play_addr_265/download_addr**（f8 实测=水印版，路径带 /video/cn/mps/logo/） |
+| video | f3/f4 | width/height |
+| video | f13 | **duration ms**（f12/f32 兜底；f22=标志位非时长） |
+| video | f21 | URL 生成时间戳 varint（非码率！） |
+| play_addr | f2 | url_list（s13.a：f2→递归→f1） |
 
-**v128 统一动作阶梯**：检测命中 → 先 repair（换重定向直链就地重建，照 myDV onPlayerError 先重试）→ 仍异常才 skip。
-**护栏**：只监控/跳过居中（index==engine.index）；连续自动跳 ≥3 停手（WATCH cascade-stop），手动按键复位；skip 用 engine.next()+显式 scrollTo，绝不用 centeredIndex 反推。
-**检测三层**：idle（status 非 ready 连续 4s）/ stall（ready+非暂停+时间停滞 3s）/ black（ready+时间走+无首帧 2s）；novideo（tracks 空 0.6s 复查）。
+### 7.2 web 端点（JSON，全部已验证/可验证）
+| 端点 | 关键参数 | 状态 |
+|---|---|---|
+| `/aweme/v1/web/tab/feed/` | b0 配方（aweme_pc_rec_raw_data/filterGids/refresh_index/pull_type/video_type_select...）+ webCommon | ✅ 双源已用 |
+| `/aweme/v1/web/danmaku/get_v2/` | u11.K 参数 + webCommon；**60s 分段**（单响应 ~460 上限）；offset_time/text | ✅ 已用 |
+| `/aweme/v1/web/comment/list/` | aweme_id/cursor/count=20；{comments[{cid,user.nickname,avatar_thumb,text,digg_count,create_time}],has_more,cursor} | ✅ v147 已用 |
+| `/aweme/v1/web/aweme/post/` | sec_user_id/max_cursor/need_time_list 等（u11:3683 原样） | ❌ 403 UIFID 墙（待 uz0 链） |
+| `/aweme/v1/web/mix/listcollection/` | cursor/count | ❌ 同 UIFID 墙（myDV 也 blocked） |
+| ttwid 注册 | POST ttwid.bytedance.com/ttwid/union/register/（body/headers u11.A 原文） | ✅ 匿名可用 |
+| webCommon（必需） | device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_* | 缺则 "AppId不合法" |
+| 签名 | getABogus(query,data,path,webUA) + timestamp 参数；a_bogus 后置 | ✅ 评论/弹幕/tab feed 全验证 |
 
-**风险对冲**：静态直链优先（快启动、全清晰度），最坏情况=现状；redirect 端点若 403（无登录 cookie）只影响超龄条目，看门狗 repair/skip 兜底。
+## 8. 未来开发方向（路线图）
 
-## 8.5 日志诊断方法（v128 升级——排障一次 curl 看全）
+### 8.1 短期（体验收尾）
+1. **新视频卡顿**：按 §5.1 组合 A+B+D 实施（等用户拍板）。
+2. **弹幕重启**：按 §5.2 疑点顺序排查（offset_time 语义 → 轨道时序 → 时序对齐），数据说话。
+3. **评论滚动加载更多**：cursor 分页已支持，触底加载 + "加载更多"按钮。
+4. **悬浮窗补暂停/播放项**（OK 键被占用后暂停功能缺口）。
 
-- `curl http://<ATV-IP>:8765/stat`：版本 + **计数器全量**（feed_page/feed_aweme/feed_usable/feed_redirect/url_static/url_redirect/acquire/ready/novideo/itemErr/repair/autoskip/scroll/cover_retry）+ **最近 15 条诊断事件环**（WATCH repair/skip、MGR itemErr/novideo、FEED 0 usable 等）+ 最近直链。
-- `curl http://<ATV-IP>:8765/log`：末 50 行常规日志。`/ping`、`/clear` 保留。
-- `DYLog.event()` = 常规日志 + 事件环双写；`DYLog.count(key, by:)` 计数器。新增诊断一律走这两个，别散落裸 log。
-- FEED 每视频日志已压缩成 1 行：`FEED item a[i] id=.. type=.. static=ok/none redirect=ok/none dur=..`（旧 7 行 loop 噪音已删）；每页首条仍 dump video 全字段监控 schema 漂移。
-- ⚠️ 运维：`dy_collector.ps1` 不会常驻——读日志前先 `netstat -ano | findstr :9988` 确认 LISTENING；采集器启动会重置日志文件；ATV 只在新日志行产生时才重连，采集器起来后需要用户操作一下 ATV 触发回灌；ATV IP 可从 netstat 9988 的 ESTABLISHED 远端拿。
-- ⚠️ 已知缺陷（待优化）：采集器离线期间 ATV 堆积的 N 条连接恢复时各回灌一份 500 行缓冲 → 日志大量重复（分析前先按行去重，`_tmp/analyze3_v128.ps1` 有现成去重逻辑）；ATV :8765 /stat 入站 curl 可能不通（连接堆积），文件日志已够用。
+### 8.2 中期（功能扩展）
+1. **作者主页**：挖通 UIFID 申请链（uz0 调用方）→ works API → 作品列表屏（封面网格+点击播放，复用 merge 管道）。
+2. **合集浏览**：mix/listcollection（同 UIFID 墙，一起解决）。
+3. **搜索**：顶部搜索条 UI + web 搜索端点（myDV 有 search/single 端点参照）。
+4. **扫码登录**：解锁登录态（更全数据/收藏/关注流）；网页套壳路线 v2-v8 已验证可行（铁律允许仅登录用 WebView）。
+5. **直播**：myDV LiveWebSocket（kq2.java）参照。
 
-## 11. v129 无感跳过图集/novideo（parse 阶段过滤，2026-11-14 用户拍板）
-
-- **语义照抄** myDV `filterPrimaryPlayableAwemes`（DataModelKt.java:131，在 feed 响应处理处 zq5 调用）：awemeType==0 且 playAddr 非空才进池。
-- **双信号实现**：① `awemeType != 0` —— 照 s13.e:371 依次探字段 {43,55,61}，第一个落在 [0,201) 的值即 type，全缺默认 0（=myDV 模型行为）；② `dur == 0` —— wire 实锤：v128 两个 novideo 坏条目（idx=69 id=7697175741067703211 / idx=82 id=7706360995123839439）的时长字段全缺。
-- **dur 取值链修正**：f13（wire 实证=真实时长 ms）→ f12 → f32；f22 是标志位非时长（v128 取值链被它污染，26 条正常视频被误标 dur=1）。
-- **过滤日志**：`FEED skip-item a[i] id=.. type=.. dur=.. reason=type|nodur`（事件环）；页统计行加 `filtered=N`；计数器 filter_type/filter_nodur。
-- **runtime repair→skip 保留兜底**（极罕见 type=0 但媒体真坏）。
-- **图集显示（暂缓，可行性已分析给用户）**：myDV 不做图集展示无参照；图片字段号未知、服务器是否填充未证实，需 aweme 级字段 dump 探针；UI 方案已设计好（ImageCell 横滑 pager + 左右键翻图/上下键切条，cell 不可聚焦按键集中在 pressesBegan，不碰滚动路径）。全会话 dur=0 仅 5/175（2.9%），价值中等。待用户决定。
-- **v129 验收补充**：冷启动首帧实测 11s（17:44:04 启动→17:44:06 首页解析完→idx=0 静态直链 age=0 但 4s 不 ready→17:44:11 repair→17:44:15 ready）；两链都慢=网络首连/冷门 CDN 域名慢，非 URL 选择问题 → 催生 v130。
-
-## 12. v130 冷启动首帧提速 + 坏链快速恢复（2026-11-14 用户拍板"其他的问题一次性解决"，UI 美化后期统一做）
-
-- **冷启动收敛（PlayerManager.prepare）**：池全空（会话首个 prepare）→ 只 acquire 居中条且 `forceRedirect: true`（省掉静态直链 4s 空等 + repair 重建来回）；邻居 index 记入 `pendingNeighbors`，居中 ready 后 `drainPendingNeighbors()` 补装载（此时网络已暖，邻居仍走静态快启动）。规避启动瞬间 3 个并发 TLS 握手互拖（v129 idx=1 TLS error 实锤）。正常路径（池非空）行为与 v122 完全一致。
-- **idle 看门狗 4s→2s**（watchIdleTicks）：repair 实测 1-2s 恢复，静态直链打不开少等 2s；stall=3s、black=2s 不动（stall 要区分正常缓冲）。
-- **验收指标**：启动→首帧时长（v129 基线 11s，目标 ~6s）；`MGR cold-start defer/acquired` 日志；`cold_start` 计数器；TLS error 是否随并发收敛消失。
-- **用户决定搁置**：启动 loading spinner 等 UI 美化（v76 曾有 spinner，v122 重构丢失）——待基础功能完美后统一做。
-
-## 13. v131 去水印（2026-11-14 用户拍板）
-
-- **根因**：抖音每条视频两份转码——play_addr（f1/f9，播放版**无水印**）+ download_addr（f8，下载版**烧录漂移水印**）。myDV 播放只从 play_addr 选（s13.e：f8 在其模型里就是 downloadAddr）；我们 v58 时代实测"f8 直连快"固定 8→1→9 选链 = 踩 download_addr。日志铁证：我们播放的 URL 路径带 `/video/cn/mps/logo/`（转码服务+水印模板）。
-- **修复**（DYFeedClient.parse + 新增 selectBestPlayUrl/isPathSigned，均照抄 VideoPlayUrlResolver）：
-  1. 候选 = play_addr（f1/f9）url_list（取第一个非空子消息，f1 优先 f9），空则退化 f8；
-  2. 候选内四级优先级原样：① `douyinvod.com/[32hex]/[8hex]/` 签名直链 ② `douyin.com/aweme/v1/play` ③ douyinvod+`signature=` ④ 列表最后一个；
-  3. v128 双链/age/repair 机制不动（redirect 取自 f1/9 本就是无水印家族）。
-- **验收**：first url 路径形状（签名直链 = 快+无水印；若 f1/9 只有重定向 URL 则首播多一跳 302）；真机肉眼确认无水印；ready 率/首帧时长不得回退。
-- **v131 验收结果（2026-11-14）**：用户确认"水印没了，播放体验趋于完美"。播放线（黑屏/跳页/无感过滤/水印/冷启动）全部收工。
-
-## 14. v132 弹幕功能（2026-11-14 探针版，待真机验收）
-
-**数据链（照抄 myDV 反编译）**：
-- 请求：GET `https://www.douyin.com/aweme/v1/web/danmaku/get_v2/`，参数照抄 u11.K:1310（app_name=aweme/format=json/group_id/item_id/start_time=0/end_time/duration/authentication_token/pc_libra_divert=Windows/support_h265=0/support_dash=1/version_code=170400/version_name=17.4.0 + D0 公共参数）。
-- 响应：JSON `{status_code, danmaku_list:[{danmaku_id, offset_time(ms), text, ...}]}`（DanmakuResponse/DanmakuItem.java 对应）。
-- web 身份：Chrome 147 桌面 UA（u11.A 原文）+ **ttwid 匿名注册**（POST ttwid.bytedance.com/ttwid/union/register/，body/headers u11.A 原文，Set-Cookie 取 ttwid，存 UserDefaults dy_ttwid）+ Referer `https://www.douyin.com/video/<id>`。无需登录。
-- 签名：web 链 myDV 用 generateABogusParam/G0（蓝本 §5）；v132 探针复用现有 4 参 getABogus（第 4 参传 web UA）+ timestamp 参数——可用性由 DANM 日志实锤。
-- ⚠️ **已知未知数（探针中）**：authentication_token / group_id 的 mobile proto 字段号未知（s13.e 未映射）——aweme-dump 探针同跑；v132 先传 awemeId/空 token，若 status_code!=0 或 items=0 按日志定论。
-
-**渲染（vendor DanmakuKit，MIT）**：
-- `qyz777/DanmakuKit` core 源码 vendored 到 `App/Sources/DanmakuKit/`（LICENSE-DanmakuKit.txt 保留归属；未走 SPM——其 Package.swift 无 tvOS 平台声明；未用 fndanmu——用户明确其渲染不行）。
-- 架构 = 业界成熟模式：**CABasicAnimation(position.x) 由 Core Animation 合成器驱动 + DanmakuAsyncLayer 异步位图绘制 + cell 复用池** → 滚屏流畅性由系统渲染管线保证。
-- vendored 修补（v132）：Sentinel 的 OSAtomicIncrement32（已废弃/新 SDK 可能移除）→ NSLock 等价实现；其余 tvOS 兼容零改动（PlatformTypes.swift 已有 tvOS awareness，扫描无 iOS-only API）。
-- 集成：`DYDanmakuOverlay`（PlayerCell 内，视频层之上/封面之下，isUserInteractionEnabled=false 焦点隔离）——DanmakuTextCellModel/DanmakuTextCell（黑描边白字）+ 按播放时钟发射器（0.25s tick，迟到 >2.5s 不补射）；参数 trackHeight=46/displayArea=0.55/速度 300px/s/字号 38。
-- 播放同步：load(awemeId)（换片清屏重取）→ syncPlaying（居中在播=play+游标对齐）→ seekSync（清屏重对齐）→ toggle/seek/togglePlayPause 全接。
-- 弹幕总开关 `DanmakuOverlay.enabled` 默认 true（UI 开关待美化阶段统一做）。
-- 日志：DANM 前缀（get/ttwid/ok/status_code/http err）+ FEED aweme-dump（每页首条 aweme 级字段 dump）+ 计数器 dm_items/dm_shoot。
-- **验收**：真机弹幕是否显示；DANM ok（status_code=0+items>0）还是被拒（token/签名/cookie 哪个缺失由日志定论）；滚屏流畅度。
-- **v132 真机验收结果**：弹幕未显示，日志 `DANM status_code=3`（端点拒绝），渲染层就绪无报错。
-- **⚠️ 开发机验证门（v133 起的重大流程升级，用户提议并采纳）**：数据获取类改动**先在开发机用 Node 复刻整条链验证**（`_tmp/danmaku_probe.js` 可复用：加载 Signer JS + protobuf 解码 + HTTP 矩阵），数据说话后再进真机代码——一轮脚本顶 3-4 轮 CI。
-
-## 15. v133 弹幕数据链打通（2026-11-14，开发机探针定位根因，CI 过待真机验收）
-
-- **v132 失败根因（开发机探针实锤）**：`status_msg="AppId不合法"`——弹幕请求缺 **web 公共参数**（`device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_*`）。myDV 的 u11.K 参数表本身就没有这些（myDV mobile 路径的弹幕链同样是坏的——tw0/rn5 的 token 非空门槛在 mobile proto 上永远不满足，它根本不会发请求）。
-- **修复（DYDanmakuClient.fetch）**：参数表 = webCommon 前缀 + u11.K 参数 + D0 公共参数；**签名输入 = 完整 query 含 timestamp**（webCommon+dm+timestamp → getABogus(webUA) → a_bogus 后置）；authentication_token 传空（**开发机探针实锤：mobile proto 无此字段且空值能通**，aweme-dump 候选字段全是 JSON/URL/sec_uid 非 token）。
-- **开发机探针实测**（`_tmp/danmaku_probe.js`）：status_code=0，12s 短视频 items=1461、186s 视频 items=817，连发 6 个无频控；弹幕数据 `danmaku_list[{offset_time, text, danmaku_id}]` 直连可用。
-- **验收**：真机弹幕显示 + `DANM ok items=N` 日志 + 滚屏流畅度（DanmakuKit Core Animation 驱动）。
-- 后续可选：弹幕开关 UI（enabled 属性已预留）、按 user_id 过滤、密度限制。
-
-## 17. v135 设置面板 + 双视频源（2026-11-14 用户规格，CI 过待真机验收）
-
-- **Menu 状态机**：面板关闭按 Menu → 呼出设置面板（DYPlayerViewController.pressesBegan 拦截 .menu）；面板显示中按 Menu → 退出应用（焦点在面板内走面板 `.onExitCommand` → `exit(0)`，sideload 可用）。
-- **面板 UI**：屏幕左侧悬浮 SwiftUI；tvOS 26 原生 **Liquid Glass**（`.glassEffect(.regular.tint(.black.opacity(0.35)))`，Xcode 26.6 SDK 编译实锤存在；低版本 ultraThinMaterial 回退）。五项：移动端推荐 / 抖音精选 / 弹幕设置（开关，UserDefaults dy_danmaku_on + DanmakuOverlay.globalEnabled）/ 直播（占位）/ 登录（占位）。
-- **抖音精选（web 源）**：GET `https://www.douyin.com/aweme/v1/web/tab/feed/`，b0 配方 u11.java:2701 参数原样 + webCommon（danmaku 探针实锤必需）+ web 签名 + ttwid cookie；**开发机探针（_tmp/webfeed_probe.js）已验证**：status_code=0、refresh_index 分页正常、JSON 含 play_addr/play_addr_265/bit_rate(8-24档) 全量数据；播放链复用 selectBestPlayUrl；播放请求头按源切换（PlayerManager.playbackHeaders：web=Chrome UA+Referer+ttwid）。
-- **架构**：`DYFeedSource` 枚举 + `PlaybackEngine.reset()`（源切换清空）+ `DYFeedClient.setSource()`（重置分页状态）+ reloadIfNeeded 空态重置；源切换后池清空 → 冷启动收敛自动生效。
-- **CI 踩坑**：ensureTTWID 私有重名 → 改 ensureTTWIDInternal。产物 output/DYTV-tvos-unsigned-v135.ipa。
-- **真机验收**：Menu 呼出面板/再按退出；源切换到抖音精选后视频正常播放（web 直链 AVPlayer 播放是本版唯一未实测点——HEAD 403 是测试方法问题，真机 GET+带头待验）；弹幕开关即时生效。
-- **✅ v135 真机验收全通（日志实锤）**：面板呼出 → 选抖音精选 → ENGINE reset → web GET usable=7 → web 直链 MGR ready ×10 / itemErr=0，18 分钟长视频弹幕 652 条，弹幕开关生效，menu#2 退出正常。**双源架构全通。**
-
-## 18. v136/v137 面板打磨 + 源持久化（2026-11-14，CI 过）
-
-- **v136**：①面板 **3s 无操作自动隐藏**（DYSettingsModel.startAutoHide/noteInteraction——焦点移动、按键都刷新计时）；②焦点样式：去灰底 → **焦点行白色描边 + 1.05 缩放弹簧动画**（@FocusState PanelRow）；③**弹幕区域回退 v133 全屏行为**（删 v134 aspectFit 内切矩形——用户报有 bug，待后修）。
-- **v137**：**视频源持久化**——选过的源存 UserDefaults(dy_feed_source)，启动 tryStart 同步 engine.source，面板徽标同步；下次启动直接用上次设置过的源。
-- 验收：面板 3s 自动消失；焦点行白描边+放大；弹幕回全屏；换源后杀 app 重启直接是上次选的源。
-- **✅ v135 源切换日志验收补充**：web 会话 MGR ready ×10 / itemErr=0 / 18min 长视频弹幕 652 条。
-
-## 19. v138 弹幕断流修复 + 面板焦点打磨（2026-11-14 用户反馈，CI 过待真机验收）
-
-- **弹幕断流根因（开发机探针实锤，_tmp/danmaku_segment_probe.js）**：`danmaku/get_v2` **单次响应 ~460 条上限**——186s 视频 items=458 / total=3564，播完第一段就没了。**修复 = 60s 窗口分段顺序取回 + danmaku_id 合并去重**，同视频实测 1183 条全量（0-60s 458 / 60-120s 476 / 120-180s 173 / 180-186s 76）。
-- **实现**：DYDanmakuClient.fetch 改分段循环（requestWindow→runNext 递归），`items(for:durationMs:onSegment:completion:)` 每段增量回调（主队列，段间 offset 递增保序，Overlay shotIndex 无需重排）；Overlay.load onSegment 追加（换片丢弃）；单段失败记日志继续不中断整体。
-- **面板焦点灰底根因**：tvOS 系统 Button 聚焦 chrome（.plain 也挡不住，截图实锤）→ 自定义 `PanelRowButtonStyle`（label 原样返回）；焦点行 = **液态玻璃底板**（glassEffect tint white 0.10）+ **白描边** + 1.05 缩放（用户要求描边也带玻璃质感）。
-- **CI 踩坑**：fetch 签名加了 onSegment 后内部调用漏透传（missing argument）。
-- **验收**：PC 长视频弹幕不断流（日志 `DANM all-segments done total=N`，N 应≈total）；面板焦点无灰底、玻璃底+白描边+放大。
-- **✅ v138 真机验收结果**：分段覆盖全片（19min 视频 20 段全取到尾），但 41 段中 3 段零星被拒 → 该 60s 窗口无弹幕 = 用户报"停一会又有了"。
-
-## 20. v139 弹幕间歇断流修复（2026-11-14 用户反馈，CI 过待真机验收）
-
-- **根因（v138 日志实锤）**：3 秒内连发 20 个段请求触发风控零星拒绝（41 段中 3 段 http=200 但 status/解析失败）→ 失败的 60s 窗口无弹幕 = "停一会儿又有了"。myDV 弹幕调度类 dp5 反编译缺失（jadx 失败）无法参照，按自身日志证据修复。
-- **修复**：①段间 **0.15s 节流**（防连发）；②**失败段统一重试一次**（0.4s 间隔，乱序追加）；③发射器 `shotIndex` → **`shotIds` 集合扫描**（容忍乱序追加，迟到 40s 放弃，seek 保留已射集合防重复）。
-- **查证记录**：zq5.e → mp5 → u11.K 是薄包装（窗口值由上层 VM 传）；dp5（弹幕编排）jadx 缺失。
-- **验收**：长视频弹幕无空隙；日志 `DANM retry N failed segments` 应趋零；`DANM all-segments done total=N`。
-- **✅ v139 真机验收结果**：弹幕仍间歇稀疏——**第二根因**：60s 窗口命中 460 上限被截断（密集视频每窗都截，段内也稀疏）。
-
-## 21. v140 弹幕自适应切分 + 底部进度条（2026-11-14 用户要求，CI 过待真机验收）
-
-- **弹幕自适应切分**：回答用户"一次请求拿全量"=不行（服务端 ~460 条/响应硬上限，探针实锤）。等价方案：段返回 ≥450 条（`capThreshold`，=被截断）**自动对半递归拆分**（depth<4、窗>10s 才拆；已回的部分条目由 seen 去重兜底不重复），直到每段都在上限内 → 加载开始即全量预取，密集段截断导致的间歇稀疏一并解决。节流 0.15s + 失败段重试（v139）保持。
-- **底部播放进度条**：`DYProgressBar`——5px 细条贴屏幕最底部（左右留 24px），`UIBlurEffect(style: .regular)`（**tvOS 专属样式，systemThin/systemChrome 均 unavailable in tvOS**）+ 白色进度层（0.75）+ 整体 alpha 0.55 低调；0.5s Timer 随播放推进（`item.duration` 属性非方法），seek 即时跳动，duration 无效自动隐藏。
-- **CI 踩坑**：Self.capThreshold 忘定义；tvOS blur 样式限制；duration 属性。产物 output/DYTV-tvos-unsigned-v140.ipa。
-- **验收**：密集弹幕视频全程无稀疏/空隙（日志 cap-hit → split 行可见）；底部细进度条随播放推进。
-- **✅ v140 真机验收结果**：数据面已净（0 失败段、cap-hit 拆分生效、1212 条全量取回），但弹幕仍间歇——**第二根因=显示吞吐**：12 轨道×~9s 滚屏 ≈ 1.3 条/s，密集视频 2-5 条/s，超量全被 `noSpaceShoot` 静默丢弃（此前无日志可证）。
-
-## 22. v141 弹幕显示吞吐提升（2026-11-14，CI 过待真机验收）
-
-- **修复**：轨道高 46→**34**（约 12→23 条轨道）+ 显示区 55%→**75%** + 滚动速度 300→**380px/s** + 字号 38→**34**（测量/绘制同源 `DanmakuTextCellModel.fontSize`）→ 吞吐 ≈ **3.3 条/s**（原 1.3）。
-- **新增 `dm_drop` 计数器**：`DanmakuOverlay` 实现 `DanmakuViewDelegate.noSpaceShoot`——丢弃量直接量化（dm_items - dm_shoot ≈ dm_drop），下一版数据说话（若 drop 仍高，可继续加轨道/开 isOverlap/降字号）。
-- **CI 踩坑**：类声明与 extension 双重 conformance（redundant conformance）。
-- **验收**：密集视频弹幕密度观感（不再间歇）；日志 `dm_drop` 与 `dm_shoot` 比例。
-- **✅ v141 真机验收结果**：仍间歇——用户澄清"间歇"=**明显空窗期（一条都没有）过一会儿又扎堆出现**（非密度稀疏）。
-
-## 23. v142 弹幕空窗+扎堆修复（2026-11-14 用户澄清，CI 过待真机验收）
-
-- **决定性证据（开发机直方图探针 _tmp/danmaku_hist_probe.js）**：79s 视频 1212 条全量取回，30s 桶直方图**连续、无 ≥60s 零桶**（数据本身无空窗），但**峰值密度 41 条/s、avg 15.4 条/s**。
-- **空窗+扎堆机制**：发射器同 tick 把到点的弹幕全部射出——峰值 41 条同时抢 23 条轨道（isOverlap=false 不重叠），大部分瞬间被 `noSpaceShoot` 丢弃 → 轨道清空期间零星补入 = **空窗**；下一个高峰秒再扎堆。
-- **修复（对齐 PC 版观感）**：①发射器**每 tick 限量 6 条**（0.25s×6=24/s，峰值期排队平滑射出，积压在 40s grace 内消化）；②**isOverlap=true** 允许同轨重叠（PC 版同密度全显示、接受重叠）。
-- **验收**：密集视频弹幕持续流动无空窗（观感偏密、允许重叠=PC 同款）；日志 `dm_shoot≈dm_items`、`dm_drop` 大幅下降。
-- **⏸️ v142 验收+弹幕暂停**：用户反馈改法没到点子（真实现象=「获取→展示」循环：空窗一条都没有→扎堆→循环），**弹幕整体暂停待重启**（详见记忆文件 dytv-v121-rollback-checkpoint 的弹幕暂停段：数据链成果保留 + 重启排查方向 4 条 + 探针脚本就位）。
-
-## 25. v144 PC 版 UI 按用户测试反馈修正（2026-11-14，CI 过待真机验收）
-
-- **用户实测 v143 五点反馈全部修正**：
-  1. 左下 desc 与话题两行重复 → desc 剔除话题串（mobile：f459 子串剔除；web：text_extra 的 hashtag_name 逐个剔除），**话题独立一行**；
-  2. 标题 `numberOfLines=3` 自动换行（高度 102px）；
-  3. 右轨**上下箭头删除**；
-  4. **左下头像删除**（保留右轨圆头像）；
-  5. 昵称字号 **32 > 标题 26**，昵称后同一行显示**发布时间**（mobile f16 / web create_time，格式化 "MM月dd日"，attributed 白 75%）。
-- **待办（用户未拍板）**：新视频卡顿（forward ready 0-3s + 刷速快于预载；redirect 老视频重取 0-16s）——候选方案：驱逐半径 ±3 / idle 2s→4s / redirect>5s fallback static / 预取窗口 [idx-1,idx+3]。
-- **CI 踩坑（重复发生）**：大段重写 PlayerCell 会覆盖此前小修复（var railLikeIcon、bind 方法）——**重写后必须 diff 检查历史修复点**；编辑残留孤儿代码块同样编译失败。产物 output/DYTV-tvos-unsigned-v144.ipa。
-- **验收**：左下信息区=昵称(大)+时间 · 文案(≤3行) · 话题行，无重复无箭头无左下头像；右轨=头像+四组计数；播放/弹幕开关/面板/源记忆不回归。
-
-## 26. v145 快捷悬浮窗 + UI 打磨（2026-11-15，CI 过待真机验收）
-
-- **快捷悬浮窗（DYQuickPanel.swift，OK 呼出）**：屏幕中下液态玻璃面板；**OK 呼出/再按关闭**（`.playPause` 语义变更：原暂停切换移除）；面板内 **Menu=关闭回播放**（不退出应用——设置面板的 menu#2 退出不受影响，二者焦点链隔离）。四项：
-  - 主页（图标=博主头像异步加载）——占位（作者作品 API zq5.UserWorksResponse 后续实施）
-  - 评论——占位（评论 API 后续）
-  - 合集——**条件显示**：仅合集内容（mobile=aweme f14 子消息存在，内含合集名 f5；web=mix_info/mix_name）
-  - 不感兴趣——**实作=跳过当前视频**（engine.next+scrollTo，与看门狗 skip 同路；反馈 API 后续接）
-- **合集识别**：DYVideoInfo.isMix/mixName（mobile f14 / web mix_info）。
-- **UI 打磨**：左下间距收紧（标题 numberOfLines=2，块总高 ~140px 不再伸向屏幕中间）；右轨图标 44→56、头像 66→76；进度条右上方加「当前/总时长」文本（clockText mm:ss，0.5s 随播放刷新）。
-- **CI 踩坑**：AnyTransition.scale 参数名=scale 非 scaleEffect；private 类型跨文件不可见（PanelRowButtonStyle 改 internal）。产物 output/DYTV-tvos-unsigned-v145.ipa。
-- **验收**：OK 呼出中下面板/再按关闭/Menu 关闭；合集视频才显示合集项；不感兴趣=跳到下一条；左下紧凑不伸向中部；右轨图标明显变大；进度条右上有时长文本。
-- **✅ v145 反馈澄清**：用户报"确认键呼不出面板/图标没变大"=装的是 **v144**（面板与图标尺寸是 v145 才有的）——装 v145/v146 即可。头像非正圆是 v145 真瑕疵。
-
-## 27. v146 触摸板手势 + 头像正圆（2026-11-15，CI 过待真机验收）
-
-- **触摸板手势（手势挂 controller.view）**：①`UIPanGestureRecognizer` 阈值 100px——**上滑=下一条、下滑=上一条**（同时 `collectionView.panGestureRecognizer.isEnabled=false` 关闭原生滚动防打架；面板打开时不响应）；②`UILongPressGestureRecognizer(minimumPressDuration=1.5, allowableMovement=60)`——**长按 1.5s 两倍速**（`rate=2.0`），松开恢复原播放态；acquire 加 `audioTimePitchAlgorithm = .timeDomain`（2x 不变调）。
-- **头像正圆**：`cornerRadius = 38`（=76/2，v145 的 33 非正圆）。
-- **恢复实例**：CI success 但本地 Expand-Archive 瞬态失败 → `dy_download.ps1 -ArtifactId <id>` 单独重下（595KB）。
-- **验收**：触摸板上/下滑切换视频（方向别搞反）、按住 1.5s 后视频 2 倍速且声音不变调、松开恢复 1x；右轨头像正圆；**务必先装 v146**（v144 无面板/大图标）。
-- **⏸️ v142 真机验收结果 + 弹幕任务暂停（2026-11-14 用户拍板）**：用户反馈改法没到点子——真实现象是「获取→展示」循环：一段时间一条都没有，过一会又有，循环。**弹幕整体暂停，记录在此随时重启**：
-  - 已做且保留：数据链全通（web get_v2 + ttwid 匿名注册 + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试）；直方图探针证实**数据无空窗但峰值密度 41 条/s**；样式=纯白字无底无描边；发射器=shotIds 集合扫描；面板弹幕开关可用。
-  - 重启时优先查：①offset_time 语义（是否真 ms 偏移——周期性空窗与段 offset 分布存疑）；②DanmakuTrack 轨道占满/释放时序；③isOverlap 观感；④取回/展示时序对齐。
-  - 重启入口：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + dm_drop/dm_shoot/dm_items 计数器 + 探针 _tmp/danmaku_hist_probe.js。
-
-## 24. v143 PC 版 UI 上线（2026-11-14 用户规格，CI 过待真机验收）
-
-- **布局（参考 web 版截图）**：右侧动作轨（上下切换箭头 + 圆头像 66px + 点赞/评论/收藏/分享 SF Symbols + 计数万缩写，距右 118px、从 28% 高度起竖排）；左下信息区（头像 44px + @昵称 + 文案 + 话题行，避让底部进度条）。层级：player < danmaku < cover < PC 信息层（封面期一并盖住）。计数纯展示（tvOS 导航仍是箭头键）。
-- **数据（wire 实测字段号，dev 探针 _tmp/aweme_fields_probe.js 双样本一致）**：
-  - mobile proto：`desc=aweme f2`、`纯话题行=f459`、`author=f4（f3=昵称，f5/6/7=头像 url_list）`、`statistics=f10（f3=digg f2=comment f6=share f11=collect）`——与 s13.e 构造序完全一致。
-  - web JSON：`author.nickname / author.avatar_thumb.url_list / statistics.{digg,comment,share,collect}_count / desc` 直取。
-  - 存储：`DYVideoInfo` + `PlaybackEngine.infos` + merge `allInfos` 参数 + `videoInfo(at:)` 访问器；源切换随 reset 清空。
-- **头像**：`AvatarLoader`（NSCache 记忆化异步加载）。
-- **CI 踩坑**：PlayerCell 重写时丢了 `bind` 方法；rail 图标 `let` 重赋值（改 var）。产物 output/DYTV-tvos-unsigned-v143.ipa。
-- **验收**：左下作者/文案/话题、右轨计数与头像随视频切换；数字万缩写；计数与 PC 网页版数值一致即数据映射正确。
-
-## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
-
-- ①去白底：根因 = DanmakuAsyncLayer 在 layer isOpaque==true 时主动填白（UIColor.white）；修 = DanmakuTextCell `required init(frame:)`（官方 example 同款写法）+ backgroundColor=.clear + isOpaque=false + layer.isOpaque=false。
-- ②去描边：弹幕 JSON 无颜色字段（danmaku_type/score/text_extra，无 color），默认色即白 → 纯白字无 stroke。
-- ③弹幕区域限定视频 aspectFit 内切矩形（用户：手机竖版源弹幕不该飘全屏黑边）：PlayerCell.updateDanmakuFrame() 用 presentationSize 算内切矩形（ready 后 presentationSize 才有效；bind/layoutSubviews/updatePlaybackStates/refreshCoverForVisible 四处触发）；滚屏时长按区域实际宽度算。
-- CI 踩坑：子类实现父类 required init 要写 `required` 不带 override（官方 example 同款）；PlayerCell 里是 playerLayerView.player 不是 playerLayer。产物 output/DYTV-tvos-unsigned-v134.ipa。
+### 8.3 长期（打磨）
+1. UI 美化统一轮：启动 spinner（v76 曾有）、弹幕样式设置、主题。
+2. 弹幕设置项扩展（密度/字号/速度/透明度）。
+3. 设置面板持久化扩展（各项 UserDefaults）。
+4. App 图标（actool Assets.car 问题未解，已搁置）。
 
 ## 9. 关键文件
-- `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
-- `DYFeedClient.swift`：移动端 feed 直连 + protobuf 解码 + `pickHighestQuality`（恒 nil，待修）。
-- `DYSigner.swift`：4 参 a_bogus 签名（JavaScriptCore）。
-- `PlaybackEngine.swift`：URL/索引状态管理（含 `rawVideos` 存储）。
-- `MYDV_FEED_BLUEPRINT.md`：myDV 数据获取蓝图。
-- `output/atv_push.log`：真机日志（`MGR`/`CODEC`/`STALL`/`ENGINE`/`FEED` 前缀）。
+- `NativePlayerView.swift`：播放层全部（池/看门狗/手势/进度条/PC UI/PlayerCell）。
+- `DYFeedClient.swift`：双源数据 + 解析（Proto 解码/选链/过滤/信息提取）。
+- `PlaybackEngine.swift`：引擎状态（urls/infos/durations/rawVideos/redirectUrls + reset/merge）。
+- `DYDanmakuClient.swift` / `DYDanmakuOverlay.swift`：弹幕（⏸️暂停）。
+- `DYCommentClient.swift`：评论数据。
+- `DYQuickPanel.swift`：快捷悬浮窗 + 评论屏（SwiftUI）。
+- `DYSettingsModel.swift`：设置面板 + 快捷面板模型（SwiftUI）。
+- `DYSigner.swift`：4 参 a_bogus 签名（JavaScriptCore + Signer JS 资产）。
+- `DYLog.swift`：日志 + LAN 服务器（/log /stat /ping /clear）+ count()/event()。
+- `HANDOVER.md`（本文档）、`MYDV_FEED_BLUEPRINT.md`（数据蓝图）、记忆文件 `dytv-*-*.md`。
+- 探针：`_tmp/danmaku_probe.js`、`webfeed_probe.js`、`danmaku_hist_probe.js`、`comment_works_probe.js`、`aweme_fields_probe.js`。
+- 反编译：`_apk_work/jadx_out_classes/sources/defpackage/u11.java`（API 总集）+ `com/github/mytv/dv/model/`（JSON 模型）+ `s13`（jadx_out，protobuf 解析权威）。
 
 ## 10. 给下一个 AI 的明确指令
-1. **先读实际代码再动手**（血泪：v79-v124 多版凭记忆打补丁 = 幻觉）。
-2. **治播放 bug 先问 myDV 原项目怎么做**（`_apk_work/jadx_out_classes`），别自己造轮子。
-3. **同一路线连败 3+ 版 → 回退稳定底座**（v121 是当前稳定点）。
-4. **当前唯一遗留 = 黑屏**。建议先按 §8 用 `currentItem.tracks` + 看门狗双层验证，数据说话再深挖。
+1. **先读本文档 §7 权威表 + 实际代码 + 反编译**，禁止凭记忆/猜测。
+2. **数据获取类改动：先开发机 Node 探针验证**（`_tmp/*probe.js` 复用），数据说话再进真机。
+3. **治播放/数据 bug 先问 myDV 原项目**（u11.java = DouyinDirectApi 全集；缺失类如 s13/dp5 记录在案，改用 wire 实测）。
+4. **同一路线连败 3+ 版 → 回退稳定底座**（当前 v122/v147），别让用户连续当测试员。
+5. **大段重写后必须 diff 检查历史修复点**（v143/v144 两次返工教训）。
+6. **CI/日志/编译的坑先查 §6**，已知问题别再踩一遍。
+7. 每版交付后更新本文档 + 记忆文件；版本号 +1 禁止重复。

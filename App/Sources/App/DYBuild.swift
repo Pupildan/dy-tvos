@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v147"
-    static let changes = "v147: ①确认键修正(.select 点击板中心=呼出快捷面板,.playPause 播放/暂停键恢复暂停切换——v146 误绑);②评论功能实装(web comment/list 探针已验证 status0/55091条,分页cursor 3页60条,评论屏=全屏液态玻璃列表 头像/昵称/文本/赞数/时间,Menu关闭);③作者主页被UIFID风控墙挡住(ArgusSecurityPlugin,myDV同样会blocked)保持占位待后续挖 UIFID 申请链(uz0 POST X-Secsdk-Csrf-Token)"
+    static let version = "v148"
+    static let changes = "v148: ①评论屏闪退修复:tvOS焦点环境无可聚焦元素致异常(真机日志实锤 select comment 后 ROOT auto-start)——评论行改可聚焦Button+常驻返回按钮+关面板后0.4s再开评论屏;②两倍速改长按确认键0.6s触发松开恢复(撤销v146触摸板长按,短按仍是呼出快捷面板);③快捷面板改屏幕底部居中横向卡片排列;④右轨4图标加大(46pt符号/68高/头像88正圆)"
 }

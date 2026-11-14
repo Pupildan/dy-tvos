@@ -37,11 +37,16 @@ final class DYQuickPanelModel: ObservableObject {
         noteAndClose("home")
     }
 
-    /// 评论：关闭快捷面板 + 打开评论屏（评论屏自身 Menu 关闭）
+    /// 评论：关闭快捷面板 → 0.4s 后再开评论屏。
+    /// v148 闪退修复：真机日志实锤「select comment → ROOT auto-start」——同一 SwiftUI 事务里
+    /// 移除含聚焦按钮的面板 + 插入无可聚焦元素的评论屏，tvOS 焦点引擎找不到焦点目标抛异常。
+    /// 拆成两个事务（面板先关闭，焦点更新走已验证的关闭路径），评论屏自身也加了可聚焦元素。
     func selectComment() {
         isOpen = false
-        isCommentOpen = true
         DYLog.shared.event("QUICK select comment id=\(awemeId)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+            self?.isCommentOpen = true
+        }
     }
 
     func selectMix() {
@@ -61,7 +66,7 @@ final class DYQuickPanelModel: ObservableObject {
     }
 }
 
-/// 快捷悬浮窗（屏幕中下）：液态玻璃（tvOS 26 glassEffect；低版本 ultraThinMaterial 回退）。
+/// 快捷悬浮窗（v148：屏幕底部居中、选项横向卡片排列）：液态玻璃（tvOS 26 glassEffect；低版本 ultraThinMaterial 回退）。
 /// 项目：主页（博主头像图标）/ 评论 / 合集（仅合集内容显示）/ 不感兴趣。
 struct DYQuickPanelView: View {
     @ObservedObject var model = DYQuickPanelModel.shared
@@ -75,24 +80,23 @@ struct DYQuickPanelView: View {
         VStack {
             Spacer(minLength: 0)
             panel
-                .frame(width: 620, height: model.info?.isMix == true ? 380 : 300)
                 .padding(.bottom, 90)
         }
         .onAppear { focusedRow = .home }
         .onExitCommand { model.close() }   // 面板内 Menu=关闭回播放（不退出应用）
-        .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .bottom)))
+        .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .bottom)))
     }
 
     private var panel: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            quickRow(row: .home, icon: "avatar", title: "主页", subtitle: "查看作者全部作品")
-            quickRow(row: .comment, icon: "bubble.left.and.bubble.right.fill", title: "评论", subtitle: "查看视频评论")
+        HStack(spacing: 16) {
+            quickCard(row: .home, icon: "avatar", title: "主页")
+            quickCard(row: .comment, icon: "bubble.left.and.bubble.right.fill", title: "评论")
             if model.info?.isMix == true {
-                quickRow(row: .mix, icon: "square.stack.3d.up.fill", title: "合集", subtitle: model.info?.mixName ?? "查看合集内容")
+                quickCard(row: .mix, icon: "square.stack.3d.up.fill", title: "合集")
             }
-            quickRow(row: .dislike, icon: "hand.thumbsdown.fill", title: "不感兴趣", subtitle: "不再推送类似内容")
+            quickCard(row: .dislike, icon: "hand.thumbsdown.fill", title: "不感兴趣")
         }
-        .padding(24)
+        .padding(18)
         .background(panelBackground)
     }
 
@@ -123,7 +127,8 @@ struct DYQuickPanelView: View {
         }
     }
 
-    private func quickRow(row: QuickRow, icon: String, title: String, subtitle: String) -> some View {
+    /// v148：横向紧凑卡片（图标上/文字下），焦点=白描边+放大，左右键移动焦点（SwiftUI 焦点链自动）。
+    private func quickCard(row: QuickRow, icon: String, title: String) -> some View {
         let focused = focusedRow == row
         return Button {
             switch row {
@@ -133,35 +138,28 @@ struct DYQuickPanelView: View {
             case .dislike: model.selectDislike()
             }
         } label: {
-            HStack(spacing: 18) {
+            VStack(spacing: 12) {
                 rowIcon(icon)
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.system(size: 30, weight: .semibold))
-                        .foregroundColor(.white)
-                    Text(subtitle)
-                        .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.65))
-                }
-                Spacer(minLength: 0)
+                Text(title)
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundColor(.white)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
+            .frame(width: 210, height: 150)
             .background {
                 if focused {
                     if #available(tvOS 26.0, *) {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(Color.clear)
-                            .glassEffect(.regular.tint(.white.opacity(0.10)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
+                            .glassEffect(.regular.tint(.white.opacity(0.10)), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
                     } else {
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .fill(.ultraThinMaterial)
-                            .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
+                            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
                     }
                 }
             }
-            .scaleEffect(focused ? 1.04 : 1.0)
+            .scaleEffect(focused ? 1.05 : 1.0)
             .animation(.spring(response: 0.28, dampingFraction: 0.72), value: focused)
         }
         .buttonStyle(PanelRowButtonStyle())
@@ -191,8 +189,11 @@ struct AvatarImage: View {
 
 /// 评论屏（v147：快捷面板「评论」打开；全屏液态玻璃列表；Menu 关闭回播放）。
 /// 数据：DYCommentClient 3 页 60 条起步；Menu=关闭。
+/// v148 焦点修复：评论行改可聚焦 Button + 常驻「返回播放」按钮——tvOS 焦点环境
+/// 必须时刻有可聚焦元素（否则真机闪退，v147 实锤）；数据到达后焦点自动落到首条评论。
 struct DYCommentScreen: View {
     @ObservedObject var model = DYQuickPanelModel.shared
+    @FocusState private var focusedItem: String?
     @State private var comments: [DYCommentItem] = []
     @State private var loaded = false
     @State private var loading = false
@@ -212,9 +213,13 @@ struct DYCommentScreen: View {
             guard !loaded else { return }
             loaded = true
             loading = true
+            focusedItem = "close"
             DYCommentClient.shared.comments(for: model.awemeId, pages: 3) { items in
                 comments = items
                 loading = false
+                if focusedItem == nil || focusedItem == "close" {
+                    focusedItem = items.first?.cid ?? "close"
+                }
             }
         }
         .onExitCommand { model.isCommentOpen = false }   // Menu 关闭回播放
@@ -223,9 +228,32 @@ struct DYCommentScreen: View {
 
     private var list: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("评论")
-                .font(.system(size: 34, weight: .bold))
-                .foregroundColor(.white)
+            HStack {
+                Text("评论")
+                    .font(.system(size: 34, weight: .bold))
+                    .foregroundColor(.white)
+                Spacer(minLength: 0)
+                Button {
+                    model.isCommentOpen = false
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                        Text("返回播放")
+                    }
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 10)
+                    .background {
+                        if focusedItem == "close" {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .strokeBorder(Color.white, lineWidth: 4)
+                        }
+                    }
+                }
+                .buttonStyle(PanelRowButtonStyle())
+                .focused($focusedItem, equals: "close")
+            }
             if loading && comments.isEmpty {
                 Text("加载中...")
                     .font(.system(size: 26))
@@ -240,35 +268,11 @@ struct DYCommentScreen: View {
                 ScrollView {
                     VStack(spacing: 10) {
                         ForEach(comments, id: \.cid) { c in
-                            HStack(alignment: .top, spacing: 14) {
-                                AvatarImage(url: URL(string: c.avatarUrl) ?? URL(fileURLWithPath: "/dev/null"))
-                                    .frame(width: 52, height: 52)
-                                    .clipShape(Circle())
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        Text(c.nickname.isEmpty ? "抖音用户" : c.nickname)
-                                            .font(.system(size: 22, weight: .semibold))
-                                            .foregroundColor(.white.opacity(0.85))
-                                        Spacer()
-                                        if !c.createTimeText.isEmpty {
-                                            Text(c.createTimeText)
-                                                .font(.system(size: 18))
-                                                .foregroundColor(.white.opacity(0.5))
-                                        }
-                                    }
-                                    Text(c.text)
-                                        .font(.system(size: 25))
-                                        .foregroundColor(.white)
-                                        .fixedSize(horizontal: false, vertical: true)
-                                    if c.digg > 0 {
-                                        Text("👍 " + String(c.digg))
-                                            .font(.system(size: 18))
-                                            .foregroundColor(.white.opacity(0.55))
-                                    }
-                                }
+                            Button { } label: {
+                                commentRow(c)
                             }
-                            .padding(14)
-                            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.white.opacity(0.07)))
+                            .buttonStyle(PanelRowButtonStyle())
+                            .focused($focusedItem, equals: c.cid)
                         }
                     }
                 }
@@ -277,6 +281,55 @@ struct DYCommentScreen: View {
         }
         .padding(28)
         .background(panelBackground)
+    }
+
+    private func commentRow(_ c: DYCommentItem) -> some View {
+        let focused = focusedItem == c.cid
+        return HStack(alignment: .top, spacing: 14) {
+            Group {
+                if !c.avatarUrl.isEmpty, let url = URL(string: c.avatarUrl) {
+                    AvatarImage(url: url)
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .font(.system(size: 46))
+                        .foregroundColor(.white.opacity(0.5))
+                }
+            }
+            .frame(width: 52, height: 52)
+            .clipShape(Circle())
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(c.nickname.isEmpty ? "抖音用户" : c.nickname)
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.85))
+                    Spacer()
+                    if !c.createTimeText.isEmpty {
+                        Text(c.createTimeText)
+                            .font(.system(size: 18))
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                }
+                Text(c.text)
+                    .font(.system(size: 25))
+                    .foregroundColor(.white)
+                    .fixedSize(horizontal: false, vertical: true)
+                if c.digg > 0 {
+                    Text("👍 " + String(c.digg))
+                        .font(.system(size: 18))
+                        .foregroundColor(.white.opacity(0.55))
+                }
+            }
+        }
+        .padding(14)
+        .background {
+            if focused {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.12))
+                    .overlay(RoundedRectangle(cornerRadius: 14, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
+            } else {
+                RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.white.opacity(0.07))
+            }
+        }
     }
 
     private var panelBackground: some View {
