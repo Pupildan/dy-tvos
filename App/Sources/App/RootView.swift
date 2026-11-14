@@ -31,6 +31,13 @@ struct RootView: View {
                     .ignoresSafeArea()
                     .zIndex(9)
             }
+
+            // 评论屏（v147：快捷面板「评论」打开；Menu 关闭回播放）
+            if quick.isCommentOpen {
+                DYCommentScreen()
+                    .ignoresSafeArea()
+                    .zIndex(11)
+            }
         }
         .background(Color.black)
         .onAppear {

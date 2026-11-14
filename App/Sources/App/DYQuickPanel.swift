@@ -1,10 +1,14 @@
 import SwiftUI
 
-/// 快捷悬浮窗状态（v145：播放中按 OK 呼出，屏幕中下；OK 再按=关闭；面板内 Menu=关闭回播放）。
+/// 快捷悬浮窗状态（v145：播放中按确认键呼出，屏幕中下；OK 再按=关闭；面板内 Menu=关闭回播放）。
 final class DYQuickPanelModel: ObservableObject {
     static let shared = DYQuickPanelModel()
 
     @Published var isOpen = false
+    /// 评论屏开关（v147：快捷面板「评论」项打开）
+    @Published var isCommentOpen = false
+    /// 面板对应的视频 id（评论请求用）
+    var awemeId = ""
     /// 当前视频信息（主页头像/合集条件显示）
     @Published var info: DYVideoInfo?
     /// 不感兴趣动作（控制器接线：跳过当前视频）
@@ -16,8 +20,9 @@ final class DYQuickPanelModel: ObservableObject {
         DYLog.shared.event("QUICK panel \(isOpen ? "open" : "close") (ok)")
     }
 
-    func open(info: DYVideoInfo?) {
+    func open(info: DYVideoInfo?, awemeId: String) {
         self.info = info
+        self.awemeId = awemeId
         isOpen = true
         DYLog.shared.event("QUICK panel open (ok) mix=\(info?.isMix == true ? 1 : 0)")
     }
@@ -32,8 +37,11 @@ final class DYQuickPanelModel: ObservableObject {
         noteAndClose("home")
     }
 
+    /// 评论：关闭快捷面板 + 打开评论屏（评论屏自身 Menu 关闭）
     func selectComment() {
-        noteAndClose("comment")
+        isOpen = false
+        isCommentOpen = true
+        DYLog.shared.event("QUICK select comment id=\(awemeId)")
     }
 
     func selectMix() {
@@ -177,6 +185,110 @@ struct AvatarImage: View {
         .onAppear {
             guard image == nil else { return }
             AvatarLoader.shared.load(url) { img in image = img }
+        }
+    }
+}
+
+/// 评论屏（v147：快捷面板「评论」打开；全屏液态玻璃列表；Menu 关闭回播放）。
+/// 数据：DYCommentClient 3 页 60 条起步；Menu=关闭。
+struct DYCommentScreen: View {
+    @ObservedObject var model = DYQuickPanelModel.shared
+    @State private var comments: [DYCommentItem] = []
+    @State private var loaded = false
+    @State private var loading = false
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.75).ignoresSafeArea()
+            HStack {
+                Spacer(minLength: 0)
+                list
+                    .frame(width: 760)
+                    .padding(.trailing, 32)
+                    .padding(.vertical, 40)
+            }
+        }
+        .onAppear {
+            guard !loaded else { return }
+            loaded = true
+            loading = true
+            DYCommentClient.shared.comments(for: model.commentAwemeId, pages: 3) { items in
+                comments = items
+                loading = false
+            }
+        }
+        .onExitCommand { model.isCommentOpen = false }   // Menu 关闭回播放
+        .transition(.opacity)
+    }
+
+    private var list: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("评论")
+                .font(.system(size: 34, weight: .bold))
+                .foregroundColor(.white)
+            if loading && comments.isEmpty {
+                Text("加载中...")
+                    .font(.system(size: 26))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
+            } else if comments.isEmpty {
+                Text("还没有评论")
+                    .font(.system(size: 26))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
+            } else {
+                ScrollView {
+                    VStack(spacing: 10) {
+                        ForEach(comments, id: \.cid) { c in
+                            HStack(alignment: .top, spacing: 14) {
+                                AvatarImage(url: URL(string: c.avatarUrl) ?? URL(fileURLWithPath: "/dev/null"))
+                                    .frame(width: 52, height: 52)
+                                    .clipShape(Circle())
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text(c.nickname.isEmpty ? "抖音用户" : c.nickname)
+                                            .font(.system(size: 22, weight: .semibold))
+                                            .foregroundColor(.white.opacity(0.85))
+                                        Spacer()
+                                        if !c.createTimeText.isEmpty {
+                                            Text(c.createTimeText)
+                                                .font(.system(size: 18))
+                                                .foregroundColor(.white.opacity(0.5))
+                                        }
+                                    }
+                                    Text(c.text)
+                                        .font(.system(size: 25))
+                                        .foregroundColor(.white)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                    if c.digg > 0 {
+                                        Text("👍 " + String(c.digg))
+                                            .font(.system(size: 18))
+                                            .foregroundColor(.white.opacity(0.55))
+                                    }
+                                }
+                            }
+                            .padding(14)
+                            .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color.white.opacity(0.07)))
+                        }
+                    }
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(28)
+        .background(panelBackground)
+    }
+
+    private var panelBackground: some View {
+        Group {
+            if #available(tvOS 26.0, *) {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(Color.clear)
+                    .glassEffect(.regular.tint(.black.opacity(0.4)), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+            } else {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            }
         }
     }
 }

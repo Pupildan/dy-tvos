@@ -988,14 +988,18 @@ final class DYPlayerViewController: UIViewController {
             case .upArrow: rewind(); return
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
-            case .playPause:
-                // OK 确认键（v145）：呼出/关闭快捷悬浮窗（原暂停切换移除；暂停经悬浮窗后续版本补充）
+            case .select:
+                // 确认键（v147：点击板中心按下=.select，与播放/暂停键 .playPause 是两个键）
+                // 呼出/关闭快捷悬浮窗
                 if DYQuickPanelModel.shared.isOpen {
                     DYQuickPanelModel.shared.close()
                 } else {
-                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex))
+                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex),
+                                                  awemeId: PlaybackEngine.shared.awemeId(at: currentIndex) ?? "")
                 }
                 return
+            case .playPause:
+                togglePlayPause(); return
             case .menu:
                 // Menu 状态机（v135）：面板关闭 → 呼出设置面板；面板显示中 → 放行系统默认（退出应用）。
                 // 显示中时焦点在面板内，本方法收不到按键（面板 onExitCommand 负责退出）——此处只处理关闭态。

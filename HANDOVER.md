@@ -258,6 +258,14 @@
 - **UI 打磨**：左下间距收紧（标题 numberOfLines=2，块总高 ~140px 不再伸向屏幕中间）；右轨图标 44→56、头像 66→76；进度条右上方加「当前/总时长」文本（clockText mm:ss，0.5s 随播放刷新）。
 - **CI 踩坑**：AnyTransition.scale 参数名=scale 非 scaleEffect；private 类型跨文件不可见（PanelRowButtonStyle 改 internal）。产物 output/DYTV-tvos-unsigned-v145.ipa。
 - **验收**：OK 呼出中下面板/再按关闭/Menu 关闭；合集视频才显示合集项；不感兴趣=跳到下一条；左下紧凑不伸向中部；右轨图标明显变大；进度条右上有时长文本。
+- **✅ v145 反馈澄清**：用户报"确认键呼不出面板/图标没变大"=装的是 **v144**（面板与图标尺寸是 v145 才有的）——装 v145/v146 即可。头像非正圆是 v145 真瑕疵。
+
+## 27. v146 触摸板手势 + 头像正圆（2026-11-15，CI 过待真机验收）
+
+- **触摸板手势（手势挂 controller.view）**：①`UIPanGestureRecognizer` 阈值 100px——**上滑=下一条、下滑=上一条**（同时 `collectionView.panGestureRecognizer.isEnabled=false` 关闭原生滚动防打架；面板打开时不响应）；②`UILongPressGestureRecognizer(minimumPressDuration=1.5, allowableMovement=60)`——**长按 1.5s 两倍速**（`rate=2.0`），松开恢复原播放态；acquire 加 `audioTimePitchAlgorithm = .timeDomain`（2x 不变调）。
+- **头像正圆**：`cornerRadius = 38`（=76/2，v145 的 33 非正圆）。
+- **恢复实例**：CI success 但本地 Expand-Archive 瞬态失败 → `dy_download.ps1 -ArtifactId <id>` 单独重下（595KB）。
+- **验收**：触摸板上/下滑切换视频（方向别搞反）、按住 1.5s 后视频 2 倍速且声音不变调、松开恢复 1x；右轨头像正圆；**务必先装 v146**（v144 无面板/大图标）。
 - **⏸️ v142 真机验收结果 + 弹幕任务暂停（2026-11-14 用户拍板）**：用户反馈改法没到点子——真实现象是「获取→展示」循环：一段时间一条都没有，过一会又有，循环。**弹幕整体暂停，记录在此随时重启**：
   - 已做且保留：数据链全通（web get_v2 + ttwid 匿名注册 + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试）；直方图探针证实**数据无空窗但峰值密度 41 条/s**；样式=纯白字无底无描边；发射器=shotIds 集合扫描；面板弹幕开关可用。
   - 重启时优先查：①offset_time 语义（是否真 ms 偏移——周期性空窗与段 offset 分布存疑）；②DanmakuTrack 轨道占满/释放时序；③isOverlap 观感；④取回/展示时序对齐。
