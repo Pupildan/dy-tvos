@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v149**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v150**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -33,7 +33,7 @@
   - web（抖音精选）：`www.douyin.com/aweme/v1/web/tab/feed/` JSON（b0 配方 + webCommon + web 签名 + ttwid）。
   - 源切换：`DYFeedSource` 枚举 + `setSource()`（持久化 UserDefaults dy_feed_source）+ `PlaybackEngine.reset()`。
 - **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 池（±2 窗口驱逐）+ 三层看门狗 + 冷启动收敛 + 源感知请求头 + PC 版 UI（右轨/左下信息区/进度条）。
-- **弹幕**（v149 重启改造）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通；显示端 v149 按用户规格重造：**顶部 6 行 / 禁止重叠 / 280px/s**——轨道翻台率(≈0.8 条/s)成为天然节流阀，峰值超出容量的被 noSpaceShoot 丢弃，流量平稳不扎堆。
+- **弹幕**（v149-v150 按用户规格重造）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通（取数 1-7s 全量、0 重试）。显示端：**顶部 6 行（轨道高 50）/ 禁止重叠 / 280px/s**；发射器 v150 canShoot 门控（被轨道拒不标记，腾出即补射）+ 轨道卡死 10s 自愈（DMJANITOR 强制清轨）+ DMSYNC 每 4s 诊断日志。
 - **快捷悬浮窗**（DYQuickPanel）：确认键短按呼出，**屏幕底部居中横向卡片**（v149 修复：RootView ZStack 是 alignment:.leading，外层 VStack 必须 frame(maxWidth:.infinity) 才不被钉在左侧）；标准液态玻璃无 tint 透出视频；主页/评论/合集(条件)/不感兴趣。**两倍速=触摸板悬停 1s**（手指放触摸区不动，与滑动同区域；v149 定版，v146 长按 1.5s/v148 确认键长按都是弯路）。
 - **评论**（DYCommentClient + DYCommentScreen）：web comment/list，3 页 60 条，玻璃列表屏。
 - **设置面板**（DYSettingsModel + SettingsPanelView）：Menu 呼出，左侧液态玻璃，源切换/弹幕开关/占位项，3s 自动隐藏。
@@ -58,7 +58,8 @@
 | v146 | 触摸板滑动切换 + 长按 1.5s 两倍速 + 头像正圆 | ✅ 待复验 |
 | v147 | 确认键修正（.select）+ 评论功能实装 + 播放/暂停键恢复 | ✅ CI 过，待验收 |
 | v148 | 评论屏闪退修复（tvOS 焦点环境无可聚焦元素，真机日志实锤）+ 两倍速改长按确认键 0.6s + 快捷面板底部居中横排 + 右轨图标加大 | ❌ 焦点理论证伪（v148 真机评论仍闪退），但焦点兜底保留 |
-| v149 | 评论闪退真根因=ensureTTWID 队列内联回调+同队列 queue.sync 自等待死锁；两倍速改触摸板悬停 1s；面板真·底部居中+无 tint 玻璃；弹幕顶部 6 行/不重叠/280px/s；右轨图标回落 | ✅ CI 过，待验收 |
+| v149 | 评论闪退真根因=ensureTTWID 队列内联回调+同队列 queue.sync 自等待死锁；两倍速改触摸板悬停 1s；面板真·底部居中+无 tint 玻璃；弹幕顶部 6 行/不重叠/280px/s；右轨图标回落 | ✅ 评论死锁修复真机验收通过（v149 会话 3 次开评论屏 0 闪退，CMT 全通）；触摸悬停真机零触发（容限太紧） |
+| v150 | 弹幕 canShoot 门控+轨道卡死 10s 自愈+DMSYNC 诊断；行距加大（轨道高 50）；悬停倍速 0.6s/漂移容限 140/必留日志+▶▶2x 角标；主页合集 toast 反馈（探针实锤作品列表需登录态） | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -67,19 +68,20 @@
 - **已分析根因**：①每视频不同 CDN 域名 → 每次 acquire 新 DNS+TLS；②驱逐半径 ±2 窄，回看必重取；③v136 idle=2s 有误杀风险（本会话未触发但存在）；④redirect 302 出的 CDN 不可控（16s 尾部）。
 - **候选方案（待拍板）**：A 驱逐半径对称 ±3（解码器 ≤7 仍限内）；B idle 2s→4s 回退；C redirect>5s fallback static 重试；D 预取窗口 [idx-1, idx+3] 前向偏移。建议组合 A+B+D。
 
-### 5.2 弹幕间歇空窗（v149 按用户新规格重启改造，待验收）
-- **现象（用户澄清）**：明显的「获取→展示」循环——一段时间一条都没有，过一会儿扎堆出现。
-- **已排除**：数据空窗（直方图探针：1212 条连续无零桶）；数据不全（自适应切分已取全量）；单纯密度问题（v141 吞吐提升后仍间歇）。
-- **v149 显示端重造（用户规格）**：顶部仅 6 行 / 禁止重叠 / 280px/s——轨道翻台率成为天然节流阀，峰值被 noSpaceShoot 丢弃，流量平稳。验收看：是否还有明显空窗（dm_shoot 应平稳、dm_drop 大是预期内）。
-- **遗留疑点（若 v149 观感仍空窗再查）**：①offset_time 语义（是否真 ms 视频内偏移）；②取回/展示时序对齐（先取后播 vs 边取边播）。
-- **已做保留**：数据链全通（web get_v2 + ttwid + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试节流）；样式=纯白字无底无描边；发射器=shotIds 集合扫描；dm_drop/dm_shoot/dm_items 计数器；面板弹幕开关可用。
-- **重启入口**：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + 探针 `_tmp/danmaku_hist_probe.js`（直方图）/ `danmaku_segment_probe.js`。
+### 5.2 弹幕间歇空窗（v150 双候选根因同治 + 诊断就位，待验收）
+- **现象（用户澄清）**：明显的「获取→展示」循环——一段时间一条都没有，过一会儿扎堆出现，~40s 周期循环。
+- **已排除**：数据空窗（直方图探针：1212 条连续无零桶）；数据不全（自适应切分已取全量）；**v149 真机日志：数据侧全净**（1172 条 7s 取完/0 重试/0 失败段）——空窗铁定在发射/轨道层。
+- **v150 两个候选根因同治**：①发射器 canShoot 门控（此前被轨道拒的弹幕被 shotIds 永久标记=白白损失，密集段过后无弹可射）；②DanmakuKit 轨道释放疑点（track.pause 的 removeAllAnimations 触发 animationDidStop(flag=false) 不释放 cell；animationDidStop(flag=true) 是唯一释放路径，真机是否触发未证）→ DMJANITOR 兜底（due>0 且 10s 零发射=轨道卡死 → clean() 强制清轨）。
+- **裁决机制（下轮日志）**：DMSYNC 每 4s 一条（t/due/marked/items/stall）——若空窗期 due>0 且 DMJANITOR 频繁触发=轨道释放真凶（下一步换成主动巡检 realFrame 释放或换渲染方案）；若空窗期 due=0=数据/offset_time 问题（换 offset_time 语义探针）。
+- **已做保留**：数据链全通；样式=纯白字无底无描边；顶部 6 行/不重叠/280px/s；dm_drop/dm_shoot/dm_items/dm_janitor 计数器。
+- **重启入口**：DYDanmakuOverlay.tick + 探针 `_tmp/danmaku_hist_probe.js` / `danmaku_segment_probe.js`。
 
-### 5.3 作者主页被 UIFID 风控墙（保持占位）
-- **现象**：`/aweme/v1/web/aweme/post/`（u11 参数原样）→ 403 `ArgusSecurityPlugin Uifid Not Found`。myDV 的 mix/listcollection 同样 blocked（其源码注释："blocked，缺少有效的 UIFID"）。
-- **UIFID 链已挖到**：uz0 协程 POST 申请（`X-Secsdk-Csrf-Token: DOWNGRADE` 头 + FormBody，响应写回 sl4），调用方 URL 未挖到；x-secsdk-web-signature 算法已知（MD5(uifid_timestamp_密钥A96D..._params)——蓝本 §5）。
-- **待续**：挖 uz0 调用方拿到 UIFID 申请端点 → 探针验证 → 主页作品列表（UserWorksResponse.aweme_list）→ 作品点击播放。
-- **已有资产**：sec_uid=author f191（实测）；works API 参数表全录；zq5 有 UserWorksResponse 解析参照。
+### 5.3 作者主页作品列表（两道墙已探明，需登录态解锁）
+- **web 墙**：`/aweme/v1/web/aweme/post/` → 403 `ArgusSecurityPlugin Uifid Not Found`（myDV 同 blocked）。UIFID 链已挖到 uz0 协程 POST 申请（X-Secsdk-Csrf-Token: DOWNGRADE），调用方 URL 未挖到。
+- **mobile 墙（v150 探针实锤，`_tmp/mobile_post_probe.js`）**：`aweme.snssdk.com/aweme/v1|v2/aweme/post/` **无风控墙**（http=200 status_code=0，a_bogus 签名即过），但匿名设备一律返回**空 aweme_list**（sec_user_id 与 user_id/max_time 两种参数形态、3 个作者全试过）——作品列表被登录态卡死，不是签名问题。
+- **解锁路径**：扫码登录（路线 v2-v8 已验证，铁律允许仅登录用 WebView）→ 拿到 cookie 后 mobile post 端点大概率直接可用（比挖 UIFID 链靠谱）。
+- **v150 占位反馈**：主页/合集点击给 toast「需登录支持，即将上线」（不再点了没反应）。
+- **已有资产**：sec_uid=author f191（实测）；works API 参数表全录（web+mobile 双形态）；zq5 有 UserWorksResponse 解析参照。
 
 ### 5.4 评论功能增强（次要）
 - 当前固定取 3 页 60 条；滚动到底自动加载更多（cursor 分页已支持，加个触底加载即可）。

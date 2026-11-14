@@ -91,7 +91,8 @@ final class DanmakuOverlay: UIView {
         // ①只显示在屏幕顶部 6 行（displayArea 在 layoutSubviews 按 6 行精确计算）；
         // ②禁止重叠（isOverlap=false，同轨不叠——轨道满由 noSpaceShoot 丢弃，发射连续不扎堆）；
         // ③降速 280px/s（DanmakuTextCellModel.scrollSpeed）。
-        danmakuView.trackHeight = 34
+        // v150：行距加大（轨道高 34→50，字 34 行间空 ~16px；用户反馈行距太低）
+        danmakuView.trackHeight = 50
         danmakuView.isOverlap = false
         danmakuView.enableCellReusable = true
         danmakuView.delegate = self
@@ -181,26 +182,46 @@ final class DanmakuOverlay: UIView {
     }
 
     /// 发射器：按播放时钟扫描到点的弹幕 shoot 出去（id 去重，容忍乱序追加）。
-    /// v149：顶部 6 行 + 禁止重叠——轨道翻台率成为天然节流阀（≈0.8 条/s 连续流），
-    /// 峰值期超出轨道容量的被 noSpaceShoot 丢弃（dm_drop 计数），流量始终平稳不扎堆；
-    /// 每 tick 仍限量 6 条兜底（防极端瞬间冲击）。迟到 40s 以上的放弃（防堆积爆屏）。
+    /// v150 关键改造（治「空窗+扎堆」循环）：
+    /// ①**canShoot 门控**——先问轨道能否容纳，拒绝则【不标记】，轨道腾出后下个 tick 补射；
+    ///   （v149 及之前是先标记再 shoot，被轨道丢弃的弹幕永久损失，密集段过后无弹可射=空窗）
+    /// ②轨道卡死自愈——due>0 却连续 10s 零发射 → clean() 强制清轨重发（怀疑 DanmakuKit
+    ///   轨道释放 animationDidStop 在真机未触发，此自愈兜底保证空窗不超过 ~10s）；
+    /// ③DMSYNC 每 4s 一条诊断日志（due/marked/stall），下轮日志可直接定论空窗真因。
+    /// 迟到 40s 以上的过期不射（防堆积爆屏；不标记，留在原地自然过期）。
+    private var emptyTicks = 0
+    private var syncTick = 0
+
     private func tick() {
         guard Self.globalEnabled, enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
         let t = (player?.currentTime().seconds ?? 0) * 1000
         var shot = 0
+        var due = 0
         for item in items {
             if item.offsetTime > t { break }   // 有序：后面的都还没到点
             if shotIds.contains(item.danmakuId) { continue }
-            guard t - item.offsetTime < 40_000 else { continue }   // 迟到过久的放弃
-            guard shot < 6 else { break }   // v142 平滑发射：单 tick 限量，积压排队到后续 tick
-            shotIds.insert(item.danmakuId)
+            guard t - item.offsetTime < 40_000 else { continue }   // 过期放弃（不标记）
+            guard shot < 6 else { break }   // 单 tick 限量兜底
             let model = DanmakuTextCellModel(danmakuId: item.danmakuId.isEmpty ? "\(loadedAwemeId)-\(shotIds.count)" : item.danmakuId,
                                              text: item.text,
                                              screenW: max(200, bounds.width))
+            guard danmakuView.canShoot(danmaku: model) else { due += 1; continue }   // 轨道满：不标记，留待补射
+            shotIds.insert(item.danmakuId)
             danmakuView.shoot(danmaku: model)
             shot += 1
         }
         if shot > 0 { DYLog.shared.count("dm_shoot", by: shot) }
+        if shot == 0 { emptyTicks += 1 } else { emptyTicks = 0 }
+        if due > 0, emptyTicks >= 40 {   // 10s 零发射但仍有待射弹幕 = 轨道卡死 → 强制清轨自愈
+            DYLog.shared.event("DMJANITOR due=\(due) stall=\(emptyTicks) ticks -> clean")
+            DYLog.shared.count("dm_janitor")
+            danmakuView.clean()
+            emptyTicks = 0
+        }
+        syncTick += 1
+        if syncTick % 16 == 0 {   // 每 4s 一条状态线（无论健康与否，供下轮日志定论）
+            DYLog.shared.log("DMSYNC t=\(Int(t / 1000))s due=\(due) marked=\(shotIds.count) items=\(items.count) stall=\(emptyTicks)")
+        }
     }
 }
 

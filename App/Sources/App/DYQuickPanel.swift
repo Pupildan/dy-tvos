@@ -13,6 +13,17 @@ final class DYQuickPanelModel: ObservableObject {
     @Published var info: DYVideoInfo?
     /// 不感兴趣动作（控制器接线：跳过当前视频）
     var onDislike: (() -> Void)?
+    /// 轻提示（主页/合集等占位动作的可见反馈；2.5s 自动消失）
+    @Published var toast: String?
+    private var toastTimer: Timer?
+
+    func showToast(_ text: String) {
+        toast = text
+        toastTimer?.invalidate()
+        toastTimer = Timer.scheduledTimer(withTimeInterval: 2.5, repeats: false) { [weak self] _ in
+            self?.toast = nil
+        }
+    }
 
     /// OK 呼出/关闭切换（控制器 pressesBegan 调用；面板打开时焦点在面板内，OK=选中项目不回控制器）
     func toggle() {
@@ -34,7 +45,9 @@ final class DYQuickPanelModel: ObservableObject {
     }
 
     func selectHome() {
+        // v150：作品列表数据被登录态卡死（探针实锤：web=UIFID 墙 403；mobile /aweme/post/ 匿名一律空列表）
         noteAndClose("home")
+        showToast("作者主页需登录支持，登录功能即将上线")
     }
 
     /// 评论：关闭快捷面板 → 0.4s 后再开评论屏。
@@ -51,6 +64,7 @@ final class DYQuickPanelModel: ObservableObject {
 
     func selectMix() {
         noteAndClose("mix")
+        showToast("合集浏览需登录支持，登录功能即将上线")
     }
 
     /// 不感兴趣：跳过当前视频（后续版本接反馈 API 不再推送同类）

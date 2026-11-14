@@ -607,8 +607,8 @@ final class DYPlayerViewController: UIViewController {
         pan.cancelsTouchesInView = false
         view.addGestureRecognizer(pan)
         let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
-        hold.minimumPressDuration = 1.0
-        hold.allowableMovement = 60   // 容忍悬停时的轻微漂移
+        hold.minimumPressDuration = 0.6
+        hold.allowableMovement = 140   // 容忍悬停漂移（v149 的 60px 太紧+1s 太长，真机零触发）
         hold.cancelsTouchesInView = false
         view.addGestureRecognizer(hold)
     }
@@ -622,32 +622,45 @@ final class DYPlayerViewController: UIViewController {
         DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
     }
 
-    // MARK: - 触摸板悬停两倍速（v149 用户规格：手指放到触摸区域不动=倍速，与滑动同区域）
+    // MARK: - 触摸板悬停两倍速（用户规格：手指放到触摸区域不动=倍速，与滑动同区域）
+    /// 是否处于悬停倍速中（角标显示用）
+    private var isHolding2x = false
+
     @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
-        guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
         switch g.state {
         case .began:
+            guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
             holdWasPlaying = (p.timeControlStatus == .playing)
             if holdWasPlaying {
                 p.rate = 2.0
-                DYLog.shared.event("PLAYBACK 2x on (touch hold)")
+                isHolding2x = true
+                updateProgress()   // 立即刷新 ▶▶2x 角标
             }
+            // 必留日志：v149 真机零日志无法定位是没触发还是暂停态——began 无论是否生效都记录
+            DYLog.shared.event("PLAYBACK hold began playing=\(holdWasPlaying ? 1 : 0)")
         case .ended, .cancelled, .failed:
-            if holdWasPlaying { p.play() } else { p.pause() }
-            DYLog.shared.event("PLAYBACK 2x off (release)")
+            if isHolding2x {
+                isHolding2x = false
+                if let p = PlayerManager.shared.player(at: currentIndex) {
+                    if holdWasPlaying { p.play() } else { p.pause() }
+                }
+                updateProgress()
+                DYLog.shared.event("PLAYBACK 2x off (release)")
+            }
         default: break
         }
     }
 
-    /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration + 时长文本
+    /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration + 时长文本（悬停倍速时加 ▶▶2x 角标）
     private func updateProgress() {
         guard let p = PlayerManager.shared.player(at: currentIndex),
               let item = p.currentItem else { progressBar.update(current: 0, duration: 0); return }
         let dur = item.duration.seconds
         let cur = item.currentTime().seconds
         progressBar.update(current: cur, duration: dur)
-        timeLabel.text = "\(Self.clockText(cur)) / \(Self.clockText(dur))"
+        let badge = isHolding2x ? "▶▶ 2x   " : ""
+        timeLabel.text = badge + "\(Self.clockText(cur)) / \(Self.clockText(dur))"
     }
 
     /// 秒 → mm:ss（超 1 小时 h:mm:ss）

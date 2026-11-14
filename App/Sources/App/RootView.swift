@@ -38,6 +38,23 @@ struct RootView: View {
                     .ignoresSafeArea()
                     .zIndex(11)
             }
+
+            // 轻提示（v150：主页/合集等占位动作反馈，2.5s 自动消失）
+            if let toast = quick.toast {
+                Text(toast)
+                    .font(.system(size: 26, weight: .medium))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .fill(Color.black.opacity(0.75))
+                    )
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                    .padding(.bottom, 210)
+                    .zIndex(20)
+                    .transition(.opacity)
+            }
         }
         .background(Color.black)
         .onAppear {
