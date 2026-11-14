@@ -66,6 +66,8 @@ final class PlayerManager {
     static let shared = PlayerManager()
     /// 上限池：index -> AVPlayer
     private var players: [Int: AVPlayer] = [:]
+    /// 冷启动待补装载的邻居 index（首个 prepare 只装居中条，居中 ready 后补齐）
+    private var pendingNeighbors: Set<Int> = []
     /// index -> 封面图（异步生成后缓存，未 ready 时兜底）
     private var covers: [Int: UIImage] = [:]
     private var coversLoading = Set<Int>()
@@ -94,10 +96,37 @@ final class PlayerManager {
             players.removeValue(forKey: i)
             DYLog.shared.log("MGR evict idx=\(i)")
         }
-        // 2) 确保范围内的都存在（复用已有，缺失才建）
+        // 2) 冷启动收敛（v130）：池全空=会话首个 prepare → 只装载居中条且直接走重定向直链。
+        // v129 实锤：启动 idx=0 静态直链（age=0）4s 不 ready + idx=1 并发 TLS error，repair 换
+        // redirect 后 4s ready——redirect 优先省掉一次 4s 空等+重建来回；邻居推迟装载，
+        // 避免启动瞬间 3 个并发 TLS 握手互相拖垮。居中 ready 后由 drainPendingNeighbors 补齐。
+        if players.isEmpty {
+            if PlaybackEngine.shared.urls.indices.contains(idx) {
+                acquire(index: idx, forceRedirect: true)
+            }
+            pendingNeighbors = Set(desired.filter { $0 != idx })
+            DYLog.shared.log("MGR cold-start defer neighbors=\(pendingNeighbors.sorted())")
+            DYLog.shared.count("cold_start")
+            return
+        }
+        // 3) 正常路径：确保范围内的都存在（复用已有，缺失才建）
+        if !pendingNeighbors.isEmpty { pendingNeighbors.removeAll() }
         for i in desired where players[i] == nil {
             acquire(index: i)
         }
+    }
+
+    /// 冷启动收敛第二步：居中条 ready 后补装载邻居（此时网络已暖，静态直链快启动）。
+    private func drainPendingNeighbors() {
+        guard !pendingNeighbors.isEmpty else { return }
+        let pend = pendingNeighbors.sorted()
+        pendingNeighbors.removeAll()
+        for i in pend {
+            if players[i] == nil, PlaybackEngine.shared.urls.indices.contains(i) {
+                acquire(index: i)
+            }
+        }
+        DYLog.shared.log("MGR cold-start neighbors acquired=\(pend)")
     }
 
     /// 取 index 的 player（prepare 已确保存在；防御性：缺失则现建）。
@@ -224,6 +253,7 @@ final class PlayerManager {
                 self?.onPlayerReady?(index)
                 DYLog.shared.log("MGR ready idx=\(index)")
                 DYLog.shared.count("ready")
+                self?.drainPendingNeighbors()
             }
             // 黑屏无声检测：ready 但无视频轨（图集/纯音频/无效媒体；v124 实锤 idx=31 codec=no-video-track）。
             // 0.6s 后复查一次防异步误杀（v119 教训：ready 瞬间轨可能未加载完）。
@@ -460,7 +490,7 @@ final class DYPlayerViewController: UIViewController {
 
     /// 修复后缓冲宽限期（秒）：新 player 需要重新装载，期间只观察不动作
     private let watchGraceSeconds: TimeInterval = 6
-    private let watchIdleTicks = 4     // status 非 ready 连续 4s → idle（URL 打不开/无权限）
+    private let watchIdleTicks = 2     // status 非 ready 连续 2s → idle（v130 由 4s 下调：repair 实测 1-2s 恢复，静态直链打不开少等 2s）
     private let watchStallTicks = 3    // ready+非暂停但时间停滞连续 3s → stall（有轨但解不出）
     private let watchBlackTicks = 2    // ready+时间在走但无首帧连续 2s → black（黑屏有声，v123 停滞看门狗的盲区）
     private var idleTicks = 0

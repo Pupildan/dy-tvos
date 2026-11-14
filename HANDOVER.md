@@ -1,8 +1,9 @@
-# DYTV 交接文档（v128 治残余黑屏 · 2026-11-14）
+# DYTV 交接文档（v129 无感过滤 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
-> **v128 = 残余黑屏攻坚版**（CI sha 461c6aa）：三靶点全部基于 2026-11-14 日志/反编译实锤，待真机验收。若回归，回滚 v122。
+> **v128 = 残余黑屏攻坚版（真机验收通过，用户确认"体验有很大提升"）**：三靶点全过——真新鲜 URL（重定向链 100% 提取且 /aweme/v1/play 对未登录设备可用）、空轨检测、isReadyForDisplay 看门狗；15 分钟连刷 142 条，仅 2 个坏条目各 3-7s 自动治愈，0 级联 0 误杀 0 长黑屏。
+> **v129 = 无感跳过图集/novideo（parse 阶段过滤，用户拍板）**：坏条目不进池，用户永远刷不到；runtime repair→skip 保留兜底。见 §11。
 > **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"，与 v123-v127 的失败原因逐条对上（见 §8）。
 
 ---
@@ -113,7 +114,18 @@
 - `curl http://<ATV-IP>:8765/stat`：版本 + **计数器全量**（feed_page/feed_aweme/feed_usable/feed_redirect/url_static/url_redirect/acquire/ready/novideo/itemErr/repair/autoskip/scroll/cover_retry）+ **最近 15 条诊断事件环**（WATCH repair/skip、MGR itemErr/novideo、FEED 0 usable 等）+ 最近直链。
 - `curl http://<ATV-IP>:8765/log`：末 50 行常规日志。`/ping`、`/clear` 保留。
 - `DYLog.event()` = 常规日志 + 事件环双写；`DYLog.count(key, by:)` 计数器。新增诊断一律走这两个，别散落裸 log。
-- FEED 每视频日志已压缩成 1 行：`FEED item a[i] id=.. static=ok/none redirect=ok/none dur=..`（旧 7 行 loop 噪音已删）；每页首条仍 dump video 全字段监控 schema 漂移。
+- FEED 每视频日志已压缩成 1 行：`FEED item a[i] id=.. type=.. static=ok/none redirect=ok/none dur=..`（旧 7 行 loop 噪音已删）；每页首条仍 dump video 全字段监控 schema 漂移。
+- ⚠️ 运维：`dy_collector.ps1` 不会常驻——读日志前先 `netstat -ano | findstr :9988` 确认 LISTENING；采集器启动会重置日志文件；ATV 只在新日志行产生时才重连，采集器起来后需要用户操作一下 ATV 触发回灌；ATV IP 可从 netstat 9988 的 ESTABLISHED 远端拿。
+- ⚠️ 已知缺陷（待优化）：采集器离线期间 ATV 堆积的 N 条连接恢复时各回灌一份 500 行缓冲 → 日志大量重复（分析前先按行去重，`_tmp/analyze3_v128.ps1` 有现成去重逻辑）；ATV :8765 /stat 入站 curl 可能不通（连接堆积），文件日志已够用。
+
+## 11. v129 无感跳过图集/novideo（parse 阶段过滤，2026-11-14 用户拍板）
+
+- **语义照抄** myDV `filterPrimaryPlayableAwemes`（DataModelKt.java:131，在 feed 响应处理处 zq5 调用）：awemeType==0 且 playAddr 非空才进池。
+- **双信号实现**：① `awemeType != 0` —— 照 s13.e:371 依次探字段 {43,55,61}，第一个落在 [0,201) 的值即 type，全缺默认 0（=myDV 模型行为）；② `dur == 0` —— wire 实锤：v128 两个 novideo 坏条目（idx=69 id=7697175741067703211 / idx=82 id=7706360995123839439）的时长字段全缺。
+- **dur 取值链修正**：f13（wire 实证=真实时长 ms）→ f12 → f32；f22 是标志位非时长（v128 取值链被它污染，26 条正常视频被误标 dur=1）。
+- **过滤日志**：`FEED skip-item a[i] id=.. type=.. dur=.. reason=type|nodur`（事件环）；页统计行加 `filtered=N`；计数器 filter_type/filter_nodur。
+- **runtime repair→skip 保留兜底**（极罕见 type=0 但媒体真坏）。
+- **图集显示（暂缓，可行性已分析给用户）**：myDV 不做图集展示无参照；图片字段号未知、服务器是否填充未证实，需 aweme 级字段 dump 探针；UI 方案已设计好（ImageCell 横滑 pager + 左右键翻图/上下键切条，cell 不可聚焦按键集中在 pressesBegan，不碰滚动路径）。全会话 dur=0 仅 5/175（2.9%），价值中等。待用户决定。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。

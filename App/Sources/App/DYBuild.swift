@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v129"
-    static let changes = "v129: 无感跳过图集/novideo——parse 阶段双信号过滤(照 myDV filterPrimaryPlayableAwemes 语义):awemeType!=0(照s13.e:371探字段43/55/61)或 dur=0(v128实锤:两个novideo坏条目 idx=69/82 时长字段全缺)不进池→用户永远刷不到;dur取值链修正(f13提前,f22是标志位非时长);runtime repair→skip 保留兜底;FEED skip-item 逐条记录过滤原因"
+    static let version = "v130"
+    static let changes = "v130: 冷启动首帧提速+坏链快速恢复——①冷启动收敛:首个prepare只装居中条且直接走重定向直链(省掉静态直链4s空等+repair重建来回,v129实锤首帧11s→预期6s),邻居等居中ready再补装载(避免启动3个并发TLS握手互拖,v129 idx=1 TLS error实锤);②idle看门狗阈值4s→2s(repair实测1-2s恢复,静态直链打不开少等2s);UI美化(spinner等)按用户决定后期统一做"
 }
