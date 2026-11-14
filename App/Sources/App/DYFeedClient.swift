@@ -165,7 +165,6 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
-        var rawVideos: [[UInt8]] = []
         var loggedFirst = false
         var ei = 0
         for entry in awemeEntries {
@@ -176,19 +175,6 @@ final class DYFeedClient {
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
                   let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] video-ok")
-            rawVideos.append(videoBytes)   // 存原始 video bytes，播放时现选新鲜 URL（防预载过期）
-            // 一次性诊断：dump video 消息所有 field（号/wire/长度），定位 bit_rate 真实字段号
-            let videoDump = video.fields.keys.sorted().map { k -> String in
-                let vals = video.fields[k] ?? []
-                let desc = vals.map { v -> String in
-                    switch v {
-                    case .varint(let n): return "varint=\(n)"
-                    case .bytes(let b): return "bytes=\(b.count)"
-                    }
-                }
-                return "f\(k)[\(desc.joined(separator: ","))]"
-            }.joined(separator: " ")
-            DYLog.shared.log("FEED video-dump a[\(ei)] \(videoDump)")
             // aweme_id = field 1（s13.b 优先 str，退化为 varint）
             guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.log("FEED loop a[\(ei)] id-nil"); ei += 1; continue }
             DYLog.shared.log("FEED loop a[\(ei)] id=\(id) pick-start")
@@ -232,8 +218,7 @@ final class DYFeedClient {
         PlaybackEngine.shared.merge(ids: ids, urls: urls,
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
-                                    refresh: false,
-                                    allRawVideos: rawVideos)
+                                    refresh: false)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {
@@ -279,24 +264,8 @@ final class DYFeedClient {
 
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
-        var dumped = false
         for e in entries {
             guard let br = Proto.parse(e) else { continue }
-            // 一次性诊断：dump bit_rate 首条的所有 field（号/wire/长度），确认真实结构（is_h265/play_addr 字段号）
-            if !dumped {
-                dumped = true
-                let dump = br.fields.keys.sorted().map { k -> String in
-                    let vals = br.fields[k] ?? []
-                    let sizes = vals.map { v -> String in
-                        switch v {
-                        case .varint(let n): return "varint=\(n)"
-                        case .bytes(let b): return "bytes=\(b.count)"
-                        }
-                    }
-                    return "f\(k)[\(sizes.joined(separator: ","))]"
-                }.joined(separator: " ")
-                DYLog.shared.log("FEED bitrate-dump aweme=\(awemeId) entries=\(entries.count) \(dump)")
-            }
             let gear = br.string(1) ?? ""
             let w = Int(br.varint(2) ?? 0)
             let h = Int(br.varint(3) ?? 0)

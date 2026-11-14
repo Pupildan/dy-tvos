@@ -11,8 +11,6 @@ final class PlaybackEngine: ObservableObject {
 
     @Published var urls: [URL] = []
     @Published var index: Int = 0
-    /// 每条视频的原始 video 子消息 bytes（index→bytes）——播放时现选新鲜 URL 用，避免预载 URL 过期
-    private var rawVideos: [Int: [UInt8]] = [:]
 
     /// 直链批次拉取时间（用于过期判断）
     private(set) var fetchedAt: Date = .distantPast
@@ -38,11 +36,6 @@ final class PlaybackEngine: ObservableObject {
 
     var count: Int { urls.count }
 
-    /// 取 index 的原始 video 子消息 bytes（播放时现选新鲜 URL 用，避免预载 URL 过期）。
-    func rawVideo(at index: Int) -> [UInt8]? {
-        rawVideos[index]
-    }
-
     /// 已消费（当前及之前）的 aweme id——feed 直连翻页时作 presented_ids 排除重复推荐。
     var consumedIds: [String] {
         Array(awemeOrder.prefix(max(0, min(index + 1, awemeOrder.count))))
@@ -52,7 +45,7 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool) {
         let previousAwemeId = currentAwemeId
         var mergedIds = awemeOrder
         var mergedUrls = self.urls
@@ -69,14 +62,6 @@ final class PlaybackEngine: ObservableObject {
         }
         awemeOrder = mergedIds
         self.urls = mergedUrls
-        // 存原始 video bytes（按最终 position）——播放时现选新鲜 URL 用，避免预载 URL 过期
-        if let raws = allRawVideos {
-            for (i, id) in ids.enumerated() {
-                if let p = position[id], i < raws.count {
-                    rawVideos[p] = raws[i]
-                }
-            }
-        }
         fetchedAt = Date()
         consecutiveFailures = 0
         if refresh, !previousAwemeId.isEmpty, let pos = awemeOrder.firstIndex(of: previousAwemeId) {

@@ -18,12 +18,6 @@ final class PlayerLayerView: UIView {
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
 final class PlayerCell: UICollectionViewCell {
     let playerLayerView = PlayerLayerView()
-    /// 当前绑定的 player（看门狗读播放时间用）
-    var player: AVPlayer? { playerLayerView.player }
-    /// 当前播放时间（黑屏看门狗判断时间是否前进）
-    func currentTime() -> Double {
-        player?.currentTime().seconds ?? 0
-    }
     /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
     let coverImageView: UIImageView = {
         let iv = UIImageView()
@@ -40,10 +34,7 @@ final class PlayerCell: UICollectionViewCell {
         contentView.addSubview(playerLayerView)
         contentView.addSubview(coverImageView)
         playerLayerView.playerLayer.videoGravity = .resizeAspect
-        // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
-        isUserInteractionEnabled = false
     }
-    override var canBecomeFocused: Bool { false }
     required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -140,25 +131,9 @@ final class PlayerManager {
         }
     }
 
-    /// 播放时现场选新鲜 URL：优先用原始 video bytes 现跑选链（URL 当下生成、不过期），
-    /// 取不到才退化用预载的静态 urls[index]。照 myDV 播放时现算模式，治预载 URL 过期黑屏。
-    private func resolveFreshURL(index: Int) -> URL {
-        if let raw = PlaybackEngine.shared.rawVideo(at: index),
-           let parsed = Proto.parse(raw),
-           let fresh = DYFeedClient.shared.pickHighestQuality(from: parsed, awemeId: "") {
-            DYLog.shared.log("MGR fresh url idx=\(index): \(fresh.absoluteString.prefix(100))")
-            return fresh
-        }
-        let fallback = PlaybackEngine.shared.urls[index]
-        DYLog.shared.log("MGR fresh url idx=\(index) fallback static")
-        return fallback
-    }
-
     /// 新建 player 装载 index，挂 ready KVO（ready 时回调刷新封面显隐）。
     private func acquire(index: Int) -> AVPlayer {
-        // 播放时现场选新鲜 URL：优先用原始 video bytes 现跑选链（URL 当下生成、不过期），
-        // 取不到才退化用预载的静态 urls[index]（可能已过期→黑屏）。照 myDV 播放时现算模式。
-        let url = resolveFreshURL(index: index)
+        let url = PlaybackEngine.shared.urls[index]
         var headers = ["User-Agent": DYFeedClient.mobileUA]
         if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
             headers["Cookie"] = cookie
@@ -170,32 +145,39 @@ final class PlayerManager {
         p.replaceCurrentItem(with: item)
         players[index] = p
         readyObservers[index]?.invalidate()
-        readyObservers[index] = observedItem.observe(\.status, options: [.new]) { [weak self] newStatus, _ in
-            // readyToPlay 无视频轨(图集/纯音频) 或 failed(Cannot Open/无权限) → 跳过这条坏视频。
-            // 直接 engine.next() 精确 +1（不经 advance/centeredIndex，避免动画中途反推跳多页）。
-            guard newStatus.status == .readyToPlay || newStatus.status == .failed else { return }
+        readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+            // ready → 回调刷新封面；failed(Cannot Open，如 HEVC 解不出) → 预处理无感跳过
+            guard it.status == .readyToPlay || it.status == .failed else { return }
+            let failed = (it.status == .failed)
             DispatchQueue.main.async {
-                guard let self else { return }
-                let engine = PlaybackEngine.shared
-                let isCurrent = (index == engine.index)
-                // 视频轨检测：readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）
-                if newStatus.status == .readyToPlay, observedItem.tracks(withMediaType: .video).isEmpty {
-                    DYLog.shared.log("MGR ready idx=\(index) 无视频轨 -> skip")
-                    if isCurrent { engine.next() }
-                    return
+                if failed {
+                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
+                    self?.skipFailed(index: index)
+                } else {
+                    self?.onPlayerReady?(index)
+                    DYLog.shared.log("MGR ready idx=\(index)")
                 }
-                if newStatus.status == .failed {
-                    DYLog.shared.log("MGR failed idx=\(index) err=\(newStatus.error?.localizedDescription ?? "?") -> skip")
-                    if isCurrent { engine.next() }
-                    return
-                }
-                self.onPlayerReady?(index)
-                DYLog.shared.log("MGR ready idx=\(index)")
             }
         }
         DYLog.shared.log("MGR acquire idx=\(index) total=\(players.count)")
         return p
     }
+
+    /// 预处理无感跳过：index 的视频打不开(Cannot Open，如 HEVC 解不出)时，驱逐它并回调跳过。
+    /// 无条件回调，由控制器判断"失败的是否当前居中"再 advance（manager 不持有 currentIndex）。
+    func skipFailed(index: Int) {
+        if let p = players[index] {
+            p.pause()
+            p.replaceCurrentItem(with: nil)
+            readyObservers[index]?.invalidate()
+            readyObservers.removeValue(forKey: index)
+            players.removeValue(forKey: index)
+        }
+        onSkipFailed?(index)
+    }
+
+    /// 失败跳过回调（index）——控制器接到后 advance 到下一个。
+    var onSkipFailed: ((Int) -> Void)?
 }
 
 /// 原生播放器：UICollectionView 垂直分页 + PlayerManager 上限 3 池。
@@ -206,10 +188,6 @@ final class DYPlayerViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
-    // 黑屏探测看门狗：居中 player 进入 playing 后，若视频时间连续不走（黑屏特征）则跳下一条
-    private var lastObservedTime: [AVPlayer: Double] = [:]
-    private var stallCounts: [AVPlayer: Int] = [:]
-    private var stallTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -238,43 +216,11 @@ final class DYPlayerViewController: UIViewController {
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
         }
-        // 黑屏看门狗：每 1.5s 查居中 player 视频时间是否前进，连续停滞则跳过
-        stallTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] _ in
-            self?.checkStall()
-        }
-    }
-
-    deinit {
-        stallTimer?.invalidate()
-    }
-
-    /// 黑屏探测：居中 player 的视频时间连续不走（无论 readyToPlay 还是 playing）→ 判定黑屏，跳下一条。
-    /// 不要求 .playing——黑屏视频(Cannot Open/无权限/HEVC)常进不到 playing，只看时间走不走。
-    private func checkStall() {
-        guard let cell = centeredCell(),
-              let ip = collectionView.indexPath(for: cell),
-              let p = cell.player else {
-            return
-        }
-        // 只看当前居中的这条
-        guard ip.item == currentIndex else { return }
-        let idx = ip.item
-        let t = p.currentTime().seconds
-        let last = lastObservedTime[p] ?? -1
-        // 时间前进（含刚重置-1）→ 正常，重置计数
-        if t.isFinite, abs(t - last) >= 0.05 {
-            stallCounts[p] = 0
-            lastObservedTime[p] = t
-            return
-        }
-        // 时间不走：累加停滞计数（间隔 1.5s，连续 2 次 = 3s 无进展）
-        let c = (stallCounts[p] ?? 0) + 1
-        stallCounts[p] = c
-        DYLog.shared.log("STALL idx=\(idx) t=\(t) count=\(c) status=\(p.timeControlStatus.rawValue)")
-        if c >= 2 {
-            stallCounts[p] = 0
-            DYLog.shared.log("STALL idx=\(idx) confirmed black -> skip")
-            advance()
+        // player 打不开(Cannot Open/HEVC) → 预处理无感跳过：仅当失败的是当前居中才 advance（邻位预载失败不跳）
+        PlayerManager.shared.onSkipFailed = { [weak self] idx in
+            guard idx == self?.currentIndex else { return }
+            DYLog.shared.log("FEEDCOLL skip failed idx=\(idx) -> advance")
+            self?.advance()
         }
     }
 
@@ -418,18 +364,6 @@ final class DYPlayerViewController: UIViewController {
         let center = CGPoint(x: collectionView.bounds.midX, y: collectionView.bounds.midY)
         if let ip = collectionView.indexPathForItem(at: center) { return ip.item }
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
-    }
-
-    /// 当前居中的 Cell（黑屏看门狗用）。
-    private func centeredCell() -> PlayerCell? {
-        let ci = centeredIndex()
-        for cell in collectionView.visibleCells {
-            if let c = cell as? PlayerCell,
-               let ip = collectionView.indexPath(for: c), ip.item == ci {
-                return c
-            }
-        }
-        return nil
     }
 
     private func advance() {

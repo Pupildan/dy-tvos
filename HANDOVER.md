@@ -1,88 +1,102 @@
-# DYTV 交接文档（v88 状态 · 2026-11-13）
+# DYTV 交接文档（v124 状态 · 2026-11-14）
 
-> 本文档取代此前所有过时交接。当前代码已从「WebView 数据泵 + 单 AVPlayer」演进到「myDV 移动端 protobuf 直连 + UICollectionView 垂直分页 + PlayerPool」。所有结论均基于工具读取的实际代码，非记忆。请以本文档为准。
+> 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
+> 当前版本 **v124**。**跳多页、声画不同步、冻屏已修复**；**黑屏（有声/无声）未解决**，是唯一遗留问题。
 
-## 1. 项目背景与终极目标
-纯原生 tvOS 抖音客户端，**绝对不使用 WebView 作为 UI**。完全原生 AVPlayer + 原生焦点遥控器控制。追求无限向下刷新（不卡 42 条）。
+---
 
-## 2. 环境与构建约束（极重要）
-- **开发机 Windows，无 Xcode、无本地模拟器** → 无法本地编译，一切靠真机 + CI。
-- **构建**：GitHub Actions（`CODE_SIGNING_ALLOWED=NO` 仅编译）。流水线 `_tools/dy_pipeline.ps1 -Version vX` 一条龙 commit→push→盯 CI→下载未签名 ipa 到 `output/`。
-- **签名推送**：本地 Docker/AltStore 自签推 ATV，**7 天过期**。
-- **版本号**：`DYBuild.version` 每次 +1，禁止重复（一版本号 = 唯一构建产物）。
-- **ATV 崩溃拿不到堆栈**：原生崩溃不经过日志服务器，`output/atv_push.log` 只能看到崩溃前最后的自定义日志。诊断靠「分步日志 + 二分排除」，别指望崩溃堆栈。
-- **反编译产物**：`_apk_work/jadx_out_classes/sources`（多数类）、`_apk_work/jadx_out/sources`（s13.java、highestQuality 比较器 lambda）。文件名带 `$` 时 PowerShell 通配失效，用 `cmd /c dir /s /b | findstr` 定位。
+## 1. 项目背景与铁律
 
-## 3. 当前架构（v88 实际状态，已用工具确认）
-- **数据层** `DYFeedClient`：直连移动端 `https://aweme.snssdk.com/aweme/v2/feed/`。`DYSigner` 用 JavaScriptCore 跑 myDV 的 abogus.js 算 **4 参签名** `getABogus(query, data, path, ua)`。响应是 **protobuf 非 JSON**，`Proto` struct 手工 wire 解码。零 WebView。
-- **播放层** `NativePlayerView`：`UICollectionView` 垂直分页 + **3 实例 `AVPlayer` 池**（`playerPool`/`playerIndex`/`PlayerLayerView`/`PlayerCell`）。真实视频图层随 Cell 滑动（UIScrollView 原生物理/惯性）。
-- **启动动画**：`launch_video.mp4`（bundle，8.3MB）全屏循环静音播放，feed 首批就绪后淡出。**当前 `RootView.showLaunchVideo = false` 已禁用**（疑似导致启动闪退，见未解决 6.2）。
+纯原生 tvOS 抖音客户端。两条铁律：
+1. **绝对不使用 WebView 作为 UI**。
+2. **真实视频层滑动是核心体验，必须保留**（不能退回快照假滑动）。
+3. **绝对禁止造轮子**：未知字段/解析/清晰度不准猜，必须翻反编译（`_apk_work/jadx_out_classes`）找 myDV 现成源码照抄。**v94-v99、v111-v124 反复因"造轮子/幻觉"翻车，这是最高教训。**
 
-## 4. 踩过的坑（极其重要，血泪教训）
+## 2. 环境与构建约束
 
-### 数据层
-- **feed 端点**：必须用移动端 `aweme/v2/feed/`（host `aweme.snssdk.com`）。网页版 `tab/feed`、`module/feed` 池子小会卡 42 条。
-- **签名 4 参**：`getABogus(query, data, path, ua)`，第 4 参 ua = 移动端 UA `com.ss.android.ugc.aweme/391000 (Linux; U; Android 16; zh_CN; Pixel 10 Pro)`。`DYSigner.sign(query:data:path:ua:)` + `navigator.userAgent` 运行时同步。
-- **响应是 protobuf 非 JSON**：`s13.f()` 首字节 `==123('{')` 就 throw。必须手工 wire 解码（`Proto` struct）。字段：根 5=aweme 列表、1=status_code；aweme 7/8=video；video 1/9=play_addr；**play_addr field 2=真正 http CDN URL（field 1 是 uri 不可播）**，urlList 提取优先级 field 2→递归→field 1（`Proto.urlList`）。
-- **移动端 bit_rate field 21 是 varint 非 bytes**（QDIAG 实测 f21=0），别硬套网页版 s13。暂用 play_addr field 8 直连已够。
-- **最高画质**：`pickHighestQuality` 照 `highestQualityBitRate`（DataModelKt:155）——过滤 urlList 非空，按 h*w→fps→encodingScore(H265=1)→bitRateValue→gearName(≠adapt_lowest) 取最大。
-- **403**：必须 1:1 补齐 Referer/Cookie/uifid/x-secsdk-csrf-token 等鉴权头。
+- **开发机 Windows，无 Xcode** → 无法本地编译，全靠 GitHub Actions CI + 真机。
+- 流水线 `_tools/dy_pipeline.ps1 -Version vX` 一条龙：commit→push→盯 CI→下载未签名 ipa 到 `output/`。
+- 版本号 `DYBuild.version` 每次 +1，禁止重复。
+- ATV 崩溃拿不到堆栈 → 靠"分步日志 + 二分排除"；**崩溃可隔空投送导出 `.ips` 读堆栈**（见 §7）。
+- 日志：ATV 推送到开发机 `output/atv_push.log`（player 前缀 `MGR`/`CODEC`/`STALL`/`ENGINE`/`FEED`）。
 
-### 播放层（双播放器池路线已证伪并废弃）
-- **双 AVPlayerLayer 池（v71-v75、v79-v80 共 7 版）已放弃**：tvOS 上双全屏解码器 + CATransform/UIView transform 动画 + 预载/清空时序**天生脆弱**，反复黑屏/跳号/无声/闪退/Cannot Open。试过：裸 layer→容器 view→layoutIfNeeded→同 idx 不重载→loadingIndex+isKeepWorthy→错峰 clear，每轮只压下一个症状，黑屏/跳号/无声换马甲回来。**教训：双 AVPlayerLayer 池在 tvOS 是死路，别再试。**
-- **UICollectionView 方案（v77/v78/v88）**：tvOS **无 `isPagingEnabled`**，需 `scrollViewWillEndDragging` 手动整页吸附；`scrollToItem` 在零 bounds 会崩（加 `bounds.height > 0` 守卫）；`playerPool.min` 返回可选需解包；`viewDidLayoutSubviews` 加零 bounds 守卫。这些都修过，v88 编译通过。
-- **AVPlayerLayer 动画**：直接 `addSublayer` 到 view.layer 后动画 transform，真机不可靠，需套容器 UIView 动画 container.transform（v72 教训）。
-- **首条 URL 失效**：douyinvod 直链有时效，播 14 秒可能 `Cannot Open`。`onFailed` **只走 `advance()`** 推进，绝不再调 `reportFailure()`（它会 triggerRefresh → 又动 index → 跳号 0→1→3）。
-- **跳号**：slot 的 `statusObservation`(.failed) 和 `endObserver`(播完) 可能都 fire `onFailed` → 双 advance → 跳号。用 `didFail` 标志防同槽重复推进，`clear()` 重置。
-- **声画同步**：滑动起步瞬间就 `outgoing.isMuted=true` + 新槽出声，不等动画完成。
+## 3. 当前架构（v124 实际状态）
 
-### 启动黑屏
-- 根因：`reloadIfNeeded` 守卫 `engine.index != currentIndex`，首批时 index=0/currentIndex=0 → `0!=0` 恒假 → 直接 return，activeSlot 从没装载首条 → 黑屏，按键才加载。
-- 修：加 `hasLoadedOnce` 标志，首批到达**强制装载 index 0** 并播放。
+- **数据层** `DYFeedClient`：移动端 `aweme.snssdk.com/aweme/v2/feed/` protobuf 直连。`DYSigner` 用 JavaScriptCore 跑 abogus.js 算 4 参签名。响应 protobuf 手工 wire 解码（`Proto` struct）。零 WebView。
+- **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 上限 3 池（current±1）。
+- **跳多页已修**：删 `scrollViewDidEnd` 两委托（动画中途 `centeredIndex()` 反推致正反馈）、`advance/rewind` 直接 `engine.next()/prev()`、`scrollTo` 删 `for{next()}` 对齐循环。
+- **声画不同步已修**：同上（不再有 skip 引发的换源错位）。
+- **冻屏已修**：基本没有。
 
-## 5. 项目约束（必须永久遵守）
-- **绝对不使用 WebView 作为 UI**。
-- **绝对禁止造轮子**（用户原话）：未知字段/解析/清晰度选择不准猜或试探，必须去反编译项目（`jadx_out_classes`）找 myDV 现成源码 1:1 照抄再翻 Swift。
-- 原项目同时有移动端和 PC 端，**当前只做移动端**数据获取+播放。
-- 版本号每次 +1，禁止重复。
-- **改代码前先用工具读实际文件**（血泪教训：v79-v88 十版凭记忆打补丁、old_string 反复不匹配、同症状反复 = 幻觉，用户点名批评「你出现幻觉了」）。
-- **同一路线连败 3+ 版 → 果断回退稳定底座**，别让用户连续当测试员。
+## 4. 已解决的问题（别再重复造）
 
-## 6. 未解决问题 + 解决思路
+| 问题 | 解法 | 版本 |
+|---|---|---|
+| 启动崩溃 `scrollToItem` 抛 NSException | 用 clamp 的 `setContentOffset` 替代；`UICollectionView` 必须 `reloadData` | v91/v92 |
+| 跳多页 | 删 `scrollViewDidEnd` 两委托 + `advance` 直接 `engine.next()` + `scrollTo` 删对齐循环 | v115/v121 |
+| 声画不同步 | 同上（不再有 skip 换源错位） | v121 |
+| 冻屏 | 基本没有 | v108+ |
 
-### 6.1 滑动连贯性/卡顿（当前核心卡点）
-- **现状**：v88 UICollectionView 方案编译通过、能跑，但切换仍有卡顿/黑帧，老视频滑动观感不足。
-- **可能原因**：`cellForItemAt` 里同步 `acquirePlayer`+`load`（建 AVAsset/item）在滑动时才建解码器；相邻预载时机偏晚。
-- **解决思路**：① 滑动前预载目标±1 的 player（`preloadAdjacent` 已加，验证效果）；② 确保 `playerView.frame` 在 `willDisplay`/`layoutSubviews` 都刷新；③ 若仍卡，调低 `preferredForwardBufferDuration` 或提前 `loadValuesAsynchronously`。
+## 5. 未解决问题：黑屏（有声/无声）——唯一遗留
 
-### 6.2 启动闪退（疑似 launch_video，未确认）
-- **现状**：v88 加 `launch_video.mp4` 后出现「打开就闪退」，崩在启动视频播放 + feed 同时启动。无崩溃堆栈。
-- **二分**：RootView `showLaunchVideo = false` 已禁用启动视频。**下一步**：打包 v89 确认禁用后是否还闪退。
-  - 不闪退 → 启动视频编解码器与 tvOS 不兼容 → 用 ffmpeg 转 H.264 baseline，或换成静态封面图。
-  - 仍闪退 → 排除启动视频，问题在 feed/滑动逻辑，读分步日志定位。
-- **拿崩溃堆栈**：ATV `~/Library/Logs/CrashReporter/DYTV-*.ips`（需在 ATV 上操作导出）。
+### 5.1 现象
+- **黑屏有声**：有声音、没画面。频次中等。
+- **黑屏无声**：既无声音也无画面。较少。
 
-### 6.3 任务 3 弹幕（未开始）
-- 引入 DanmakuKit，数据获取严格照抄原项目（`u11.K()` 走 `/aweme/v2/web/danmaku/get_v2/`，需挖 DanmakuItem/DanmakuResponse 字段号，不猜）。
-- `danmakuView.isUserInteractionEnabled = false` 不抢遥控焦点；`addPeriodicTimeObserver` 驱动；暂停弹幕暂停、快进清屏按新时间戳对齐。
-- **前置**：滑动稳定后再做。注意弹幕是网页版路径（JSON DanmakuResponse/DanmakuItem snake_case），与移动端 protobuf feed 不同，需 web cookie。
+### 5.2 根因诊断（v124 CODEC 诊断实锤）
+- 可播视频编码 **全是 `avc1`(H.264)**，无 hvc1(HEVC) → **黑屏不是 HEVC 解不出**（推翻早期假设）。
+- idx=31 出现 `codec=no-video-track` 但仍 `MGR ready` → **无视频轨的视频没被跳过**（图集/纯音频帖）。
+- 看门狗抓到的黑屏是 `status=0`(`.idle`)、`t=0.0` → **player 压根没起来**（URL 无效/过期/无权限），看门狗能跳过这类。
 
-### 6.4 可选后续
-- 扫码登录拿真实 cookie（提升推荐质量）。
-- mssdk msToken（现随机兜底够用）。
-- 启动视频编解码兼容处理（若确认要做启动视频）。
+### 5.3 根本困境
+**移动端 protobuf 没有 bit_rate 子消息、没有 is_h265 字段**（video-dump 实锤：field21=单 varint 码率）→ **无法在 parse 阶段预判坏视频**，只能在播放时实测。而"播放时跳过"用 `centeredIndex()` 反推会跳多页，用 `engine.next()` 又要防级联——反复横跳。
 
-## 7. 给下一个 AI 的明确指令
-1. **先读实际代码再动手**（血泪教训：v79-v88 十版凭记忆打补丁 = 幻觉）。用工具读 `NativePlayerView.swift`/`DYFeedClient.swift` 实际状态。
-2. **同一路线连败 3+ 版 → 果断回退稳定底座**，别让用户连续当测试员。
-3. **tvOS 特殊性**（都是实测，不是猜）：无 `isPagingEnabled`、零 bounds 会崩、AVPlayerLayer 动画需容器 view、崩溃无堆栈。
-4. 当前构建 v88，`showLaunchVideo=false`。**下一步优先**：打包 v89 确认禁用启动视频后是否还闪退（二分定位），稳定后调滑动连贯性。
+## 6. 试过的方法（重点：哪些有效、哪些失败）
 
-## 8. 关键文件
-- `NativePlayerView.swift`：UICollectionView 垂直分页 + PlayerPool（当前播放层）。
-- `DYFeedClient.swift`：移动端 feed 直连 + protobuf 解码 + 最高画质。
+### 有效（保留在 v124）
+- **`setContentOffset` 替代 `scrollToItem`**（后者 tvOS 抛 NSException）。
+- **删 `scrollViewDidEnd` 两委托 + `advance` 直接 `engine.next()`** → 治跳多页。
+- **黑屏看门狗**：每 1.5s 查居中 player 时间是否前进，连续 2 次停滞则 `advance()`。能抓"player 停在 idle"的黑屏。
+- **CODEC 诊断**：KVO ready 时查 `currentItem.tracks(video)` 编码，确认非 HEVC。
+
+### 失败/被否（别再重复）
+- **双 player 池（v77-v83）**：黑屏/跳号/无声，全败，回退单 player。
+- **`.failed → advance` 自动跳过（v111/v112）**：用 `centeredIndex()` 反推 → 跳多页 + 声画不同步，v121 删除。
+- **按 URL 字样猜 HEVC（v98）**：URL 里无可靠编码标志，失败。
+- **按 JSON 序号套 proto 字段号（v118 awemeType=field6）**：field6 非 awemeType，空操作。
+- **`asset.tracks` 在 readyToPlay 查视频轨（v119）**：track 异步未加载完 → 误返回空 → 误杀好视频 → 黑屏无声增多，v120 删除。
+- **`pickHighestQuality` 读 bit_rate（field21/31）**：移动端 field21 是单 varint 非 bytes，**恒返回 nil**，从没成功过。
+
+## 7. 踩过的坑（血泪，务必牢记）
+
+1. **tvOS `scrollToItem` 抛 NSException → SIGABRT**：flow layout 未就绪时调用会崩。用 clamp 的 `setContentOffset` 替代。
+2. **`UICollectionView` 必须 `reloadData`**：否则 `numberOfItems` 恒 0 → scrollTo 全 SKIP → 黑屏。
+3. **改代码前必读实际文件**：v79-v124 多版凭记忆打补丁 = 幻觉，被点名批评。**治播放 bug 先问 myDV 原项目怎么做。**
+4. **同一路线连败 3+ 版 → 果断回退稳定底座**，别让用户连续当测试员（v94-99、v111-124 两次翻车）。
+5. **myDV 手机端(protobuf) 与 PC端(JSON) 字段号不通用**：拿 JSON 序号套 proto 必错（BitRate/awemeType 都栽过）。
+6. **AVPlayer 原生解 HEVC**（myDV VideoPlayUrlResolver 证明）→ 黑屏非 HEVC，别再往解码方向猜。
+7. **`item` 变量遮蔽**：KVO 闭包内 `item` 易被外层 `enumerated()` 循环变量遮蔽，导致 `item.tracks` 编译错。用 `playerItem`/`observedItem` 等无歧义名。
+
+## 8. 黑屏问题的下一步建议（未验证，需决策）
+
+**推荐：播放时用 `currentItem.tracks(video)` 查视频轨 + 看门狗兜底（双层）**
+- `readyToPlay` 时用 **`currentItem.tracks(video)`**（不是之前误判的 `asset.tracks`）查视频轨，空则跳过 → 治"无视频轨"黑屏。
+- 看门狗（已有）兜底"有轨但时间不走"的黑屏 → 治"player 停 idle"。
+- **风险**：`currentItem.tracks` 也有异步时序，需实测确认在 readyToPlay 后已加载完（v119 用 asset.tracks 误判过）。
+- **先小范围验证**：加日志确认 `currentItem.tracks(video)` 在 readyToPlay 后是否稳定非空，再决定是否用它做跳过判据。
+
+**备选**：若双层仍不理想，考虑集成 libVLC 软解（能解 HEVC），但违背"原生 AVPlayer"铁律 + 包体积暴涨 + 滑动重做，需拍板。
+
+## 9. 关键文件
+- `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
+- `DYFeedClient.swift`：移动端 feed 直连 + protobuf 解码 + `pickHighestQuality`（恒 nil，待修）。
 - `DYSigner.swift`：4 参 a_bogus 签名（JavaScriptCore）。
-- `PlaybackEngine.swift`：URL/索引状态管理。
-- `LaunchVideoView.swift`：启动视频加载动画（当前禁用）。
+- `PlaybackEngine.swift`：URL/索引状态管理（含 `rawVideos` 存储）。
 - `MYDV_FEED_BLUEPRINT.md`：myDV 数据获取蓝图。
-- `RootView.swift`：启动加载动画开关（`showLaunchVideo`）。
+- `output/atv_push.log`：真机日志（`MGR`/`CODEC`/`STALL`/`ENGINE`/`FEED` 前缀）。
+
+## 10. 给下一个 AI 的明确指令
+1. **先读实际代码再动手**（血泪：v79-v124 多版凭记忆打补丁 = 幻觉）。
+2. **治播放 bug 先问 myDV 原项目怎么做**（`_apk_work/jadx_out_classes`），别自己造轮子。
+3. **同一路线连败 3+ 版 → 回退稳定底座**（v121 是当前稳定点）。
+4. **当前唯一遗留 = 黑屏**。建议先按 §8 用 `currentItem.tracks` + 看门狗双层验证，数据说话再深挖。
