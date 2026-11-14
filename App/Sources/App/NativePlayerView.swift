@@ -87,16 +87,16 @@ final class PlayerCell: UICollectionViewCell {
         contentView.addSubview(descLabel)
         contentView.addSubview(hashtagLabel)
 
-        // 右侧动作轨（纯展示；图标 SF Symbols，计数万缩写；v144 去掉上下箭头；v148 图标再加大）
+        // 右侧动作轨（纯展示；图标 SF Symbols，计数万缩写；v144 去掉上下箭头；v149 尺寸=v147 与 v148 之间）
         func railIcon(_ name: String) -> UIImageView {
-            let iv = UIImageView(image: UIImage(systemName: name, withConfiguration: UIImage.SymbolConfiguration(pointSize: 46, weight: .medium)))
+            let iv = UIImageView(image: UIImage(systemName: name, withConfiguration: UIImage.SymbolConfiguration(pointSize: 40, weight: .medium)))
             iv.tintColor = .white
             iv.contentMode = .center
             return iv
         }
         railAvatarView.contentMode = .scaleAspectFill
         railAvatarView.clipsToBounds = true
-        railAvatarView.layer.cornerRadius = 44
+        railAvatarView.layer.cornerRadius = 40
         railAvatarView.layer.borderColor = UIColor.white.withAlphaComponent(0.7).cgColor
         railAvatarView.layer.borderWidth = 2
         railLikeIcon = railIcon("heart.fill")
@@ -104,7 +104,7 @@ final class PlayerCell: UICollectionViewCell {
         railStarIcon = railIcon("star.fill")
         railShareIcon = railIcon("arrowshape.turn.up.right.fill")
         for l in [railLikeLabel, railCommentLabel, railStarLabel, railShareLabel] {
-            l.font = .systemFont(ofSize: 28, weight: .semibold)
+            l.font = .systemFont(ofSize: 26, weight: .semibold)
             l.textColor = .white
             l.textAlignment = .center
         }
@@ -113,20 +113,20 @@ final class PlayerCell: UICollectionViewCell {
         }
     }
 
-    /// PC 版 UI 布局（v148：右轨距右 118px 竖排起于 28% 高度，图标 68 高/间距 112/头像 88 正圆；
+    /// PC 版 UI 布局（v149：右轨距右 118px 竖排起于 28% 高度，图标 62 高/间距 104/头像 80 正圆；
     /// 左下信息区避让进度条，底部锚定向上排）
     private func layoutPCOverlay() {
         let b = contentView.bounds
         let railX = b.width - 118
         let railW: CGFloat = 92
         var y = b.height * 0.28
-        railAvatarView.frame = CGRect(x: railX + 2, y: y, width: 88, height: 88)
-        railAvatarView.layer.cornerRadius = 44   // 正圆（88/2）
-        y += 102
+        railAvatarView.frame = CGRect(x: railX + 6, y: y, width: 80, height: 80)
+        railAvatarView.layer.cornerRadius = 40   // 正圆（80/2）
+        y += 94
         for (icon, label) in [(railLikeIcon, railLikeLabel), (railCommentIcon, railCommentLabel), (railStarIcon, railStarLabel), (railShareIcon, railShareLabel)] {
-            icon.frame = CGRect(x: railX - 4, y: y, width: railW + 8, height: 68)
-            label.frame = CGRect(x: railX - 14, y: y + 68, width: railW + 28, height: 36)
-            y += 112
+            icon.frame = CGRect(x: railX - 4, y: y, width: railW + 8, height: 62)
+            label.frame = CGRect(x: railX - 14, y: y + 62, width: railW + 28, height: 34)
+            y += 104
         }
         // 左下信息区（无头像；底部锚定向上，紧凑间距 v145：话题 → 文案(2行) → 昵称+时间）
         let infoLeft: CGFloat = 24
@@ -598,8 +598,7 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
-    /// 手势（触摸板/触摸面）：上/下滑切换视频。
-    /// v148：两倍速从触摸板长按改为**长按确认键**（pressesBegan/Ended 计时判定，用户规格）。
+    /// 手势（触摸板/触摸面）：上/下滑切换视频 + 手指悬停不动 1s 两倍速播放松开恢复（v149 用户规格）。
     /// 前提：面板关闭态才响应（焦点链隔离；设置面板/快捷面板打开时不抢）。
     private func setupGestures() {
         // 关闭 collection 原生滚动（触摸板滑动交给手势，避免原生滚动与翻页打架）
@@ -607,6 +606,11 @@ final class DYPlayerViewController: UIViewController {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.cancelsTouchesInView = false
         view.addGestureRecognizer(pan)
+        let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
+        hold.minimumPressDuration = 1.0
+        hold.allowableMovement = 60   // 容忍悬停时的轻微漂移
+        hold.cancelsTouchesInView = false
+        view.addGestureRecognizer(hold)
     }
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
@@ -618,41 +622,21 @@ final class DYPlayerViewController: UIViewController {
         DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
     }
 
-    // MARK: - 确认键长按两倍速（v148，替代 v146 触摸板长按）
-    // 短按确认键=呼出快捷面板（pressesEnded 判定）；按住 ≥0.6s=两倍速，松开恢复。
-    // 面板打开时按键走 SwiftUI 焦点链，本 VC 收不到（焦点链隔离）——无需额外互斥。
-    private var selectHoldTimer: Timer?
-    private var selectPressed = false
-    private var isHolding2x = false
-
-    private func beginHold2x() {
-        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
-              let p = PlayerManager.shared.player(at: currentIndex) else { return }
-        isHolding2x = true
-        holdWasPlaying = (p.timeControlStatus == .playing)
-        if holdWasPlaying {
-            p.rate = 2.0
-            DYLog.shared.event("PLAYBACK 2x on (select hold)")
-        }
-    }
-
-    private func endHold2x() {
-        selectHoldTimer?.invalidate()
-        selectHoldTimer = nil
-        guard isHolding2x else { return }
-        isHolding2x = false
-        if let p = PlayerManager.shared.player(at: currentIndex) {
+    // MARK: - 触摸板悬停两倍速（v149 用户规格：手指放到触摸区域不动=倍速，与滑动同区域）
+    @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
+        switch g.state {
+        case .began:
+            holdWasPlaying = (p.timeControlStatus == .playing)
+            if holdWasPlaying {
+                p.rate = 2.0
+                DYLog.shared.event("PLAYBACK 2x on (touch hold)")
+            }
+        case .ended, .cancelled, .failed:
             if holdWasPlaying { p.play() } else { p.pause() }
-        }
-        DYLog.shared.event("PLAYBACK 2x off (select release)")
-    }
-
-    private func shortTapSelect() {
-        if DYQuickPanelModel.shared.isOpen {
-            DYQuickPanelModel.shared.close()
-        } else {
-            DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex),
-                                          awemeId: PlaybackEngine.shared.awemeId(at: currentIndex) ?? "")
+            DYLog.shared.event("PLAYBACK 2x off (release)")
+        default: break
         }
     }
 
@@ -1009,13 +993,13 @@ final class DYPlayerViewController: UIViewController {
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
             case .select:
-                // 确认键（v148）：按下开始计时——按住 ≥0.6s=两倍速；短按（pressesEnded）=呼出快捷悬浮窗
-                selectPressed = true
-                selectHoldTimer?.invalidate()
-                selectHoldTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { [weak self] _ in
-                    guard let self, self.selectPressed else { return }
-                    self.selectPressed = false
-                    self.beginHold2x()
+                // 确认键（点击板中心按下=.select，与播放/暂停键 .playPause 是两个键）：呼出/关闭快捷悬浮窗
+                // （v149：两倍速归还触摸板悬停手势，确认键恢复 v147 即按即呼出）
+                if DYQuickPanelModel.shared.isOpen {
+                    DYQuickPanelModel.shared.close()
+                } else {
+                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex),
+                                                  awemeId: PlaybackEngine.shared.awemeId(at: currentIndex) ?? "")
                 }
                 return
             case .playPause:
@@ -1032,32 +1016,6 @@ final class DYPlayerViewController: UIViewController {
             }
         }
         super.pressesBegan(presses, with: event)
-    }
-
-    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses where press.type == .select {
-            if selectPressed {
-                // 短按（计时器未触发）：呼出/关闭快捷悬浮窗
-                selectPressed = false
-                selectHoldTimer?.invalidate()
-                selectHoldTimer = nil
-                shortTapSelect()
-                return
-            }
-            if isHolding2x {
-                endHold2x()
-                return
-            }
-        }
-        super.pressesEnded(presses, with: event)
-    }
-
-    override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses where press.type == .select {
-            selectPressed = false
-            endHold2x()
-        }
-        super.pressesCancelled(presses, with: event)
     }
 }
 

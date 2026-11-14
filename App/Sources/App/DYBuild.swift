@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v148"
-    static let changes = "v148: ①评论屏闪退修复:tvOS焦点环境无可聚焦元素致异常(真机日志实锤 select comment 后 ROOT auto-start)——评论行改可聚焦Button+常驻返回按钮+关面板后0.4s再开评论屏;②两倍速改长按确认键0.6s触发松开恢复(撤销v146触摸板长按,短按仍是呼出快捷面板);③快捷面板改屏幕底部居中横向卡片排列;④右轨4图标加大(46pt符号/68高/头像88正圆)"
+    static let version = "v149"
+    static let changes = "v149: ①评论闪退真根因修复:ensureTTWID 回调在 danmaku 队列内联执行,DYCommentClient 在同队列调 ttwidValue(queue.sync)自等待死锁→主线程跟着卡死被杀;回调改跳主线程;②两倍速改触摸板悬停1s触发(手指放触摸区不动,与滑动同区域,松开恢复;撤销确认键长按);③快捷面板真·底部居中(RootView ZStack leading对齐致面板贴左,补 maxWidth infinity)+标准液态玻璃去黑tint透出视频+评论屏黑幕减淡;④弹幕:顶部6行/禁止重叠/降速280;⑤右轨图标回落40pt/62px/头像80"
 }

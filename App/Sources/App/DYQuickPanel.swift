@@ -82,6 +82,9 @@ struct DYQuickPanelView: View {
             panel
                 .padding(.bottom, 90)
         }
+        // v149 关键：撑满全宽再水平居中——RootView 的 ZStack 是 alignment: .leading，
+        // VStack 只包内容宽时会被钉在屏幕左侧（v145-v148「位置不对」的真凶）
+        .frame(maxWidth: .infinity)
         .onAppear { focusedRow = .home }
         .onExitCommand { model.close() }   // 面板内 Menu=关闭回播放（不退出应用）
         .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .bottom)))
@@ -100,12 +103,13 @@ struct DYQuickPanelView: View {
         .background(panelBackground)
     }
 
+    /// v149：tvOS 26 标准液态玻璃（无黑色 tint——用户要求透出背后的视频）
     private var panelBackground: some View {
         Group {
             if #available(tvOS 26.0, *) {
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                     .fill(Color.clear)
-                    .glassEffect(.regular.tint(.black.opacity(0.4)), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
             } else {
                 RoundedRectangle(cornerRadius: 28, style: .continuous)
                     .fill(.ultraThinMaterial)
@@ -200,7 +204,8 @@ struct DYCommentScreen: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.75).ignoresSafeArea()
+            // v149：黑幕减淡（0.75→0.35）——标准液态玻璃要透出背后的视频
+            Color.black.opacity(0.35).ignoresSafeArea()
             HStack {
                 Spacer(minLength: 0)
                 list
@@ -332,12 +337,13 @@ struct DYCommentScreen: View {
         }
     }
 
+    /// v149：标准液态玻璃无 tint（透出视频），与快捷面板一致
     private var panelBackground: some View {
         Group {
             if #available(tvOS 26.0, *) {
                 RoundedRectangle(cornerRadius: 30, style: .continuous)
                     .fill(Color.clear)
-                    .glassEffect(.regular.tint(.black.opacity(0.4)), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
             } else {
                 RoundedRectangle(cornerRadius: 30, style: .continuous)
                     .fill(.ultraThinMaterial)

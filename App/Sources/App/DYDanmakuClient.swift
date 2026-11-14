@@ -97,10 +97,16 @@ final class DYDanmakuClient {
         queue.sync { ttwid }
     }
 
-    /// 确保 ttwid 已注册（web 源切换前调用；幂等，完成即回调）。
+    /// 确保 ttwid 已注册（web 源切换/评论取数前调用；幂等，完成即回调）。
+    /// v149 关键修复：回调永远先跳回主线程再执行。此前 ttwid 已缓存时 done() 在 danmaku
+    /// 队列内联执行，DYCommentClient.fetchPages 接着在本队列里调 ttwidValue（queue.sync）
+    /// —— 同队列 sync 自等待 = 必死死锁；队列卡死后主线程的 ttwidValue 调用（DYFeedClient
+    /// 翻页 / PlayerManager 播放头）也全部卡死 → 应用冻结被杀（v147/v148 评论「闪退」真根因）。
     func ensureTTWID(_ done: @escaping () -> Void) {
         queue.async { [weak self] in
-            self?.ensureTTWIDInternal { done() }
+            self?.ensureTTWIDInternal {
+                DispatchQueue.main.async { done() }
+            }
         }
     }
 

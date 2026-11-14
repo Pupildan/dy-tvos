@@ -6,8 +6,8 @@ import AVFoundation
 final class DanmakuTextCellModel: DanmakuCellModel {
     /// v141：字号统一 34（轨道高 34 的观感匹配；测量与绘制必须同源）
     static let fontSize: CGFloat = 34
-    /// v141：滚动速度 380px/s（吞吐提升：更多轨道 + 更快翻台，密集视频不再被吞吐卡成间歇）
-    static let scrollSpeed: CGFloat = 380
+    /// v149：滚动速度 280px/s（用户要求降速；380→280 穿屏约 6.5s）
+    static let scrollSpeed: CGFloat = 280
 
     let text: String
     let sizeValue: CGSize
@@ -87,12 +87,12 @@ final class DanmakuOverlay: UIView {
         super.init(frame: frame)
         isUserInteractionEnabled = false
         danmakuView.isUserInteractionEnabled = false
-        // tvOS 1080p 参数（v141 吞吐提升）：轨道高 34 → 约 23 条轨道，铺 75% 高度。
-        // v142：isOverlap=true——峰值密度实测 41 条/s（探针直方图 max/sec），不重叠模式轨道竞争
-        // 大部分瞬间被丢=「空窗+扎堆」；PC 版同密度靠重叠全显示，观感对齐。
+        // v149 用户规格（弹幕观感对标 PC 少量顶显）：
+        // ①只显示在屏幕顶部 6 行（displayArea 在 layoutSubviews 按 6 行精确计算）；
+        // ②禁止重叠（isOverlap=false，同轨不叠——轨道满由 noSpaceShoot 丢弃，发射连续不扎堆）；
+        // ③降速 280px/s（DanmakuTextCellModel.scrollSpeed）。
         danmakuView.trackHeight = 34
-        danmakuView.displayArea = 0.75
-        danmakuView.isOverlap = true
+        danmakuView.isOverlap = false
         danmakuView.enableCellReusable = true
         danmakuView.delegate = self
         addSubview(danmakuView)
@@ -103,6 +103,11 @@ final class DanmakuOverlay: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         danmakuView.frame = bounds
+        // 顶部 6 行：DanmakuKit viewHeight=bounds.height*displayArea，trackCount=floor(viewHeight/trackHeight)。
+        // 按 6.5 行宽度给值（floor 后恰为 6 行，且对任意屏高稳健）；区域从顶部铺（positionY 自顶起）。
+        if bounds.height > 0 {
+            danmakuView.displayArea = min(0.95, 6.5 * danmakuView.trackHeight / bounds.height)
+        }
     }
 
     func bind(player: AVPlayer?) {
@@ -176,9 +181,9 @@ final class DanmakuOverlay: UIView {
     }
 
     /// 发射器：按播放时钟扫描到点的弹幕 shoot 出去（id 去重，容忍乱序追加）。
-    /// v142 平滑发射：每 tick 最多 6 条（24/s）——同秒 41 条的峰值不再一 tick 全射（23 轨抢位大部分被丢
-    /// =「空窗+扎堆」），改为排队平滑射出；isOverlap=true 保证轨道不拒绝。
-    /// 迟到 40s 以上的放弃（防堆积爆屏）。
+    /// v149：顶部 6 行 + 禁止重叠——轨道翻台率成为天然节流阀（≈0.8 条/s 连续流），
+    /// 峰值期超出轨道容量的被 noSpaceShoot 丢弃（dm_drop 计数），流量始终平稳不扎堆；
+    /// 每 tick 仍限量 6 条兜底（防极端瞬间冲击）。迟到 40s 以上的放弃（防堆积爆屏）。
     private func tick() {
         guard Self.globalEnabled, enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
         let t = (player?.currentTime().seconds ?? 0) * 1000

@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v148**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v149**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -33,8 +33,8 @@
   - web（抖音精选）：`www.douyin.com/aweme/v1/web/tab/feed/` JSON（b0 配方 + webCommon + web 签名 + ttwid）。
   - 源切换：`DYFeedSource` 枚举 + `setSource()`（持久化 UserDefaults dy_feed_source）+ `PlaybackEngine.reset()`。
 - **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 池（±2 窗口驱逐）+ 三层看门狗 + 冷启动收敛 + 源感知请求头 + PC 版 UI（右轨/左下信息区/进度条）。
-- **弹幕**（⏸️暂停）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通、显示端未达点子，详见 §6.1。
-- **快捷悬浮窗**（DYQuickPanel）：确认键**短按**呼出，屏幕底部居中横向卡片（v148），主页/评论/合集(条件)/不感兴趣；确认键**长按 0.6s**=两倍速（v148，撤销 v146 触摸板长按），松开恢复。
+- **弹幕**（v149 重启改造）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通；显示端 v149 按用户规格重造：**顶部 6 行 / 禁止重叠 / 280px/s**——轨道翻台率(≈0.8 条/s)成为天然节流阀，峰值超出容量的被 noSpaceShoot 丢弃，流量平稳不扎堆。
+- **快捷悬浮窗**（DYQuickPanel）：确认键短按呼出，**屏幕底部居中横向卡片**（v149 修复：RootView ZStack 是 alignment:.leading，外层 VStack 必须 frame(maxWidth:.infinity) 才不被钉在左侧）；标准液态玻璃无 tint 透出视频；主页/评论/合集(条件)/不感兴趣。**两倍速=触摸板悬停 1s**（手指放触摸区不动，与滑动同区域；v149 定版，v146 长按 1.5s/v148 确认键长按都是弯路）。
 - **评论**（DYCommentClient + DYCommentScreen）：web comment/list，3 页 60 条，玻璃列表屏。
 - **设置面板**（DYSettingsModel + SettingsPanelView）：Menu 呼出，左侧液态玻璃，源切换/弹幕开关/占位项，3s 自动隐藏。
 
@@ -57,7 +57,8 @@
 | v145 | 快捷悬浮窗（OK 呼出四项）+ 间距收紧 + 图标加大 + 时长文本 | ✅ 待复验 |
 | v146 | 触摸板滑动切换 + 长按 1.5s 两倍速 + 头像正圆 | ✅ 待复验 |
 | v147 | 确认键修正（.select）+ 评论功能实装 + 播放/暂停键恢复 | ✅ CI 过，待验收 |
-| v148 | 评论屏闪退修复（tvOS 焦点环境无可聚焦元素，真机日志实锤）+ 两倍速改长按确认键 0.6s + 快捷面板底部居中横排 + 右轨图标加大 | ✅ CI 过，待验收 |
+| v148 | 评论屏闪退修复（tvOS 焦点环境无可聚焦元素，真机日志实锤）+ 两倍速改长按确认键 0.6s + 快捷面板底部居中横排 + 右轨图标加大 | ❌ 焦点理论证伪（v148 真机评论仍闪退），但焦点兜底保留 |
+| v149 | 评论闪退真根因=ensureTTWID 队列内联回调+同队列 queue.sync 自等待死锁；两倍速改触摸板悬停 1s；面板真·底部居中+无 tint 玻璃；弹幕顶部 6 行/不重叠/280px/s；右轨图标回落 | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -66,10 +67,11 @@
 - **已分析根因**：①每视频不同 CDN 域名 → 每次 acquire 新 DNS+TLS；②驱逐半径 ±2 窄，回看必重取；③v136 idle=2s 有误杀风险（本会话未触发但存在）；④redirect 302 出的 CDN 不可控（16s 尾部）。
 - **候选方案（待拍板）**：A 驱逐半径对称 ±3（解码器 ≤7 仍限内）；B idle 2s→4s 回退；C redirect>5s fallback static 重试；D 预取窗口 [idx-1, idx+3] 前向偏移。建议组合 A+B+D。
 
-### 5.2 弹幕间歇空窗（⏸️ 用户暂停，记录完整随时重启）
+### 5.2 弹幕间歇空窗（v149 按用户新规格重启改造，待验收）
 - **现象（用户澄清）**：明显的「获取→展示」循环——一段时间一条都没有，过一会儿扎堆出现。
 - **已排除**：数据空窗（直方图探针：1212 条连续无零桶）；数据不全（自适应切分已取全量）；单纯密度问题（v141 吞吐提升后仍间歇）。
-- **遗留疑点（重启时优先查）**：①offset_time 语义（是否真 ms 视频内偏移——周期性空窗与段分布存疑）；②DanmakuTrack 轨道占满/释放时序（cellPlayingStop 是否正常回收）；③isOverlap 观感；④取回/展示时序对齐（先取后播 vs 边取边播）。
+- **v149 显示端重造（用户规格）**：顶部仅 6 行 / 禁止重叠 / 280px/s——轨道翻台率成为天然节流阀，峰值被 noSpaceShoot 丢弃，流量平稳。验收看：是否还有明显空窗（dm_shoot 应平稳、dm_drop 大是预期内）。
+- **遗留疑点（若 v149 观感仍空窗再查）**：①offset_time 语义（是否真 ms 视频内偏移）；②取回/展示时序对齐（先取后播 vs 边取边播）。
 - **已做保留**：数据链全通（web get_v2 + ttwid + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试节流）；样式=纯白字无底无描边；发射器=shotIds 集合扫描；dm_drop/dm_shoot/dm_items 计数器；面板弹幕开关可用。
 - **重启入口**：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + 探针 `_tmp/danmaku_hist_probe.js`（直方图）/ `danmaku_segment_probe.js`。
 
@@ -134,8 +136,8 @@
 3. `exit(0)` sideload 可用（设置面板 menu#2 退出）。
 4. tvOS 焦点链：面板/列表打开时按键走 SwiftUI（onExitCommand/按钮），VC.pressesBegan 收不到——两套面板的按键处理必须各自实现，且互不干扰（焦点链隔离是特性不是 bug）。
 5. 大响应/多连接的日志重复问题——分析前按行去重。
-6. **tvOS 焦点环境必须时刻含可聚焦元素**（v147 真机实锤闪退）：同一 SwiftUI 事务里移除含聚焦按钮的视图 + 插入无可聚焦元素的新屏 → 焦点引擎异常闪退（日志特征 = 操作后紧跟 ROOT auto-start）。全展示型新屏必须至少一个 Button 兜底（v148 评论行改可聚焦 + 常驻返回按钮 + 关面板后延时 0.4s 分离事务）。
-7. 确认键长按/短按复用：pressesBegan 起 0.6s Timer，pressesEnded 短按走面板/长按走两倍速，pressesCancelled 兜底恢复（v148）。
+6. **串行队列内联回调 + 同队列 queue.sync = 自等待死锁（v147/v148 评论「闪退」真根因，v148 焦点理论被真机证伪）**：ttwid 已缓存时 ensureTTWID 的 done() 在 danmaku 队列内联执行，DYCommentClient.fetchPages 在同队列调 ttwidValue（queue.sync）→ 队列永久卡死 → 主线程的 ttwidValue（DYFeedClient 翻页/PlayerManager 播放头）跟着卡死 → 应用冻结被杀。日志特征：CMT 请求一行都没出现 + 操作后不久 ROOT auto-start。修复=跨模块回调永远先 DispatchQueue.main.async 跳出工作队列。焦点兜底（可聚焦元素/Button）仍是有益实践，但不是本例根因。
+7. 两倍速触发方式用户三次改口径后定版：**触摸板悬停不动**（与滑动同区域），v146 触摸板长按 1.5s / v148 确认键长按 0.6s 都是弯路；最终=UILongPressGestureRecognizer minimumPressDuration 1.0 + allowableMovement 60。
 
 ## 7. 数据字段权威表（全部 wire/探针实测，禁止猜测）
 
