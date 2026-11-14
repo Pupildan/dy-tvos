@@ -87,11 +87,12 @@ final class DanmakuOverlay: UIView {
         super.init(frame: frame)
         isUserInteractionEnabled = false
         danmakuView.isUserInteractionEnabled = false
-        // tvOS 1080p 参数（v141 吞吐提升）：轨道高 34 → 约 23 条轨道，铺 75% 高度，不重叠；
-        // 吞吐 ≈ 轨道数/滚屏时长 ≈ 23/7 ≈ 3.3 条/s（v141 前 12 轨×9s ≈ 1.3 条/s，密集视频超量被丢弃=间歇）
+        // tvOS 1080p 参数（v141 吞吐提升）：轨道高 34 → 约 23 条轨道，铺 75% 高度。
+        // v142：isOverlap=true——峰值密度实测 41 条/s（探针直方图 max/sec），不重叠模式轨道竞争
+        // 大部分瞬间被丢=「空窗+扎堆」；PC 版同密度靠重叠全显示，观感对齐。
         danmakuView.trackHeight = 34
         danmakuView.displayArea = 0.75
-        danmakuView.isOverlap = false
+        danmakuView.isOverlap = true
         danmakuView.enableCellReusable = true
         danmakuView.delegate = self
         addSubview(danmakuView)
@@ -175,7 +176,9 @@ final class DanmakuOverlay: UIView {
     }
 
     /// 发射器：按播放时钟扫描到点的弹幕 shoot 出去（id 去重，容忍乱序追加）。
-    /// 迟到 40s 以上的放弃（防堆积爆屏；分段重试晚到的部分照常参与）。
+    /// v142 平滑发射：每 tick 最多 6 条（24/s）——同秒 41 条的峰值不再一 tick 全射（23 轨抢位大部分被丢
+    /// =「空窗+扎堆」），改为排队平滑射出；isOverlap=true 保证轨道不拒绝。
+    /// 迟到 40s 以上的放弃（防堆积爆屏）。
     private func tick() {
         guard Self.globalEnabled, enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
         let t = (player?.currentTime().seconds ?? 0) * 1000
@@ -184,6 +187,7 @@ final class DanmakuOverlay: UIView {
             if item.offsetTime > t { break }   // 有序：后面的都还没到点
             if shotIds.contains(item.danmakuId) { continue }
             guard t - item.offsetTime < 40_000 else { continue }   // 迟到过久的放弃
+            guard shot < 6 else { break }   // v142 平滑发射：单 tick 限量，积压排队到后续 tick
             shotIds.insert(item.danmakuId)
             let model = DanmakuTextCellModel(danmakuId: item.danmakuId.isEmpty ? "\(loadedAwemeId)-\(shotIds.count)" : item.danmakuId,
                                              text: item.text,

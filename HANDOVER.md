@@ -217,6 +217,14 @@
 - **底部播放进度条**：`DYProgressBar`——5px 细条贴屏幕最底部（左右留 24px），`UIBlurEffect(style: .regular)`（**tvOS 专属样式，systemThin/systemChrome 均 unavailable in tvOS**）+ 白色进度层（0.75）+ 整体 alpha 0.55 低调；0.5s Timer 随播放推进（`item.duration` 属性非方法），seek 即时跳动，duration 无效自动隐藏。
 - **CI 踩坑**：Self.capThreshold 忘定义；tvOS blur 样式限制；duration 属性。产物 output/DYTV-tvos-unsigned-v140.ipa。
 - **验收**：密集弹幕视频全程无稀疏/空隙（日志 cap-hit → split 行可见）；底部细进度条随播放推进。
+- **✅ v140 真机验收结果**：数据面已净（0 失败段、cap-hit 拆分生效、1212 条全量取回），但弹幕仍间歇——**第二根因=显示吞吐**：12 轨道×~9s 滚屏 ≈ 1.3 条/s，密集视频 2-5 条/s，超量全被 `noSpaceShoot` 静默丢弃（此前无日志可证）。
+
+## 22. v141 弹幕显示吞吐提升（2026-11-14，CI 过待真机验收）
+
+- **修复**：轨道高 46→**34**（约 12→23 条轨道）+ 显示区 55%→**75%** + 滚动速度 300→**380px/s** + 字号 38→**34**（测量/绘制同源 `DanmakuTextCellModel.fontSize`）→ 吞吐 ≈ **3.3 条/s**（原 1.3）。
+- **新增 `dm_drop` 计数器**：`DanmakuOverlay` 实现 `DanmakuViewDelegate.noSpaceShoot`——丢弃量直接量化（dm_items - dm_shoot ≈ dm_drop），下一版数据说话（若 drop 仍高，可继续加轨道/开 isOverlap/降字号）。
+- **CI 踩坑**：类声明与 extension 双重 conformance（redundant conformance）。
+- **验收**：密集视频弹幕密度观感（不再间歇）；日志 `dm_drop` 与 `dm_shoot` 比例。
 
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 

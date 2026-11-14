@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v141"
-    static let changes = "v141: 弹幕间歇显示第二根因=显示吞吐不足(12轨道×9s≈1.3条/s,密集视频2-5条/s超量被noSpaceShoot静默丢弃)→轨道高46→34+显示区55%→75%(约23轨道)+速度300→380px/s+字号38→34,吞吐≈3.3条/s;补dm_drop计数器(noSpaceShoot delegate)量化丢弃,数据说话"
+    static let version = "v142"
+    static let changes = "v142: 弹幕空窗+扎堆修复——数据侧已证实无空窗(79s视频1212条30s桶直方图连续),根因=峰值密度41条/s远超发射吞吐,同秒全部抢23轨大部分被丢;修复①发射器每tick限量6条(24/s)平滑排队;②isOverlap=true允许同轨重叠(PC版同密度观感);峰值期积压在40s grace内消化"
 }
