@@ -318,7 +318,7 @@ final class DYProgressBar: UIView {
     private var ratio: Double = 0
 
     override init(frame: CGRect) {
-        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
         super.init(frame: frame)
         backgroundColor = .clear
         layer.cornerRadius = 2.5
@@ -431,7 +431,7 @@ final class DYPlayerViewController: UIViewController {
     private func updateProgress() {
         guard let p = PlayerManager.shared.player(at: currentIndex),
               let item = p.currentItem else { progressBar.update(current: 0, duration: 0); return }
-        let dur = item.duration().seconds
+        let dur = item.duration.seconds
         let cur = item.currentTime().seconds
         progressBar.update(current: cur, duration: dur)
     }

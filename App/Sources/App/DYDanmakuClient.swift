@@ -36,6 +36,8 @@ final class DYDanmakuClient {
     ]
     /// 分段窗口（v138 探针实锤：单次响应 ~460 条上限，60s 窗口可取全量）
     private static let segmentWindowMs: Int = 60_000
+    /// 响应上限阈值（v140：段返回 ≥450 条视为被截断，自动对半递归拆分）
+    private static let capThreshold = 450
 
     private let session: URLSession
     private var cache: [String: [DYDanmakuItem]] = [:]
