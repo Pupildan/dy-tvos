@@ -308,6 +308,11 @@ final class DYFeedClient {
                     info.desc = info.desc.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
             }
+            // 合集识别（v145：web mix_info）
+            if let mix = a["mix_info"] as? [String: Any] {
+                info.isMix = true
+                info.mixName = mix["mix_name"] as? String ?? ""
+            }
             if let author = a["author"] as? [String: Any] {
                 info.nickname = author["nickname"] as? String ?? ""
                 if let av = author["avatar_thumb"] as? [String: Any], let ul = av["url_list"] as? [String] {
@@ -498,6 +503,12 @@ final class DYFeedClient {
             // 去重：desc 尾部内联的话题串与 f459 重复 → 从 desc 里剔除，话题单独一行显示（v144 用户要求分行）
             if !info.hashtags.isEmpty, info.desc.contains(info.hashtags) {
                 info.desc = info.desc.replacingOccurrences(of: info.hashtags, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            // 合集识别（v145：aweme f14 子消息——wire 观测内含合集名；存在即合集帖）
+            if let mb = aweme.bytesFields(14).first, let mf = Proto.parse(mb) {
+                info.isMix = true
+                info.mixName = mf.string(5) ?? ""
+                DYLog.shared.log("FEED mix a[\(ei)] name=\(info.mixName)")
             }
             if let ab = aweme.bytesFields(4).first, let af = Proto.parse(ab) {
                 info.nickname = af.string(3) ?? af.string(2) ?? ""

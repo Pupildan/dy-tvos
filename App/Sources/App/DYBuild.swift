@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v144"
-    static let changes = "v144: PC版UI按用户测试反馈修正——①去左下 desc/话题重复(desc 剔除话题串,话题独立行);②话题与标题分不同行;③标题 numberOfLines=3 自动换行;④去右轨上下箭头;⑤去左下头像(保留右轨头像);⑥昵称字号32>标题26;⑦昵称后显示发布时间(f16/create_time 格式化 MM月dd日)"
+    static let version = "v145"
+    static let changes = "v145: ①快捷悬浮窗——播放中按OK呼出屏幕中下液态玻璃面板(Menu关闭回播放):主页(博主头像图标)/评论/合集(仅合集内容显示:mobile f14子消息/web mix_info,含合集名)/不感兴趣(跳过当前视频);②左下间距收紧(标题限两行,不再往屏幕中间伸);③右轨图标加大(44→56,头像76);④进度条右上方显示 当前/总时长 文本"
 }

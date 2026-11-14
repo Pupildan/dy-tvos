@@ -78,7 +78,7 @@ final class PlayerCell: UICollectionViewCell {
         descLabel.textColor = .white
         descLabel.shadowColor = .black
         descLabel.shadowOffset = CGSize(width: 1, height: 1)
-        descLabel.numberOfLines = 3
+        descLabel.numberOfLines = 2
         hashtagLabel.font = .systemFont(ofSize: 24, weight: .medium)
         hashtagLabel.textColor = UIColor.white.withAlphaComponent(0.9)
         hashtagLabel.shadowColor = .black
@@ -118,20 +118,20 @@ final class PlayerCell: UICollectionViewCell {
         let b = contentView.bounds
         let railX = b.width - 118
         let railW: CGFloat = 92
-        var y = b.height * 0.32
-        railAvatarView.frame = CGRect(x: railX + 16, y: y, width: 66, height: 66); y += 78
+        var y = b.height * 0.30
+        railAvatarView.frame = CGRect(x: railX + 13, y: y, width: 76, height: 76); y += 88
         for (icon, label) in [(railLikeIcon, railLikeLabel), (railCommentIcon, railCommentLabel), (railStarIcon, railStarLabel), (railShareIcon, railShareLabel)] {
-            icon.frame = CGRect(x: railX, y: y, width: railW, height: 44)
-            label.frame = CGRect(x: railX - 14, y: y + 44, width: railW + 28, height: 30)
-            y += 84
+            icon.frame = CGRect(x: railX - 4, y: y, width: railW + 8, height: 56)
+            label.frame = CGRect(x: railX - 14, y: y + 56, width: railW + 28, height: 32)
+            y += 96
         }
-        // 左下信息区（无头像；底部锚定向上：话题 → 文案(3行) → 昵称+时间）
+        // 左下信息区（无头像；底部锚定向上，紧凑间距 v145：话题 → 文案(2行) → 昵称+时间）
         let infoLeft: CGFloat = 24
-        let infoBottom: CGFloat = 40
+        let infoBottom: CGFloat = 34
         let infoW = b.width - railW - 160
-        hashtagLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34, width: infoW, height: 34)
-        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102, width: infoW, height: 102)
-        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102 - 8 - 42, width: infoW, height: 42)
+        hashtagLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30, width: infoW, height: 30)
+        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30 - 4 - 62, width: infoW, height: 62)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30 - 4 - 62 - 4 - 40, width: infoW, height: 40)
     }
 
     /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
@@ -518,6 +518,8 @@ final class DYPlayerViewController: UIViewController {
     private var didInitialScroll = false
     /// 底部播放进度条（v140：液态玻璃细条，纯展示）
     private let progressBar = DYProgressBar(frame: .zero)
+    /// 时长文本（v145：进度条右侧上方 "当前 / 总时长"）
+    private let timeLabel = UILabel()
     private var progressTimer: Timer?
 
     override func viewDidLoad() {
@@ -538,8 +540,15 @@ final class DYPlayerViewController: UIViewController {
         collectionView.delegate = self
         collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
-        // 底部播放进度条（最顶层；0.5s 随播放推进，seek 即时跳动）
+        // 底部播放进度条（最顶层；0.5s 随播放推进，seek 即时跳动）+ 右侧时长文本
         view.addSubview(progressBar)
+        timeLabel.font = .systemFont(ofSize: 22, weight: .medium)
+        timeLabel.textColor = .white.withAlphaComponent(0.8)
+        timeLabel.shadowColor = .black
+        timeLabel.shadowOffset = CGSize(width: 1, height: 1)
+        timeLabel.textAlignment = .right
+        timeLabel.text = "--:-- / --:--"
+        view.addSubview(timeLabel)
         let pt = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in self?.updateProgress() }
         RunLoop.main.add(pt, forMode: .common)
         progressTimer = pt
@@ -552,6 +561,12 @@ final class DYPlayerViewController: UIViewController {
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
         }
+        // 快捷悬浮窗「不感兴趣」：跳过当前视频（后续接反馈 API 不再推送同类）
+        DYQuickPanelModel.shared.onDislike = { [weak self] in
+            guard let self else { return }
+            let idx = PlaybackEngine.shared.index
+            self.engineSkipDislike(index: idx)
+        }
         // 无视频轨（已 0.6s 复查确认）→ 统一跳过入口（护栏内：仅居中才跳）
         PlayerManager.shared.onNoVideoTrack = { [weak self] idx in
             self?.skipIfCentered(idx, reason: "novideo")
@@ -563,8 +578,9 @@ final class DYPlayerViewController: UIViewController {
         super.viewDidLayoutSubviews()
         guard view.bounds.height > 0 else { return }
         collectionView.frame = view.bounds
-        // 进度条贴屏幕最底部（左右留 24px，高 5px）
+        // 进度条贴屏幕最底部（左右留 24px，高 5px）；时长文本在条右上方
         progressBar.frame = CGRect(x: 24, y: view.bounds.height - 13, width: view.bounds.width - 48, height: 5)
+        timeLabel.frame = CGRect(x: view.bounds.width - 424, y: view.bounds.height - 47, width: 400, height: 30)
         if !didInitialScroll, !PlaybackEngine.shared.urls.isEmpty {
             didInitialScroll = true
             scrollTo(index: PlaybackEngine.shared.index, animated: false)
@@ -575,13 +591,33 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
-    /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration
+    /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration + 时长文本
     private func updateProgress() {
         guard let p = PlayerManager.shared.player(at: currentIndex),
               let item = p.currentItem else { progressBar.update(current: 0, duration: 0); return }
         let dur = item.duration.seconds
         let cur = item.currentTime().seconds
         progressBar.update(current: cur, duration: dur)
+        timeLabel.text = "\(Self.clockText(cur)) / \(Self.clockText(dur))"
+    }
+
+    /// 秒 → mm:ss（超 1 小时 h:mm:ss）
+    static func clockText(_ s: Double) -> String {
+        guard s.isFinite, s >= 0 else { return "--:--" }
+        let total = Int(s)
+        let h = total / 3600, m = (total % 3600) / 60, sec = total % 60
+        return h > 0 ? String(format: "%d:%02d:%02d", h, m, sec) : String(format: "%02d:%02d", m, sec)
+    }
+
+    /// 「不感兴趣」：跳过当前视频（与看门狗 skip 同路：engine.next + 显式 scrollTo）
+    private func engineSkipDislike(index: Int) {
+        let engine = PlaybackEngine.shared
+        guard index == engine.index else { return }
+        DYLog.shared.event("FEEDCOLL dislike skip idx=\(index)")
+        resetWatchCounters()
+        repairedFor = nil
+        engine.next()
+        scrollTo(index: engine.index, animated: true)
     }
 
     private var lastKnownCount = 0
@@ -907,7 +943,14 @@ final class DYPlayerViewController: UIViewController {
             case .upArrow: rewind(); return
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
-            case .playPause: togglePlayPause(); return
+            case .playPause:
+                // OK 确认键（v145）：呼出/关闭快捷悬浮窗（原暂停切换移除；暂停经悬浮窗后续版本补充）
+                if DYQuickPanelModel.shared.isOpen {
+                    DYQuickPanelModel.shared.close()
+                } else {
+                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex))
+                }
+                return
             case .menu:
                 // Menu 状态机（v135）：面板关闭 → 呼出设置面板；面板显示中 → 放行系统默认（退出应用）。
                 // 显示中时焦点在面板内，本方法收不到按键（面板 onExitCommand 负责退出）——此处只处理关闭态。
