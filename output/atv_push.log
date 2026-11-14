@@ -28889,3 +28889,383 @@
 00:45:02  [00:45:04] ENGINE merge total=18 index=5 replace=false auto=false redirect=0
 00:50:52  [00:50:54] SETTINGS panel open (menu #1)
 00:50:52  [00:50:54] SETTINGS panel exit-app (menu #2)
+01:23:12  [01:23:14] DYTV v145 launched
+01:23:12  [01:23:14] SIGNER init start
+01:23:12  [01:23:14] LOGSRV ready on port 8765
+01:23:12  [01:23:14] LOGSRV advertising as DYTV-383
+01:23:12  [01:23:14] SIGNER load shim ok
+01:23:12  [01:23:14] SIGNER load abogus ok
+01:23:12  [01:23:14] SIGNER load sign ok
+01:23:13  [01:23:14] FEEDCOLL viewDidLoad
+01:23:13  [01:23:14] ROOT auto-start v145
+01:23:13  [01:23:14] SIGNER load abogus_dy ok
+01:23:13  [01:23:14] SIGNER extras sign=true dy=true
+01:23:13  [01:23:14] SIGNER bdms=yes
+01:23:13  [01:23:14] SIGNER initABogus=true
+01:23:13  [01:23:14] SIGNER fns=AB (期望 AB)
+01:23:13  [01:23:14] SIGNER smoke={"ok":true,"value":"djWMMD8hmDfBgDWX5XCLfY3qVW33YsUo0SVkMDhezVfPvg39HMPA9exE3gGvNCbeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+01:23:13  [01:23:14] SIGNER READY a_bogus len=180
+01:23:13  [01:23:14] FEED native pipeline armed (source=web)
+01:23:13  [01:23:14] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+01:23:13  [01:23:15] LOGSRV Bonjour published: DYTV-383
+01:23:14  [01:23:16] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+01:23:14  [01:23:16] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+01:23:14  [01:23:16] ENGINE needMore (index=0 count=6)
+01:23:14  [01:23:16] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+01:23:14  [01:23:16] MGR url idx=0 src=static age=0s
+01:23:14  [01:23:16] MGR acquire idx=0 total=1
+01:23:14  [01:23:16] MGR cold-start defer neighbors=[1, 2]
+01:23:14  [01:23:16] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+01:23:15  [01:23:16] DMLOAD id=7680912228786891923 dur=11000
+01:23:15  [01:23:16] MGR ready idx=0
+01:23:15  [01:23:16] MGR url idx=1 src=static age=0s
+01:23:15  [01:23:16] DANM get id=7680912228786891923 [0-11s] ttwid=127
+01:23:15  [01:23:16] MGR acquire idx=1 total=2
+01:23:15  [01:23:16] MGR url idx=2 src=static age=0s
+01:23:15  [01:23:16] MGR acquire idx=2 total=3
+01:23:15  [01:23:16] MGR cold-start neighbors acquired=[1, 2]
+01:23:15  [01:23:17] MGR ready idx=2
+01:23:15  [01:23:17] DANM all-segments done id=7680912228786891923 total=31 retry=0
+01:23:15  [01:23:17] DMLOAD done id=7680912228786891923 total=31
+01:23:15  [01:23:17] MGR ready idx=1
+01:23:16  [01:23:17] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+01:23:16  [01:23:17] ENGINE merge total=12 index=0 replace=false auto=false redirect=0
+01:23:26  [01:23:28] ENGINE next -> index=1
+01:23:26  [01:23:28] MGR url idx=3 src=static age=11s
+01:23:26  [01:23:28] MGR acquire idx=3 total=4
+01:23:26  [01:23:28] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+01:23:26  [01:23:28] DMLOAD id=7692754336963446090 dur=18934
+01:23:26  [01:23:28] DANM get id=7692754336963446090 [0-18s] ttwid=127
+01:23:27  [01:23:28] MGR ready idx=3
+01:23:27  [01:23:28] DANM all-segments done id=7692754336963446090 total=2 retry=0
+01:23:27  [01:23:28] DMLOAD done id=7692754336963446090 total=2
+01:23:30  [01:23:32] SETTINGS panel open (menu #1)
+01:23:34  [01:23:36] SETTINGS panel auto-hide (3s idle)
+01:23:48  [01:23:50] ENGINE next -> index=2
+01:23:48  [01:23:50] MGR url idx=4 src=static age=33s
+01:23:48  [01:23:50] MGR acquire idx=4 total=5
+01:23:48  [01:23:50] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+01:23:48  [01:23:50] DMLOAD id=7675586914254969587 dur=6200
+01:23:48  [01:23:50] DANM get id=7675586914254969587 [0-6s] ttwid=127
+01:23:48  [01:23:50] MGR ready idx=4
+01:23:49  [01:23:50] DANM all-segments done id=7675586914254969587 total=23 retry=0
+01:23:49  [01:23:50] DMLOAD done id=7675586914254969587 total=23
+01:23:51  [01:23:52] ENGINE next -> index=3
+01:23:51  [01:23:52] MGR evict idx=0
+01:23:51  [01:23:52] MGR url idx=5 src=static age=36s
+01:23:51  [01:23:52] MGR acquire idx=5 total=5
+01:23:51  [01:23:52] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+01:23:51  [01:23:53] DMLOAD id=7706358243598160058 dur=9637
+01:23:51  [01:23:53] DANM get id=7706358243598160058 [0-9s] ttwid=127
+01:23:51  [01:23:53] MGR ready idx=5
+01:23:51  [01:23:53] DANM all-segments done id=7706358243598160058 total=103 retry=0
+01:23:51  [01:23:53] DMLOAD done id=7706358243598160058 total=103
+01:23:52  [01:23:54] ENGINE next -> index=4
+01:23:52  [01:23:54] MGR evict idx=1
+01:23:52  [01:23:54] MGR url idx=6 src=static age=36s
+01:23:52  [01:23:54] MGR acquire idx=6 total=5
+01:23:52  [01:23:54] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+01:23:53  [01:23:54] DMLOAD id=7695259662555368745 dur=90200
+01:23:53  [01:23:54] DANM get id=7695259662555368745 [0-60s] ttwid=127
+01:23:53  [01:23:54] MGR ready idx=6
+01:23:53  [01:23:55] DANM get id=7695259662555368745 [60-90s] ttwid=127
+01:23:53  [01:23:55] DANM all-segments done id=7695259662555368745 total=42 retry=0
+01:23:53  [01:23:55] DMLOAD done id=7695259662555368745 total=42
+01:23:54  [01:23:56] ENGINE next -> index=5
+01:23:54  [01:23:56] ENGINE needMore (index=5 count=12)
+01:23:54  [01:23:56] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+01:23:54  [01:23:56] MGR evict idx=2
+01:23:54  [01:23:56] MGR url idx=7 src=static age=38s
+01:23:54  [01:23:56] MGR acquire idx=7 total=5
+01:23:54  [01:23:56] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+01:23:54  [01:23:56] DMLOAD id=7693842622972391653 dur=563896
+01:23:54  [01:23:56] DANM get id=7693842622972391653 [0-60s] ttwid=127
+01:23:54  [01:23:56] MGR ready idx=7
+01:23:55  [01:23:56] DANM get id=7693842622972391653 [60-120s] ttwid=127
+01:23:55  [01:23:57] DANM get id=7693842622972391653 [120-180s] ttwid=127
+01:23:55  [01:23:57] DANM get id=7693842622972391653 [180-240s] ttwid=127
+01:23:55  [01:23:57] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=18
+01:23:56  [01:23:57] ENGINE merge total=18 index=5 replace=false auto=false redirect=0
+01:23:56  [01:23:57] DANM get id=7693842622972391653 [240-300s] ttwid=127
+01:23:56  [01:23:58] DANM get id=7693842622972391653 [300-360s] ttwid=127
+01:23:56  [01:23:58] DANM get id=7693842622972391653 [360-420s] ttwid=127
+01:23:56  [01:23:58] DANM get id=7693842622972391653 [420-480s] ttwid=127
+01:23:56  [01:23:58] ENGINE next -> index=6
+01:23:57  [01:23:58] MGR evict idx=3
+01:23:57  [01:23:58] MGR url idx=8 src=static age=40s
+01:23:57  [01:23:58] MGR acquire idx=8 total=5
+01:23:57  [01:23:58] FEEDCOLL scrollTo idx=6 y=6480.0 items=18
+01:23:57  [01:23:58] DANM get id=7693842622972391653 [480-540s] ttwid=127
+01:23:57  [01:23:58] DMLOAD id=7703502753318068985 dur=8867
+01:23:57  [01:23:58] DANM get id=7703502753318068985 [0-8s] ttwid=127
+01:23:57  [01:23:59] DANM get id=7693842622972391653 [540-563s] ttwid=127
+01:23:57  [01:23:59] DANM all-segments done id=7703502753318068985 total=497 retry=0
+01:23:57  [01:23:59] DMLOAD done id=7703502753318068985 total=497
+01:23:57  [01:23:59] DANM all-segments done id=7693842622972391653 total=21 retry=0
+01:23:57  [01:23:59] DMLOAD done id=7693842622972391653 total=21
+01:23:57  [01:23:59] MGR ready idx=8
+01:24:00  [01:24:01] ENGINE next -> index=7
+01:24:00  [01:24:01] MGR evict idx=4
+01:24:00  [01:24:01] MGR url idx=9 src=static age=44s
+01:24:00  [01:24:01] MGR acquire idx=9 total=5
+01:24:00  [01:24:01] FEEDCOLL scrollTo idx=7 y=7560.0 items=18
+01:24:00  [01:24:02] DMLOAD id=7682029320277792106 dur=289064
+01:24:00  [01:24:02] DANM get id=7682029320277792106 [0-60s] ttwid=127
+01:24:00  [01:24:02] MGR ready idx=9
+01:24:00  [01:24:02] DANM get id=7682029320277792106 [60-120s] ttwid=127
+01:24:01  [01:24:02] DANM get id=7682029320277792106 [120-180s] ttwid=127
+01:24:01  [01:24:03] DANM get id=7682029320277792106 [180-240s] ttwid=127
+01:24:01  [01:24:03] DANM get id=7682029320277792106 [240-289s] ttwid=127
+01:24:01  [01:24:03] DANM all-segments done id=7682029320277792106 total=443 retry=0
+01:24:02  [01:24:03] DMLOAD done id=7682029320277792106 total=443
+01:24:04  [01:24:06] SETTINGS panel open (menu #1)
+01:24:06  [01:24:07] SETTINGS danmaku -> off
+01:24:08  [01:24:10] SETTINGS panel exit-app (menu #2)
+01:24:10  [01:24:11] DYTV v145 launched
+01:24:10  [01:24:11] SIGNER init start
+01:24:10  [01:24:11] LOGSRV ready on port 8765
+01:24:10  [01:24:11] SIGNER load shim ok
+01:24:10  [01:24:11] SIGNER load abogus ok
+01:24:10  [01:24:11] LOGSRV advertising as DYTV-595
+01:24:10  [01:24:11] SIGNER load sign ok
+01:24:10  [01:24:11] FEEDCOLL viewDidLoad
+01:24:10  [01:24:11] ROOT auto-start v145
+01:24:10  [01:24:12] SIGNER load abogus_dy ok
+01:24:10  [01:24:12] SIGNER extras sign=true dy=true
+01:24:10  [01:24:12] SIGNER bdms=yes
+01:24:10  [01:24:12] SIGNER initABogus=true
+01:24:10  [01:24:12] SIGNER fns=AB (期望 AB)
+01:24:10  [01:24:12] SIGNER smoke={"ok":true,"value":"D6RwQVu6dk6NhVWD5XCLfY3qVW33YsUw0SVkMDhezVfP4g39HMTb9exE3g7vPrmeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+01:24:10  [01:24:12] SIGNER READY a_bogus len=180
+01:24:10  [01:24:12] FEED native pipeline armed (source=web)
+01:24:10  [01:24:12] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+01:24:10  [01:24:12] LOGSRV Bonjour published: DYTV-595
+01:24:11  [01:24:13] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+01:24:11  [01:24:13] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+01:24:11  [01:24:13] ENGINE needMore (index=0 count=6)
+01:24:11  [01:24:13] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+01:24:11  [01:24:13] MGR url idx=0 src=static age=0s
+01:24:11  [01:24:13] MGR acquire idx=0 total=1
+01:24:11  [01:24:13] MGR cold-start defer neighbors=[1, 2]
+01:24:11  [01:24:13] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+01:24:12  [01:24:14] DMLOAD id=7687159530274229539 dur=274200
+01:24:12  [01:24:14] MGR ready idx=0
+01:24:12  [01:24:14] MGR url idx=1 src=static age=0s
+01:24:12  [01:24:14] DANM get id=7687159530274229539 [0-60s] ttwid=127
+01:24:12  [01:24:14] MGR acquire idx=1 total=2
+01:24:12  [01:24:14] MGR url idx=2 src=static age=0s
+01:24:12  [01:24:14] MGR acquire idx=2 total=3
+01:24:12  [01:24:14] MGR cold-start neighbors acquired=[1, 2]
+01:24:13  [01:24:14] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+01:24:13  [01:24:14] ENGINE merge total=12 index=0 replace=false auto=false redirect=0
+01:24:13  [01:24:14] DANM get id=7687159530274229539 [60-120s] ttwid=127
+01:24:13  [01:24:15] MGR ready idx=1
+01:24:13  [01:24:15] DANM get id=7687159530274229539 [120-180s] ttwid=127
+01:24:13  [01:24:15] DANM get id=7687159530274229539 [180-240s] ttwid=127
+01:24:14  [01:24:15] DANM get id=7687159530274229539 [240-274s] ttwid=127
+01:24:14  [01:24:16] DANM all-segments done id=7687159530274229539 total=329 retry=0
+01:24:14  [01:24:16] DMLOAD done id=7687159530274229539 total=329
+01:24:15  [01:24:16] MGR ready idx=2
+01:29:00  [01:29:01] SETTINGS panel open (menu #1)
+01:29:03  [01:29:05] SETTINGS panel auto-hide (3s idle)
+01:29:47  [01:24:11] DYTV v145 launched
+01:29:47  [01:24:11] SIGNER init start
+01:29:47  [01:24:11] LOGSRV ready on port 8765
+01:29:47  [01:24:11] SIGNER load shim ok
+01:29:47  [01:24:11] SIGNER load abogus ok
+01:29:47  [01:24:11] LOGSRV advertising as DYTV-595
+01:29:47  [01:24:11] SIGNER load sign ok
+01:29:47  [01:24:11] FEEDCOLL viewDidLoad
+01:29:47  [01:24:11] ROOT auto-start v145
+01:29:47  [01:24:12] SIGNER load abogus_dy ok
+01:29:47  [01:24:12] SIGNER extras sign=true dy=true
+01:29:47  [01:24:12] SIGNER bdms=yes
+01:29:47  [01:24:12] SIGNER initABogus=true
+01:29:47  [01:24:12] SIGNER fns=AB (期望 AB)
+01:29:47  [01:24:12] SIGNER smoke={"ok":true,"value":"D6RwQVu6dk6NhVWD5XCLfY3qVW33YsUw0SVkMDhezVfP4g39HMTb9exE3g7vPrmeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+01:29:47  [01:24:12] SIGNER READY a_bogus len=180
+01:29:47  [01:24:12] FEED native pipeline armed (source=web)
+01:29:47  [01:24:12] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+01:29:47  [01:24:12] LOGSRV Bonjour published: DYTV-595
+01:29:47  [01:24:13] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+01:29:47  [01:24:13] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+01:29:47  [01:24:13] ENGINE needMore (index=0 count=6)
+01:29:47  [01:24:13] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+01:29:47  [01:24:13] MGR url idx=0 src=static age=0s
+01:29:47  [01:24:13] MGR acquire idx=0 total=1
+01:29:47  [01:24:13] MGR cold-start defer neighbors=[1, 2]
+01:29:47  [01:24:13] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+01:29:47  [01:24:14] DMLOAD id=7687159530274229539 dur=274200
+01:29:47  [01:24:14] MGR ready idx=0
+01:29:47  [01:24:14] MGR url idx=1 src=static age=0s
+01:29:47  [01:24:14] DANM get id=7687159530274229539 [0-60s] ttwid=127
+01:29:47  [01:24:14] MGR acquire idx=1 total=2
+01:29:47  [01:24:14] MGR url idx=2 src=static age=0s
+01:29:47  [01:24:14] MGR acquire idx=2 total=3
+01:29:47  [01:24:14] MGR cold-start neighbors acquired=[1, 2]
+01:29:47  [01:24:14] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+01:29:47  [01:24:14] ENGINE merge total=12 index=0 replace=false auto=false redirect=0
+01:29:47  [01:24:14] DANM get id=7687159530274229539 [60-120s] ttwid=127
+01:29:47  [01:24:15] MGR ready idx=1
+01:29:47  [01:24:15] DANM get id=7687159530274229539 [120-180s] ttwid=127
+01:29:47  [01:24:15] DANM get id=7687159530274229539 [180-240s] ttwid=127
+01:29:47  [01:24:15] DANM get id=7687159530274229539 [240-274s] ttwid=127
+01:29:47  [01:24:16] DANM all-segments done id=7687159530274229539 total=329 retry=0
+01:29:47  [01:24:16] DMLOAD done id=7687159530274229539 total=329
+01:29:47  [01:24:16] MGR ready idx=2
+01:29:47  [01:29:01] SETTINGS panel open (menu #1)
+01:29:47  [01:29:05] SETTINGS panel auto-hide (3s idle)
+01:29:47  [01:29:28] LOGSRV Bonjour didNotPublish: ["NSNetServicesErrorDomain": 10, "NSNetServicesErrorCode": -72000]
+01:29:47  [01:29:49] ENGINE next -> index=1
+01:29:47  [01:29:49] MGR url idx=3 src=static-stale-no-redirect age=335s
+01:29:47  [01:29:49] MGR acquire idx=3 total=4
+01:29:47  [01:29:49] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+01:29:47  [01:29:49] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+01:29:47  [01:29:49] DMLOAD id=7693116794047605105 dur=28867
+01:29:47  [01:29:49] DANM get id=7693116794047605105 [0-28s] ttwid=127
+01:29:48  [01:29:49] DANM all-segments done id=7693116794047605105 total=83 retry=0
+01:29:48  [01:29:49] DMLOAD done id=7693116794047605105 total=83
+01:29:48  [01:29:50] MGR ready idx=3
+01:29:57  [01:29:58] ENGINE next -> index=2
+01:29:57  [01:29:58] MGR url idx=4 src=static-stale-no-redirect age=345s
+01:29:57  [01:29:58] MGR acquire idx=4 total=5
+01:29:57  [01:29:58] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+01:29:57  [01:29:59] DMLOAD id=7682712994194722091 dur=2362751
+01:29:57  [01:29:59] DANM get id=7682712994194722091 [0-60s] ttwid=127
+01:29:57  [01:29:59] MGR ready idx=4
+01:29:57  [01:29:59] DANM get id=7682712994194722091 [60-120s] ttwid=127
+01:29:57  [01:29:59] DANM get id=7682712994194722091 [120-180s] ttwid=127
+01:29:58  [01:29:59] DANM get id=7682712994194722091 [180-240s] ttwid=127
+01:29:58  [01:30:00] DANM get id=7682712994194722091 [240-300s] ttwid=127
+01:29:58  [01:30:00] DANM get id=7682712994194722091 [300-360s] ttwid=127
+01:29:59  [01:30:00] DANM get id=7682712994194722091 [360-420s] ttwid=127
+01:29:59  [01:30:01] DANM get id=7682712994194722091 [420-480s] ttwid=127
+01:29:59  [01:30:01] DANM get id=7682712994194722091 [480-540s] ttwid=127
+01:30:00  [01:30:01] DANM get id=7682712994194722091 [540-600s] ttwid=127
+01:30:00  [01:30:02] DANM get id=7682712994194722091 [600-660s] ttwid=127
+01:30:00  [01:30:02] DANM get id=7682712994194722091 [660-720s] ttwid=127
+01:30:01  [01:30:02] DANM get id=7682712994194722091 [720-780s] ttwid=127
+01:30:01  [01:30:03] DANM get id=7682712994194722091 [780-840s] ttwid=127
+01:30:01  [01:30:03] DANM get id=7682712994194722091 [840-900s] ttwid=127
+01:30:01  [01:30:03] DANM get id=7682712994194722091 [900-960s] ttwid=127
+01:30:02  [01:30:03] DANM get id=7682712994194722091 [960-1020s] ttwid=127
+01:30:02  [01:30:04] DANM get id=7682712994194722091 [1020-1080s] ttwid=127
+01:30:02  [01:30:04] ENGINE next -> index=3
+01:30:02  [01:30:04] MGR evict idx=0
+01:30:02  [01:30:04] MGR url idx=5 src=static-stale-no-redirect age=350s
+01:30:02  [01:30:04] MGR acquire idx=5 total=5
+01:30:02  [01:30:04] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+01:30:02  [01:30:04] DANM get id=7682712994194722091 [1080-1140s] ttwid=127
+01:30:02  [01:30:04] DMLOAD id=7676024455381978395 dur=1430836
+01:30:02  [01:30:04] ENGINE next -> index=4
+01:30:02  [01:30:04] MGR evict idx=1
+01:30:02  [01:30:04] MGR url idx=6 src=static-stale-no-redirect age=349s
+01:30:02  [01:30:04] DANM get id=7676024455381978395 [0-60s] ttwid=127
+01:30:02  [01:30:04] MGR acquire idx=6 total=5
+01:30:02  [01:30:04] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+01:30:03  [01:30:04] DANM get id=7682712994194722091 [1140-1200s] ttwid=127
+01:30:03  [01:30:04] DANM get id=7676024455381978395 [60-120s] ttwid=127
+01:30:03  [01:30:04] DMLOAD id=7705684124631076130 dur=27236
+01:30:03  [01:30:04] DANM get id=7705684124631076130 [0-27s] ttwid=127
+01:30:03  [01:30:04] MGR ready idx=5
+01:30:03  [01:30:05] MGR ready idx=6
+01:30:03  [01:30:05] DANM get id=7676024455381978395 [120-180s] ttwid=127
+01:30:03  [01:30:05] DANM all-segments done id=7705684124631076130 total=0 retry=0
+01:30:03  [01:30:05] DANM get id=7682712994194722091 [1200-1260s] ttwid=127
+01:30:03  [01:30:05] DMLOAD done id=7705684124631076130 total=0
+01:30:03  [01:30:05] DANM get id=7676024455381978395 [180-240s] ttwid=127
+01:30:03  [01:30:05] DANM get id=7682712994194722091 [1260-1320s] ttwid=127
+01:30:03  [01:30:05] ENGINE prev -> index=3
+01:30:03  [01:30:05] MGR evict idx=6
+01:30:03  [01:30:05] MGR url idx=1 src=static-stale-no-redirect age=352s
+01:30:03  [01:30:05] MGR acquire idx=1 total=5
+01:30:03  [01:30:05] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+01:30:04  [01:30:05] DANM get id=7676024455381978395 [240-300s] ttwid=127
+01:30:04  [01:30:05] DANM get id=7682712994194722091 [1320-1380s] ttwid=127
+01:30:04  [01:30:05] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+01:30:04  [01:30:05] MGR ready idx=1
+01:30:04  [01:30:05] DANM get id=7676024455381978395 [300-360s] ttwid=127
+01:30:04  [01:30:05] DANM get id=7682712994194722091 [1380-1440s] ttwid=127
+01:30:04  [01:30:06] DANM get id=7682712994194722091 [1440-1500s] ttwid=127
+01:30:04  [01:30:06] DANM get id=7676024455381978395 [360-420s] ttwid=127
+01:30:04  [01:30:06] DANM get id=7682712994194722091 [1500-1560s] ttwid=127
+01:30:04  [01:30:06] DANM get id=7676024455381978395 [420-480s] ttwid=127
+01:30:05  [01:30:06] DANM get id=7682712994194722091 [1560-1620s] ttwid=127
+01:30:05  [01:30:06] DANM get id=7676024455381978395 [480-540s] ttwid=127
+01:30:05  [01:30:07] DANM get id=7682712994194722091 [1620-1680s] ttwid=127
+01:30:05  [01:30:07] DANM get id=7676024455381978395 [540-600s] ttwid=127
+01:30:05  [01:30:07] DANM get id=7682712994194722091 [1680-1740s] ttwid=127
+01:30:05  [01:30:07] DANM get id=7676024455381978395 [600-660s] ttwid=127
+01:30:06  [01:30:07] DANM get id=7682712994194722091 [1740-1800s] ttwid=127
+01:30:06  [01:30:07] DANM get id=7676024455381978395 [660-720s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7682712994194722091 [1800-1860s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7676024455381978395 [720-780s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7682712994194722091 [1860-1920s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7676024455381978395 [780-840s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7682712994194722091 [1920-1980s] ttwid=127
+01:30:06  [01:30:08] DANM get id=7676024455381978395 [840-900s] ttwid=127
+01:30:07  [01:30:08] DANM get id=7682712994194722091 [1980-2040s] ttwid=127
+01:30:07  [01:30:08] DANM get id=7676024455381978395 [900-960s] ttwid=127
+01:30:07  [01:30:09] DANM get id=7682712994194722091 [2040-2100s] ttwid=127
+01:30:07  [01:30:09] DANM get id=7676024455381978395 [960-1020s] ttwid=127
+01:30:07  [01:30:09] DANM get id=7676024455381978395 [1020-1080s] ttwid=127
+01:30:07  [01:30:09] DANM get id=7682712994194722091 [2100-2160s] ttwid=127
+01:30:08  [01:30:09] DANM get id=7676024455381978395 [1080-1140s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7682712994194722091 [2160-2220s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7676024455381978395 [1140-1200s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7682712994194722091 [2220-2280s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7676024455381978395 [1200-1260s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7682712994194722091 [2280-2340s] ttwid=127
+01:30:08  [01:30:10] DANM get id=7676024455381978395 [1260-1320s] ttwid=127
+01:30:09  [01:30:10] DANM get id=7682712994194722091 [2340-2362s] ttwid=127
+01:30:09  [01:30:10] DANM get id=7676024455381978395 [1320-1380s] ttwid=127
+01:30:09  [01:30:11] DANM all-segments done id=7682712994194722091 total=845 retry=0
+01:30:09  [01:30:11] DMLOAD done id=7682712994194722091 total=845
+01:30:09  [01:30:11] DANM get id=7676024455381978395 [1380-1430s] ttwid=127
+01:30:09  [01:30:11] DANM all-segments done id=7676024455381978395 total=111 retry=0
+01:30:09  [01:30:11] DMLOAD done id=7676024455381978395 total=111
+01:30:20  [01:30:22] SETTINGS panel open (menu #1)
+01:30:23  [01:30:25] SETTINGS panel auto-hide (3s idle)
+01:30:24  [01:30:26] ENGINE next -> index=4
+01:30:24  [01:30:26] MGR evict idx=1
+01:30:24  [01:30:26] MGR url idx=6 src=static-stale-no-redirect age=371s
+01:30:24  [01:30:26] MGR acquire idx=6 total=5
+01:30:24  [01:30:26] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+01:30:25  [01:30:26] MGR ready idx=6
+01:30:27  [01:30:29] SETTINGS panel open (menu #1)
+01:30:31  [01:30:32] SETTINGS panel auto-hide (3s idle)
+01:30:36  [01:30:38] ENGINE next -> index=5
+01:30:36  [01:30:38] ENGINE needMore (index=5 count=12)
+01:30:36  [01:30:38] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+01:30:36  [01:30:38] MGR evict idx=2
+01:30:36  [01:30:38] MGR url idx=7 src=static-stale-no-redirect age=383s
+01:30:36  [01:30:38] MGR acquire idx=7 total=5
+01:30:36  [01:30:38] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+01:30:36  [01:30:38] DMLOAD id=7686777047825878437 dur=1148467
+01:30:36  [01:30:38] DANM get id=7686777047825878437 [0-60s] ttwid=127
+01:30:37  [01:30:38] MGR ready idx=7
+01:30:37  [01:30:38] DANM get id=7686777047825878437 [60-120s] ttwid=127
+01:30:37  [01:30:39] DANM get id=7686777047825878437 [120-180s] ttwid=127
+01:30:37  [01:30:39] DANM get id=7686777047825878437 [180-240s] ttwid=127
+01:30:37  [01:30:39] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=18
+01:30:38  [01:30:39] ENGINE merge total=18 index=5 replace=false auto=false redirect=0
+01:30:38  [01:30:39] DANM get id=7686777047825878437 [240-300s] ttwid=127
+01:30:38  [01:30:40] DANM get id=7686777047825878437 [300-360s] ttwid=127
+01:30:38  [01:30:40] DANM get id=7686777047825878437 [360-420s] ttwid=127
+01:30:39  [01:30:40] DANM get id=7686777047825878437 [420-480s] ttwid=127
+01:30:39  [01:30:41] DANM get id=7686777047825878437 [480-540s] ttwid=127
+01:30:39  [01:30:41] DANM get id=7686777047825878437 [540-600s] ttwid=127
+01:30:39  [01:30:41] SETTINGS panel open (menu #1)
+01:30:40  [01:30:41] DANM get id=7686777047825878437 [600-660s] ttwid=127
+01:30:40  [01:30:42] DANM get id=7686777047825878437 [660-720s] ttwid=127
+01:30:40  [01:30:42] DANM get id=7686777047825878437 [720-780s] ttwid=127
+01:30:41  [01:30:42] DANM get id=7686777047825878437 [780-840s] ttwid=127
+01:30:41  [01:30:43] DANM get id=7686777047825878437 [840-900s] ttwid=127
+01:30:41  [01:30:43] DANM get id=7686777047825878437 [900-960s] ttwid=127
+01:30:42  [01:30:43] DANM get id=7686777047825878437 [960-1020s] ttwid=127
+01:30:42  [01:30:44] DANM get id=7686777047825878437 [1020-1080s] ttwid=127
+01:30:42  [01:30:44] DANM get id=7686777047825878437 [1080-1140s] ttwid=127
+01:30:43  [01:30:44] DANM get id=7686777047825878437 [1140-1148s] ttwid=127
+01:30:43  [01:30:45] DANM all-segments done id=7686777047825878437 total=1852 retry=0
+01:30:43  [01:30:45] DMLOAD done id=7686777047825878437 total=1852
+01:30:43  [01:30:45] SETTINGS panel auto-hide (3s idle)

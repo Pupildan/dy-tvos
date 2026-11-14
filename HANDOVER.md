@@ -246,6 +246,18 @@
 - **待办（用户未拍板）**：新视频卡顿（forward ready 0-3s + 刷速快于预载；redirect 老视频重取 0-16s）——候选方案：驱逐半径 ±3 / idle 2s→4s / redirect>5s fallback static / 预取窗口 [idx-1,idx+3]。
 - **CI 踩坑（重复发生）**：大段重写 PlayerCell 会覆盖此前小修复（var railLikeIcon、bind 方法）——**重写后必须 diff 检查历史修复点**；编辑残留孤儿代码块同样编译失败。产物 output/DYTV-tvos-unsigned-v144.ipa。
 - **验收**：左下信息区=昵称(大)+时间 · 文案(≤3行) · 话题行，无重复无箭头无左下头像；右轨=头像+四组计数；播放/弹幕开关/面板/源记忆不回归。
+
+## 26. v145 快捷悬浮窗 + UI 打磨（2026-11-15，CI 过待真机验收）
+
+- **快捷悬浮窗（DYQuickPanel.swift，OK 呼出）**：屏幕中下液态玻璃面板；**OK 呼出/再按关闭**（`.playPause` 语义变更：原暂停切换移除）；面板内 **Menu=关闭回播放**（不退出应用——设置面板的 menu#2 退出不受影响，二者焦点链隔离）。四项：
+  - 主页（图标=博主头像异步加载）——占位（作者作品 API zq5.UserWorksResponse 后续实施）
+  - 评论——占位（评论 API 后续）
+  - 合集——**条件显示**：仅合集内容（mobile=aweme f14 子消息存在，内含合集名 f5；web=mix_info/mix_name）
+  - 不感兴趣——**实作=跳过当前视频**（engine.next+scrollTo，与看门狗 skip 同路；反馈 API 后续接）
+- **合集识别**：DYVideoInfo.isMix/mixName（mobile f14 / web mix_info）。
+- **UI 打磨**：左下间距收紧（标题 numberOfLines=2，块总高 ~140px 不再伸向屏幕中间）；右轨图标 44→56、头像 66→76；进度条右上方加「当前/总时长」文本（clockText mm:ss，0.5s 随播放刷新）。
+- **CI 踩坑**：AnyTransition.scale 参数名=scale 非 scaleEffect；private 类型跨文件不可见（PanelRowButtonStyle 改 internal）。产物 output/DYTV-tvos-unsigned-v145.ipa。
+- **验收**：OK 呼出中下面板/再按关闭/Menu 关闭；合集视频才显示合集项；不感兴趣=跳到下一条；左下紧凑不伸向中部；右轨图标明显变大；进度条右上有时长文本。
 - **⏸️ v142 真机验收结果 + 弹幕任务暂停（2026-11-14 用户拍板）**：用户反馈改法没到点子——真实现象是「获取→展示」循环：一段时间一条都没有，过一会又有，循环。**弹幕整体暂停，记录在此随时重启**：
   - 已做且保留：数据链全通（web get_v2 + ttwid 匿名注册 + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试）；直方图探针证实**数据无空窗但峰值密度 41 条/s**；样式=纯白字无底无描边；发射器=shotIds 集合扫描；面板弹幕开关可用。
   - 重启时优先查：①offset_time 语义（是否真 ms 偏移——周期性空窗与段 offset 分布存疑）；②DanmakuTrack 轨道占满/释放时序；③isOverlap 观感；④取回/展示时序对齐。

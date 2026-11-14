@@ -119,7 +119,9 @@ final class PlayerCell: UICollectionViewCell {
         let railX = b.width - 118
         let railW: CGFloat = 92
         var y = b.height * 0.30
-        railAvatarView.frame = CGRect(x: railX + 13, y: y, width: 76, height: 76); y += 88
+        railAvatarView.frame = CGRect(x: railX + 13, y: y, width: 76, height: 76)
+        railAvatarView.layer.cornerRadius = 38   // v146：正圆（76/2）
+        y += 88
         for (icon, label) in [(railLikeIcon, railLikeLabel), (railCommentIcon, railCommentLabel), (railStarIcon, railStarLabel), (railShareIcon, railShareLabel)] {
             icon.frame = CGRect(x: railX - 4, y: y, width: railW + 8, height: 56)
             label.frame = CGRect(x: railX - 14, y: y + 56, width: railW + 28, height: 32)
@@ -385,6 +387,7 @@ final class PlayerManager {
         let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": playbackHeaders()])
         let playerItem = AVPlayerItem(asset: asset)
         playerItem.preferredForwardBufferDuration = 8
+        playerItem.audioTimePitchAlgorithm = .timeDomain   // v146：2 倍速时音频不变调
         let p = AVPlayer()
         p.replaceCurrentItem(with: playerItem)
         players[index] = p
@@ -521,6 +524,8 @@ final class DYPlayerViewController: UIViewController {
     /// 时长文本（v145：进度条右侧上方 "当前 / 总时长"）
     private let timeLabel = UILabel()
     private var progressTimer: Timer?
+    /// 长按 2 倍速前的播放状态（松开恢复用）
+    private var holdWasPlaying = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -552,6 +557,7 @@ final class DYPlayerViewController: UIViewController {
         let pt = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in self?.updateProgress() }
         RunLoop.main.add(pt, forMode: .common)
         progressTimer = pt
+        setupGestures()
 
         PlaybackEngine.shared.$urls
             .receive(on: DispatchQueue.main)
@@ -588,6 +594,45 @@ final class DYPlayerViewController: UIViewController {
         for cell in collectionView.visibleCells {
             (cell as? PlayerCell)?.playerLayerView.frame = (cell as? PlayerCell)?.contentView.bounds ?? .zero
             (cell as? PlayerCell)?.coverImageView.frame = (cell as? PlayerCell)?.contentView.bounds ?? .zero
+        }
+    }
+
+    /// 手势（v146，触摸板/触摸面）：上/下滑切换视频 + 长按 1.5s 两倍速播放松开恢复。
+    /// 前提：cell/面板关闭态才响应（焦点链隔离；设置面板/快捷面板打开时不抢）。
+    private func setupGestures() {
+        // 关闭 collection 原生滚动（触摸板滑动交给手势，避免原生滚动与翻页打架）
+        collectionView.panGestureRecognizer.isEnabled = false
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.cancelsTouchesInView = false
+        view.addGestureRecognizer(pan)
+        let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
+        hold.minimumPressDuration = 1.5
+        hold.allowableMovement = 60   // 容忍按住时的轻微漂移
+        hold.cancelsTouchesInView = false
+        view.addGestureRecognizer(hold)
+    }
+
+    @objc private func handlePan(_ g: UIPanGestureRecognizer) {
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        let t = g.translation(in: view)
+        guard abs(t.y) > 100 else { return }   // 滑动阈值
+        g.setTranslation(.zero, in: view)
+        if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
+        DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
+    }
+
+    @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
+        switch g.state {
+        case .began:
+            holdWasPlaying = (p.timeControlStatus == .playing)
+            p.rate = 2.0
+            DYLog.shared.event("PLAYBACK 2x on (hold)")
+        case .ended, .cancelled, .failed:
+            if holdWasPlaying { p.play() } else { p.pause() }
+            DYLog.shared.event("PLAYBACK 2x off (release)")
+        default: break
         }
     }
 
