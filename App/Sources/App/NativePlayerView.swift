@@ -227,15 +227,20 @@ final class PlayerManager {
             }
             // 黑屏无声检测：ready 但无视频轨（图集/纯音频/无效媒体；v124 实锤 idx=31 codec=no-video-track）。
             // 0.6s 后复查一次防异步误杀（v119 教训：ready 瞬间轨可能未加载完）。
+            // 用 asset.loadTracks（异步等待加载完，tvOS 15+）——不用 item.tracks(withMediaType:)，
+            // 它与属性 tracks 在 Swift 里重载冲突（CI 实锤 error: non-function type）。
             // identity 守卫：该 index 已被驱逐/重建（currentItem 换了）则不判，防旧 item 延迟回调误伤。
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-                guard let self else { return }
-                guard observedItem.status == .readyToPlay,
-                      self.players[index]?.currentItem === observedItem else { return }
-                if observedItem.tracks(withMediaType: .video).isEmpty {
-                    DYLog.shared.event("MGR novideo idx=\(index) (double-checked)")
-                    DYLog.shared.count("novideo")
-                    self.onNoVideoTrack?(index)
+                Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    guard observedItem.status == .readyToPlay,
+                          self.players[index]?.currentItem === observedItem else { return }
+                    let videoTracks = (try? await observedItem.asset.loadTracks(withMediaType: AVMediaType.video)) ?? []
+                    if videoTracks.isEmpty {
+                        DYLog.shared.event("MGR novideo idx=\(index) (double-checked)")
+                        DYLog.shared.count("novideo")
+                        self.onNoVideoTrack?(index)
+                    }
                 }
             }
         }

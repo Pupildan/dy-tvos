@@ -1,8 +1,9 @@
-# DYTV 交接文档（v122 稳定版 · 2026-11-14）
+# DYTV 交接文档（v128 治残余黑屏 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> 当前稳定版 **v122**。**跳多页、声画不同步、冻屏已修复**；**黑屏有声已大幅减少**（播放时现取新鲜 URL）；**黑屏无声仍有残留**（偶发，见 §5）。
-> **决策记录**：v111-v126 在黑屏问题上反复横跳（加 skip/看门狗/视频轨检测又回退），最终**锁定 v122 为稳定发布版**，残余黑屏作为独立任务后续攻。详见 §5-§8。
+> 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
+> **v128 = 残余黑屏攻坚版**（CI sha 461c6aa）：三靶点全部基于 2026-11-14 日志/反编译实锤，待真机验收。若回归，回滚 v122。
+> **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"，与 v123-v127 的失败原因逐条对上（见 §8）。
 
 ---
 
@@ -40,11 +41,16 @@
 | 冻屏 | 基本没有 | v108+ |
 | **黑屏有声（大幅减少）** | **播放时现取新鲜 URL**（`resolveFreshURL`+`rawVideos`），不用预载过期静态 URL | **v122** |
 
-## 5. 未解决问题：黑屏（有声/无声）——唯一遗留
+## 5. 未解决问题：黑屏（有声/无声）——唯一遗留（v128 攻坚中）
 
 ### 5.1 现象（v122 真机实测）
-- **黑屏有声**：有声音、没画面。**v122 已大幅减少**（播放时现取新鲜 URL），但仍有残留。
+- **黑屏有声**：有声音、没画面。**v122 已大幅减少**，但仍有残留。
 - **黑屏无声**：既无声音也无画面。较少。
+
+### 5.1a v128 攻坚（2026-11-14）——见 §8 三靶点 + §8.5 日志方法
+- 真新鲜 URL（重定向）/ 空轨跳过 / isReadyForDisplay 看门狗，已过 CI 待真机验收。
+- ⚠️ 重要证伪记录：v122 的"播放时现取新鲜 URL"**从未生效**（日志 381 次 fallback static / 0 次成功）——v122 黑屏减少另有原因或会话方差，勿再归功于该机制。
+- ⚠️ field 21 语义修正：是 **URL 生成时刻的时间戳**（epoch 解码 1794753056=2026-11-14 22:30:56≈抓取时刻），不是码率（1.79e9 kbps 荒谬）。
 
 ### 5.2 根因诊断（v124 CODEC 诊断 + video-dump 实锤）
 - 可播视频编码 **全是 `avc1`(H.264)**，无 hvc1(HEVC) → **黑屏不是 HEVC 解不出**（推翻早期 HEVC 假设，别再往解码方向猜）。
@@ -85,22 +91,29 @@
 6. **AVPlayer 原生解 HEVC**（myDV VideoPlayUrlResolver 证明）→ 黑屏非 HEVC，别再往解码方向猜。
 7. **`item` 变量遮蔽**：KVO 闭包内 `item` 易被外层 `enumerated()` 循环变量遮蔽，导致 `item.tracks` 编译错。用 `playerItem`/`observedItem` 等无歧义名。
 
-## 8. 黑屏问题的下一步建议（基于 v124 CODEC 诊断实锤，需决策）
+## 8. v128 三靶点（2026-11-14 实施，基于实锤，与 v123-v127 失败原因逐条对上）
 
-**已排除的方向（别再重复）**：
-- ❌ HEVC 解不出（v124 CODEC 诊断：可播视频全是 `avc1`/H.264，无 hvc1）。
-- ❌ 图集/图文帖（黑屏 index 全是 `final chosen=true` 真视频，非图集）。
-- ❌ 解码器耗尽（v110 单解码器仍黑屏）。
-- ❌ CDN 域名（同一域名既 ok 又 FAIL）。
+**已排除的方向（别再重复）**：HEVC（v124 全 avc1）、图集、解码器耗尽（v110）、CDN 域名（同域名 ok/FAIL 交错）。
 
-**剩余嫌疑（按可能性排序，均需实测确认）**：
-1. **无视频轨的视频未跳过**：v124 CODEC 诊断抓到 idx=31 `codec=no-video-track` 但仍 `MGR ready` → player ready 但没有可播视频轨 → 黑屏。**修法**：KVO ready 分支查 `currentItem.tracks(video)`，空则跳过（v122 底座已删此检测，需重新加回并用 `currentItem.tracks` 而非误判的 `asset.tracks`）。
-2. **URL 无权限/过期**：部分 URL `Cannot Open`/`no permission`（v122 已用现取新鲜 URL 大幅减少，但仍有残留）。
-3. **播放停滞**：有轨但时间不走（看门狗 `STALL` 能抓，已能跳过）。
+**v128 为什么不是"第 4 次叠机制"——v123-v127 每次失败的具体原因这次都找到了**：
+| 旧尝试 | 失败原因 | v128 对应修复 |
+|---|---|---|
+| v122 resolveFreshURL"存 bytes 现选" | **日志证伪：381 次 fallback static / 0 次成功**。pickHighestQuality 找 bytesFields(21/31) 恒 nil（field 21 是 varint 时间戳非 bit_rate 子消息）；且重解析旧 bytes 本身选不出新 URL（bytes 里只有同一批链接） | **真新鲜**：静态直链 age>90s 改用 `/aweme/v1/play/` 重定向端点（URL 不带时效签名，服务器请求时现场 302 出新鲜直链，AVPlayer 自动跟随）。照 myDV selectBestPlayUrl 第②优先级 |
+| v123 停滞看门狗 | 盯"时间不前进"——黑屏**有声**时音频在走、时间在走，**永远不触发** | **isReadyForDisplay 看门狗**：ready+播放+时间走但首帧渲染不出 2s → 检出（myDV onRenderedFirstFrame 的 AVPlayer 等价信号） |
+| v125 视频轨检测 | 编译失败（item 遮蔽）后陷入回退混乱，**从未真机验证**——不是方案被证伪 | **currentItem.tracks(.video) 空轨检测**：0.6s 复查防误杀，identity 守卫防旧 item 延迟回调误伤 |
 
-**推荐下一步**：先用 §8 第一条的 `currentItem.tracks(video)` 检测（在 v122 底座重新加回），实测黑屏是否减少。**这是当前最有实锤支撑的方向**（CODEC 诊断已证明黑屏视频存在无视频轨情况）。
+**v128 统一动作阶梯**：检测命中 → 先 repair（换重定向直链就地重建，照 myDV onPlayerError 先重试）→ 仍异常才 skip。
+**护栏**：只监控/跳过居中（index==engine.index）；连续自动跳 ≥3 停手（WATCH cascade-stop），手动按键复位；skip 用 engine.next()+显式 scrollTo，绝不用 centeredIndex 反推。
+**检测三层**：idle（status 非 ready 连续 4s）/ stall（ready+非暂停+时间停滞 3s）/ black（ready+时间走+无首帧 2s）；novideo（tracks 空 0.6s 复查）。
 
-**备选**：若视频轨检测仍不理想，考虑集成 libVLC 软解（能解 HEVC），但违背"原生 AVPlayer"铁律 + 包体积暴涨 + 滑动重做，需拍板。
+**风险对冲**：静态直链优先（快启动、全清晰度），最坏情况=现状；redirect 端点若 403（无登录 cookie）只影响超龄条目，看门狗 repair/skip 兜底。
+
+## 8.5 日志诊断方法（v128 升级——排障一次 curl 看全）
+
+- `curl http://<ATV-IP>:8765/stat`：版本 + **计数器全量**（feed_page/feed_aweme/feed_usable/feed_redirect/url_static/url_redirect/acquire/ready/novideo/itemErr/repair/autoskip/scroll/cover_retry）+ **最近 15 条诊断事件环**（WATCH repair/skip、MGR itemErr/novideo、FEED 0 usable 等）+ 最近直链。
+- `curl http://<ATV-IP>:8765/log`：末 50 行常规日志。`/ping`、`/clear` 保留。
+- `DYLog.event()` = 常规日志 + 事件环双写；`DYLog.count(key, by:)` 计数器。新增诊断一律走这两个，别散落裸 log。
+- FEED 每视频日志已压缩成 1 行：`FEED item a[i] id=.. static=ok/none redirect=ok/none dur=..`（旧 7 行 loop 噪音已删）；每页首条仍 dump video 全字段监控 schema 漂移。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
