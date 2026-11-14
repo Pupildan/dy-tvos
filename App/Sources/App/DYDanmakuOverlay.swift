@@ -35,17 +35,23 @@ final class DanmakuTextCellModel: DanmakuCellModel {
     }
 }
 
-/// 弹幕文字 Cell：DanmakuKit 异步图层上画带描边的文字（黑描边保证任何画面可读）。
+/// 弹幕文字 Cell：DanmakuKit 异步图层上画纯色文字（v134 用户要求：无背景、无描边，保留弹幕本身颜色）。
 final class DanmakuTextCell: DanmakuCell {
-    private var cachedAttrs: [NSAttributedString.Key: Any]?
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        // 关键：DanmakuAsyncLayer 在 isOpaque==true 时会主动填白（白底来源）——必须显式关掉
+        isOpaque = false
+        layer.isOpaque = false
+        backgroundColor = nil
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     override func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
         guard let model = model as? DanmakuTextCellModel else { return }
         let attrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.boldSystemFont(ofSize: 38),
             .foregroundColor: UIColor.white,
-            .strokeColor: UIColor.black,
-            .strokeWidth: -4.0,   // 负数 = 填充+描边
         ]
         model.text.draw(in: CGRect(x: 0, y: 2, width: size.width, height: size.height), withAttributes: attrs)
     }
@@ -168,7 +174,7 @@ final class DanmakuOverlay: UIView {
             if t - item.offsetTime < 2500 {   // 迟到 2.5s 以上的不再补射（防止堆积）
                 let model = DanmakuTextCellModel(danmakuId: item.danmakuId.isEmpty ? "\(loadedAwemeId)-\(shotIndex)" : item.danmakuId,
                                                  text: item.text,
-                                                 screenW: UIScreen.main.bounds.width)
+                                                 screenW: max(200, bounds.width))   // v134: 用视频区域实际宽度算滚屏时长
                 danmakuView.shoot(danmaku: model)
                 DYLog.shared.count("dm_shoot")
             }

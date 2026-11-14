@@ -45,13 +45,29 @@ final class PlayerCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayerView.frame = contentView.bounds
-        danmakuOverlay.frame = contentView.bounds
+        updateDanmakuFrame()
         coverImageView.frame = contentView.bounds
     }
 
     /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
     func bind(player: AVPlayer) {
         playerLayerView.player = player
+        updateDanmakuFrame()
+    }
+
+    /// 弹幕层限定在视频实际显示区域（aspectFit 内切矩形；手机竖版源在 16:9 屏上是居中窄条，
+    /// v134 用户要求弹幕只飘在画面上不飘全屏黑边）。
+    func updateDanmakuFrame() {
+        let b = contentView.bounds
+        guard b.width > 1, b.height > 1 else { return }
+        let ps = playerLayer.player?.currentItem?.presentationSize
+        guard let w = ps?.width, let h = ps?.height, w > 1, h > 1, w.isFinite, h.isFinite else {
+            danmakuOverlay.frame = b   // 尺寸未知（未 ready）兜底全屏，ready 后会再校准
+            return
+        }
+        let scale = min(b.width / w, b.height / h)
+        let vw = w * scale, vh = h * scale
+        danmakuOverlay.frame = CGRect(x: (b.width - vw) / 2, y: (b.height - vh) / 2, width: vw, height: vh)
     }
     /// 设置封面兜底图。
     func setCover(_ image: UIImage?) {
@@ -447,6 +463,7 @@ final class DYPlayerViewController: UIViewController {
                 if isCenter, ready {
                     p.play()
                     c.setCoverVisible(false)
+                    c.updateDanmakuFrame()   // ready 后 presentationSize 才有效，校准弹幕区域到视频画面
                     c.danmakuOverlay.bind(player: p)
                     c.danmakuOverlay.load(awemeId: PlaybackEngine.shared.awemeId(at: idx) ?? "",
                                           durationMs: PlaybackEngine.shared.durationMs(at: idx))
@@ -483,6 +500,7 @@ final class DYPlayerViewController: UIViewController {
                 c.setCoverVisible(false)
                 if ip.item == currentIndex {
                     p.play()
+                    c.updateDanmakuFrame()   // ready 后 presentationSize 才有效，校准弹幕区域
                     c.danmakuOverlay.bind(player: p)
                     c.danmakuOverlay.load(awemeId: PlaybackEngine.shared.awemeId(at: ip.item) ?? "",
                                           durationMs: PlaybackEngine.shared.durationMs(at: ip.item))

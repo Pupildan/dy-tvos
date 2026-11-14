@@ -166,6 +166,16 @@
 - 弹幕总开关 `DanmakuOverlay.enabled` 默认 true（UI 开关待美化阶段统一做）。
 - 日志：DANM 前缀（get/ttwid/ok/status_code/http err）+ FEED aweme-dump（每页首条 aweme 级字段 dump）+ 计数器 dm_items/dm_shoot。
 - **验收**：真机弹幕是否显示；DANM ok（status_code=0+items>0）还是被拒（token/签名/cookie 哪个缺失由日志定论）；滚屏流畅度。
+- **v132 真机验收结果**：弹幕未显示，日志 `DANM status_code=3`（端点拒绝），渲染层就绪无报错。
+- **⚠️ 开发机验证门（v133 起的重大流程升级，用户提议并采纳）**：数据获取类改动**先在开发机用 Node 复刻整条链验证**（`_tmp/danmaku_probe.js` 可复用：加载 Signer JS + protobuf 解码 + HTTP 矩阵），数据说话后再进真机代码——一轮脚本顶 3-4 轮 CI。
+
+## 15. v133 弹幕数据链打通（2026-11-14，开发机探针定位根因，CI 过待真机验收）
+
+- **v132 失败根因（开发机探针实锤）**：`status_msg="AppId不合法"`——弹幕请求缺 **web 公共参数**（`device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_*`）。myDV 的 u11.K 参数表本身就没有这些（myDV mobile 路径的弹幕链同样是坏的——tw0/rn5 的 token 非空门槛在 mobile proto 上永远不满足，它根本不会发请求）。
+- **修复（DYDanmakuClient.fetch）**：参数表 = webCommon 前缀 + u11.K 参数 + D0 公共参数；**签名输入 = 完整 query 含 timestamp**（webCommon+dm+timestamp → getABogus(webUA) → a_bogus 后置）；authentication_token 传空（**开发机探针实锤：mobile proto 无此字段且空值能通**，aweme-dump 候选字段全是 JSON/URL/sec_uid 非 token）。
+- **开发机探针实测**（`_tmp/danmaku_probe.js`）：status_code=0，12s 短视频 items=1461、186s 视频 items=817，连发 6 个无频控；弹幕数据 `danmaku_list[{offset_time, text, danmaku_id}]` 直连可用。
+- **验收**：真机弹幕显示 + `DANM ok items=N` 日志 + 滚屏流畅度（DanmakuKit Core Animation 驱动）。
+- 后续可选：弹幕开关 UI（enabled 属性已预留）、按 user_id 过滤、密度限制。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
