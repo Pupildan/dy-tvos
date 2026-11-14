@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v138"
-    static let changes = "v138: ①弹幕断流修复——danmaku get_v2 单次响应~460条上限是根因(开发机探针实锤186s视频458/total3564);改60s窗口分段顺序取回合并去重,增量回调段追加,探针实测同视频1183条全量;②面板焦点去系统灰底(自定义ButtonStyle,label原样返回)+焦点行液态玻璃底板+白描边(按用户要求描边也加玻璃质感)"
+    static let version = "v139"
+    static let changes = "v139: 弹幕间歇断流修复——v138日志实锤41段中3段零星被拒(连发20请求触发风控)→该60s窗口无弹幕=停一会又有了;修复①段间0.15s节流防连发;②失败段统一重试一次(0.4s间隔)乱序追加;③发射器shotIndex→shotIds集合扫描(容忍乱序追加,迟到40s放弃,seek保留已射集合防重复)"
 }

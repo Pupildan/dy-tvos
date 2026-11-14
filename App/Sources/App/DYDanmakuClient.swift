@@ -141,8 +141,9 @@ final class DYDanmakuClient {
 
     // MARK: - 弹幕请求（照抄 u11.K 参数表 + r() web GET 链）
 
-    /// 分段取回（v138）：60s 窗口顺序请求合并去重——单次响应 ~460 条上限是弹幕断流根因。
-    /// onSegment 每段增量回调（主队列）；completion 全量合并数组（主队列）。
+    /// 分段取回（v138；v139 加失败重试+节流）：60s 窗口顺序请求合并去重——单次响应 ~460 条上限是弹幕断流根因。
+    /// v139：段间 0.15s 节流（连发 20 请求会零星触发风控拒绝）+ 失败段统一重试一次（0.4s 间隔）。
+    /// onSegment 每段增量回调（主队列，可能乱序——Overlay 用 id 去重扫描容忍）；completion 全量合并数组（主队列）。
     private func fetch(awemeId: String, durationMs: Int,
                        onSegment: @escaping ([DYDanmakuItem]) -> Void,
                        completion: @escaping ([DYDanmakuItem]) -> Void) {
@@ -151,9 +152,9 @@ final class DYDanmakuClient {
         let window = Self.segmentWindowMs
         var merged: [DYDanmakuItem] = []
         var seen = Set<String>()
+        var failedWindows: [(Int, Int)] = []
 
-        func requestWindow(start: Int, done: @escaping () -> Void) {
-            let end = min(start + window, d)
+        func requestWindow(start: Int, end: Int, done: @escaping (_ ok: Bool) -> Void) {
             var p: [(String, String)] = Self.webCommon + [
                 ("app_name", "aweme"),
                 ("format", "json"),
@@ -178,11 +179,11 @@ final class DYDanmakuClient {
             let baseQuery = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&") + "&timestamp=\(ts)"
             guard let sr = DYSigner.shared.sign(query: baseQuery, data: "", path: path, ua: DYDanmakuClient.webUA) else {
                 DYLog.shared.log("DANM sign fail (not ready)")
-                done(); return
+                done(false); return
             }
             var finalQuery = baseQuery
             if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
-            guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else { done(); return }
+            guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else { done(false); return }
             var req = URLRequest(url: url)
             req.timeoutInterval = 12
             req.setValue(DYDanmakuClient.webUA, forHTTPHeaderField: "User-Agent")
@@ -195,18 +196,18 @@ final class DYDanmakuClient {
                 let httpStatus = (resp as? HTTPURLResponse)?.statusCode ?? -1
                 guard err == nil, httpStatus == 200, let data, !data.isEmpty,
                       let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
-                      (obj["status_code"] as? Int ?? -1) == 0,
-                      let list = obj["danmaku_list"] as? [[String: Any]] else {
-                    // 单段失败记日志继续（不中断整体取回）
-                    DYLog.shared.log("DANM segment [\(start / 1000)-\(end / 1000)s] fail/empty http=\(httpStatus)")
-                    DispatchQueue.main.async { done() }
+                      (obj["status_code"] as? Int ?? -1) == 0 else {
+                    // 段被拒/解析失败（连发触风控零星拒绝）——交给重试
+                    DYLog.shared.log("DANM segment [\(start / 1000)-\(end / 1000)s] fail http=\(httpStatus) → retry")
+                    DispatchQueue.main.async { done(false) }
                     return
                 }
+                let list = obj["danmaku_list"] as? [[String: Any]] ?? []
                 var fresh: [DYDanmakuItem] = []
                 for e in list {
                     guard let text = e["text"] as? String, !text.isEmpty else { continue }
                     let did = (e["danmaku_id"] as? NSNumber)?.stringValue ?? (e["danmaku_id"] as? String ?? "")
-                    guard !seen.contains(did) else { continue }
+                    guard !did.isEmpty, !seen.contains(did) else { continue }
                     let off = (e["offset_time"] as? NSNumber)?.doubleValue ?? 0
                     seen.insert(did)
                     fresh.append(DYDanmakuItem(danmakuId: did, offsetTime: off, text: text))
@@ -216,23 +217,51 @@ final class DYDanmakuClient {
                 DYLog.shared.count("dm_items", by: fresh.count)
                 DispatchQueue.main.async {
                     if !fresh.isEmpty { onSegment(fresh) }
-                    done()
+                    done(true)
                 }
             }.resume()
         }
 
-        func runNext(start: Int) {
+        // 主轮次：段间 0.15s 节流（防连发风控），记录失败段
+        func runMain(start: Int) {
             if start >= d {
-                DYLog.shared.event("DANM all-segments done id=\(awemeId) total=\(merged.count)")
+                runRetries()
+                return
+            }
+            let end = min(start + window, d)
+            requestWindow(start: start, end: end) { ok in
+                if !ok { failedWindows.append((start, end)) }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+                    guard self != nil else { return }
+                    runMain(start: start + window)
+                }
+            }
+        }
+
+        // 重试轮：失败段逐个重试一次（0.4s 间隔），乱序追加由 Overlay id 去重扫描容忍
+        func runRetries() {
+            guard !failedWindows.isEmpty else {
+                DYLog.shared.event("DANM all-segments done id=\(awemeId) total=\(merged.count) retry=0")
                 completion(merged)
                 return
             }
-            requestWindow(start: start) { [weak self] in
-                guard self != nil else { return }
-                runNext(start: start + window)
+            var remaining = failedWindows
+            DYLog.shared.event("DANM retry \(failedWindows.count) failed segments id=\(awemeId)")
+            func retryNext() {
+                guard !remaining.isEmpty else {
+                    DYLog.shared.event("DANM all-segments done id=\(awemeId) total=\(merged.count) retry=\(failedWindows.count)")
+                    completion(merged)
+                    return
+                }
+                let (s, e) = remaining.removeFirst()
+                requestWindow(start: s, end: e) { _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { retryNext() }
+                }
             }
+            retryNext()
         }
-        runNext(start: 0)
+
+        runMain(start: 0)
     }
 
     static func randomMsToken() -> String {

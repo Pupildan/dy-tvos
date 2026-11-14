@@ -65,7 +65,8 @@ final class DanmakuOverlay: UIView {
     private let danmakuView: DanmakuView
     private weak var player: AVPlayer?
     private var items: [DYDanmakuItem] = []
-    private var shotIndex = 0
+    /// 已发射过的弹幕 id 集合（v139：替代 shotIndex——分段乱序追加容忍 + seek 回退可重弹）
+    private var shotIds = Set<String>()
     private var loadedAwemeId = ""
     private var fetchRequested = false
     private var timer: Timer?
@@ -103,12 +104,12 @@ final class DanmakuOverlay: UIView {
     }
 
     /// 换片：清空 + 重取该 aweme 的弹幕（awemeId 未变则跳过）。
-    /// v138 分段取回：onSegment 每段增量追加（段间 offset 递增保序，shotIndex 无需重排）。
+    /// v138 分段取回；v139 onSegment 可能乱序追加（重试段）——追加后按 offset 重排，发射器用 id 去重扫描。
     func load(awemeId: String, durationMs: Int) {
         guard loadedAwemeId != awemeId else { return }
         loadedAwemeId = awemeId
         items = []
-        shotIndex = 0
+        shotIds = []
         fetchRequested = false
         danmakuView.stop()
         danmakuView.clean()
@@ -117,7 +118,7 @@ final class DanmakuOverlay: UIView {
         DYLog.shared.log("DMLOAD id=\(awemeId) dur=\(durationMs)")
         DYDanmakuClient.shared.items(for: awemeId, durationMs: durationMs, onSegment: { [weak self] seg in
             guard let self, self.loadedAwemeId == awemeId else { return }   // 已换片则丢弃
-            self.items.append(contentsOf: seg)
+            self.appendItems(seg)
         }, completion: { [weak self] in
             guard let self, self.loadedAwemeId == awemeId else { return }
             DYLog.shared.log("DMLOAD done id=\(awemeId) total=\(self.items.count)")
@@ -128,13 +129,8 @@ final class DanmakuOverlay: UIView {
     func syncPlaying(_ playing: Bool) {
         guard enabled else { return }
         if playing {
-            let t = player?.currentTime().seconds ?? 0
             if danmakuView.status == .stop || danmakuView.status == .pause {
-                let wasStop = danmakuView.status == .stop
                 danmakuView.play()
-                if wasStop {
-                    recalcCursor(atMs: t * 1000)   // 首次播放：游标对齐到当前时间
-                }
             }
             ensureTimer()
         } else {
@@ -142,27 +138,21 @@ final class DanmakuOverlay: UIView {
         }
     }
 
-    /// seek 后：清屏 + 游标重算（回拖重放，前拖跳过的直接略过）。
+    /// seek 后：清屏（回退重播时段幕会随时间重新飘出；已发射集合保留防同屏重复）。
+    /// v139：shotIds 保留不清——seek 回退时旧弹幕不重放（与抖音观感一致）；前拖跳过的照常跳过。
     func seekSync() {
-        guard enabled, !items.isEmpty else { return }
+        guard enabled else { return }
         danmakuView.clean()
-        let t = (player?.currentTime().seconds ?? 0) * 1000
-        recalcCursor(atMs: t - 1500)   // 刚过 1.5s 内的补射，更早的跳过
     }
 
     func stopAndClean() {
         danmakuView.stop()
         danmakuView.clean()
-        shotIndex = 0
+        shotIds = []
         items = []
         loadedAwemeId = ""
         timer?.invalidate()
         timer = nil
-    }
-
-    private func recalcCursor(atMs t: Double) {
-        guard !items.isEmpty else { shotIndex = 0; return }
-        shotIndex = items.firstIndex { $0.offsetTime >= t } ?? items.count
     }
 
     private func ensureTimer() {
@@ -172,21 +162,30 @@ final class DanmakuOverlay: UIView {
         timer = t
     }
 
-    /// 发射器：按播放时钟把到点的弹幕 shoot 出去（shoot 要求 danmakuView 处于 .play）。
+    /// 追加弹幕（可能乱序——重试段晚到）：按 offset 重排保持 tick 的顺序扫描假设。
+    private func appendItems(_ seg: [DYDanmakuItem]) {
+        guard !seg.isEmpty else { return }
+        items.append(contentsOf: seg)
+        items.sort { $0.offsetTime < $1.offsetTime }
+    }
+
+    /// 发射器：按播放时钟扫描到点的弹幕 shoot 出去（id 去重，容忍乱序追加）。
+    /// 迟到 40s 以上的放弃（防堆积爆屏；分段重试晚到的部分照常参与）。
     private func tick() {
         guard Self.globalEnabled, enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
-        guard shotIndex < items.count else { return }
         let t = (player?.currentTime().seconds ?? 0) * 1000
-        while shotIndex < items.count, items[shotIndex].offsetTime <= t {
-            let item = items[shotIndex]
-            if t - item.offsetTime < 2500 {   // 迟到 2.5s 以上的不再补射（防止堆积）
-                let model = DanmakuTextCellModel(danmakuId: item.danmakuId.isEmpty ? "\(loadedAwemeId)-\(shotIndex)" : item.danmakuId,
-                                                 text: item.text,
-                                                 screenW: max(200, bounds.width))   // v134: 用视频区域实际宽度算滚屏时长
-                danmakuView.shoot(danmaku: model)
-                DYLog.shared.count("dm_shoot")
-            }
-            shotIndex += 1
+        var shot = 0
+        for item in items {
+            if item.offsetTime > t { break }   // 有序：后面的都还没到点
+            if shotIds.contains(item.danmakuId) { continue }
+            guard t - item.offsetTime < 40_000 else { continue }   // 迟到过久的放弃
+            shotIds.insert(item.danmakuId)
+            let model = DanmakuTextCellModel(danmakuId: item.danmakuId.isEmpty ? "\(loadedAwemeId)-\(shotIds.count)" : item.danmakuId,
+                                             text: item.text,
+                                             screenW: max(200, bounds.width))
+            danmakuView.shoot(danmaku: model)
+            shot += 1
         }
+        if shot > 0 { DYLog.shared.count("dm_shoot", by: shot) }
     }
 }

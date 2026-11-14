@@ -192,6 +192,15 @@
 - **v136**：①面板 **3s 无操作自动隐藏**（DYSettingsModel.startAutoHide/noteInteraction——焦点移动、按键都刷新计时）；②焦点样式：去灰底 → **焦点行白色描边 + 1.05 缩放弹簧动画**（@FocusState PanelRow）；③**弹幕区域回退 v133 全屏行为**（删 v134 aspectFit 内切矩形——用户报有 bug，待后修）。
 - **v137**：**视频源持久化**——选过的源存 UserDefaults(dy_feed_source)，启动 tryStart 同步 engine.source，面板徽标同步；下次启动直接用上次设置过的源。
 - 验收：面板 3s 自动消失；焦点行白描边+放大；弹幕回全屏；换源后杀 app 重启直接是上次选的源。
+- **✅ v135 源切换日志验收补充**：web 会话 MGR ready ×10 / itemErr=0 / 18min 长视频弹幕 652 条。
+
+## 19. v138 弹幕断流修复 + 面板焦点打磨（2026-11-14 用户反馈，CI 过待真机验收）
+
+- **弹幕断流根因（开发机探针实锤，_tmp/danmaku_segment_probe.js）**：`danmaku/get_v2` **单次响应 ~460 条上限**——186s 视频 items=458 / total=3564，播完第一段就没了。**修复 = 60s 窗口分段顺序取回 + danmaku_id 合并去重**，同视频实测 1183 条全量（0-60s 458 / 60-120s 476 / 120-180s 173 / 180-186s 76）。
+- **实现**：DYDanmakuClient.fetch 改分段循环（requestWindow→runNext 递归），`items(for:durationMs:onSegment:completion:)` 每段增量回调（主队列，段间 offset 递增保序，Overlay shotIndex 无需重排）；Overlay.load onSegment 追加（换片丢弃）；单段失败记日志继续不中断整体。
+- **面板焦点灰底根因**：tvOS 系统 Button 聚焦 chrome（.plain 也挡不住，截图实锤）→ 自定义 `PanelRowButtonStyle`（label 原样返回）；焦点行 = **液态玻璃底板**（glassEffect tint white 0.10）+ **白描边** + 1.05 缩放（用户要求描边也带玻璃质感）。
+- **CI 踩坑**：fetch 签名加了 onSegment 后内部调用漏透传（missing argument）。
+- **验收**：PC 长视频弹幕不断流（日志 `DANM all-segments done total=N`，N 应≈total）；面板焦点无灰底、玻璃底+白描边+放大。
 
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 
