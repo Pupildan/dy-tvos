@@ -293,6 +293,21 @@ final class DYFeedClient {
             var info = DYVideoInfo()
             info.desc = a["desc"] as? String ?? ""
             info.hashtags = info.desc
+            if let ct = (a["create_time"] as? NSNumber)?.uint64Value {
+                info.createTimeText = Self.formatCreateTime(ct)
+            }
+            // web 话题：text_extra 的 hashtag_name → 独立行；从 desc 剔除防重复（v144 分行要求）
+            if let tex = a["text_extra"] as? [[String: Any]] {
+                var tags: [String] = []
+                for e in tex {
+                    if let hn = e["hashtag_name"] as? String, !hn.isEmpty { tags.append("#" + hn) }
+                }
+                if !tags.isEmpty {
+                    info.hashtags = tags.joined(separator: " ")
+                    for t in tags { info.desc = info.desc.replacingOccurrences(of: t, with: "") }
+                    info.desc = info.desc.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+            }
             if let author = a["author"] as? [String: Any] {
                 info.nickname = author["nickname"] as? String ?? ""
                 if let av = author["avatar_thumb"] as? [String: Any], let ul = av["url_list"] as? [String] {
@@ -475,10 +490,15 @@ final class DYFeedClient {
             // 四数组同点对齐 append（rawVideos/redirects 索引必须与 ids 一致，merge 按同下标对位）；
             // 静态无但重定向有的条目也收（urls 直接用重定向链，播放时 302 出新鲜直链）。
             guard let url = chosen ?? redirect else { DYLog.shared.count("parse_no_url"); ei += 1; continue }
-            // 展示信息（v143 PC 版 UI；字段号 wire 实测：desc=f2, hashtags=f459, author=f4(f3=昵称), stats=f10(f3赞 f2评 f6享 f11藏)）
+            // 展示信息（v143 PC 版 UI；字段号 wire 实测：desc=f2, hashtags=f459, author=f4(f3=昵称), stats=f10(f3赞 f2评 f6享 f11藏), create_time=f16(s13.e)）
             var info = DYVideoInfo()
             info.desc = aweme.string(2) ?? ""
             info.hashtags = aweme.string(459) ?? ""
+            info.createTimeText = Self.formatCreateTime(aweme.varint(16))
+            // 去重：desc 尾部内联的话题串与 f459 重复 → 从 desc 里剔除，话题单独一行显示（v144 用户要求分行）
+            if !info.hashtags.isEmpty, info.desc.contains(info.hashtags) {
+                info.desc = info.desc.replacingOccurrences(of: info.hashtags, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+            }
             if let ab = aweme.bytesFields(4).first, let af = Proto.parse(ab) {
                 info.nickname = af.string(3) ?? af.string(2) ?? ""
                 // 头像：author f5/f6/f7（PlayAddr 同构，url_list 取第一个）
@@ -666,6 +686,16 @@ final class DYFeedClient {
 
     private var deviceID: String { UserDefaults.standard.string(forKey: "dy_device_id") ?? "0" }
     private var installID: String { UserDefaults.standard.string(forKey: "dy_install_id") ?? "0" }
+
+    /// 发布时间格式化（秒→"MM月dd日"，PC 版风格）；无效输入返回空。
+    static func formatCreateTime(_ seconds: UInt64?) -> String {
+        guard let s = seconds, s > 0 else { return "" }
+        let date = Date(timeIntervalSince1970: TimeInterval(s))
+        let f = DateFormatter()
+        f.dateFormat = "MM月dd日"
+        f.timeZone = TimeZone.current
+        return f.string(from: date)
+    }
 
     private func msToken() -> String {
         for c in HTTPCookieStorage.shared.cookies ?? [] where c.name == "msToken" { return c.value }

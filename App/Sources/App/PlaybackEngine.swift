@@ -19,6 +19,8 @@ struct DYVideoInfo {
     var collect: Int = 0
     var desc: String = ""
     var hashtags: String = ""
+    /// 发布时间文本（v144：昵称后展示；解析期格式化好）
+    var createTimeText: String = ""
 }
 
 /// 原生播放引擎：持有有序视频直链 + 当前索引，驱动 AVPlayer。

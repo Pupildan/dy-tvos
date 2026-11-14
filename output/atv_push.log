@@ -26709,3 +26709,2013 @@
 23:09:41  [23:09:41] DANM get id=7707934864581905704 [300-316s] ttwid=127
 23:09:41  [23:09:41] DANM all-segments done id=7707934864581905704 total=17 retry=0
 23:09:41  [23:09:41] DMLOAD done id=7707934864581905704 total=17
+23:09:45  [23:09:45] ENGINE next -> index=70
+23:09:45  [23:09:45] MGR evict idx=67
+23:09:45  [23:09:45] MGR url idx=72 src=static age=43s
+23:09:45  [23:09:45] MGR acquire idx=72 total=5
+23:09:45  [23:09:45] FEEDCOLL scrollTo idx=70 y=75600.0 items=81
+23:09:45  [23:09:45] MGR ready idx=72
+23:09:47  [23:09:47] WATCH repair idx=70 reason=idle
+23:09:47  [23:09:47] MGR rebuild idx=70 (redirect)
+23:09:47  [23:09:47] MGR url idx=70 src=redirect forced
+23:09:47  [23:09:47] MGR acquire idx=70 total=5
+23:09:49  [23:09:48] DMLOAD id=7705551903379381169 dur=27400
+23:09:49  [23:09:48] MGR ready idx=70
+23:09:49  [23:09:48] DANM get id=7705551903379381169 [0-27s] ttwid=127
+23:09:49  [23:09:48] ENGINE next -> index=71
+23:09:49  [23:09:48] MGR evict idx=68
+23:09:49  [23:09:48] MGR url idx=73 src=static age=47s
+23:09:49  [23:09:48] MGR acquire idx=73 total=5
+23:09:49  [23:09:48] FEEDCOLL scrollTo idx=71 y=76680.0 items=81
+23:09:49  [23:09:49] DANM all-segments done id=7705551903379381169 total=198 retry=0
+23:09:49  [23:09:49] DMLOAD done id=7705551903379381169 total=198
+23:09:49  [23:09:49] DMLOAD id=7706582471597894134 dur=15510
+23:09:49  [23:09:49] DANM get id=7706582471597894134 [0-15s] ttwid=127
+23:09:49  [23:09:49] DANM all-segments done id=7706582471597894134 total=89 retry=0
+23:09:49  [23:09:49] DMLOAD done id=7706582471597894134 total=89
+23:09:51  [23:09:51] ENGINE next -> index=72
+23:09:51  [23:09:51] MGR evict idx=69
+23:09:51  [23:09:51] MGR url idx=74 src=static age=50s
+23:09:51  [23:09:51] MGR acquire idx=74 total=5
+23:09:51  [23:09:51] FEEDCOLL scrollTo idx=72 y=77760.0 items=81
+23:09:51  [23:09:51] DMLOAD id=7704995387513890417 dur=8700
+23:09:51  [23:09:51] DANM get id=7704995387513890417 [0-8s] ttwid=127
+23:09:52  [23:09:51] DANM all-segments done id=7704995387513890417 total=10 retry=0
+23:09:52  [23:09:51] DMLOAD done id=7704995387513890417 total=10
+23:09:53  [23:09:53] ENGINE next -> index=73
+23:09:53  [23:09:53] MGR evict idx=70
+23:09:53  [23:09:53] MGR url idx=75 src=static age=16s
+23:09:53  [23:09:53] MGR acquire idx=75 total=5
+23:09:53  [23:09:53] FEEDCOLL scrollTo idx=73 y=78840.0 items=81
+23:09:53  [23:09:53] MGR itemErr idx=75 err=The network connection was lost.
+23:09:56  [23:09:56] WATCH repair idx=73 reason=idle
+23:09:56  [23:09:56] MGR rebuild idx=73 (redirect)
+23:09:56  [23:09:56] MGR url idx=73 src=redirect forced
+23:09:56  [23:09:56] MGR acquire idx=73 total=5
+23:10:00  [23:10:00] MGR ready idx=74
+23:10:03  [23:10:03] DMLOAD id=7707616986049662223 dur=522217
+23:10:04  [23:10:03] MGR ready idx=73
+23:10:04  [23:10:03] DANM get id=7707616986049662223 [0-60s] ttwid=127
+23:10:04  [23:10:04] DANM get id=7707616986049662223 [60-120s] ttwid=127
+23:10:04  [23:10:04] DANM get id=7707616986049662223 [120-180s] ttwid=127
+23:10:04  [23:10:04] DANM get id=7707616986049662223 [180-240s] ttwid=127
+23:10:05  [23:10:04] DANM get id=7707616986049662223 [240-300s] ttwid=127
+23:10:05  [23:10:05] DANM get id=7707616986049662223 [300-360s] ttwid=127
+23:10:05  [23:10:05] DANM get id=7707616986049662223 [360-420s] ttwid=127
+23:10:05  [23:10:05] DANM get id=7707616986049662223 [420-480s] ttwid=127
+23:10:06  [23:10:06] WATCH skip idx=73 reason=stall streak=1
+23:10:06  [23:10:06] ENGINE next -> index=74
+23:10:06  [23:10:06] ENGINE needMore (index=74 count=81)
+23:10:06  [23:10:06] FEED mobile GET refresh_index=15 cold=0 count=10 bogus_len=180 seen=81
+23:10:06  [23:10:06] MGR evict idx=71
+23:10:06  [23:10:06] MGR url idx=76 src=static age=28s
+23:10:06  [23:10:06] MGR acquire idx=76 total=5
+23:10:06  [23:10:06] FEEDCOLL scrollTo idx=74 y=79920.0 items=81
+23:10:06  [23:10:06] DANM get id=7707616986049662223 [480-522s] ttwid=127
+23:10:06  [23:10:06] DANM all-segments done id=7707616986049662223 total=0 retry=0
+23:10:06  [23:10:06] DMLOAD done id=7707616986049662223 total=0
+23:10:06  [23:10:06] DMLOAD id=7707172060425932059 dur=15400
+23:10:06  [23:10:06] DANM get id=7707172060425932059 [0-15s] ttwid=127
+23:10:06  [23:10:06] MGR ready idx=76
+23:10:06  [23:10:06] DANM all-segments done id=7707172060425932059 total=0 retry=0
+23:10:06  [23:10:06] DMLOAD done id=7707172060425932059 total=0
+23:10:08  [23:10:08] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=15)
+23:10:08  [23:10:08] FEED video-dump a[0] f1[bytes=343] f2[bytes=1065] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1521] f9[varint=1] f10[bytes=343] f11[bytes=2510] f13[varint=4155] f14[bytes=1521] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794841811] f24[varint=0] f25[bytes=1834] f26[bytes=0] f30[bytes=3030] f33[varint=1] f34[bytes=0] f44[bytes=3]
+23:10:08  [23:10:08] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=26] f3[varint=1794126739] f4[bytes=5056] f5[bytes=4204] f7[bytes=13955] f8[bytes=472] f9[varint=0] f10[bytes=51] f11[bytes=63] f13[varint=12] f17[varint=0] f18[bytes=491] f19[bytes=716] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=4155] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=4230519845301844] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=976] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=623] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3079] f242[bytes=12] f243[bytes=225] f248[bytes=33] f249[bytes=13,bytes=20,bytes=20] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=514] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=75] f297[varint=0] f301[bytes=43] f302[bytes=1969] f303[varint=0] f304[bytes=6] f305[bytes=26] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=176] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=20] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=198] f396[bytes=0] f399[bytes=241,bytes=2797] f400[bytes=383] f403[bytes=189] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=0] f460[bytes=26] f463[varint=0] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=20] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32] f566[bytes=92] f567[varint=0] f569[bytes=253] f1001[varint=0] f1009[bytes=946] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=242] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1088[bytes=1529] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:10:08  [23:10:08] FEED item a[0] id=7705715669291140089 type=0 static=ok redirect=ok dur=4155
+23:10:08  [23:10:08] FEED first url[7705715669291140089]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbo36qnog65rfbb7mcu0&line=0&file_id=f12c447c1faf453bb71a07d3f382041b&sign=8c2
+23:10:08  [23:10:08] FEED item a[1] id=7706094155001821926 type=0 static=ok redirect=ok dur=7200
+23:10:08  [23:10:08] FEED item a[2] id=7705760189806852857 type=0 static=ok redirect=ok dur=9800
+23:10:08  [23:10:08] FEED item a[3] id=7703813218721141480 type=0 static=ok redirect=ok dur=8200
+23:10:08  [23:10:08] FEED item a[4] id=7697602352840460517 type=0 static=ok redirect=ok dur=6967
+23:10:08  [23:10:08] FEED item a[5] id=7707982165459811045 type=0 static=ok redirect=ok dur=25000
+23:10:08  [23:10:08] FEED mobile page refresh_index=15: awemes=6 usable=6 filtered=0 redirect=6 total_seen=87
+23:10:08  [23:10:08] ENGINE merge total=87 index=74 replace=false auto=false redirect=6
+23:10:10  [23:10:10] WATCH repair idx=74 reason=stall
+23:10:10  [23:10:10] MGR rebuild idx=74 (redirect)
+23:10:10  [23:10:10] MGR url idx=74 src=redirect forced
+23:10:10  [23:10:10] MGR acquire idx=74 total=5
+23:10:10  [23:10:10] ENGINE next -> index=75
+23:10:10  [23:10:10] MGR evict idx=72
+23:10:10  [23:10:10] MGR url idx=77 src=static age=33s
+23:10:10  [23:10:10] MGR acquire idx=77 total=5
+23:10:10  [23:10:10] FEEDCOLL scrollTo idx=75 y=81000.0 items=87
+23:10:10  [23:10:10] MGR ready idx=74
+23:10:11  [23:10:10] MGR ready idx=77
+23:10:13  [23:10:13] WATCH repair idx=75 reason=idle-failed
+23:10:13  [23:10:13] MGR rebuild idx=75 (redirect)
+23:10:13  [23:10:13] MGR url idx=75 src=redirect forced
+23:10:13  [23:10:13] MGR acquire idx=75 total=5
+23:10:20  [23:10:20] ENGINE next -> index=76
+23:10:20  [23:10:20] MGR evict idx=73
+23:10:20  [23:10:20] MGR url idx=78 src=static age=43s
+23:10:20  [23:10:20] MGR acquire idx=78 total=5
+23:10:20  [23:10:20] FEEDCOLL scrollTo idx=76 y=82080.0 items=87
+23:10:20  [23:10:20] DMLOAD id=7698412889526499321 dur=5767
+23:10:21  [23:10:20] DANM get id=7698412889526499321 [0-5s] ttwid=127
+23:10:21  [23:10:21] DANM all-segments done id=7698412889526499321 total=11 retry=0
+23:10:21  [23:10:21] DMLOAD done id=7698412889526499321 total=11
+23:10:22  [23:10:21] MGR ready idx=78
+23:10:22  [23:10:22] ENGINE next -> index=77
+23:10:23  [23:10:22] MGR evict idx=74
+23:10:23  [23:10:22] MGR url idx=79 src=static age=45s
+23:10:23  [23:10:22] MGR acquire idx=79 total=5
+23:10:23  [23:10:22] FEEDCOLL scrollTo idx=77 y=83160.0 items=87
+23:10:23  [23:10:23] DMLOAD id=7703536898136698853 dur=18934
+23:10:23  [23:10:23] DANM get id=7703536898136698853 [0-18s] ttwid=127
+23:10:23  [23:10:23] MGR ready idx=75
+23:10:23  [23:10:23] DANM all-segments done id=7703536898136698853 total=65 retry=0
+23:10:23  [23:10:23] DMLOAD done id=7703536898136698853 total=65
+23:10:27  [23:10:27] ENGINE next -> index=78
+23:10:27  [23:10:27] MGR evict idx=75
+23:10:27  [23:10:27] MGR url idx=80 src=static age=50s
+23:10:27  [23:10:27] MGR acquire idx=80 total=5
+23:10:27  [23:10:27] FEEDCOLL scrollTo idx=78 y=84240.0 items=87
+23:10:27  [23:10:27] DMLOAD id=7704707826941234458 dur=164715
+23:10:27  [23:10:27] DANM get id=7704707826941234458 [0-60s] ttwid=127
+23:10:28  [23:10:28] DANM get id=7704707826941234458 [60-120s] ttwid=127
+23:10:28  [23:10:28] MGR ready idx=80
+23:10:28  [23:10:28] DANM get id=7704707826941234458 [120-164s] ttwid=127
+23:10:28  [23:10:28] DANM all-segments done id=7704707826941234458 total=33 retry=0
+23:10:28  [23:10:28] DMLOAD done id=7704707826941234458 total=33
+23:10:34  [23:10:33] MGR ready idx=79
+23:10:35  [23:10:35] ENGINE next -> index=79
+23:10:35  [23:10:35] MGR evict idx=76
+23:10:35  [23:10:35] MGR url idx=81 src=static age=27s
+23:10:35  [23:10:35] MGR acquire idx=81 total=5
+23:10:35  [23:10:35] FEEDCOLL scrollTo idx=79 y=85320.0 items=87
+23:10:36  [23:10:36] DMLOAD id=7707261969414579131 dur=28002
+23:10:36  [23:10:36] DANM get id=7707261969414579131 [0-28s] ttwid=127
+23:10:36  [23:10:36] MGR ready idx=81
+23:10:36  [23:10:36] DANM all-segments done id=7707261969414579131 total=74 retry=0
+23:10:36  [23:10:36] DMLOAD done id=7707261969414579131 total=74
+23:10:39  [23:10:39] WATCH repair idx=79 reason=stall
+23:10:39  [23:10:39] MGR rebuild idx=79 (redirect)
+23:10:39  [23:10:39] MGR url idx=79 src=redirect forced
+23:10:39  [23:10:39] MGR acquire idx=79 total=5
+23:10:39  [23:10:39] MGR ready idx=79
+23:10:42  [23:10:42] ENGINE next -> index=80
+23:10:42  [23:10:42] ENGINE needMore (index=80 count=87)
+23:10:42  [23:10:42] FEED mobile GET refresh_index=16 cold=0 count=10 bogus_len=180 seen=87
+23:10:42  [23:10:42] MGR evict idx=77
+23:10:42  [23:10:42] MGR url idx=82 src=static age=34s
+23:10:42  [23:10:42] MGR acquire idx=82 total=5
+23:10:42  [23:10:42] FEEDCOLL scrollTo idx=80 y=86400.0 items=87
+23:10:42  [23:10:42] DMLOAD id=7706394236421229859 dur=227904
+23:10:42  [23:10:42] DANM get id=7706394236421229859 [0-60s] ttwid=127
+23:10:42  [23:10:42] DANM get id=7706394236421229859 [60-120s] ttwid=127
+23:10:43  [23:10:43] DANM get id=7706394236421229859 [120-180s] ttwid=127
+23:10:43  [23:10:43] DANM get id=7706394236421229859 [180-227s] ttwid=127
+23:10:43  [23:10:43] DANM all-segments done id=7706394236421229859 total=74 retry=0
+23:10:43  [23:10:43] DMLOAD done id=7706394236421229859 total=74
+23:10:44  [23:10:44] ENGINE next -> index=81
+23:10:44  [23:10:44] MGR evict idx=78
+23:10:44  [23:10:44] MGR url idx=83 src=static age=36s
+23:10:44  [23:10:44] MGR acquire idx=83 total=5
+23:10:44  [23:10:44] FEEDCOLL scrollTo idx=81 y=87480.0 items=87
+23:10:44  [23:10:44] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=16)
+23:10:44  [23:10:44] FEED video-dump a[0] f1[bytes=344] f2[bytes=1047] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=976] f7[bytes=4] f8[bytes=1501] f9[varint=1] f10[bytes=344] f11[bytes=2570] f13[varint=10000] f14[bytes=1501] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794841853] f24[varint=0] f26[bytes=0] f29[bytes=689] f30[bytes=2809] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:10:44  [23:10:44] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=82] f3[varint=1794620560] f4[bytes=4724] f5[bytes=6591] f6[bytes=420] f7[bytes=12565] f8[bytes=472] f9[varint=0] f10[bytes=52] f11[bytes=63] f13[varint=12] f14[bytes=50,bytes=43,bytes=57] f17[varint=0] f18[bytes=487] f19[bytes=861] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=10000] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=7702885962367960122] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=947] f104[varint=1] f105[varint=1] f106[bytes=110] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f138[bytes=6] f141[varint=0] f148[varint=0] f149[varint=1] f151[bytes=6] f152[varint=0] f162[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f184[varint=1] f191[bytes=290] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=1754] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3159] f242[bytes=12] f243[bytes=225] f247[bytes=1374] f248[bytes=33] f249[bytes=13,bytes=20,bytes=20] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=667] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=76] f297[varint=0] f301[bytes=43] f302[bytes=3308] f303[varint=0] f304[bytes=6] f305[bytes=46] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=6] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=40] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=199] f396[bytes=0] f399[bytes=456,bytes=2777] f400[bytes=618] f403[bytes=186] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=35] f460[bytes=46] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=10] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=36,bytes=44,bytes=52] f566[bytes=125] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=938] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=236] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1047[bytes=591] f1049[bytes=2] f1053[bytes=258] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:10:44  [23:10:44] FEED item a[0] id=7707836610725548264 type=0 static=ok redirect=ok dur=10000
+23:10:44  [23:10:44] FEED first url[7707836610725548264]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbrrp17og65m3stpoheg&line=0&file_id=896db838e1ac4f5aba3a1e28a9e928d1&sign=5f6
+23:10:44  [23:10:44] FEED item a[1] id=7698705551954811112 type=0 static=ok redirect=ok dur=27329
+23:10:44  [23:10:44] FEED item a[2] id=7707866471620458683 type=0 static=ok redirect=ok dur=11169
+23:10:44  [23:10:44] FEED item a[3] id=7706534600478182683 type=0 static=ok redirect=ok dur=21733
+23:10:44  [23:10:44] FEED item a[4] id=7706853495944561826 type=0 static=ok redirect=ok dur=6334
+23:10:44  [23:10:44] FEED item a[5] id=7705638718434239481 type=0 static=ok redirect=ok dur=34467
+23:10:44  [23:10:44] FEED mobile page refresh_index=16: awemes=6 usable=6 filtered=0 redirect=6 total_seen=93
+23:10:44  [23:10:44] ENGINE merge total=93 index=81 replace=false auto=false redirect=6
+23:10:44  [23:10:44] DMLOAD id=7705715669291140089 dur=4155
+23:10:44  [23:10:44] DANM get id=7705715669291140089 [0-4s] ttwid=127
+23:10:44  [23:10:44] MGR ready idx=83
+23:10:44  [23:10:44] DANM all-segments done id=7705715669291140089 total=12 retry=0
+23:10:44  [23:10:44] DMLOAD done id=7705715669291140089 total=12
+23:10:46  [23:10:45] ENGINE next -> index=82
+23:10:46  [23:10:45] MGR evict idx=79
+23:10:46  [23:10:45] MGR url idx=84 src=static age=37s
+23:10:46  [23:10:45] MGR acquire idx=84 total=5
+23:10:46  [23:10:45] FEEDCOLL scrollTo idx=82 y=88560.0 items=93
+23:10:48  [23:10:48] WATCH repair idx=82 reason=idle
+23:10:48  [23:10:48] MGR rebuild idx=82 (redirect)
+23:10:48  [23:10:48] MGR url idx=82 src=redirect forced
+23:10:48  [23:10:48] MGR acquire idx=82 total=5
+23:10:48  [23:10:48] DMLOAD id=7706094155001821926 dur=7200
+23:10:48  [23:10:48] MGR ready idx=82
+23:10:48  [23:10:48] DANM get id=7706094155001821926 [0-7s] ttwid=127
+23:10:48  [23:10:48] DANM all-segments done id=7706094155001821926 total=7 retry=0
+23:10:48  [23:10:48] DMLOAD done id=7706094155001821926 total=7
+23:10:50  [23:10:50] MGR ready idx=84
+23:10:53  [23:10:53] ENGINE next -> index=83
+23:10:53  [23:10:53] MGR evict idx=80
+23:10:53  [23:10:53] MGR url idx=85 src=static age=45s
+23:10:53  [23:10:53] MGR acquire idx=85 total=5
+23:10:53  [23:10:53] FEEDCOLL scrollTo idx=83 y=89640.0 items=93
+23:10:53  [23:10:53] DMLOAD id=7705760189806852857 dur=9800
+23:10:53  [23:10:53] DANM get id=7705760189806852857 [0-9s] ttwid=127
+23:10:53  [23:10:53] MGR ready idx=85
+23:10:54  [23:10:53] DANM all-segments done id=7705760189806852857 total=9 retry=0
+23:10:54  [23:10:53] DMLOAD done id=7705760189806852857 total=9
+23:10:57  [23:10:57] ENGINE next -> index=84
+23:10:57  [23:10:57] MGR evict idx=81
+23:10:57  [23:10:57] MGR url idx=86 src=static age=49s
+23:10:57  [23:10:57] MGR acquire idx=86 total=5
+23:10:57  [23:10:57] FEEDCOLL scrollTo idx=84 y=90720.0 items=93
+23:10:57  [23:10:57] DMLOAD id=7703813218721141480 dur=8200
+23:10:57  [23:10:57] DANM get id=7703813218721141480 [0-8s] ttwid=127
+23:10:57  [23:10:57] DANM all-segments done id=7703813218721141480 total=47 retry=0
+23:10:57  [23:10:57] DMLOAD done id=7703813218721141480 total=47
+23:11:01  [23:11:01] WATCH repair idx=84 reason=stall
+23:11:01  [23:11:01] MGR rebuild idx=84 (redirect)
+23:11:01  [23:11:01] MGR url idx=84 src=redirect forced
+23:11:01  [23:11:01] MGR acquire idx=84 total=5
+23:11:01  [23:11:01] MGR ready idx=84
+23:11:01  [23:11:01] MGR ready idx=86
+23:11:05  [23:11:05] ENGINE next -> index=85
+23:11:05  [23:11:05] MGR evict idx=82
+23:11:05  [23:11:05] MGR url idx=87 src=static age=21s
+23:11:05  [23:11:05] MGR acquire idx=87 total=5
+23:11:05  [23:11:05] FEEDCOLL scrollTo idx=85 y=91800.0 items=93
+23:11:06  [23:11:06] DMLOAD id=7697602352840460517 dur=6967
+23:11:06  [23:11:06] MGR ready idx=87
+23:11:06  [23:11:06] DANM get id=7697602352840460517 [0-6s] ttwid=127
+23:11:06  [23:11:06] DANM all-segments done id=7697602352840460517 total=663 retry=0
+23:11:06  [23:11:06] DMLOAD done id=7697602352840460517 total=663
+23:11:14  [23:11:13] ENGINE next -> index=86
+23:11:14  [23:11:13] ENGINE needMore (index=86 count=93)
+23:11:14  [23:11:13] FEED mobile GET refresh_index=17 cold=0 count=10 bogus_len=180 seen=93
+23:11:14  [23:11:13] MGR evict idx=83
+23:11:14  [23:11:13] MGR url idx=88 src=static age=29s
+23:11:14  [23:11:13] MGR acquire idx=88 total=5
+23:11:14  [23:11:13] FEEDCOLL scrollTo idx=86 y=92880.0 items=93
+23:11:14  [23:11:14] DMLOAD id=7707982165459811045 dur=25000
+23:11:14  [23:11:14] DANM get id=7707982165459811045 [0-25s] ttwid=127
+23:11:14  [23:11:14] MGR ready idx=88
+23:11:14  [23:11:14] DANM all-segments done id=7707982165459811045 total=2 retry=0
+23:11:14  [23:11:14] DMLOAD done id=7707982165459811045 total=2
+23:11:16  [23:11:15] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=17)
+23:11:16  [23:11:15] FEED video-dump a[0] f1[bytes=344] f2[bytes=1067] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=383] f9[varint=1] f10[bytes=344] f11[bytes=2554,bytes=2560,bytes=2566] f13[varint=24500] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794841899] f24[varint=0] f25[bytes=1837] f26[bytes=0] f30[bytes=3120] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:11:16  [23:11:15] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=48] f3[varint=1793193127] f4[bytes=5054] f5[bytes=6296] f6[bytes=423] f7[bytes=16568] f8[bytes=472] f9[varint=0] f10[bytes=54] f11[bytes=63] f13[varint=12] f14[bytes=49,bytes=49] f17[varint=0] f18[bytes=487] f19[bytes=792] f21[bytes=0] f25[varint=0] f27[varint=0] f28[bytes=9195] f29[varint=24500] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=92774619774] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=939] f104[varint=1] f105[varint=1] f106[bytes=110] f109[bytes=8] f116[bytes=0] f121[bytes=14510] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=4] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=3271] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3213] f242[bytes=12] f243[bytes=225] f247[bytes=1155] f248[bytes=33] f249[bytes=13,bytes=20,bytes=28] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=724] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=74] f297[varint=1] f301[bytes=43] f302[bytes=6602] f303[varint=0] f304[bytes=6] f305[bytes=21] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=6] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=30] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=187] f396[bytes=0] f399[bytes=452,bytes=2677] f400[bytes=614] f403[bytes=190] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=48] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=40,bytes=36,bytes=40] f564[bytes=48] f566[bytes=152] f567[varint=0] f569[bytes=253] f1001[varint=0] f1009[bytes=946] f1010[varint=0] f1011[bytes=63] f1019[bytes=0] f1030[bytes=13821] f1033[varint=0] f1035[bytes=228] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1052[varint=2] f1053[bytes=272] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:11:16  [23:11:15] FEED item a[0] id=7701705830982751610 type=0 static=ok redirect=ok dur=24500
+23:11:16  [23:11:15] FEED first url[7701705830982751610]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbgv8vfog65k00t3tkrg&line=0&file_id=98de2fb115ce4235bd17ef4ddbbf13b2&sign=17b
+23:11:16  [23:11:15] FEED item a[1] id=7703873483479282795 type=0 static=ok redirect=ok dur=10611
+23:11:16  [23:11:15] FEED item a[2] id=7677535985270542527 type=0 static=ok redirect=ok dur=12634
+23:11:16  [23:11:15] FEED item a[3] id=7705718663442147513 type=0 static=ok redirect=ok dur=15084
+23:11:16  [23:11:15] FEED item a[4] id=7697084166164699825 type=0 static=ok redirect=ok dur=16967
+23:11:16  [23:11:15] FEED item a[5] id=7681620352334840399 type=0 static=ok redirect=ok dur=15069
+23:11:16  [23:11:15] FEED mobile page refresh_index=17: awemes=6 usable=6 filtered=0 redirect=6 total_seen=99
+23:11:16  [23:11:15] ENGINE merge total=99 index=86 replace=false auto=false redirect=6
+23:11:17  [23:11:17] WATCH repair idx=86 reason=stall
+23:11:17  [23:11:17] MGR rebuild idx=86 (redirect)
+23:11:17  [23:11:17] MGR url idx=86 src=redirect forced
+23:11:17  [23:11:17] MGR acquire idx=86 total=5
+23:11:17  [23:11:17] MGR ready idx=86
+23:11:21  [23:11:21] ENGINE next -> index=87
+23:11:21  [23:11:21] MGR evict idx=84
+23:11:21  [23:11:21] MGR url idx=89 src=static age=37s
+23:11:21  [23:11:21] MGR acquire idx=89 total=5
+23:11:21  [23:11:21] FEEDCOLL scrollTo idx=87 y=93960.0 items=99
+23:11:21  [23:11:21] DMLOAD id=7707836610725548264 dur=10000
+23:11:21  [23:11:21] DANM get id=7707836610725548264 [0-10s] ttwid=127
+23:11:22  [23:11:22] DANM all-segments done id=7707836610725548264 total=1 retry=0
+23:11:22  [23:11:22] DMLOAD done id=7707836610725548264 total=1
+23:11:22  [23:11:22] MGR ready idx=89
+23:11:28  [23:11:28] ENGINE next -> index=88
+23:11:28  [23:11:28] MGR evict idx=85
+23:11:28  [23:11:28] MGR url idx=90 src=static age=43s
+23:11:28  [23:11:28] MGR acquire idx=90 total=5
+23:11:28  [23:11:28] FEEDCOLL scrollTo idx=88 y=95040.0 items=99
+23:11:28  [23:11:28] DMLOAD id=7698705551954811112 dur=27329
+23:11:28  [23:11:28] DANM get id=7698705551954811112 [0-27s] ttwid=127
+23:11:28  [23:11:28] DANM all-segments done id=7698705551954811112 total=85 retry=0
+23:11:28  [23:11:28] DMLOAD done id=7698705551954811112 total=85
+23:11:31  [23:11:31] MGR ready idx=90
+23:11:32  [23:11:32] ENGINE next -> index=89
+23:11:32  [23:11:32] MGR evict idx=86
+23:11:32  [23:11:32] MGR url idx=91 src=static age=47s
+23:11:32  [23:11:32] MGR acquire idx=91 total=5
+23:11:32  [23:11:32] FEEDCOLL scrollTo idx=89 y=96120.0 items=99
+23:11:32  [23:11:32] DMLOAD id=7707866471620458683 dur=11169
+23:11:32  [23:11:32] DANM get id=7707866471620458683 [0-11s] ttwid=127
+23:11:33  [23:11:32] DANM all-segments done id=7707866471620458683 total=7 retry=0
+23:11:33  [23:11:32] DMLOAD done id=7707866471620458683 total=7
+23:11:33  [23:11:33] MGR ready idx=91
+23:11:37  [23:11:37] ENGINE next -> index=90
+23:11:37  [23:11:37] MGR evict idx=87
+23:11:37  [23:11:37] MGR url idx=92 src=static age=52s
+23:11:37  [23:11:37] MGR acquire idx=92 total=5
+23:11:37  [23:11:37] FEEDCOLL scrollTo idx=90 y=97200.0 items=99
+23:11:37  [23:11:37] DMLOAD id=7706534600478182683 dur=21733
+23:11:37  [23:11:37] DANM get id=7706534600478182683 [0-21s] ttwid=127
+23:11:37  [23:11:37] DANM all-segments done id=7706534600478182683 total=0 retry=0
+23:11:37  [23:11:37] DMLOAD done id=7706534600478182683 total=0
+23:11:38  [23:11:38] MGR ready idx=92
+23:11:40  [23:11:40] WATCH repair idx=90 reason=stall
+23:11:40  [23:11:40] MGR rebuild idx=90 (redirect)
+23:11:40  [23:11:40] MGR url idx=90 src=redirect forced
+23:11:40  [23:11:40] MGR acquire idx=90 total=5
+23:11:41  [23:11:40] MGR ready idx=90
+23:11:50  [23:11:50] ENGINE next -> index=91
+23:11:50  [23:11:50] MGR evict idx=88
+23:11:50  [23:11:50] MGR url idx=93 src=static age=34s
+23:11:50  [23:11:50] MGR acquire idx=93 total=5
+23:11:50  [23:11:50] FEEDCOLL scrollTo idx=91 y=98280.0 items=99
+23:11:51  [23:11:51] DMLOAD id=7706853495944561826 dur=6334
+23:11:51  [23:11:51] DANM get id=7706853495944561826 [0-6s] ttwid=127
+23:11:51  [23:11:51] MGR ready idx=93
+23:11:51  [23:11:51] DANM all-segments done id=7706853495944561826 total=0 retry=0
+23:11:51  [23:11:51] DMLOAD done id=7706853495944561826 total=0
+23:11:53  [23:11:53] ENGINE next -> index=92
+23:11:53  [23:11:53] ENGINE needMore (index=92 count=99)
+23:11:53  [23:11:53] FEED mobile GET refresh_index=18 cold=0 count=10 bogus_len=180 seen=99
+23:11:53  [23:11:53] MGR evict idx=89
+23:11:53  [23:11:53] MGR url idx=94 src=static age=37s
+23:11:53  [23:11:53] MGR acquire idx=94 total=5
+23:11:53  [23:11:53] FEEDCOLL scrollTo idx=92 y=99360.0 items=99
+23:11:53  [23:11:53] DMLOAD id=7705638718434239481 dur=34467
+23:11:53  [23:11:53] DANM get id=7705638718434239481 [0-34s] ttwid=127
+23:11:54  [23:11:53] DANM all-segments done id=7705638718434239481 total=3 retry=0
+23:11:54  [23:11:53] DMLOAD done id=7705638718434239481 total=3
+23:11:55  [23:11:55] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=18)
+23:11:55  [23:11:55] FEED video-dump a[0] f1[bytes=343] f2[bytes=1054] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=991] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2536] f13[varint=4922] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794841918] f24[varint=0] f25[bytes=1829] f26[bytes=0] f30[bytes=3166] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:11:55  [23:11:55] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=48] f3[varint=1793885446] f4[bytes=5063] f5[bytes=6442] f6[bytes=414] f7[bytes=14284] f8[bytes=472] f9[varint=0] f10[bytes=53] f11[bytes=63] f13[varint=12] f14[bytes=48,bytes=43,bytes=45] f17[varint=0] f18[bytes=487] f19[bytes=787] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=4922] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=103627328417] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=976] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f115[bytes=747] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=3067] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3126] f242[bytes=12] f243[bytes=225] f248[bytes=33] f249[bytes=19,bytes=20,bytes=16] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=676] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=75] f297[varint=0] f301[bytes=43] f302[bytes=5614] f303[varint=0] f304[bytes=6] f305[bytes=22] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=5] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=30] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=193] f396[bytes=0] f399[bytes=431,bytes=2817] f400[bytes=593] f403[bytes=191] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=48] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f501[bytes=184] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32] f566[bytes=125] f567[varint=0] f569[bytes=253] f1001[varint=0] f1009[bytes=946] f1010[varint=0] f1019[bytes=0] f1033[varint=1] f1034[varint=1] f1035[bytes=229] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=238] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=11] f1077[bytes=2] f1084[varint=3] f1088[bytes=1472] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:11:55  [23:11:55] FEED item a[0] id=7704679322003950257 type=0 static=ok redirect=ok dur=4922
+23:11:55  [23:11:55] FEED first url[7704679322003950257]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbm89h7og65klq5l3l5g&line=0&file_id=bf65262d3ee8469db84c92023e6c156e&sign=969
+23:11:55  [23:11:55] FEED item a[1] id=7697131339891721811 type=0 static=ok redirect=ok dur=12834
+23:11:55  [23:11:55] FEED item a[2] id=7697593892657080680 type=0 static=ok redirect=ok dur=31810
+23:11:55  [23:11:55] FEED item a[3] id=7698608195866923499 type=0 static=ok redirect=ok dur=11934
+23:11:55  [23:11:55] FEED skip-item a[4] id=7697953602581235347 type=0 dur=0 reason=nodur
+23:11:55  [23:11:55] FEED item a[5] id=7707302683683044730 type=0 static=ok redirect=ok dur=15100
+23:11:55  [23:11:55] FEED mobile page refresh_index=18: awemes=6 usable=5 filtered=1 redirect=5 total_seen=104
+23:11:55  [23:11:55] ENGINE merge total=104 index=92 replace=false auto=false redirect=5
+23:11:55  [23:11:55] MGR ready idx=94
+23:11:55  [23:11:55] ENGINE next -> index=93
+23:11:55  [23:11:55] MGR evict idx=90
+23:11:55  [23:11:55] MGR url idx=95 src=static age=39s
+23:11:55  [23:11:55] MGR acquire idx=95 total=5
+23:11:55  [23:11:55] FEEDCOLL scrollTo idx=93 y=100440.0 items=104
+23:11:55  [23:11:55] DMLOAD id=7701705830982751610 dur=24500
+23:11:55  [23:11:55] DANM get id=7701705830982751610 [0-24s] ttwid=127
+23:11:56  [23:11:55] DANM cap-hit [0-24s] n=959 → split
+23:11:56  [23:11:55] DANM get id=7701705830982751610 [0-12s] ttwid=127
+23:11:56  [23:11:56] DANM cap-hit [0-12s] n=959 → split
+23:11:56  [23:11:56] DANM get id=7701705830982751610 [0-6s] ttwid=127
+23:11:56  [23:11:56] DANM get id=7701705830982751610 [6-12s] ttwid=127
+23:11:56  [23:11:56] ENGINE next -> index=94
+23:11:57  [23:11:56] MGR evict idx=91
+23:11:57  [23:11:56] MGR url idx=96 src=static age=40s
+23:11:57  [23:11:56] MGR acquire idx=96 total=5
+23:11:57  [23:11:56] FEEDCOLL scrollTo idx=94 y=101520.0 items=104
+23:11:57  [23:11:57] DANM get id=7701705830982751610 [12-24s] ttwid=127
+23:11:57  [23:11:57] DMLOAD id=7703873483479282795 dur=10611
+23:11:57  [23:11:57] DANM get id=7703873483479282795 [0-10s] ttwid=127
+23:11:57  [23:11:57] DANM cap-hit [12-24s] n=582 → split
+23:11:57  [23:11:57] DANM get id=7701705830982751610 [12-18s] ttwid=127
+23:11:57  [23:11:57] DANM all-segments done id=7703873483479282795 total=78 retry=0
+23:11:57  [23:11:57] DMLOAD done id=7703873483479282795 total=78
+23:11:57  [23:11:57] MGR ready idx=96
+23:11:57  [23:11:57] DANM get id=7701705830982751610 [18-24s] ttwid=127
+23:11:58  [23:11:58] ENGINE next -> index=95
+23:11:58  [23:11:58] MGR evict idx=92
+23:11:58  [23:11:58] MGR url idx=97 src=static age=42s
+23:11:58  [23:11:58] MGR acquire idx=97 total=5
+23:11:58  [23:11:58] FEEDCOLL scrollTo idx=95 y=102600.0 items=104
+23:11:58  [23:11:58] DANM all-segments done id=7701705830982751610 total=959 retry=0
+23:11:58  [23:11:58] DMLOAD done id=7701705830982751610 total=959
+23:11:59  [23:11:59] DMLOAD id=7677535985270542527 dur=12634
+23:12:00  [23:11:59] MGR ready idx=95
+23:12:00  [23:11:59] DANM get id=7677535985270542527 [0-12s] ttwid=127
+23:12:00  [23:12:00] DANM all-segments done id=7677535985270542527 total=89 retry=0
+23:12:00  [23:12:00] DMLOAD done id=7677535985270542527 total=89
+23:12:01  [23:12:01] MGR ready idx=97
+23:12:02  [23:12:01] ENGINE next -> index=96
+23:12:02  [23:12:01] MGR evict idx=93
+23:12:02  [23:12:01] MGR url idx=98 src=static age=45s
+23:12:02  [23:12:01] MGR acquire idx=98 total=5
+23:12:02  [23:12:01] FEEDCOLL scrollTo idx=96 y=103680.0 items=104
+23:12:02  [23:12:02] DMLOAD id=7705718663442147513 dur=15084
+23:12:02  [23:12:02] DANM get id=7705718663442147513 [0-15s] ttwid=127
+23:12:02  [23:12:02] MGR ready idx=98
+23:12:02  [23:12:02] DANM all-segments done id=7705718663442147513 total=3 retry=0
+23:12:02  [23:12:02] DMLOAD done id=7705718663442147513 total=3
+23:12:05  [23:12:05] WATCH repair idx=96 reason=stall
+23:12:05  [23:12:05] MGR rebuild idx=96 (redirect)
+23:12:05  [23:12:05] MGR url idx=96 src=redirect forced
+23:12:05  [23:12:05] MGR acquire idx=96 total=5
+23:12:05  [23:12:05] MGR ready idx=96
+23:12:07  [23:12:07] ENGINE next -> index=97
+23:12:07  [23:12:07] ENGINE needMore (index=97 count=104)
+23:12:07  [23:12:07] FEED mobile GET refresh_index=19 cold=0 count=10 bogus_len=180 seen=104
+23:12:07  [23:12:07] MGR evict idx=94
+23:12:07  [23:12:07] MGR url idx=99 src=static age=12s
+23:12:07  [23:12:07] MGR acquire idx=99 total=5
+23:12:07  [23:12:07] FEEDCOLL scrollTo idx=97 y=104760.0 items=104
+23:12:07  [23:12:07] DMLOAD id=7697084166164699825 dur=16967
+23:12:07  [23:12:07] DANM get id=7697084166164699825 [0-16s] ttwid=127
+23:12:08  [23:12:08] DANM all-segments done id=7697084166164699825 total=4 retry=0
+23:12:08  [23:12:08] DMLOAD done id=7697084166164699825 total=4
+23:12:09  [23:12:08] MGR ready idx=99
+23:12:09  [23:12:09] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=19)
+23:12:09  [23:12:09] FEED video-dump a[0] f1[bytes=344] f2[bytes=1055] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1004] f7[bytes=4] f8[bytes=1519] f9[varint=1] f10[bytes=344] f11[bytes=2600] f13[varint=10767] f14[bytes=1519] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794841939] f24[varint=0] f25[bytes=1827] f26[bytes=0] f30[bytes=3177] f33[varint=1] f34[bytes=0] f44[bytes=3]
+23:12:09  [23:12:09] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=38] f3[varint=1794456704] f4[bytes=4692] f5[bytes=7174] f6[bytes=423] f7[bytes=14172] f8[bytes=472] f9[varint=0] f10[bytes=53] f11[bytes=63] f13[varint=12] f14[bytes=51,bytes=52,bytes=45] f17[varint=0] f18[bytes=487] f19[bytes=759] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=10767] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=1049386811923072] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=987] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=1831] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3131] f242[bytes=12] f243[bytes=225] f247[bytes=1216] f248[bytes=33] f249[bytes=13,bytes=17,bytes=23] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=673] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=72] f297[varint=0] f301[bytes=43] f302[bytes=5938] f303[varint=0] f304[bytes=6] f305[bytes=38] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=176] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=30] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=181] f396[bytes=0] f399[bytes=451,bytes=2837] f400[bytes=593] f403[bytes=190] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=38] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f501[bytes=47] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=36,bytes=44,bytes=48] f566[bytes=125] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=946] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=250] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=11] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:12:09  [23:12:09] FEED item a[0] id=7707132859518183547 type=0 static=ok redirect=ok dur=10767
+23:12:09  [23:12:09] FEED first url[7707132859518183547]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbqjo97og65roc62long&line=0&file_id=ba3875f2d592453a9cb9a55aca9547f0&sign=9cf
+23:12:09  [23:12:09] FEED item a[1] id=7697685070026647397 type=0 static=ok redirect=ok dur=13034
+23:12:09  [23:12:09] FEED item a[2] id=7700127866670877979 type=0 static=ok redirect=ok dur=10500
+23:12:09  [23:12:09] FEED item a[3] id=7706470577732784811 type=0 static=ok redirect=ok dur=16627
+23:12:09  [23:12:09] FEED item a[4] id=7707738259644275953 type=0 static=ok redirect=ok dur=4234
+23:12:09  [23:12:09] FEED item a[5] id=7707877696802437235 type=0 static=ok redirect=ok dur=32134
+23:12:09  [23:12:09] FEED mobile page refresh_index=19: awemes=6 usable=6 filtered=0 redirect=6 total_seen=110
+23:12:09  [23:12:09] ENGINE merge total=110 index=97 replace=false auto=false redirect=6
+23:12:11  [23:12:11] WATCH repair idx=97 reason=stall
+23:12:11  [23:12:11] MGR rebuild idx=97 (redirect)
+23:12:11  [23:12:11] MGR url idx=97 src=redirect forced
+23:12:11  [23:12:11] MGR acquire idx=97 total=5
+23:12:11  [23:12:11] MGR ready idx=97
+23:12:17  [23:12:17] ENGINE next -> index=98
+23:12:17  [23:12:17] MGR evict idx=95
+23:12:17  [23:12:17] MGR url idx=100 src=static age=21s
+23:12:17  [23:12:17] MGR acquire idx=100 total=5
+23:12:17  [23:12:17] FEEDCOLL scrollTo idx=98 y=105840.0 items=110
+23:12:17  [23:12:17] DMLOAD id=7681620352334840399 dur=15069
+23:12:17  [23:12:17] MGR ready idx=100
+23:12:17  [23:12:17] DANM get id=7681620352334840399 [0-15s] ttwid=127
+23:12:17  [23:12:17] DANM all-segments done id=7681620352334840399 total=38 retry=0
+23:12:17  [23:12:17] DMLOAD done id=7681620352334840399 total=38
+23:12:19  [23:12:19] ENGINE next -> index=99
+23:12:19  [23:12:19] MGR evict idx=96
+23:12:19  [23:12:19] MGR url idx=101 src=static age=24s
+23:12:19  [23:12:19] MGR acquire idx=101 total=5
+23:12:19  [23:12:19] FEEDCOLL scrollTo idx=99 y=106920.0 items=110
+23:12:19  [23:12:19] DMLOAD id=7704679322003950257 dur=4922
+23:12:19  [23:12:19] DANM get id=7704679322003950257 [0-4s] ttwid=127
+23:12:20  [23:12:20] MGR ready idx=101
+23:12:20  [23:12:20] DANM all-segments done id=7704679322003950257 total=40 retry=0
+23:12:20  [23:12:20] DMLOAD done id=7704679322003950257 total=40
+23:12:23  [23:12:23] WATCH repair idx=99 reason=stall
+23:12:23  [23:12:23] MGR rebuild idx=99 (redirect)
+23:12:23  [23:12:23] MGR url idx=99 src=redirect forced
+23:12:23  [23:12:23] MGR acquire idx=99 total=5
+23:12:24  [23:12:24] MGR ready idx=99
+23:12:28  [23:12:28] ENGINE next -> index=100
+23:12:28  [23:12:28] MGR evict idx=97
+23:12:28  [23:12:28] MGR url idx=102 src=static age=32s
+23:12:28  [23:12:28] MGR acquire idx=102 total=5
+23:12:28  [23:12:28] FEEDCOLL scrollTo idx=100 y=108000.0 items=110
+23:12:28  [23:12:28] DMLOAD id=7697131339891721811 dur=12834
+23:12:28  [23:12:28] DANM get id=7697131339891721811 [0-12s] ttwid=127
+23:12:28  [23:12:28] MGR ready idx=102
+23:12:28  [23:12:28] DANM all-segments done id=7697131339891721811 total=19 retry=0
+23:12:28  [23:12:28] DMLOAD done id=7697131339891721811 total=19
+23:12:30  [23:12:30] ENGINE next -> index=101
+23:12:30  [23:12:30] MGR evict idx=98
+23:12:30  [23:12:30] MGR url idx=103 src=static age=35s
+23:12:30  [23:12:30] MGR acquire idx=103 total=5
+23:12:30  [23:12:30] FEEDCOLL scrollTo idx=101 y=109080.0 items=110
+23:12:30  [23:12:30] MGR itemErr idx=103 err=The network connection was lost.
+23:12:31  [23:12:30] DMLOAD id=7697593892657080680 dur=31810
+23:12:31  [23:12:30] DANM get id=7697593892657080680 [0-31s] ttwid=127
+23:12:31  [23:12:31] DANM all-segments done id=7697593892657080680 total=101 retry=0
+23:12:31  [23:12:31] DMLOAD done id=7697593892657080680 total=101
+23:12:39  [23:12:39] ENGINE next -> index=102
+23:12:39  [23:12:39] MGR evict idx=99
+23:12:39  [23:12:39] MGR url idx=104 src=static age=30s
+23:12:39  [23:12:39] MGR acquire idx=104 total=5
+23:12:39  [23:12:39] FEEDCOLL scrollTo idx=102 y=110160.0 items=110
+23:12:40  [23:12:39] DMLOAD id=7698608195866923499 dur=11934
+23:12:40  [23:12:39] DANM get id=7698608195866923499 [0-11s] ttwid=127
+23:12:40  [23:12:40] MGR ready idx=104
+23:12:40  [23:12:40] DANM all-segments done id=7698608195866923499 total=39 retry=0
+23:12:40  [23:12:40] DMLOAD done id=7698608195866923499 total=39
+23:12:47  [23:12:47] ENGINE next -> index=103
+23:12:47  [23:12:47] ENGINE needMore (index=103 count=110)
+23:12:47  [23:12:47] FEED mobile GET refresh_index=20 cold=0 count=10 bogus_len=180 seen=110
+23:12:47  [23:12:47] MGR evict idx=100
+23:12:47  [23:12:47] MGR url idx=105 src=static age=37s
+23:12:47  [23:12:47] MGR acquire idx=105 total=5
+23:12:47  [23:12:47] FEEDCOLL scrollTo idx=103 y=111240.0 items=110
+23:12:47  [23:12:47] MGR ready idx=105
+23:12:49  [23:12:49] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=20)
+23:12:49  [23:12:49] FEED video-dump a[0] f1[bytes=1283] f2[bytes=1070] f3[varint=1080] f4[varint=1920] f5[bytes=8] f6[bytes=1009] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1230] f34[bytes=0]
+23:12:49  [23:12:49] FEED skip-item a[0] id=7706757698235279462 type=0 dur=0 reason=nodur
+23:12:49  [23:12:49] FEED item a[1] id=7683841265478307682 type=0 static=ok redirect=ok dur=15700
+23:12:49  [23:12:49] FEED first url[7683841265478307682]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dah7pmvog65ubk0gnidg&line=0&file_id=81080b1f130f4d4e9ae1154b4e516059&sign=be3
+23:12:49  [23:12:49] FEED item a[2] id=7703057526065011826 type=0 static=ok redirect=ok dur=8800
+23:12:49  [23:12:49] FEED item a[3] id=7707950123180326330 type=0 static=ok redirect=ok dur=17437
+23:12:49  [23:12:49] FEED item a[4] id=7707871626759065957 type=0 static=ok redirect=ok dur=14700
+23:12:49  [23:12:49] FEED item a[5] id=7700735076800650442 type=0 static=ok redirect=ok dur=16967
+23:12:49  [23:12:49] FEED mobile page refresh_index=20: awemes=6 usable=5 filtered=1 redirect=5 total_seen=115
+23:12:49  [23:12:49] ENGINE merge total=115 index=103 replace=false auto=false redirect=5
+23:12:50  [23:12:50] WATCH repair idx=103 reason=idle-failed
+23:12:50  [23:12:50] MGR rebuild idx=103 (redirect)
+23:12:50  [23:12:50] MGR url idx=103 src=redirect forced
+23:12:50  [23:12:50] MGR acquire idx=103 total=5
+23:12:58  [23:12:58] WATCH skip idx=103 reason=idle streak=1
+23:12:58  [23:12:58] ENGINE next -> index=104
+23:12:58  [23:12:58] MGR evict idx=101
+23:12:58  [23:12:58] MGR url idx=106 src=static age=48s
+23:12:58  [23:12:58] MGR acquire idx=106 total=5
+23:12:58  [23:12:58] FEEDCOLL scrollTo idx=104 y=112320.0 items=115
+23:12:58  [23:12:58] DMLOAD id=7707132859518183547 dur=10767
+23:12:58  [23:12:58] DANM get id=7707132859518183547 [0-10s] ttwid=127
+23:12:58  [23:12:58] MGR ready idx=106
+23:12:58  [23:12:58] DANM all-segments done id=7707132859518183547 total=104 retry=0
+23:12:58  [23:12:58] DMLOAD done id=7707132859518183547 total=104
+23:13:02  [23:13:02] WATCH repair idx=104 reason=stall
+23:13:02  [23:13:02] MGR rebuild idx=104 (redirect)
+23:13:02  [23:13:02] MGR url idx=104 src=redirect forced
+23:13:02  [23:13:02] MGR acquire idx=104 total=5
+23:13:02  [23:13:02] MGR ready idx=104
+23:13:04  [23:13:04] WATCH healthy idx=104 auto-skip streak reset
+23:13:05  [23:13:04] ENGINE next -> index=105
+23:13:05  [23:13:04] MGR evict idx=102
+23:13:05  [23:13:04] MGR url idx=107 src=static age=55s
+23:13:05  [23:13:04] MGR acquire idx=107 total=5
+23:13:05  [23:13:04] FEEDCOLL scrollTo idx=105 y=113400.0 items=115
+23:13:05  [23:13:05] DMLOAD id=7697685070026647397 dur=13034
+23:13:05  [23:13:05] DANM get id=7697685070026647397 [0-13s] ttwid=127
+23:13:05  [23:13:05] DANM all-segments done id=7697685070026647397 total=140 retry=0
+23:13:05  [23:13:05] DMLOAD done id=7697685070026647397 total=140
+23:13:06  [23:13:05] MGR ready idx=107
+23:13:06  [23:13:06] MGR ready idx=103
+23:13:06  [23:13:06] ENGINE next -> index=106
+23:13:06  [23:13:06] MGR evict idx=103
+23:13:06  [23:13:06] MGR url idx=108 src=static age=56s
+23:13:06  [23:13:06] MGR acquire idx=108 total=5
+23:13:06  [23:13:06] FEEDCOLL scrollTo idx=106 y=114480.0 items=115
+23:13:06  [23:13:06] DMLOAD id=7700127866670877979 dur=10500
+23:13:06  [23:13:06] DANM get id=7700127866670877979 [0-10s] ttwid=127
+23:13:07  [23:13:07] DANM all-segments done id=7700127866670877979 total=79 retry=0
+23:13:07  [23:13:07] DMLOAD done id=7700127866670877979 total=79
+23:13:09  [23:13:09] MGR ready idx=108
+23:13:10  [23:13:10] ENGINE next -> index=107
+23:13:10  [23:13:10] MGR evict idx=104
+23:13:10  [23:13:10] MGR url idx=109 src=static age=61s
+23:13:10  [23:13:10] MGR acquire idx=109 total=5
+23:13:10  [23:13:10] FEEDCOLL scrollTo idx=107 y=115560.0 items=115
+23:13:11  [23:13:10] DMLOAD id=7706470577732784811 dur=16627
+23:13:11  [23:13:10] DANM get id=7706470577732784811 [0-16s] ttwid=127
+23:13:11  [23:13:11] MGR ready idx=109
+23:13:11  [23:13:11] DANM all-segments done id=7706470577732784811 total=24 retry=0
+23:13:11  [23:13:11] DMLOAD done id=7706470577732784811 total=24
+23:13:13  [23:13:12] ENGINE next -> index=108
+23:13:13  [23:13:12] ENGINE needMore (index=108 count=115)
+23:13:13  [23:13:12] FEED mobile GET refresh_index=21 cold=0 count=10 bogus_len=180 seen=115
+23:13:13  [23:13:12] MGR evict idx=105
+23:13:13  [23:13:12] MGR url idx=110 src=static age=23s
+23:13:13  [23:13:12] MGR acquire idx=110 total=5
+23:13:13  [23:13:12] FEEDCOLL scrollTo idx=108 y=116640.0 items=115
+23:13:13  [23:13:13] DMLOAD id=7707738259644275953 dur=4234
+23:13:13  [23:13:13] DANM get id=7707738259644275953 [0-4s] ttwid=127
+23:13:13  [23:13:13] DANM all-segments done id=7707738259644275953 total=0 retry=0
+23:13:13  [23:13:13] DMLOAD done id=7707738259644275953 total=0
+23:13:13  [23:13:13] MGR ready idx=110
+23:13:15  [23:13:15] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=21)
+23:13:15  [23:13:15] FEED video-dump a[0] f1[bytes=344] f2[bytes=1061] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1006] f7[bytes=4] f8[bytes=1515] f9[varint=1] f10[bytes=344] f11[bytes=2582] f13[varint=18167] f14[bytes=1515] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794842012] f24[varint=0] f25[bytes=1827] f26[bytes=0] f30[bytes=3250] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:13:15  [23:13:15] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=103] f3[varint=1794053731] f4[bytes=4761] f5[bytes=2993] f6[bytes=432] f7[bytes=14228] f8[bytes=472] f9[varint=0] f10[bytes=55] f11[bytes=63] f13[varint=12] f14[bytes=48,bytes=51,bytes=52,bytes=56] f17[varint=0] f18[bytes=488] f19[bytes=921] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=18167] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=499630852812395] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=824] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=394] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3160] f242[bytes=12] f243[bytes=225] f247[bytes=1029] f248[bytes=33] f249[bytes=13,bytes=20,bytes=22] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=744] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=74] f297[varint=0] f301[bytes=43] f302[bytes=2853] f303[varint=0] f304[bytes=6] f305[bytes=42] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=6] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=20] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=187] f396[bytes=0] f399[bytes=535,bytes=2907] f400[bytes=697] f403[bytes=181] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=103] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=40,bytes=48,bytes=48] f566[bytes=125] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=946] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=232] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=252] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:13:15  [23:13:15] FEED item a[0] id=7705402101623421305 type=0 static=ok redirect=ok dur=18167
+23:13:15  [23:13:15] FEED first url[7705402101623421305]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbnhcmnog65sna7d9010&line=0&file_id=fbf40bcda95c4bdca5d0e9a85ffe6ce1&sign=040
+23:13:15  [23:13:15] FEED item a[1] id=7704897330935654907 type=0 static=ok redirect=ok dur=14210
+23:13:15  [23:13:15] FEED item a[2] id=7706872272338958251 type=0 static=ok redirect=ok dur=16234
+23:13:15  [23:13:15] FEED item a[3] id=7707250183889548466 type=0 static=ok redirect=ok dur=28422
+23:13:15  [23:13:15] FEED skip-item a[4] id=7699392791977326331 type=0 dur=0 reason=nodur
+23:13:15  [23:13:15] FEED item a[5] id=7700776005808205651 type=0 static=ok redirect=ok dur=11889
+23:13:15  [23:13:15] FEED mobile page refresh_index=21: awemes=6 usable=5 filtered=1 redirect=5 total_seen=120
+23:13:15  [23:13:15] ENGINE merge total=120 index=108 replace=false auto=false redirect=5
+23:13:16  [23:13:16] WATCH repair idx=108 reason=stall
+23:13:16  [23:13:16] MGR rebuild idx=108 (redirect)
+23:13:16  [23:13:16] MGR url idx=108 src=redirect forced
+23:13:16  [23:13:16] MGR acquire idx=108 total=5
+23:13:16  [23:13:16] MGR ready idx=108
+23:13:24  [23:13:24] ENGINE next -> index=109
+23:13:24  [23:13:24] MGR evict idx=106
+23:13:24  [23:13:24] MGR url idx=111 src=static age=35s
+23:13:24  [23:13:24] MGR acquire idx=111 total=5
+23:13:24  [23:13:24] FEEDCOLL scrollTo idx=109 y=117720.0 items=120
+23:13:24  [23:13:24] DMLOAD id=7707877696802437235 dur=32134
+23:13:24  [23:13:24] DANM get id=7707877696802437235 [0-32s] ttwid=127
+23:13:25  [23:13:25] DANM all-segments done id=7707877696802437235 total=49 retry=0
+23:13:25  [23:13:25] DMLOAD done id=7707877696802437235 total=49
+23:13:26  [23:13:26] ENGINE next -> index=110
+23:13:26  [23:13:26] MGR evict idx=107
+23:13:26  [23:13:26] MGR url idx=112 src=static age=37s
+23:13:26  [23:13:26] MGR acquire idx=112 total=5
+23:13:26  [23:13:26] FEEDCOLL scrollTo idx=110 y=118800.0 items=120
+23:13:26  [23:13:26] DMLOAD id=7683841265478307682 dur=15700
+23:13:26  [23:13:26] MGR ready idx=112
+23:13:26  [23:13:26] DANM get id=7683841265478307682 [0-15s] ttwid=127
+23:13:27  [23:13:27] DANM all-segments done id=7683841265478307682 total=218 retry=0
+23:13:27  [23:13:27] DMLOAD done id=7683841265478307682 total=218
+23:13:29  [23:13:29] ENGINE next -> index=111
+23:13:29  [23:13:29] MGR evict idx=108
+23:13:29  [23:13:29] MGR url idx=113 src=static age=39s
+23:13:29  [23:13:29] MGR acquire idx=113 total=5
+23:13:29  [23:13:29] FEEDCOLL scrollTo idx=111 y=119880.0 items=120
+23:13:29  [23:13:29] MGR ready idx=113
+23:13:32  [23:13:32] WATCH repair idx=111 reason=idle
+23:13:32  [23:13:32] MGR rebuild idx=111 (redirect)
+23:13:32  [23:13:32] MGR url idx=111 src=redirect forced
+23:13:32  [23:13:32] MGR acquire idx=111 total=5
+23:13:32  [23:13:32] DMLOAD id=7703057526065011826 dur=8800
+23:13:32  [23:13:32] MGR ready idx=111
+23:13:32  [23:13:32] DANM get id=7703057526065011826 [0-8s] ttwid=127
+23:13:32  [23:13:32] DANM all-segments done id=7703057526065011826 total=11 retry=0
+23:13:33  [23:13:32] DMLOAD done id=7703057526065011826 total=11
+23:13:38  [23:13:38] SETTINGS panel open (menu #1)
+23:13:40  [23:13:40] FEED source switch mobile -> web
+23:13:40  [23:13:40] ENGINE reset (source switch)
+23:13:40  [23:13:40] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+23:13:40  [23:13:40] FEEDCOLL reset view (source switch)
+23:13:41  [23:13:41] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+23:13:42  [23:13:41] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+23:13:42  [23:13:41] ENGINE needMore (index=0 count=6)
+23:13:42  [23:13:41] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+23:13:42  [23:13:41] MGR evict idx=110
+23:13:42  [23:13:41] MGR evict idx=112
+23:13:42  [23:13:41] MGR evict idx=109
+23:13:42  [23:13:41] MGR evict idx=113
+23:13:42  [23:13:41] MGR evict idx=111
+23:13:42  [23:13:41] MGR url idx=0 src=static age=0s
+23:13:42  [23:13:41] MGR acquire idx=0 total=1
+23:13:42  [23:13:41] MGR cold-start defer neighbors=[1, 2]
+23:13:42  [23:13:41] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+23:13:42  [23:13:42] ENGINE next -> index=1
+23:13:43  [23:13:42] MGR url idx=1 src=static age=1s
+23:13:43  [23:13:42] MGR acquire idx=1 total=2
+23:13:43  [23:13:42] MGR url idx=2 src=static age=1s
+23:13:43  [23:13:42] MGR acquire idx=2 total=3
+23:13:43  [23:13:42] MGR url idx=3 src=static age=1s
+23:13:43  [23:13:42] MGR acquire idx=3 total=4
+23:13:43  [23:13:42] FEEDCOLL scrollTo idx=1 y=1080.0 items=6
+23:13:43  [23:13:43] MGR ready idx=3
+23:13:43  [23:13:43] MGR ready idx=0
+23:13:43  [23:13:43] DMLOAD id=7687910756201383589 dur=20000
+23:13:43  [23:13:43] MGR ready idx=1
+23:13:43  [23:13:43] DANM get id=7687910756201383589 [0-20s] ttwid=127
+23:13:43  [23:13:43] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+23:13:43  [23:13:43] ENGINE merge total=12 index=1 replace=false auto=false redirect=0
+23:13:43  [23:13:43] DANM cap-hit [0-20s] n=971 → split
+23:13:43  [23:13:43] DANM get id=7687910756201383589 [0-10s] ttwid=127
+23:13:43  [23:13:43] MGR ready idx=2
+23:13:44  [23:13:43] DANM get id=7687910756201383589 [10-20s] ttwid=127
+23:13:44  [23:13:44] DANM all-segments done id=7687910756201383589 total=971 retry=0
+23:13:44  [23:13:44] DMLOAD done id=7687910756201383589 total=971
+23:13:44  [23:13:44] ENGINE next -> index=2
+23:13:44  [23:13:44] MGR url idx=4 src=static age=2s
+23:13:44  [23:13:44] MGR acquire idx=4 total=5
+23:13:44  [23:13:44] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+23:13:45  [23:13:45] DMLOAD id=7692401191971474698 dur=301500
+23:13:45  [23:13:45] DANM get id=7692401191971474698 [0-60s] ttwid=127
+23:13:45  [23:13:45] MGR ready idx=4
+23:13:45  [23:13:45] DANM get id=7692401191971474698 [60-120s] ttwid=127
+23:13:45  [23:13:45] DANM get id=7692401191971474698 [120-180s] ttwid=127
+23:13:46  [23:13:46] DANM get id=7692401191971474698 [180-240s] ttwid=127
+23:13:46  [23:13:46] DANM get id=7692401191971474698 [240-300s] ttwid=127
+23:13:46  [23:13:46] ENGINE next -> index=3
+23:13:46  [23:13:46] MGR evict idx=0
+23:13:46  [23:13:46] MGR url idx=5 src=static age=4s
+23:13:46  [23:13:46] MGR acquire idx=5 total=5
+23:13:46  [23:13:46] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:13:46  [23:13:46] DANM get id=7692401191971474698 [300-301s] ttwid=127
+23:13:46  [23:13:46] DMLOAD id=7684645923691797939 dur=6034
+23:13:46  [23:13:46] DANM get id=7684645923691797939 [0-6s] ttwid=127
+23:13:47  [23:13:46] DANM all-segments done id=7692401191971474698 total=107 retry=0
+23:13:47  [23:13:46] DMLOAD done id=7692401191971474698 total=107
+23:13:47  [23:13:46] MGR ready idx=5
+23:13:47  [23:13:47] DANM all-segments done id=7684645923691797939 total=522 retry=0
+23:13:47  [23:13:47] DMLOAD done id=7684645923691797939 total=522
+23:13:48  [23:13:48] ENGINE next -> index=4
+23:13:48  [23:13:48] MGR evict idx=1
+23:13:48  [23:13:48] MGR url idx=6 src=static age=5s
+23:13:48  [23:13:48] MGR acquire idx=6 total=5
+23:13:48  [23:13:48] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+23:13:49  [23:13:48] DMLOAD id=7694309930932751659 dur=643170
+23:13:49  [23:13:48] DANM get id=7694309930932751659 [0-60s] ttwid=127
+23:13:49  [23:13:49] MGR ready idx=6
+23:13:49  [23:13:49] DANM get id=7694309930932751659 [60-120s] ttwid=127
+23:13:49  [23:13:49] DANM get id=7694309930932751659 [120-180s] ttwid=127
+23:13:50  [23:13:49] DANM get id=7694309930932751659 [180-240s] ttwid=127
+23:13:50  [23:13:50] DANM get id=7694309930932751659 [240-300s] ttwid=127
+23:13:50  [23:13:50] DANM get id=7694309930932751659 [300-360s] ttwid=127
+23:13:51  [23:13:50] DANM get id=7694309930932751659 [360-420s] ttwid=127
+23:13:51  [23:13:51] DANM get id=7694309930932751659 [420-480s] ttwid=127
+23:13:51  [23:13:51] DANM get id=7694309930932751659 [480-540s] ttwid=127
+23:13:51  [23:13:51] DANM get id=7694309930932751659 [540-600s] ttwid=127
+23:13:52  [23:13:52] DANM get id=7694309930932751659 [600-643s] ttwid=127
+23:13:52  [23:13:52] DANM all-segments done id=7694309930932751659 total=494 retry=0
+23:13:52  [23:13:52] DMLOAD done id=7694309930932751659 total=494
+23:13:59  [23:13:59] ENGINE next -> index=5
+23:13:59  [23:13:59] ENGINE needMore (index=5 count=12)
+23:13:59  [23:13:59] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+23:13:59  [23:13:59] MGR evict idx=2
+23:13:59  [23:13:59] MGR url idx=7 src=static age=15s
+23:13:59  [23:13:59] MGR acquire idx=7 total=5
+23:13:59  [23:13:59] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+23:13:59  [23:13:59] DMLOAD id=7690571475241241896 dur=370858
+23:13:59  [23:13:59] DANM get id=7690571475241241896 [0-60s] ttwid=127
+23:14:00  [23:13:59] DANM get id=7690571475241241896 [60-120s] ttwid=127
+23:14:00  [23:14:00] DANM get id=7690571475241241896 [120-180s] ttwid=127
+23:14:00  [23:14:00] MGR ready idx=7
+23:14:00  [23:14:00] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=18
+23:14:00  [23:14:00] ENGINE merge total=18 index=5 replace=false auto=false redirect=0
+23:14:00  [23:14:00] DANM get id=7690571475241241896 [180-240s] ttwid=127
+23:14:01  [23:14:01] DANM get id=7690571475241241896 [240-300s] ttwid=127
+23:14:01  [23:14:01] DANM get id=7690571475241241896 [300-360s] ttwid=127
+23:14:01  [23:14:01] DANM get id=7690571475241241896 [360-370s] ttwid=127
+23:14:02  [23:14:02] DANM all-segments done id=7690571475241241896 total=920 retry=0
+23:14:02  [23:14:02] DMLOAD done id=7690571475241241896 total=920
+23:14:06  [23:14:06] ENGINE next -> index=6
+23:14:06  [23:14:06] MGR evict idx=3
+23:14:06  [23:14:06] MGR url idx=8 src=static age=22s
+23:14:06  [23:14:06] MGR acquire idx=8 total=5
+23:14:06  [23:14:06] FEEDCOLL scrollTo idx=6 y=6480.0 items=18
+23:14:06  [23:14:06] DMLOAD id=7696339233737700834 dur=11467
+23:14:07  [23:14:06] DANM get id=7696339233737700834 [0-11s] ttwid=127
+23:14:07  [23:14:07] DANM all-segments done id=7696339233737700834 total=17 retry=0
+23:14:07  [23:14:07] DMLOAD done id=7696339233737700834 total=17
+23:14:08  [23:14:08] MGR ready idx=8
+23:14:19  [23:14:19] ENGINE next -> index=7
+23:14:19  [23:14:19] MGR evict idx=4
+23:14:19  [23:14:19] MGR url idx=9 src=static age=35s
+23:14:19  [23:14:19] MGR acquire idx=9 total=5
+23:14:19  [23:14:19] FEEDCOLL scrollTo idx=7 y=7560.0 items=18
+23:14:19  [23:14:19] DMLOAD id=7684613026239440891 dur=560334
+23:14:19  [23:14:19] DANM get id=7684613026239440891 [0-60s] ttwid=127
+23:14:19  [23:14:19] MGR ready idx=9
+23:14:19  [23:14:19] DANM get id=7684613026239440891 [60-120s] ttwid=127
+23:14:20  [23:14:20] DANM get id=7684613026239440891 [120-180s] ttwid=127
+23:14:20  [23:14:20] DANM get id=7684613026239440891 [180-240s] ttwid=127
+23:14:20  [23:14:20] DANM get id=7684613026239440891 [240-300s] ttwid=127
+23:14:21  [23:14:21] DANM get id=7684613026239440891 [300-360s] ttwid=127
+23:14:21  [23:14:21] ENGINE next -> index=8
+23:14:21  [23:14:21] MGR evict idx=5
+23:14:21  [23:14:21] MGR url idx=10 src=static age=37s
+23:14:21  [23:14:21] MGR acquire idx=10 total=5
+23:14:21  [23:14:21] FEEDCOLL scrollTo idx=8 y=8640.0 items=18
+23:14:21  [23:14:21] DANM get id=7684613026239440891 [360-420s] ttwid=127
+23:14:21  [23:14:21] DMLOAD id=7693844510312385833 dur=1198222
+23:14:21  [23:14:21] DANM get id=7693844510312385833 [0-60s] ttwid=127
+23:14:21  [23:14:21] DANM get id=7684613026239440891 [420-480s] ttwid=127
+23:14:21  [23:14:21] DANM get id=7693844510312385833 [60-120s] ttwid=127
+23:14:22  [23:14:21] DANM get id=7684613026239440891 [480-540s] ttwid=127
+23:14:22  [23:14:22] DANM get id=7693844510312385833 [120-180s] ttwid=127
+23:14:22  [23:14:22] MGR ready idx=10
+23:14:22  [23:14:22] DANM get id=7684613026239440891 [540-560s] ttwid=127
+23:14:22  [23:14:22] DANM get id=7693844510312385833 [180-240s] ttwid=127
+23:14:22  [23:14:22] DANM all-segments done id=7684613026239440891 total=59 retry=0
+23:14:22  [23:14:22] DMLOAD done id=7684613026239440891 total=59
+23:14:22  [23:14:22] DANM get id=7693844510312385833 [240-300s] ttwid=127
+23:14:23  [23:14:23] DANM get id=7693844510312385833 [300-360s] ttwid=127
+23:14:23  [23:14:23] COVER retry redirect idx=99
+23:14:23  [23:14:23] DANM get id=7693844510312385833 [360-420s] ttwid=127
+23:14:23  [23:14:23] ENGINE next -> index=9
+23:14:23  [23:14:23] MGR evict idx=6
+23:14:23  [23:14:23] MGR url idx=11 src=static age=39s
+23:14:23  [23:14:23] MGR acquire idx=11 total=5
+23:14:23  [23:14:23] FEEDCOLL scrollTo idx=9 y=9720.0 items=18
+23:14:23  [23:14:23] DMLOAD id=7703529589276785778 dur=8916
+23:14:23  [23:14:23] DANM get id=7703529589276785778 [0-8s] ttwid=127
+23:14:24  [23:14:23] DANM get id=7693844510312385833 [420-480s] ttwid=127
+23:14:24  [23:14:24] DANM all-segments done id=7703529589276785778 total=280 retry=0
+23:14:24  [23:14:24] DMLOAD done id=7703529589276785778 total=280
+23:14:24  [23:14:24] DANM get id=7693844510312385833 [480-540s] ttwid=127
+23:14:24  [23:14:24] DANM get id=7693844510312385833 [540-600s] ttwid=127
+23:14:24  [23:14:24] MGR ready idx=11
+23:14:24  [23:14:24] DANM get id=7693844510312385833 [600-660s] ttwid=127
+23:14:25  [23:14:25] DANM get id=7693844510312385833 [660-720s] ttwid=127
+23:14:25  [23:14:25] DANM get id=7693844510312385833 [720-780s] ttwid=127
+23:14:25  [23:14:25] DANM get id=7693844510312385833 [780-840s] ttwid=127
+23:14:26  [23:14:26] DANM get id=7693844510312385833 [840-900s] ttwid=127
+23:14:26  [23:14:26] DANM get id=7693844510312385833 [900-960s] ttwid=127
+23:14:27  [23:14:26] DANM get id=7693844510312385833 [960-1020s] ttwid=127
+23:14:27  [23:14:27] DANM get id=7693844510312385833 [1020-1080s] ttwid=127
+23:14:27  [23:14:27] DANM get id=7693844510312385833 [1080-1140s] ttwid=127
+23:14:27  [23:14:27] DANM get id=7693844510312385833 [1140-1198s] ttwid=127
+23:14:28  [23:14:28] DANM all-segments done id=7693844510312385833 total=145 retry=0
+23:14:28  [23:14:28] DMLOAD done id=7693844510312385833 total=145
+23:14:31  [23:14:30] ENGINE next -> index=10
+23:14:31  [23:14:30] MGR evict idx=7
+23:14:31  [23:14:30] MGR url idx=12 src=static age=30s
+23:14:31  [23:14:30] MGR acquire idx=12 total=5
+23:14:31  [23:14:30] FEEDCOLL scrollTo idx=10 y=10800.0 items=18
+23:14:31  [23:14:31] DMLOAD id=7699091786983034131 dur=627010
+23:14:31  [23:14:31] DANM get id=7699091786983034131 [0-60s] ttwid=127
+23:14:31  [23:14:31] MGR ready idx=12
+23:14:31  [23:14:31] DANM get id=7699091786983034131 [60-120s] ttwid=127
+23:14:32  [23:14:32] DANM get id=7699091786983034131 [120-180s] ttwid=127
+23:14:32  [23:14:32] DANM get id=7699091786983034131 [180-240s] ttwid=127
+23:14:32  [23:14:32] DANM get id=7699091786983034131 [240-300s] ttwid=127
+23:14:33  [23:14:32] DANM get id=7699091786983034131 [300-360s] ttwid=127
+23:14:33  [23:14:33] DANM get id=7699091786983034131 [360-420s] ttwid=127
+23:14:33  [23:14:33] DANM get id=7699091786983034131 [420-480s] ttwid=127
+23:14:33  [23:14:33] DANM get id=7699091786983034131 [480-540s] ttwid=127
+23:14:34  [23:14:34] DANM get id=7699091786983034131 [540-600s] ttwid=127
+23:14:34  [23:14:34] DANM get id=7699091786983034131 [600-627s] ttwid=127
+23:14:34  [23:14:34] DANM all-segments done id=7699091786983034131 total=43 retry=0
+23:14:34  [23:14:34] DMLOAD done id=7699091786983034131 total=43
+23:14:35  [23:14:35] ENGINE next -> index=11
+23:14:35  [23:14:35] ENGINE needMore (index=11 count=18)
+23:14:35  [23:14:35] FEED web GET refresh_index=4 cold=0 bogus_len=180 ttwid=127
+23:14:35  [23:14:35] MGR evict idx=8
+23:14:35  [23:14:35] MGR url idx=13 src=static age=34s
+23:14:35  [23:14:35] MGR acquire idx=13 total=5
+23:14:35  [23:14:35] FEEDCOLL scrollTo idx=11 y=11880.0 items=18
+23:14:35  [23:14:35] DMLOAD id=7702820964513739894 dur=310634
+23:14:35  [23:14:35] DANM get id=7702820964513739894 [0-60s] ttwid=127
+23:14:35  [23:14:35] MGR ready idx=13
+23:14:35  [23:14:35] DANM get id=7702820964513739894 [60-120s] ttwid=127
+23:14:36  [23:14:36] DANM get id=7702820964513739894 [120-180s] ttwid=127
+23:14:36  [23:14:36] DANM get id=7702820964513739894 [180-240s] ttwid=127
+23:14:36  [23:14:36] FEED web page refresh_index=4: awemes=6 usable=6 filtered=0 total_seen=24
+23:14:36  [23:14:36] ENGINE merge total=24 index=11 replace=false auto=false redirect=0
+23:14:36  [23:14:36] DANM get id=7702820964513739894 [240-300s] ttwid=127
+23:14:37  [23:14:36] DANM get id=7702820964513739894 [300-310s] ttwid=127
+23:14:37  [23:14:37] ENGINE next -> index=12
+23:14:37  [23:14:37] MGR evict idx=9
+23:14:37  [23:14:37] MGR url idx=14 src=static age=36s
+23:14:37  [23:14:37] MGR acquire idx=14 total=5
+23:14:37  [23:14:37] FEEDCOLL scrollTo idx=12 y=12960.0 items=24
+23:14:37  [23:14:37] DANM all-segments done id=7702820964513739894 total=475 retry=0
+23:14:37  [23:14:37] DMLOAD done id=7702820964513739894 total=475
+23:14:37  [23:14:37] DMLOAD id=7697528325077552426 dur=29372
+23:14:37  [23:14:37] DMLOAD done id=7697528325077552426 total=0
+23:14:38  [23:14:38] MGR ready idx=14
+23:14:41  [23:14:40] ENGINE next -> index=13
+23:14:41  [23:14:40] MGR evict idx=10
+23:14:41  [23:14:40] MGR url idx=15 src=static age=40s
+23:14:41  [23:14:40] MGR acquire idx=15 total=5
+23:14:41  [23:14:40] FEEDCOLL scrollTo idx=13 y=14040.0 items=24
+23:14:41  [23:14:41] DMLOAD id=7697616625947643136 dur=783743
+23:14:41  [23:14:41] DANM get id=7697616625947643136 [0-60s] ttwid=127
+23:14:41  [23:14:41] MGR ready idx=15
+23:14:41  [23:14:41] DANM get id=7697616625947643136 [60-120s] ttwid=127
+23:14:41  [23:14:41] DANM get id=7697616625947643136 [120-180s] ttwid=127
+23:14:42  [23:14:42] DANM get id=7697616625947643136 [180-240s] ttwid=127
+23:14:42  [23:14:42] DANM get id=7697616625947643136 [240-300s] ttwid=127
+23:14:42  [23:14:42] DANM get id=7697616625947643136 [300-360s] ttwid=127
+23:14:43  [23:14:43] DANM get id=7697616625947643136 [360-420s] ttwid=127
+23:14:43  [23:14:43] DANM get id=7697616625947643136 [420-480s] ttwid=127
+23:14:43  [23:14:43] DANM get id=7697616625947643136 [480-540s] ttwid=127
+23:14:44  [23:14:44] DANM get id=7697616625947643136 [540-600s] ttwid=127
+23:14:44  [23:14:44] DANM get id=7697616625947643136 [600-660s] ttwid=127
+23:14:44  [23:14:44] DANM get id=7697616625947643136 [660-720s] ttwid=127
+23:14:45  [23:14:44] DANM get id=7697616625947643136 [720-780s] ttwid=127
+23:14:45  [23:14:45] DANM get id=7697616625947643136 [780-783s] ttwid=127
+23:14:45  [23:14:45] DANM all-segments done id=7697616625947643136 total=14 retry=0
+23:14:45  [23:14:45] DMLOAD done id=7697616625947643136 total=14
+23:15:00  [23:15:00] ENGINE next -> index=14
+23:15:00  [23:15:00] MGR evict idx=11
+23:15:00  [23:15:00] MGR url idx=16 src=static age=60s
+23:15:00  [23:15:00] MGR acquire idx=16 total=5
+23:15:00  [23:15:00] FEEDCOLL scrollTo idx=14 y=15120.0 items=24
+23:15:01  [23:15:00] FEEDCOLL scrollTo idx=14 y=15120.0 items=24
+23:15:01  [23:15:01] DMLOAD id=7691658830405932657 dur=457167
+23:15:01  [23:15:01] DANM get id=7691658830405932657 [0-60s] ttwid=127
+23:15:01  [23:15:01] MGR ready idx=16
+23:15:01  [23:15:01] DANM get id=7691658830405932657 [60-120s] ttwid=127
+23:15:01  [23:15:01] DANM get id=7691658830405932657 [120-180s] ttwid=127
+23:15:02  [23:15:02] DANM get id=7691658830405932657 [180-240s] ttwid=127
+23:15:02  [23:15:02] DANM get id=7691658830405932657 [240-300s] ttwid=127
+23:15:03  [23:15:02] DANM get id=7691658830405932657 [300-360s] ttwid=127
+23:15:03  [23:15:03] DANM get id=7691658830405932657 [360-420s] ttwid=127
+23:15:03  [23:15:03] DANM get id=7691658830405932657 [420-457s] ttwid=127
+23:15:03  [23:15:03] DANM all-segments done id=7691658830405932657 total=2 retry=0
+23:15:04  [23:15:03] DMLOAD done id=7691658830405932657 total=2
+23:15:04  [23:15:04] ENGINE next -> index=15
+23:15:04  [23:15:04] MGR evict idx=12
+23:15:04  [23:15:04] MGR url idx=17 src=static age=64s
+23:15:04  [23:15:04] MGR acquire idx=17 total=5
+23:15:04  [23:15:04] FEEDCOLL scrollTo idx=15 y=16200.0 items=24
+23:15:05  [23:15:04] DMLOAD id=7703916424948380529 dur=26367
+23:15:05  [23:15:05] DANM get id=7703916424948380529 [0-26s] ttwid=127
+23:15:05  [23:15:05] DANM all-segments done id=7703916424948380529 total=111 retry=0
+23:15:05  [23:15:05] DMLOAD done id=7703916424948380529 total=111
+23:15:05  [23:15:05] MGR ready idx=17
+23:15:06  [23:15:06] ENGINE next -> index=16
+23:15:06  [23:15:06] MGR evict idx=13
+23:15:06  [23:15:06] MGR url idx=18 src=static age=30s
+23:15:06  [23:15:06] MGR acquire idx=18 total=5
+23:15:06  [23:15:06] FEEDCOLL scrollTo idx=16 y=17280.0 items=24
+23:15:06  [23:15:06] DMLOAD id=7680434684593590217 dur=151767
+23:15:07  [23:15:06] DANM get id=7680434684593590217 [0-60s] ttwid=127
+23:15:07  [23:15:06] MGR ready idx=18
+23:15:07  [23:15:07] DANM get id=7680434684593590217 [60-120s] ttwid=127
+23:15:07  [23:15:07] DANM get id=7680434684593590217 [120-151s] ttwid=127
+23:15:07  [23:15:07] DANM all-segments done id=7680434684593590217 total=22 retry=0
+23:15:07  [23:15:07] DMLOAD done id=7680434684593590217 total=22
+23:15:08  [23:15:08] ENGINE next -> index=17
+23:15:08  [23:15:08] ENGINE needMore (index=17 count=24)
+23:15:08  [23:15:08] FEED web GET refresh_index=5 cold=0 bogus_len=180 ttwid=127
+23:15:08  [23:15:08] MGR evict idx=14
+23:15:08  [23:15:08] MGR url idx=19 src=static age=31s
+23:15:08  [23:15:08] MGR acquire idx=19 total=5
+23:15:08  [23:15:08] FEEDCOLL scrollTo idx=17 y=18360.0 items=24
+23:15:08  [23:15:08] DMLOAD id=7697147846277090594 dur=741952
+23:15:08  [23:15:08] DANM get id=7697147846277090594 [0-60s] ttwid=127
+23:15:08  [23:15:08] MGR ready idx=19
+23:15:08  [23:15:08] DANM get id=7697147846277090594 [60-120s] ttwid=127
+23:15:09  [23:15:08] DANM get id=7697147846277090594 [120-180s] ttwid=127
+23:15:09  [23:15:09] DANM get id=7697147846277090594 [180-240s] ttwid=127
+23:15:09  [23:15:09] DANM get id=7697147846277090594 [240-300s] ttwid=127
+23:15:09  [23:15:09] FEED web page refresh_index=5: awemes=6 usable=6 filtered=0 total_seen=30
+23:15:10  [23:15:09] ENGINE merge total=30 index=17 replace=false auto=false redirect=0
+23:15:10  [23:15:09] DANM get id=7697147846277090594 [300-360s] ttwid=127
+23:15:10  [23:15:10] DANM get id=7697147846277090594 [360-420s] ttwid=127
+23:15:10  [23:15:10] DANM get id=7697147846277090594 [420-480s] ttwid=127
+23:15:11  [23:15:11] DANM get id=7697147846277090594 [480-540s] ttwid=127
+23:15:11  [23:15:11] DANM get id=7697147846277090594 [540-600s] ttwid=127
+23:15:11  [23:15:11] DANM get id=7697147846277090594 [600-660s] ttwid=127
+23:15:12  [23:15:11] DANM get id=7697147846277090594 [660-720s] ttwid=127
+23:15:12  [23:15:12] DANM get id=7697147846277090594 [720-741s] ttwid=127
+23:15:12  [23:15:12] DANM all-segments done id=7697147846277090594 total=787 retry=0
+23:15:12  [23:15:12] DMLOAD done id=7697147846277090594 total=787
+23:15:13  [23:15:13] ENGINE next -> index=18
+23:15:13  [23:15:13] MGR evict idx=15
+23:15:13  [23:15:13] MGR url idx=20 src=static age=37s
+23:15:13  [23:15:13] MGR acquire idx=20 total=5
+23:15:13  [23:15:13] FEEDCOLL scrollTo idx=18 y=19440.0 items=30
+23:15:13  [23:15:13] DMLOAD id=7705754004068029354 dur=17834
+23:15:14  [23:15:13] DANM get id=7705754004068029354 [0-17s] ttwid=127
+23:15:14  [23:15:14] MGR ready idx=20
+23:15:14  [23:15:14] DANM cap-hit [0-17s] n=965 → split
+23:15:14  [23:15:14] DANM get id=7705754004068029354 [0-8s] ttwid=127
+23:15:14  [23:15:14] DANM get id=7705754004068029354 [8-17s] ttwid=127
+23:15:15  [23:15:14] DANM all-segments done id=7705754004068029354 total=965 retry=0
+23:15:15  [23:15:14] DMLOAD done id=7705754004068029354 total=965
+23:15:15  [23:15:15] ENGINE next -> index=19
+23:15:15  [23:15:15] MGR evict idx=16
+23:15:15  [23:15:15] MGR url idx=21 src=static age=38s
+23:15:15  [23:15:15] MGR acquire idx=21 total=5
+23:15:15  [23:15:15] FEEDCOLL scrollTo idx=19 y=20520.0 items=30
+23:15:15  [23:15:15] DMLOAD id=7698349396756417835 dur=459339
+23:15:15  [23:15:15] DANM get id=7698349396756417835 [0-60s] ttwid=127
+23:15:15  [23:15:15] MGR ready idx=21
+23:15:16  [23:15:15] DANM get id=7698349396756417835 [60-120s] ttwid=127
+23:15:16  [23:15:16] DANM get id=7698349396756417835 [120-180s] ttwid=127
+23:15:16  [23:15:16] DANM get id=7698349396756417835 [180-240s] ttwid=127
+23:15:16  [23:15:16] ENGINE next -> index=20
+23:15:16  [23:15:16] MGR evict idx=17
+23:15:16  [23:15:16] MGR url idx=22 src=static age=40s
+23:15:16  [23:15:16] MGR acquire idx=22 total=5
+23:15:16  [23:15:16] FEEDCOLL scrollTo idx=20 y=21600.0 items=30
+23:15:16  [23:15:16] DANM get id=7698349396756417835 [240-300s] ttwid=127
+23:15:17  [23:15:16] DMLOAD id=7695290660496220367 dur=606034
+23:15:17  [23:15:16] DANM get id=7695290660496220367 [0-60s] ttwid=127
+23:15:17  [23:15:17] DANM get id=7698349396756417835 [300-360s] ttwid=127
+23:15:17  [23:15:17] DANM get id=7695290660496220367 [60-120s] ttwid=127
+23:15:17  [23:15:17] DANM get id=7698349396756417835 [360-420s] ttwid=127
+23:15:17  [23:15:17] DANM get id=7695290660496220367 [120-180s] ttwid=127
+23:15:17  [23:15:17] MGR ready idx=22
+23:15:17  [23:15:17] DANM get id=7698349396756417835 [420-459s] ttwid=127
+23:15:17  [23:15:17] DANM get id=7695290660496220367 [180-240s] ttwid=127
+23:15:18  [23:15:17] DANM all-segments done id=7698349396756417835 total=4 retry=0
+23:15:18  [23:15:17] DMLOAD done id=7698349396756417835 total=4
+23:15:18  [23:15:18] DANM get id=7695290660496220367 [240-300s] ttwid=127
+23:15:18  [23:15:18] DANM get id=7695290660496220367 [300-360s] ttwid=127
+23:15:18  [23:15:18] ENGINE next -> index=21
+23:15:18  [23:15:18] MGR evict idx=18
+23:15:18  [23:15:18] MGR url idx=23 src=static age=42s
+23:15:18  [23:15:18] MGR acquire idx=23 total=5
+23:15:18  [23:15:18] FEEDCOLL scrollTo idx=21 y=22680.0 items=30
+23:15:18  [23:15:18] DANM get id=7695290660496220367 [360-420s] ttwid=127
+23:15:18  [23:15:18] DMLOAD id=7707606394765830075 dur=28978
+23:15:19  [23:15:18] DANM get id=7707606394765830075 [0-28s] ttwid=127
+23:15:19  [23:15:18] DANM get id=7695290660496220367 [420-480s] ttwid=127
+23:15:19  [23:15:19] DANM all-segments done id=7707606394765830075 total=21 retry=0
+23:15:19  [23:15:19] DMLOAD done id=7707606394765830075 total=21
+23:15:19  [23:15:19] DANM get id=7695290660496220367 [480-540s] ttwid=127
+23:15:19  [23:15:19] DANM get id=7695290660496220367 [540-600s] ttwid=127
+23:15:19  [23:15:19] MGR ready idx=23
+23:15:20  [23:15:19] ENGINE next -> index=22
+23:15:20  [23:15:19] MGR evict idx=19
+23:15:20  [23:15:19] MGR url idx=24 src=static age=10s
+23:15:20  [23:15:19] MGR acquire idx=24 total=5
+23:15:20  [23:15:19] FEEDCOLL scrollTo idx=22 y=23760.0 items=30
+23:15:20  [23:15:19] DANM get id=7695290660496220367 [600-606s] ttwid=127
+23:15:20  [23:15:20] DMLOAD id=7678129362838785332 dur=1361157
+23:15:20  [23:15:20] DANM all-segments done id=7695290660496220367 total=283 retry=0
+23:15:20  [23:15:20] DANM get id=7678129362838785332 [0-60s] ttwid=127
+23:15:20  [23:15:20] DMLOAD done id=7695290660496220367 total=283
+23:15:20  [23:15:20] MGR ready idx=24
+23:15:20  [23:15:20] DANM get id=7678129362838785332 [60-120s] ttwid=127
+23:15:20  [23:15:20] DANM get id=7678129362838785332 [120-180s] ttwid=127
+23:15:21  [23:15:21] DANM get id=7678129362838785332 [180-240s] ttwid=127
+23:15:21  [23:15:21] DANM get id=7678129362838785332 [240-300s] ttwid=127
+23:15:21  [23:15:21] DANM get id=7678129362838785332 [300-360s] ttwid=127
+23:15:22  [23:15:22] DANM get id=7678129362838785332 [360-420s] ttwid=127
+23:15:22  [23:15:22] ENGINE next -> index=23
+23:15:22  [23:15:22] ENGINE needMore (index=23 count=30)
+23:15:22  [23:15:22] FEED web GET refresh_index=6 cold=0 bogus_len=180 ttwid=127
+23:15:22  [23:15:22] MGR evict idx=20
+23:15:22  [23:15:22] MGR url idx=25 src=static age=12s
+23:15:22  [23:15:22] MGR acquire idx=25 total=5
+23:15:22  [23:15:22] FEEDCOLL scrollTo idx=23 y=24840.0 items=30
+23:15:22  [23:15:22] DANM get id=7678129362838785332 [420-480s] ttwid=127
+23:15:22  [23:15:22] DMLOAD id=7690086203630161193 dur=902200
+23:15:22  [23:15:22] DANM get id=7690086203630161193 [0-60s] ttwid=127
+23:15:22  [23:15:22] MGR ready idx=25
+23:15:22  [23:15:22] DANM get id=7678129362838785332 [480-540s] ttwid=127
+23:15:23  [23:15:22] DANM get id=7690086203630161193 [60-120s] ttwid=127
+23:15:23  [23:15:22] DANM get id=7678129362838785332 [540-600s] ttwid=127
+23:15:23  [23:15:23] DANM get id=7690086203630161193 [120-180s] ttwid=127
+23:15:23  [23:15:23] DANM get id=7678129362838785332 [600-660s] ttwid=127
+23:15:23  [23:15:23] DANM get id=7690086203630161193 [180-240s] ttwid=127
+23:15:23  [23:15:23] DANM get id=7678129362838785332 [660-720s] ttwid=127
+23:15:23  [23:15:23] FEED web page refresh_index=6: awemes=6 usable=6 filtered=0 total_seen=36
+23:15:23  [23:15:23] ENGINE merge total=36 index=23 replace=false auto=false redirect=0
+23:15:23  [23:15:23] ENGINE next -> index=24
+23:15:23  [23:15:23] MGR evict idx=21
+23:15:23  [23:15:23] MGR url idx=26 src=static age=13s
+23:15:24  [23:15:23] MGR acquire idx=26 total=5
+23:15:24  [23:15:23] FEEDCOLL scrollTo idx=24 y=25920.0 items=36
+23:15:24  [23:15:23] DANM get id=7690086203630161193 [240-300s] ttwid=127
+23:15:24  [23:15:23] DANM get id=7678129362838785332 [720-780s] ttwid=127
+23:15:24  [23:15:24] DMLOAD id=7687882613504036777 dur=24534
+23:15:24  [23:15:24] DANM get id=7687882613504036777 [0-24s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7690086203630161193 [300-360s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7678129362838785332 [780-840s] ttwid=127
+23:15:24  [23:15:24] DANM cap-hit [0-24s] n=920 → split
+23:15:24  [23:15:24] DANM get id=7687882613504036777 [0-12s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7690086203630161193 [360-420s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7678129362838785332 [840-900s] ttwid=127
+23:15:24  [23:15:24] DANM cap-hit [0-12s] n=920 → split
+23:15:24  [23:15:24] DANM get id=7687882613504036777 [0-6s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7690086203630161193 [420-480s] ttwid=127
+23:15:24  [23:15:24] DANM get id=7678129362838785332 [900-960s] ttwid=127
+23:15:24  [23:15:24] MGR ready idx=26
+23:15:25  [23:15:24] DANM get id=7687882613504036777 [6-12s] ttwid=127
+23:15:25  [23:15:24] DANM get id=7678129362838785332 [960-1020s] ttwid=127
+23:15:25  [23:15:24] DANM get id=7690086203630161193 [480-540s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7678129362838785332 [1020-1080s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7690086203630161193 [540-600s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7687882613504036777 [12-24s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7678129362838785332 [1080-1140s] ttwid=127
+23:15:25  [23:15:25] DANM cap-hit [12-24s] n=606 → split
+23:15:25  [23:15:25] DANM get id=7687882613504036777 [12-18s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7690086203630161193 [600-660s] ttwid=127
+23:15:25  [23:15:25] DANM get id=7678129362838785332 [1140-1200s] ttwid=127
+23:15:26  [23:15:25] DANM get id=7690086203630161193 [660-720s] ttwid=127
+23:15:26  [23:15:25] DANM get id=7687882613504036777 [18-24s] ttwid=127
+23:15:26  [23:15:26] DANM get id=7690086203630161193 [720-780s] ttwid=127
+23:15:26  [23:15:26] DANM get id=7678129362838785332 [1200-1260s] ttwid=127
+23:15:26  [23:15:26] DANM get id=7690086203630161193 [780-840s] ttwid=127
+23:15:26  [23:15:26] DANM get id=7678129362838785332 [1260-1320s] ttwid=127
+23:15:26  [23:15:26] DANM all-segments done id=7687882613504036777 total=921 retry=0
+23:15:26  [23:15:26] DMLOAD done id=7687882613504036777 total=921
+23:15:26  [23:15:26] DANM get id=7690086203630161193 [840-900s] ttwid=127
+23:15:26  [23:15:26] DANM get id=7678129362838785332 [1320-1361s] ttwid=127
+23:15:27  [23:15:26] DANM get id=7690086203630161193 [900-902s] ttwid=127
+23:15:27  [23:15:26] DANM all-segments done id=7678129362838785332 total=234 retry=0
+23:15:27  [23:15:26] DMLOAD done id=7678129362838785332 total=234
+23:15:27  [23:15:27] DANM all-segments done id=7690086203630161193 total=118 retry=0
+23:15:27  [23:15:27] DMLOAD done id=7690086203630161193 total=118
+23:15:48  [23:15:48] SETTINGS panel open (menu #1)
+23:15:48  [23:15:48] SETTINGS panel exit-app (menu #2)
+23:23:15  [23:23:14] DYTV v143 launched
+23:23:15  [23:23:14] LOGSRV ready on port 8765
+23:23:15  [23:23:14] SIGNER init start
+23:23:15  [23:23:14] LOGSRV advertising as DYTV-384
+23:23:15  [23:23:14] SIGNER load shim ok
+23:23:15  [23:23:14] SIGNER load abogus ok
+23:23:15  [23:23:14] SIGNER load sign ok
+23:23:15  [23:23:15] SIGNER load abogus_dy ok
+23:23:15  [23:23:15] SIGNER extras sign=true dy=true
+23:23:15  [23:23:15] SIGNER bdms=yes
+23:23:15  [23:23:15] SIGNER initABogus=true
+23:23:15  [23:23:15] SIGNER fns=AB (期望 AB)
+23:23:15  [23:23:15] SIGNER smoke={"ok":true,"value":"D6WhQQ0hdEdBgdWg5XcLfY3qVW33Ysl60SVkMDhezVfPm639HMY29exE3lJvc/DeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+23:23:15  [23:23:15] SIGNER READY a_bogus len=180
+23:23:15  [23:23:15] FEEDCOLL viewDidLoad
+23:23:15  [23:23:15] ROOT auto-start v143
+23:23:15  [23:23:15] FEED native pipeline armed (source=web)
+23:23:15  [23:23:15] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+23:23:15  [23:23:15] LOGSRV Bonjour published: DYTV-384
+23:23:16  [23:23:16] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+23:23:16  [23:23:16] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+23:23:17  [23:23:16] ENGINE needMore (index=0 count=6)
+23:23:17  [23:23:16] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+23:23:17  [23:23:16] MGR url idx=0 src=static age=0s
+23:23:17  [23:23:16] MGR acquire idx=0 total=1
+23:23:17  [23:23:16] MGR cold-start defer neighbors=[1, 2]
+23:23:17  [23:23:16] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+23:23:17  [23:23:17] DMLOAD id=7707655440431793064 dur=8567
+23:23:17  [23:23:17] MGR ready idx=0
+23:23:17  [23:23:17] MGR url idx=1 src=static age=0s
+23:23:17  [23:23:17] DANM get id=7707655440431793064 [0-8s] ttwid=127
+23:23:17  [23:23:17] MGR acquire idx=1 total=2
+23:23:17  [23:23:17] MGR url idx=2 src=static age=0s
+23:23:17  [23:23:17] MGR acquire idx=2 total=3
+23:23:17  [23:23:17] MGR cold-start neighbors acquired=[1, 2]
+23:23:18  [23:23:18] MGR ready idx=1
+23:23:18  [23:23:18] DANM all-segments done id=7707655440431793064 total=36 retry=0
+23:23:18  [23:23:18] DMLOAD done id=7707655440431793064 total=36
+23:23:18  [23:23:18] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+23:23:18  [23:23:18] ENGINE merge total=12 index=0 replace=false auto=false redirect=0
+23:23:19  [23:23:19] MGR ready idx=2
+23:23:27  [23:23:27] ENGINE next -> index=1
+23:23:27  [23:23:27] MGR url idx=3 src=static age=10s
+23:23:27  [23:23:27] MGR acquire idx=3 total=4
+23:23:27  [23:23:27] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+23:23:27  [23:23:27] DMLOAD id=7706516380128904379 dur=536640
+23:23:28  [23:23:27] DANM get id=7706516380128904379 [0-60s] ttwid=127
+23:23:28  [23:23:27] MGR ready idx=3
+23:23:28  [23:23:28] DANM get id=7706516380128904379 [60-120s] ttwid=127
+23:23:28  [23:23:28] DANM get id=7706516380128904379 [120-180s] ttwid=127
+23:23:28  [23:23:28] DANM get id=7706516380128904379 [180-240s] ttwid=127
+23:23:29  [23:23:29] DANM get id=7706516380128904379 [240-300s] ttwid=127
+23:23:29  [23:23:29] DANM get id=7706516380128904379 [300-360s] ttwid=127
+23:23:29  [23:23:29] DANM get id=7706516380128904379 [360-420s] ttwid=127
+23:23:30  [23:23:30] DANM get id=7706516380128904379 [420-480s] ttwid=127
+23:23:30  [23:23:30] DANM get id=7706516380128904379 [480-536s] ttwid=127
+23:23:30  [23:23:30] DANM all-segments done id=7706516380128904379 total=153 retry=0
+23:23:30  [23:23:30] DMLOAD done id=7706516380128904379 total=153
+23:23:35  [23:23:35] ENGINE next -> index=2
+23:23:35  [23:23:35] MGR url idx=4 src=static age=19s
+23:23:35  [23:23:35] MGR acquire idx=4 total=5
+23:23:35  [23:23:35] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+23:23:36  [23:23:36] DMLOAD id=7685972329633041679 dur=2468379
+23:23:36  [23:23:36] DANM get id=7685972329633041679 [0-60s] ttwid=127
+23:23:36  [23:23:36] MGR ready idx=4
+23:23:36  [23:23:36] DANM get id=7685972329633041679 [60-120s] ttwid=127
+23:23:36  [23:23:36] DANM get id=7685972329633041679 [120-180s] ttwid=127
+23:23:37  [23:23:36] DANM get id=7685972329633041679 [180-240s] ttwid=127
+23:23:37  [23:23:37] DANM get id=7685972329633041679 [240-300s] ttwid=127
+23:23:37  [23:23:37] DANM get id=7685972329633041679 [300-360s] ttwid=127
+23:23:38  [23:23:37] DANM get id=7685972329633041679 [360-420s] ttwid=127
+23:23:38  [23:23:38] DANM get id=7685972329633041679 [420-480s] ttwid=127
+23:23:38  [23:23:38] DANM get id=7685972329633041679 [480-540s] ttwid=127
+23:23:38  [23:23:38] DANM get id=7685972329633041679 [540-600s] ttwid=127
+23:23:39  [23:23:39] DANM get id=7685972329633041679 [600-660s] ttwid=127
+23:23:39  [23:23:39] DANM get id=7685972329633041679 [660-720s] ttwid=127
+23:23:39  [23:23:39] DANM get id=7685972329633041679 [720-780s] ttwid=127
+23:23:40  [23:23:40] DANM get id=7685972329633041679 [780-840s] ttwid=127
+23:23:40  [23:23:40] DANM get id=7685972329633041679 [840-900s] ttwid=127
+23:23:40  [23:23:40] DANM get id=7685972329633041679 [900-960s] ttwid=127
+23:23:41  [23:23:40] DANM get id=7685972329633041679 [960-1020s] ttwid=127
+23:23:41  [23:23:41] DANM get id=7685972329633041679 [1020-1080s] ttwid=127
+23:23:41  [23:23:41] DANM get id=7685972329633041679 [1080-1140s] ttwid=127
+23:23:41  [23:23:41] DANM get id=7685972329633041679 [1140-1200s] ttwid=127
+23:23:42  [23:23:42] DANM get id=7685972329633041679 [1200-1260s] ttwid=127
+23:23:42  [23:23:42] DANM get id=7685972329633041679 [1260-1320s] ttwid=127
+23:23:42  [23:23:42] DANM get id=7685972329633041679 [1320-1380s] ttwid=127
+23:23:43  [23:23:42] DANM get id=7685972329633041679 [1380-1440s] ttwid=127
+23:23:43  [23:23:43] DANM get id=7685972329633041679 [1440-1500s] ttwid=127
+23:23:43  [23:23:43] DANM get id=7685972329633041679 [1500-1560s] ttwid=127
+23:23:43  [23:23:43] ENGINE next -> index=3
+23:23:43  [23:23:43] MGR evict idx=0
+23:23:43  [23:23:43] MGR url idx=5 src=static age=26s
+23:23:43  [23:23:43] MGR acquire idx=5 total=5
+23:23:43  [23:23:43] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:23:43  [23:23:43] DANM get id=7685972329633041679 [1560-1620s] ttwid=127
+23:23:44  [23:23:44] DMLOAD id=7707889487947644904 dur=20167
+23:23:44  [23:23:44] DANM get id=7707889487947644904 [0-20s] ttwid=127
+23:23:44  [23:23:44] DANM get id=7685972329633041679 [1620-1680s] ttwid=127
+23:23:44  [23:23:44] DANM cap-hit [0-20s] n=527 → split
+23:23:44  [23:23:44] DANM get id=7707889487947644904 [0-10s] ttwid=127
+23:23:44  [23:23:44] DANM get id=7685972329633041679 [1680-1740s] ttwid=127
+23:23:44  [23:23:44] DANM cap-hit [0-10s] n=526 → split
+23:23:44  [23:23:44] DANM get id=7707889487947644904 [0-5s] ttwid=127
+23:23:44  [23:23:44] DANM get id=7685972329633041679 [1740-1800s] ttwid=127
+23:23:44  [23:23:44] MGR ready idx=5
+23:23:44  [23:23:44] DANM get id=7707889487947644904 [5-10s] ttwid=127
+23:23:45  [23:23:44] DANM get id=7685972329633041679 [1800-1860s] ttwid=127
+23:23:45  [23:23:45] DANM get id=7685972329633041679 [1860-1920s] ttwid=127
+23:23:45  [23:23:45] DANM get id=7707889487947644904 [10-20s] ttwid=127
+23:23:45  [23:23:45] DANM get id=7685972329633041679 [1920-1980s] ttwid=127
+23:23:45  [23:23:45] DANM all-segments done id=7707889487947644904 total=527 retry=0
+23:23:45  [23:23:45] DMLOAD done id=7707889487947644904 total=527
+23:23:45  [23:23:45] DANM get id=7685972329633041679 [1980-2040s] ttwid=127
+23:23:46  [23:23:46] DANM get id=7685972329633041679 [2040-2100s] ttwid=127
+23:23:46  [23:23:46] DANM get id=7685972329633041679 [2100-2160s] ttwid=127
+23:23:46  [23:23:46] DANM get id=7685972329633041679 [2160-2220s] ttwid=127
+23:23:47  [23:23:47] DANM get id=7685972329633041679 [2220-2280s] ttwid=127
+23:23:47  [23:23:47] DANM get id=7685972329633041679 [2280-2340s] ttwid=127
+23:23:47  [23:23:47] DANM get id=7685972329633041679 [2340-2400s] ttwid=127
+23:23:48  [23:23:47] DANM get id=7685972329633041679 [2400-2460s] ttwid=127
+23:23:48  [23:23:48] DANM get id=7685972329633041679 [2460-2468s] ttwid=127
+23:23:48  [23:23:48] DANM all-segments done id=7685972329633041679 total=14 retry=0
+23:23:48  [23:23:48] DMLOAD done id=7685972329633041679 total=14
+23:23:48  [23:23:48] ENGINE next -> index=4
+23:23:49  [23:23:48] MGR evict idx=1
+23:23:49  [23:23:48] MGR url idx=6 src=static age=30s
+23:23:49  [23:23:48] MGR acquire idx=6 total=5
+23:23:49  [23:23:48] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+23:23:49  [23:23:49] DMLOAD id=7697632035547958538 dur=524749
+23:23:49  [23:23:49] DANM get id=7697632035547958538 [0-60s] ttwid=127
+23:23:49  [23:23:49] MGR ready idx=6
+23:23:49  [23:23:49] DANM get id=7697632035547958538 [60-120s] ttwid=127
+23:23:49  [23:23:49] DANM get id=7697632035547958538 [120-180s] ttwid=127
+23:23:50  [23:23:50] DANM get id=7697632035547958538 [180-240s] ttwid=127
+23:23:50  [23:23:50] DANM get id=7697632035547958538 [240-300s] ttwid=127
+23:23:50  [23:23:50] DANM get id=7697632035547958538 [300-360s] ttwid=127
+23:23:51  [23:23:50] DANM get id=7697632035547958538 [360-420s] ttwid=127
+23:23:51  [23:23:51] DANM get id=7697632035547958538 [420-480s] ttwid=127
+23:23:51  [23:23:51] DANM get id=7697632035547958538 [480-524s] ttwid=127
+23:23:51  [23:23:51] DANM all-segments done id=7697632035547958538 total=5 retry=0
+23:23:52  [23:23:51] DMLOAD done id=7697632035547958538 total=5
+23:23:54  [23:23:54] ENGINE next -> index=5
+23:23:54  [23:23:54] ENGINE needMore (index=5 count=12)
+23:23:54  [23:23:54] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+23:23:54  [23:23:54] MGR evict idx=2
+23:23:54  [23:23:54] MGR url idx=7 src=static age=35s
+23:23:54  [23:23:54] MGR acquire idx=7 total=5
+23:23:54  [23:23:54] FEEDCOLL scrollTo idx=5 y=5400.0 items=12
+23:23:54  [23:23:54] DMLOAD id=7678719262915087622 dur=882000
+23:23:54  [23:23:54] DANM get id=7678719262915087622 [0-60s] ttwid=127
+23:23:54  [23:23:54] DANM get id=7678719262915087622 [60-120s] ttwid=127
+23:23:55  [23:23:55] DANM get id=7678719262915087622 [120-180s] ttwid=127
+23:23:55  [23:23:55] MGR ready idx=7
+23:23:55  [23:23:55] DANM get id=7678719262915087622 [180-240s] ttwid=127
+23:23:55  [23:23:55] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=18
+23:23:55  [23:23:55] ENGINE merge total=18 index=5 replace=false auto=false redirect=0
+23:23:55  [23:23:55] DANM get id=7678719262915087622 [240-300s] ttwid=127
+23:23:56  [23:23:56] DANM get id=7678719262915087622 [300-360s] ttwid=127
+23:23:56  [23:23:56] DANM get id=7678719262915087622 [360-420s] ttwid=127
+23:23:56  [23:23:56] DANM get id=7678719262915087622 [420-480s] ttwid=127
+23:23:57  [23:23:57] DANM get id=7678719262915087622 [480-540s] ttwid=127
+23:23:57  [23:23:57] DANM get id=7678719262915087622 [540-600s] ttwid=127
+23:23:57  [23:23:57] DANM get id=7678719262915087622 [600-660s] ttwid=127
+23:23:58  [23:23:58] DANM get id=7678719262915087622 [660-720s] ttwid=127
+23:23:58  [23:23:58] ENGINE next -> index=6
+23:23:58  [23:23:58] MGR evict idx=3
+23:23:58  [23:23:58] MGR url idx=8 src=static age=39s
+23:23:58  [23:23:58] MGR acquire idx=8 total=5
+23:23:58  [23:23:58] FEEDCOLL scrollTo idx=6 y=6480.0 items=18
+23:23:58  [23:23:58] DANM get id=7678719262915087622 [720-780s] ttwid=127
+23:23:58  [23:23:58] DMLOAD id=7698332864743915599 dur=21734
+23:23:58  [23:23:58] DANM get id=7698332864743915599 [0-21s] ttwid=127
+23:23:58  [23:23:58] DANM get id=7678719262915087622 [780-840s] ttwid=127
+23:23:58  [23:23:58] DANM all-segments done id=7698332864743915599 total=32 retry=0
+23:23:58  [23:23:58] DMLOAD done id=7698332864743915599 total=32
+23:23:59  [23:23:58] DANM get id=7678719262915087622 [840-882s] ttwid=127
+23:23:59  [23:23:59] DANM all-segments done id=7678719262915087622 total=400 retry=0
+23:23:59  [23:23:59] DMLOAD done id=7678719262915087622 total=400
+23:23:59  [23:23:59] MGR ready idx=8
+23:24:02  [23:24:02] ENGINE next -> index=7
+23:24:02  [23:24:02] MGR evict idx=4
+23:24:02  [23:24:02] MGR url idx=9 src=static age=44s
+23:24:02  [23:24:02] MGR acquire idx=9 total=5
+23:24:02  [23:24:02] FEEDCOLL scrollTo idx=7 y=7560.0 items=18
+23:24:02  [23:24:02] DMLOAD id=7695984909185911418 dur=611667
+23:24:02  [23:24:02] DANM get id=7695984909185911418 [0-60s] ttwid=127
+23:24:02  [23:24:02] MGR ready idx=9
+23:24:03  [23:24:03] DANM get id=7695984909185911418 [60-120s] ttwid=127
+23:24:03  [23:24:03] DANM get id=7695984909185911418 [120-180s] ttwid=127
+23:24:03  [23:24:03] DANM get id=7695984909185911418 [180-240s] ttwid=127
+23:24:04  [23:24:04] DANM get id=7695984909185911418 [240-300s] ttwid=127
+23:24:04  [23:24:04] DANM get id=7695984909185911418 [300-360s] ttwid=127
+23:24:04  [23:24:04] DANM get id=7695984909185911418 [360-420s] ttwid=127
+23:24:05  [23:24:04] DANM get id=7695984909185911418 [420-480s] ttwid=127
+23:24:05  [23:24:04] ENGINE next -> index=8
+23:24:05  [23:24:04] MGR evict idx=5
+23:24:05  [23:24:04] MGR url idx=10 src=static age=46s
+23:24:05  [23:24:04] MGR acquire idx=10 total=5
+23:24:05  [23:24:04] FEEDCOLL scrollTo idx=8 y=8640.0 items=18
+23:24:05  [23:24:05] DANM get id=7695984909185911418 [480-540s] ttwid=127
+23:24:05  [23:24:05] DMLOAD id=7703539826758356287 dur=526886
+23:24:05  [23:24:05] DANM get id=7703539826758356287 [0-60s] ttwid=127
+23:24:05  [23:24:05] DANM get id=7695984909185911418 [540-600s] ttwid=127
+23:24:05  [23:24:05] DANM get id=7703539826758356287 [60-120s] ttwid=127
+23:24:05  [23:24:05] DANM get id=7695984909185911418 [600-611s] ttwid=127
+23:24:05  [23:24:05] DANM get id=7703539826758356287 [120-180s] ttwid=127
+23:24:06  [23:24:05] DANM all-segments done id=7695984909185911418 total=17 retry=0
+23:24:06  [23:24:05] DMLOAD done id=7695984909185911418 total=17
+23:24:06  [23:24:06] DANM get id=7703539826758356287 [180-240s] ttwid=127
+23:24:06  [23:24:06] DANM get id=7703539826758356287 [240-300s] ttwid=127
+23:24:06  [23:24:06] MGR ready idx=10
+23:24:06  [23:24:06] DANM get id=7703539826758356287 [300-360s] ttwid=127
+23:24:07  [23:24:07] DANM get id=7703539826758356287 [360-420s] ttwid=127
+23:24:07  [23:24:07] ENGINE next -> index=9
+23:24:07  [23:24:07] MGR evict idx=6
+23:24:07  [23:24:07] MGR url idx=11 src=static age=48s
+23:24:07  [23:24:07] MGR acquire idx=11 total=5
+23:24:07  [23:24:07] FEEDCOLL scrollTo idx=9 y=9720.0 items=18
+23:24:07  [23:24:07] DANM get id=7703539826758356287 [420-480s] ttwid=127
+23:24:07  [23:24:07] DMLOAD id=7706829191592948842 dur=10334
+23:24:07  [23:24:07] DANM get id=7706829191592948842 [0-10s] ttwid=127
+23:24:07  [23:24:07] DANM get id=7703539826758356287 [480-526s] ttwid=127
+23:24:07  [23:24:07] MGR ready idx=11
+23:24:07  [23:24:07] DANM all-segments done id=7706829191592948842 total=105 retry=0
+23:24:08  [23:24:07] DMLOAD done id=7706829191592948842 total=105
+23:24:08  [23:24:07] DANM all-segments done id=7703539826758356287 total=89 retry=0
+23:24:08  [23:24:07] DMLOAD done id=7703539826758356287 total=89
+23:24:13  [23:24:13] ENGINE next -> index=10
+23:24:14  [23:24:13] MGR evict idx=7
+23:24:14  [23:24:13] MGR url idx=12 src=static age=18s
+23:24:14  [23:24:13] MGR acquire idx=12 total=5
+23:24:14  [23:24:13] FEEDCOLL scrollTo idx=10 y=10800.0 items=18
+23:24:14  [23:24:14] DMLOAD id=7701327355008060712 dur=1143096
+23:24:14  [23:24:14] DANM get id=7701327355008060712 [0-60s] ttwid=127
+23:24:14  [23:24:14] MGR ready idx=12
+23:24:14  [23:24:14] DANM get id=7701327355008060712 [60-120s] ttwid=127
+23:24:14  [23:24:14] DANM get id=7701327355008060712 [120-180s] ttwid=127
+23:24:15  [23:24:15] DANM get id=7701327355008060712 [180-240s] ttwid=127
+23:24:15  [23:24:15] DANM get id=7701327355008060712 [240-300s] ttwid=127
+23:24:15  [23:24:15] DANM get id=7701327355008060712 [300-360s] ttwid=127
+23:24:16  [23:24:15] ENGINE next -> index=11
+23:24:16  [23:24:15] ENGINE needMore (index=11 count=18)
+23:24:16  [23:24:15] FEED web GET refresh_index=4 cold=0 bogus_len=180 ttwid=127
+23:24:16  [23:24:15] MGR evict idx=8
+23:24:16  [23:24:15] MGR url idx=13 src=static age=20s
+23:24:16  [23:24:15] MGR acquire idx=13 total=5
+23:24:16  [23:24:15] FEEDCOLL scrollTo idx=11 y=11880.0 items=18
+23:24:16  [23:24:16] DANM get id=7701327355008060712 [360-420s] ttwid=127
+23:24:16  [23:24:16] DMLOAD id=7695969146178321765 dur=581752
+23:24:16  [23:24:16] DANM get id=7695969146178321765 [0-60s] ttwid=127
+23:24:16  [23:24:16] DANM get id=7701327355008060712 [420-480s] ttwid=127
+23:24:16  [23:24:16] MGR ready idx=13
+23:24:16  [23:24:16] DANM get id=7695969146178321765 [60-120s] ttwid=127
+23:24:16  [23:24:16] DANM get id=7701327355008060712 [480-540s] ttwid=127
+23:24:16  [23:24:16] DANM get id=7695969146178321765 [120-180s] ttwid=127
+23:24:17  [23:24:16] DANM get id=7701327355008060712 [540-600s] ttwid=127
+23:24:17  [23:24:17] DANM get id=7695969146178321765 [180-240s] ttwid=127
+23:24:17  [23:24:17] DANM get id=7701327355008060712 [600-660s] ttwid=127
+23:24:17  [23:24:17] FEED web page refresh_index=4: awemes=6 usable=6 filtered=0 total_seen=24
+23:24:17  [23:24:17] ENGINE merge total=24 index=11 replace=false auto=false redirect=0
+23:24:17  [23:24:17] DANM get id=7695969146178321765 [240-300s] ttwid=127
+23:24:17  [23:24:17] ENGINE next -> index=12
+23:24:17  [23:24:17] MGR evict idx=9
+23:24:17  [23:24:17] MGR url idx=14 src=static age=21s
+23:24:17  [23:24:17] MGR acquire idx=14 total=5
+23:24:17  [23:24:17] FEEDCOLL scrollTo idx=12 y=12960.0 items=24
+23:24:17  [23:24:17] DANM get id=7701327355008060712 [660-720s] ttwid=127
+23:24:17  [23:24:17] DANM get id=7695969146178321765 [300-360s] ttwid=127
+23:24:17  [23:24:17] DMLOAD id=7684280555194262706 dur=8196
+23:24:17  [23:24:17] DANM get id=7684280555194262706 [0-8s] ttwid=127
+23:24:17  [23:24:17] DANM get id=7701327355008060712 [720-780s] ttwid=127
+23:24:17  [23:24:17] MGR ready idx=14
+23:24:18  [23:24:18] DANM get id=7695969146178321765 [360-420s] ttwid=127
+23:24:18  [23:24:18] DANM all-segments done id=7684280555194262706 total=47 retry=0
+23:24:18  [23:24:18] DMLOAD done id=7684280555194262706 total=47
+23:24:18  [23:24:18] DANM get id=7701327355008060712 [780-840s] ttwid=127
+23:24:18  [23:24:18] DANM get id=7695969146178321765 [420-480s] ttwid=127
+23:24:18  [23:24:18] DANM get id=7701327355008060712 [840-900s] ttwid=127
+23:24:18  [23:24:18] DANM get id=7695969146178321765 [480-540s] ttwid=127
+23:24:18  [23:24:18] DANM get id=7701327355008060712 [900-960s] ttwid=127
+23:24:19  [23:24:18] DANM get id=7695969146178321765 [540-581s] ttwid=127
+23:24:19  [23:24:18] DANM get id=7701327355008060712 [960-1020s] ttwid=127
+23:24:19  [23:24:19] ENGINE next -> index=13
+23:24:19  [23:24:19] MGR evict idx=10
+23:24:19  [23:24:19] MGR url idx=15 src=static age=23s
+23:24:19  [23:24:19] MGR acquire idx=15 total=5
+23:24:19  [23:24:19] FEEDCOLL scrollTo idx=13 y=14040.0 items=24
+23:24:19  [23:24:19] DANM all-segments done id=7695969146178321765 total=165 retry=0
+23:24:19  [23:24:19] DMLOAD done id=7695969146178321765 total=165
+23:24:19  [23:24:19] DANM get id=7701327355008060712 [1020-1080s] ttwid=127
+23:24:19  [23:24:19] DMLOAD id=7679708492278970267 dur=6934
+23:24:19  [23:24:19] DANM get id=7679708492278970267 [0-6s] ttwid=127
+23:24:19  [23:24:19] MGR ready idx=15
+23:24:19  [23:24:19] DANM get id=7701327355008060712 [1080-1140s] ttwid=127
+23:24:19  [23:24:19] DANM all-segments done id=7679708492278970267 total=781 retry=0
+23:24:19  [23:24:19] DMLOAD done id=7679708492278970267 total=781
+23:24:20  [23:24:19] DANM get id=7701327355008060712 [1140-1143s] ttwid=127
+23:24:20  [23:24:20] DANM all-segments done id=7701327355008060712 total=949 retry=0
+23:24:22  [23:24:22] ENGINE next -> index=14
+23:24:22  [23:24:22] MGR evict idx=11
+23:24:22  [23:24:22] MGR url idx=16 src=static age=26s
+23:24:22  [23:24:22] MGR acquire idx=16 total=5
+23:24:22  [23:24:22] FEEDCOLL scrollTo idx=14 y=15120.0 items=24
+23:24:22  [23:24:22] DMLOAD id=7683162604865885355 dur=26334
+23:24:22  [23:24:22] DANM get id=7683162604865885355 [0-26s] ttwid=127
+23:24:23  [23:24:23] DANM cap-hit [0-26s] n=958 → split
+23:24:23  [23:24:23] DANM get id=7683162604865885355 [0-13s] ttwid=127
+23:24:23  [23:24:23] DANM cap-hit [0-13s] n=958 → split
+23:24:23  [23:24:23] DANM get id=7683162604865885355 [0-6s] ttwid=127
+23:24:23  [23:24:23] MGR ready idx=16
+23:24:23  [23:24:23] DANM get id=7683162604865885355 [6-13s] ttwid=127
+23:24:24  [23:24:24] DANM get id=7683162604865885355 [13-26s] ttwid=127
+23:24:24  [23:24:24] DANM cap-hit [13-26s] n=577 → split
+23:24:24  [23:24:24] DANM get id=7683162604865885355 [13-19s] ttwid=127
+23:24:25  [23:24:24] DANM get id=7683162604865885355 [19-26s] ttwid=127
+23:24:25  [23:24:25] DANM all-segments done id=7683162604865885355 total=958 retry=0
+23:24:25  [23:24:25] DMLOAD done id=7683162604865885355 total=958
+23:24:28  [23:24:28] ENGINE next -> index=15
+23:24:28  [23:24:28] MGR evict idx=12
+23:24:28  [23:24:28] MGR url idx=17 src=static age=32s
+23:24:28  [23:24:28] MGR acquire idx=17 total=5
+23:24:28  [23:24:28] FEEDCOLL scrollTo idx=15 y=16200.0 items=24
+23:24:28  [23:24:28] DMLOAD id=7703023641964907827 dur=1302317
+23:24:28  [23:24:28] DANM get id=7703023641964907827 [0-60s] ttwid=127
+23:24:28  [23:24:28] MGR ready idx=17
+23:24:28  [23:24:28] DANM get id=7703023641964907827 [60-120s] ttwid=127
+23:24:29  [23:24:29] DANM get id=7703023641964907827 [120-180s] ttwid=127
+23:24:29  [23:24:29] DANM get id=7703023641964907827 [180-240s] ttwid=127
+23:24:29  [23:24:29] DANM get id=7703023641964907827 [240-300s] ttwid=127
+23:24:30  [23:24:29] DANM get id=7703023641964907827 [300-360s] ttwid=127
+23:24:30  [23:24:30] DANM get id=7703023641964907827 [360-420s] ttwid=127
+23:24:30  [23:24:30] DANM get id=7703023641964907827 [420-480s] ttwid=127
+23:24:31  [23:24:31] DANM get id=7703023641964907827 [480-540s] ttwid=127
+23:24:31  [23:24:31] DANM get id=7703023641964907827 [540-600s] ttwid=127
+23:24:31  [23:24:31] DANM get id=7703023641964907827 [600-660s] ttwid=127
+23:24:32  [23:24:32] DANM get id=7703023641964907827 [660-720s] ttwid=127
+23:24:32  [23:24:32] DANM get id=7703023641964907827 [720-780s] ttwid=127
+23:24:32  [23:24:32] DANM get id=7703023641964907827 [780-840s] ttwid=127
+23:24:33  [23:24:33] DANM get id=7703023641964907827 [840-900s] ttwid=127
+23:24:33  [23:24:33] DANM get id=7703023641964907827 [900-960s] ttwid=127
+23:24:33  [23:24:33] DANM get id=7703023641964907827 [960-1020s] ttwid=127
+23:24:34  [23:24:34] DANM get id=7703023641964907827 [1020-1080s] ttwid=127
+23:24:34  [23:24:34] DANM get id=7703023641964907827 [1080-1140s] ttwid=127
+23:24:34  [23:24:34] DANM get id=7703023641964907827 [1140-1200s] ttwid=127
+23:24:35  [23:24:35] DANM get id=7703023641964907827 [1200-1260s] ttwid=127
+23:24:35  [23:24:35] DANM get id=7703023641964907827 [1260-1302s] ttwid=127
+23:24:35  [23:24:35] DANM all-segments done id=7703023641964907827 total=1666 retry=0
+23:24:35  [23:24:35] DMLOAD done id=7703023641964907827 total=1666
+23:24:38  [23:24:38] ENGINE next -> index=16
+23:24:38  [23:24:38] MGR evict idx=13
+23:24:38  [23:24:38] MGR url idx=18 src=static age=21s
+23:24:38  [23:24:38] MGR acquire idx=18 total=5
+23:24:38  [23:24:38] FEEDCOLL scrollTo idx=16 y=17280.0 items=24
+23:24:39  [23:24:39] DMLOAD id=7694201769701674282 dur=464034
+23:24:39  [23:24:39] DANM get id=7694201769701674282 [0-60s] ttwid=127
+23:24:39  [23:24:39] DANM get id=7694201769701674282 [60-120s] ttwid=127
+23:24:39  [23:24:39] DANM get id=7694201769701674282 [120-180s] ttwid=127
+23:24:39  [23:24:39] MGR ready idx=18
+23:24:40  [23:24:39] DANM get id=7694201769701674282 [180-240s] ttwid=127
+23:24:40  [23:24:40] DANM get id=7694201769701674282 [240-300s] ttwid=127
+23:24:40  [23:24:40] DANM get id=7694201769701674282 [300-360s] ttwid=127
+23:24:41  [23:24:40] DANM get id=7694201769701674282 [360-420s] ttwid=127
+23:24:41  [23:24:41] DANM get id=7694201769701674282 [420-464s] ttwid=127
+23:24:41  [23:24:41] DANM all-segments done id=7694201769701674282 total=10 retry=0
+23:24:41  [23:24:41] DMLOAD done id=7694201769701674282 total=10
+23:31:50  [23:31:50] ENGINE next -> index=17
+23:31:50  [23:31:50] ENGINE needMore (index=17 count=24)
+23:31:50  [23:31:50] FEED web GET refresh_index=5 cold=0 bogus_len=180 ttwid=127
+23:31:50  [23:31:50] MGR evict idx=14
+23:31:50  [23:31:50] MGR url idx=19 src=static-stale-no-redirect age=453s
+23:31:50  [23:31:50] MGR acquire idx=19 total=5
+23:31:50  [23:31:50] FEEDCOLL scrollTo idx=17 y=18360.0 items=24
+23:31:51  [23:31:50] DMLOAD id=7692448935280910705 dur=11609
+23:31:51  [23:31:50] DANM get id=7692448935280910705 [0-11s] ttwid=127
+23:31:51  [23:31:51] MGR ready idx=19
+23:31:51  [23:31:51] DANM all-segments done id=7692448935280910705 total=394 retry=0
+23:31:51  [23:31:51] DMLOAD done id=7692448935280910705 total=394
+23:31:52  [23:31:52] FEED web page refresh_index=5: awemes=6 usable=6 filtered=0 total_seen=30
+23:31:52  [23:31:52] ENGINE merge total=30 index=17 replace=false auto=false redirect=0
+23:31:57  [23:31:56] ENGINE next -> index=18
+23:31:57  [23:31:56] MGR evict idx=15
+23:31:57  [23:31:56] MGR url idx=20 src=static-stale-no-redirect age=459s
+23:31:57  [23:31:56] MGR acquire idx=20 total=5
+23:31:57  [23:31:56] FEEDCOLL scrollTo idx=18 y=19440.0 items=30
+23:31:57  [23:31:57] DMLOAD id=7693624754541223675 dur=1723222
+23:31:57  [23:31:57] DANM get id=7693624754541223675 [0-60s] ttwid=127
+23:31:57  [23:31:57] MGR ready idx=20
+23:31:57  [23:31:57] DANM get id=7693624754541223675 [60-120s] ttwid=127
+23:31:57  [23:31:57] DANM get id=7693624754541223675 [120-180s] ttwid=127
+23:31:58  [23:31:58] DANM get id=7693624754541223675 [180-240s] ttwid=127
+23:31:58  [23:31:58] DANM get id=7693624754541223675 [240-300s] ttwid=127
+23:31:59  [23:31:59] DANM get id=7693624754541223675 [300-360s] ttwid=127
+23:31:59  [23:31:59] ENGINE next -> index=19
+23:31:59  [23:31:59] MGR evict idx=16
+23:31:59  [23:31:59] MGR url idx=21 src=static-stale-no-redirect age=461s
+23:31:59  [23:31:59] MGR acquire idx=21 total=5
+23:31:59  [23:31:59] FEEDCOLL scrollTo idx=19 y=20520.0 items=30
+23:31:59  [23:31:59] DANM get id=7693624754541223675 [360-420s] ttwid=127
+23:31:59  [23:31:59] DMLOAD id=7695019938246888746 dur=328238
+23:31:59  [23:31:59] DANM get id=7695019938246888746 [0-60s] ttwid=127
+23:31:59  [23:31:59] MGR ready idx=21
+23:31:59  [23:31:59] DANM get id=7693624754541223675 [420-480s] ttwid=127
+23:31:59  [23:31:59] DANM get id=7695019938246888746 [60-120s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7693624754541223675 [480-540s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7695019938246888746 [120-180s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7695019938246888746 [180-240s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7693624754541223675 [540-600s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7695019938246888746 [240-300s] ttwid=127
+23:32:00  [23:32:00] DANM get id=7693624754541223675 [600-660s] ttwid=127
+23:32:01  [23:32:01] DANM get id=7693624754541223675 [660-720s] ttwid=127
+23:32:01  [23:32:01] DANM get id=7695019938246888746 [300-328s] ttwid=127
+23:32:01  [23:32:01] DANM get id=7693624754541223675 [720-780s] ttwid=127
+23:32:01  [23:32:01] DANM all-segments done id=7695019938246888746 total=560 retry=0
+23:32:01  [23:32:01] DMLOAD done id=7695019938246888746 total=560
+23:32:01  [23:32:01] DANM get id=7693624754541223675 [780-840s] ttwid=127
+23:32:02  [23:32:01] DANM get id=7693624754541223675 [840-900s] ttwid=127
+23:32:02  [23:32:02] ENGINE next -> index=20
+23:32:02  [23:32:02] MGR evict idx=17
+23:32:02  [23:32:02] MGR url idx=22 src=static-stale-no-redirect age=464s
+23:32:02  [23:32:02] MGR acquire idx=22 total=5
+23:32:02  [23:32:02] FEEDCOLL scrollTo idx=20 y=21600.0 items=30
+23:32:02  [23:32:02] DANM get id=7693624754541223675 [900-960s] ttwid=127
+23:32:02  [23:32:02] DMLOAD id=7684644488322003621 dur=16400
+23:32:02  [23:32:02] DANM get id=7684644488322003621 [0-16s] ttwid=127
+23:32:02  [23:32:02] DANM get id=7693624754541223675 [960-1020s] ttwid=127
+23:32:02  [23:32:02] MGR ready idx=22
+23:32:02  [23:32:02] DANM all-segments done id=7684644488322003621 total=37 retry=0
+23:32:02  [23:32:02] DMLOAD done id=7684644488322003621 total=37
+23:32:02  [23:32:02] DANM get id=7693624754541223675 [1020-1080s] ttwid=127
+23:32:03  [23:32:03] DANM get id=7693624754541223675 [1080-1140s] ttwid=127
+23:32:03  [23:32:03] DANM get id=7693624754541223675 [1140-1200s] ttwid=127
+23:32:04  [23:32:03] ENGINE next -> index=21
+23:32:04  [23:32:03] MGR evict idx=18
+23:32:04  [23:32:03] MGR url idx=23 src=static-stale-no-redirect age=466s
+23:32:04  [23:32:03] MGR acquire idx=23 total=5
+23:32:04  [23:32:03] FEEDCOLL scrollTo idx=21 y=22680.0 items=30
+23:32:04  [23:32:03] DANM get id=7693624754541223675 [1200-1260s] ttwid=127
+23:32:04  [23:32:04] DMLOAD id=7689467319575252274 dur=882240
+23:32:04  [23:32:04] DANM get id=7689467319575252274 [0-60s] ttwid=127
+23:32:04  [23:32:04] DANM get id=7693624754541223675 [1260-1320s] ttwid=127
+23:32:04  [23:32:04] MGR ready idx=23
+23:32:04  [23:32:04] DANM get id=7689467319575252274 [60-120s] ttwid=127
+23:32:04  [23:32:04] DANM get id=7693624754541223675 [1320-1380s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7693624754541223675 [1380-1440s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7689467319575252274 [120-180s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7693624754541223675 [1440-1500s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7689467319575252274 [180-240s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7693624754541223675 [1500-1560s] ttwid=127
+23:32:05  [23:32:05] DANM get id=7689467319575252274 [240-300s] ttwid=127
+23:32:06  [23:32:05] DANM get id=7693624754541223675 [1560-1620s] ttwid=127
+23:32:06  [23:32:05] DANM get id=7689467319575252274 [300-360s] ttwid=127
+23:32:06  [23:32:06] DANM get id=7693624754541223675 [1620-1680s] ttwid=127
+23:32:06  [23:32:06] DANM get id=7689467319575252274 [360-420s] ttwid=127
+23:32:06  [23:32:06] DANM get id=7693624754541223675 [1680-1723s] ttwid=127
+23:32:06  [23:32:06] DANM get id=7689467319575252274 [420-480s] ttwid=127
+23:32:06  [23:32:06] DANM all-segments done id=7693624754541223675 total=194 retry=0
+23:32:07  [23:32:07] DANM get id=7689467319575252274 [480-540s] ttwid=127
+23:32:07  [23:32:07] DANM get id=7689467319575252274 [540-600s] ttwid=127
+23:32:07  [23:32:07] DANM get id=7689467319575252274 [600-660s] ttwid=127
+23:32:08  [23:32:08] DANM get id=7689467319575252274 [660-720s] ttwid=127
+23:32:08  [23:32:08] ENGINE next -> index=22
+23:32:08  [23:32:08] MGR evict idx=19
+23:32:08  [23:32:08] MGR url idx=24 src=static age=15s
+23:32:08  [23:32:08] MGR acquire idx=24 total=5
+23:32:08  [23:32:08] FEEDCOLL scrollTo idx=22 y=23760.0 items=30
+23:32:08  [23:32:08] DANM get id=7689467319575252274 [720-780s] ttwid=127
+23:32:08  [23:32:08] DMLOAD id=7690981733587586323 dur=181440
+23:32:08  [23:32:08] DANM get id=7690981733587586323 [0-60s] ttwid=127
+23:32:08  [23:32:08] DANM get id=7689467319575252274 [780-840s] ttwid=127
+23:32:08  [23:32:08] DANM get id=7690981733587586323 [60-120s] ttwid=127
+23:32:09  [23:32:08] DANM get id=7689467319575252274 [840-882s] ttwid=127
+23:32:09  [23:32:09] DANM get id=7690981733587586323 [120-180s] ttwid=127
+23:32:09  [23:32:09] DANM all-segments done id=7689467319575252274 total=1733 retry=0
+23:32:09  [23:32:09] DMLOAD done id=7689467319575252274 total=1733
+23:32:09  [23:32:09] DANM get id=7690981733587586323 [180-181s] ttwid=127
+23:32:09  [23:32:09] MGR ready idx=24
+23:32:09  [23:32:09] DANM all-segments done id=7690981733587586323 total=6 retry=0
+23:32:09  [23:32:09] DMLOAD done id=7690981733587586323 total=6
+23:32:14  [23:32:13] ENGINE next -> index=23
+23:32:14  [23:32:13] ENGINE needMore (index=23 count=30)
+23:32:14  [23:32:13] FEED web GET refresh_index=6 cold=0 bogus_len=180 ttwid=127
+23:32:14  [23:32:13] MGR evict idx=20
+23:32:14  [23:32:13] MGR url idx=25 src=static age=21s
+23:32:14  [23:32:13] MGR acquire idx=25 total=5
+23:32:14  [23:32:13] FEEDCOLL scrollTo idx=23 y=24840.0 items=30
+23:32:14  [23:32:14] DMLOAD id=7707837660982914481 dur=22567
+23:32:14  [23:32:14] DANM get id=7707837660982914481 [0-22s] ttwid=127
+23:32:14  [23:32:14] MGR ready idx=25
+23:32:14  [23:32:14] DANM cap-hit [0-22s] n=909 → split
+23:32:14  [23:32:14] DANM get id=7707837660982914481 [0-11s] ttwid=127
+23:32:14  [23:32:14] DANM cap-hit [0-11s] n=909 → split
+23:32:14  [23:32:14] DANM get id=7707837660982914481 [0-5s] ttwid=127
+23:32:15  [23:32:15] DANM get id=7707837660982914481 [5-11s] ttwid=127
+23:32:15  [23:32:15] FEED web page refresh_index=6: awemes=6 usable=6 filtered=0 total_seen=36
+23:32:15  [23:32:15] ENGINE merge total=36 index=23 replace=false auto=false redirect=0
+23:32:15  [23:32:15] DANM get id=7707837660982914481 [11-22s] ttwid=127
+23:32:16  [23:32:16] DANM all-segments done id=7707837660982914481 total=909 retry=0
+23:32:16  [23:32:16] DMLOAD done id=7707837660982914481 total=909
+23:32:16  [23:32:16] SETTINGS panel open (menu #1)
+23:32:20  [23:32:20] FEED source switch web -> mobile
+23:32:20  [23:32:20] ENGINE reset (source switch)
+23:32:20  [23:32:20] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+23:32:20  [23:32:20] FEEDCOLL reset view (source switch)
+23:32:23  [23:32:22] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+23:32:23  [23:32:22] FEED video-dump a[0] f1[bytes=343] f2[bytes=1046] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=974] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2514] f13[varint=4110] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794843146] f24[varint=0] f25[bytes=1816] f26[bytes=0] f30[bytes=2185] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:32:23  [23:32:22] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=52] f3[varint=1792682302] f4[bytes=5317] f5[bytes=6547] f6[bytes=414] f7[bytes=13243] f8[bytes=472] f9[varint=0] f10[bytes=53] f11[bytes=63] f13[varint=12] f14[bytes=48] f17[varint=0] f18[bytes=487] f19[bytes=809] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=4110] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=2862779088780734] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=46] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=441] f220[bytes=191] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=2961] f242[bytes=12] f243[bytes=225] f247[bytes=1408] f248[bytes=33] f249[bytes=13,bytes=14,bytes=22] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=581] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=73] f297[varint=0] f301[bytes=43] f302[bytes=4725] f303[varint=0] f304[bytes=6] f305[bytes=42] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=206] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=40] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=199] f396[bytes=0] f399[bytes=329,bytes=2739] f400[bytes=491] f403[bytes=22] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f434[bytes=14] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=52] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f501[bytes=184] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=40] f566[bytes=125] f567[varint=0] f569[bytes=253] f1001[varint=0] f1009[bytes=946] f1019[bytes=0] f1033[varint=1] f1034[varint=1] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1047[bytes=604] f1049[bytes=2] f1053[bytes=250] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:32:23  [23:32:22] FEED item a[0] id=7699511854413997755 type=0 static=ok redirect=ok dur=4110
+23:32:23  [23:32:22] FEED first url[7699511854413997755]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbd2idvog65glrth1qug&line=0&file_id=90c0326777ac483c953dae99d1ce503f&sign=525
+23:32:23  [23:32:22] FEED skip-item a[1] id=7702486004058642939 type=0 dur=0 reason=nodur
+23:32:23  [23:32:22] FEED item a[2] id=7685614240212622665 type=0 static=ok redirect=ok dur=18567
+23:32:23  [23:32:22] FEED item a[3] id=7705051806036118602 type=0 static=ok redirect=ok dur=7244
+23:32:23  [23:32:22] FEED item a[4] id=7707620762698039443 type=0 static=ok redirect=ok dur=6245
+23:32:23  [23:32:22] FEED item a[5] id=7676047762811098794 type=0 static=ok redirect=ok dur=18948
+23:32:23  [23:32:22] FEED mobile page refresh_index=1: awemes=6 usable=5 filtered=1 redirect=5 total_seen=5
+23:32:23  [23:32:22] ENGINE merge total=5 index=0 replace=false auto=true redirect=5
+23:32:25  [23:32:25] ENGINE needMore (index=0 count=5)
+23:32:25  [23:32:25] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=5
+23:32:25  [23:32:25] ENGINE next -> index=1
+23:32:25  [23:32:25] MGR evict idx=21
+23:32:25  [23:32:25] MGR evict idx=23
+23:32:25  [23:32:25] MGR evict idx=24
+23:32:25  [23:32:25] MGR evict idx=22
+23:32:25  [23:32:25] MGR evict idx=25
+23:32:25  [23:32:25] MGR url idx=1 src=redirect forced
+23:32:25  [23:32:25] MGR acquire idx=1 total=1
+23:32:25  [23:32:25] MGR cold-start defer neighbors=[0, 2, 3]
+23:32:25  [23:32:25] FEEDCOLL scrollTo idx=1 y=0.0 items=5
+23:32:26  [23:32:26] MGR ready idx=1
+23:32:26  [23:32:26] MGR url idx=0 src=static age=3s
+23:32:26  [23:32:26] MGR acquire idx=0 total=2
+23:32:26  [23:32:26] MGR url idx=2 src=static age=3s
+23:32:26  [23:32:26] MGR acquire idx=2 total=3
+23:32:26  [23:32:26] MGR url idx=3 src=static age=3s
+23:32:26  [23:32:26] MGR acquire idx=3 total=4
+23:32:26  [23:32:26] MGR cold-start neighbors acquired=[0, 2, 3]
+23:32:27  [23:32:26] MGR ready idx=0
+23:32:27  [23:32:27] MGR ready idx=2
+23:32:27  [23:32:27] MGR ready idx=3
+23:32:27  [23:32:27] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+23:32:27  [23:32:27] FEED video-dump a[0] f1[bytes=1308] f2[bytes=1067] f3[varint=0] f4[varint=0] f5[bytes=8] f6[bytes=966] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1167] f34[bytes=0]
+23:32:27  [23:32:27] FEED skip-item a[0] id=7698408557432518031 type=0 dur=0 reason=nodur
+23:32:27  [23:32:27] FEED item a[1] id=7706809594349112619 type=0 static=ok redirect=ok dur=7035
+23:32:27  [23:32:27] FEED first url[7706809594349112619]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbq1577og65nsg2rdh0g&line=0&file_id=430e53e0a71d4124ae8581e7cff29c7d&sign=029
+23:32:27  [23:32:27] FEED item a[2] id=7707674045995089339 type=0 static=ok redirect=ok dur=8300
+23:32:27  [23:32:27] FEED item a[3] id=7707685186464758521 type=0 static=ok redirect=ok dur=7667
+23:32:27  [23:32:27] FEED item a[4] id=7700214460883875430 type=0 static=ok redirect=ok dur=5271
+23:32:27  [23:32:27] FEED item a[5] id=7707502396770995506 type=0 static=ok redirect=ok dur=1072832
+23:32:27  [23:32:27] FEED mobile page refresh_index=2: awemes=6 usable=5 filtered=1 redirect=5 total_seen=10
+23:32:27  [23:32:27] ENGINE merge total=10 index=1 replace=false auto=false redirect=5
+23:32:27  [23:32:27] FEEDCOLL scrollTo idx=1 y=1080.0 items=10
+23:32:27  [23:32:27] DMLOAD id=7685614240212622665 dur=18567
+23:32:27  [23:32:27] DANM get id=7685614240212622665 [0-18s] ttwid=127
+23:32:28  [23:32:27] DANM all-segments done id=7685614240212622665 total=236 retry=0
+23:32:28  [23:32:27] DMLOAD done id=7685614240212622665 total=236
+23:32:31  [23:32:31] ENGINE next -> index=2
+23:32:31  [23:32:31] MGR url idx=4 src=static age=8s
+23:32:31  [23:32:31] MGR acquire idx=4 total=5
+23:32:31  [23:32:31] FEEDCOLL scrollTo idx=2 y=2160.0 items=10
+23:32:31  [23:32:31] DMLOAD id=7705051806036118602 dur=7244
+23:32:31  [23:32:31] DANM get id=7705051806036118602 [0-7s] ttwid=127
+23:32:31  [23:32:31] DANM all-segments done id=7705051806036118602 total=16 retry=0
+23:32:31  [23:32:31] DMLOAD done id=7705051806036118602 total=16
+23:32:32  [23:32:32] MGR ready idx=4
+23:32:33  [23:32:33] ENGINE next -> index=3
+23:32:33  [23:32:33] ENGINE needMore (index=3 count=10)
+23:32:33  [23:32:33] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=10
+23:32:33  [23:32:33] MGR evict idx=0
+23:32:33  [23:32:33] MGR url idx=5 src=static age=5s
+23:32:33  [23:32:33] MGR acquire idx=5 total=5
+23:32:33  [23:32:33] FEEDCOLL scrollTo idx=3 y=3240.0 items=10
+23:32:33  [23:32:33] DMLOAD id=7707620762698039443 dur=6245
+23:32:33  [23:32:33] DANM get id=7707620762698039443 [0-6s] ttwid=127
+23:32:33  [23:32:33] MGR ready idx=5
+23:32:33  [23:32:33] DANM all-segments done id=7707620762698039443 total=1 retry=0
+23:32:33  [23:32:33] DMLOAD done id=7707620762698039443 total=1
+23:32:35  [23:32:34] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+23:32:35  [23:32:34] FEED video-dump a[0] f1[bytes=342] f2[bytes=1074] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=992] f7[bytes=4] f8[bytes=382] f9[varint=1] f10[bytes=342] f11[bytes=2545] f13[varint=6013] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=342] f21[varint=1794843160] f24[varint=0] f26[bytes=0] f30[bytes=2932] f33[varint=1] f34[bytes=0] f44[bytes=3]
+23:32:35  [23:32:34] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=73] f3[varint=1794650877] f4[bytes=4577] f5[bytes=4170] f6[bytes=423] f7[bytes=9383] f8[bytes=472] f9[varint=0] f10[bytes=53] f11[bytes=63] f13[varint=12] f14[bytes=48,bytes=51,bytes=45,bytes=51,bytes=48] f17[varint=0] f18[bytes=488] f19[bytes=844] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=6013] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=4364402774512795] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=986] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=2320] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3130] f242[bytes=12] f243[bytes=225] f248[bytes=33] f249[bytes=13,bytes=17,bytes=23] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=796] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=75] f297[varint=0] f301[bytes=43] f302[bytes=5993] f303[varint=0] f304[bytes=6] f305[bytes=15] f306[varint=1] f307[varint=1] f313[bytes=0] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=20] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=41] f390[bytes=268] f391[bytes=431] f395[bytes=181] f396[bytes=0] f399[bytes=587,bytes=2747] f400[bytes=729] f403[bytes=186] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=57] f460[bytes=15] f463[varint=0] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=20] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=36,bytes=44,bytes=52] f564[bytes=36] f566[bytes=92] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=955] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=242] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=32] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:32:35  [23:32:34] FEED item a[0] id=7707966824076198373 type=0 static=ok redirect=ok dur=6013
+23:32:35  [23:32:34] FEED first url[7707966824076198373]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbs35fvog65sjta277pg&line=0&file_id=0ed7526c3f0345f0b87a0ff6150eef27&sign=b42
+23:32:35  [23:32:34] FEED item a[1] id=7703896657645805795 type=0 static=ok redirect=ok dur=8560
+23:32:35  [23:32:34] FEED item a[2] id=7698008469824472827 type=0 static=ok redirect=ok dur=6300
+23:32:35  [23:32:34] FEED item a[3] id=7699775147305209114 type=0 static=ok redirect=ok dur=28654
+23:32:35  [23:32:34] FEED item a[4] id=7704985726718381338 type=0 static=ok redirect=ok dur=10403
+23:32:35  [23:32:34] FEED item a[5] id=7707556753609054651 type=0 static=ok redirect=ok dur=34700
+23:32:35  [23:32:34] FEED mobile page refresh_index=3: awemes=6 usable=6 filtered=0 redirect=6 total_seen=16
+23:32:35  [23:32:34] ENGINE merge total=16 index=3 replace=false auto=false redirect=6
+23:32:38  [23:32:38] ENGINE next -> index=4
+23:32:38  [23:32:38] MGR evict idx=1
+23:32:38  [23:32:38] MGR url idx=6 src=static age=10s
+23:32:38  [23:32:38] MGR acquire idx=6 total=5
+23:32:38  [23:32:38] FEEDCOLL scrollTo idx=4 y=4320.0 items=16
+23:32:38  [23:32:38] DMLOAD id=7676047762811098794 dur=18948
+23:32:38  [23:32:38] DANM get id=7676047762811098794 [0-18s] ttwid=127
+23:32:39  [23:32:38] DANM all-segments done id=7676047762811098794 total=134 retry=0
+23:32:39  [23:32:38] DMLOAD done id=7676047762811098794 total=134
+23:32:39  [23:32:39] MGR ready idx=6
+23:32:40  [23:32:40] ENGINE next -> index=5
+23:32:40  [23:32:40] MGR evict idx=2
+23:32:40  [23:32:40] MGR url idx=7 src=static age=12s
+23:32:40  [23:32:40] MGR acquire idx=7 total=5
+23:32:40  [23:32:40] FEEDCOLL scrollTo idx=5 y=5400.0 items=16
+23:32:40  [23:32:40] DMLOAD id=7706809594349112619 dur=7035
+23:32:40  [23:32:40] DANM get id=7706809594349112619 [0-7s] ttwid=127
+23:32:40  [23:32:40] MGR ready idx=7
+23:32:40  [23:32:40] DANM all-segments done id=7706809594349112619 total=71 retry=0
+23:32:41  [23:32:40] DMLOAD done id=7706809594349112619 total=71
+23:32:42  [23:32:42] ENGINE next -> index=6
+23:32:42  [23:32:42] MGR evict idx=3
+23:32:42  [23:32:42] MGR url idx=8 src=static age=14s
+23:32:42  [23:32:42] MGR acquire idx=8 total=5
+23:32:42  [23:32:42] FEEDCOLL scrollTo idx=6 y=6480.0 items=16
+23:32:42  [23:32:42] DMLOAD id=7707674045995089339 dur=8300
+23:32:42  [23:32:42] DANM get id=7707674045995089339 [0-8s] ttwid=127
+23:32:42  [23:32:42] DANM all-segments done id=7707674045995089339 total=0 retry=0
+23:32:42  [23:32:42] DMLOAD done id=7707674045995089339 total=0
+23:32:45  [23:32:44] MGR ready idx=8
+23:32:49  [23:32:49] ENGINE next -> index=7
+23:32:49  [23:32:49] MGR evict idx=4
+23:32:49  [23:32:49] MGR url idx=9 src=static age=21s
+23:32:49  [23:32:49] MGR acquire idx=9 total=5
+23:32:49  [23:32:49] FEEDCOLL scrollTo idx=7 y=7560.0 items=16
+23:32:49  [23:32:49] DMLOAD id=7707685186464758521 dur=7667
+23:32:49  [23:32:49] DANM get id=7707685186464758521 [0-7s] ttwid=127
+23:32:49  [23:32:49] DANM all-segments done id=7707685186464758521 total=1 retry=0
+23:32:49  [23:32:49] DMLOAD done id=7707685186464758521 total=1
+23:32:53  [23:32:53] ENGINE next -> index=8
+23:32:53  [23:32:53] MGR evict idx=5
+23:32:53  [23:32:53] MGR url idx=10 src=static age=18s
+23:32:53  [23:32:53] MGR acquire idx=10 total=5
+23:32:53  [23:32:53] FEEDCOLL scrollTo idx=8 y=8640.0 items=16
+23:32:53  [23:32:53] DMLOAD id=7700214460883875430 dur=5271
+23:32:53  [23:32:53] MGR ready idx=9
+23:32:53  [23:32:53] DANM get id=7700214460883875430 [0-5s] ttwid=127
+23:32:53  [23:32:53] DANM all-segments done id=7700214460883875430 total=211 retry=0
+23:32:53  [23:32:53] DMLOAD done id=7700214460883875430 total=211
+23:32:54  [23:32:53] MGR ready idx=10
+23:32:56  [23:32:56] ENGINE next -> index=9
+23:32:56  [23:32:56] ENGINE needMore (index=9 count=16)
+23:32:56  [23:32:56] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=16
+23:32:56  [23:32:56] MGR evict idx=6
+23:32:56  [23:32:56] MGR url idx=11 src=static age=21s
+23:32:56  [23:32:56] MGR acquire idx=11 total=5
+23:32:56  [23:32:56] FEEDCOLL scrollTo idx=9 y=9720.0 items=16
+23:32:56  [23:32:56] DMLOAD id=7707502396770995506 dur=1072832
+23:32:56  [23:32:56] DANM get id=7707502396770995506 [0-60s] ttwid=127
+23:32:56  [23:32:56] MGR ready idx=11
+23:32:56  [23:32:56] DANM get id=7707502396770995506 [60-120s] ttwid=127
+23:32:57  [23:32:57] DANM get id=7707502396770995506 [120-180s] ttwid=127
+23:32:57  [23:32:57] DANM get id=7707502396770995506 [180-240s] ttwid=127
+23:32:57  [23:32:57] DANM get id=7707502396770995506 [240-300s] ttwid=127
+23:32:58  [23:32:57] DANM get id=7707502396770995506 [300-360s] ttwid=127
+23:32:58  [23:32:58] DANM get id=7707502396770995506 [360-420s] ttwid=127
+23:32:58  [23:32:58] ENGINE next -> index=10
+23:32:58  [23:32:58] MGR evict idx=7
+23:32:58  [23:32:58] MGR url idx=12 src=static age=23s
+23:32:58  [23:32:58] MGR acquire idx=12 total=5
+23:32:58  [23:32:58] FEEDCOLL scrollTo idx=10 y=10800.0 items=16
+23:32:58  [23:32:58] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+23:32:58  [23:32:58] FEED video-dump a[0] f1[bytes=1312] f2[bytes=1057] f3[varint=2868] f4[varint=1320] f5[bytes=8] f6[bytes=998] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1034] f34[bytes=0]
+23:32:58  [23:32:58] FEED skip-item a[0] id=7706089697546364069 type=0 dur=0 reason=nodur
+23:32:58  [23:32:58] FEED item a[1] id=7703207754052368969 type=0 static=ok redirect=ok dur=9867
+23:32:58  [23:32:58] FEED first url[7703207754052368969]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbjkj4vog65tfv1ajvl0&line=0&file_id=5d3e536d4f1448bd81032cc8e8013134&sign=0b4
+23:32:58  [23:32:58] FEED item a[2] id=7703914702384117903 type=0 static=ok redirect=ok dur=13234
+23:32:58  [23:32:58] FEED item a[3] id=7707581324235738406 type=0 static=ok redirect=ok dur=504134
+23:32:58  [23:32:58] FEED item a[4] id=7707855108725427482 type=0 static=ok redirect=ok dur=27516
+23:32:58  [23:32:58] FEED item a[5] id=7705359556360213962 type=0 static=ok redirect=ok dur=67334
+23:32:58  [23:32:58] FEED mobile page refresh_index=4: awemes=6 usable=5 filtered=1 redirect=5 total_seen=21
+23:32:58  [23:32:58] ENGINE merge total=21 index=10 replace=false auto=false redirect=5
+23:32:58  [23:32:58] DANM get id=7707502396770995506 [420-480s] ttwid=127
+23:32:58  [23:32:58] DMLOAD id=7707966824076198373 dur=6013
+23:32:58  [23:32:58] DANM get id=7707966824076198373 [0-6s] ttwid=127
+23:32:58  [23:32:58] DANM get id=7707502396770995506 [480-540s] ttwid=127
+23:32:58  [23:32:58] DANM all-segments done id=7707966824076198373 total=16 retry=0
+23:32:59  [23:32:58] DMLOAD done id=7707966824076198373 total=16
+23:32:59  [23:32:59] DANM get id=7707502396770995506 [540-600s] ttwid=127
+23:32:59  [23:32:59] DANM get id=7707502396770995506 [600-660s] ttwid=127
+23:32:59  [23:32:59] DANM get id=7707502396770995506 [660-720s] ttwid=127
+23:32:59  [23:32:59] ENGINE next -> index=11
+23:32:59  [23:32:59] MGR evict idx=8
+23:32:59  [23:32:59] MGR url idx=13 src=static age=24s
+23:32:59  [23:32:59] MGR acquire idx=13 total=5
+23:32:59  [23:32:59] FEEDCOLL scrollTo idx=11 y=11880.0 items=21
+23:33:00  [23:32:59] DANM get id=7707502396770995506 [720-780s] ttwid=127
+23:33:00  [23:32:59] DMLOAD id=7703896657645805795 dur=8560
+23:33:00  [23:32:59] DANM get id=7703896657645805795 [0-8s] ttwid=127
+23:33:00  [23:33:00] DANM get id=7707502396770995506 [780-840s] ttwid=127
+23:33:00  [23:33:00] MGR ready idx=13
+23:33:00  [23:33:00] DANM all-segments done id=7703896657645805795 total=2 retry=0
+23:33:00  [23:33:00] DMLOAD done id=7703896657645805795 total=2
+23:33:00  [23:33:00] DANM get id=7707502396770995506 [840-900s] ttwid=127
+23:33:01  [23:33:00] DANM get id=7707502396770995506 [900-960s] ttwid=127
+23:33:01  [23:33:01] ENGINE next -> index=12
+23:33:01  [23:33:01] MGR evict idx=9
+23:33:01  [23:33:01] MGR url idx=14 src=static age=26s
+23:33:01  [23:33:01] MGR acquire idx=14 total=5
+23:33:01  [23:33:01] FEEDCOLL scrollTo idx=12 y=12960.0 items=21
+23:33:01  [23:33:01] DANM get id=7707502396770995506 [960-1020s] ttwid=127
+23:33:01  [23:33:01] DANM get id=7707502396770995506 [1020-1072s] ttwid=127
+23:33:01  [23:33:01] DANM all-segments done id=7707502396770995506 total=0 retry=0
+23:33:01  [23:33:01] DMLOAD done id=7707502396770995506 total=0
+23:33:02  [23:33:02] DMLOAD id=7698008469824472827 dur=6300
+23:33:02  [23:33:02] MGR ready idx=12
+23:33:02  [23:33:02] DANM get id=7698008469824472827 [0-6s] ttwid=127
+23:33:02  [23:33:02] DANM all-segments done id=7698008469824472827 total=2 retry=0
+23:33:02  [23:33:02] DMLOAD done id=7698008469824472827 total=2
+23:33:05  [23:33:05] WATCH repair idx=12 reason=stall
+23:33:05  [23:33:05] MGR rebuild idx=12 (redirect)
+23:33:05  [23:33:05] MGR url idx=12 src=redirect forced
+23:33:05  [23:33:05] MGR acquire idx=12 total=5
+23:33:06  [23:33:05] MGR ready idx=12
+23:33:07  [23:33:07] ENGINE next -> index=13
+23:33:07  [23:33:07] MGR evict idx=10
+23:33:07  [23:33:07] MGR url idx=15 src=static age=32s
+23:33:07  [23:33:07] MGR acquire idx=15 total=5
+23:33:07  [23:33:07] FEEDCOLL scrollTo idx=13 y=14040.0 items=21
+23:33:07  [23:33:07] DMLOAD id=7699775147305209114 dur=28654
+23:33:07  [23:33:07] DANM get id=7699775147305209114 [0-28s] ttwid=127
+23:33:08  [23:33:07] DANM cap-hit [0-28s] n=939 → split
+23:33:08  [23:33:07] DANM get id=7699775147305209114 [0-14s] ttwid=127
+23:33:08  [23:33:08] DANM cap-hit [0-14s] n=939 → split
+23:33:08  [23:33:08] DANM get id=7699775147305209114 [0-7s] ttwid=127
+23:33:08  [23:33:08] DANM get id=7699775147305209114 [7-14s] ttwid=127
+23:33:09  [23:33:09] DANM get id=7699775147305209114 [14-28s] ttwid=127
+23:33:09  [23:33:09] ENGINE next -> index=14
+23:33:09  [23:33:09] ENGINE needMore (index=14 count=21)
+23:33:09  [23:33:09] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=21
+23:33:09  [23:33:09] MGR evict idx=11
+23:33:09  [23:33:09] MGR url idx=16 src=static age=10s
+23:33:09  [23:33:09] MGR acquire idx=16 total=5
+23:33:09  [23:33:09] FEEDCOLL scrollTo idx=14 y=15120.0 items=21
+23:33:09  [23:33:09] DANM cap-hit [14-28s] n=654 → split
+23:33:09  [23:33:09] DANM get id=7699775147305209114 [14-21s] ttwid=127
+23:33:09  [23:33:09] DANM get id=7699775147305209114 [21-28s] ttwid=127
+23:33:09  [23:33:09] MGR ready idx=16
+23:33:09  [23:33:09] DMLOAD id=7704985726718381338 dur=10403
+23:33:10  [23:33:09] MGR ready idx=14
+23:33:10  [23:33:09] DANM get id=7704985726718381338 [0-10s] ttwid=127
+23:33:10  [23:33:10] DANM all-segments done id=7699775147305209114 total=939 retry=0
+23:33:10  [23:33:10] DMLOAD done id=7699775147305209114 total=939
+23:33:10  [23:33:10] DANM all-segments done id=7704985726718381338 total=56 retry=0
+23:33:10  [23:33:10] DMLOAD done id=7704985726718381338 total=56
+23:33:11  [23:33:11] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+23:33:11  [23:33:11] FEED video-dump a[0] f1[bytes=344] f2[bytes=1068] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1004] f7[bytes=4] f8[bytes=1523] f9[varint=1] f10[bytes=344] f11[bytes=2554] f13[varint=9434] f14[bytes=1523] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794843199] f24[varint=0] f25[bytes=1820] f26[bytes=0] f30[bytes=3000] f33[varint=0] f34[bytes=0] f44[bytes=3]
+23:33:11  [23:33:11] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=31] f3[varint=1794655619] f4[bytes=5322] f5[bytes=5895] f6[bytes=423] f7[bytes=13963] f8[bytes=472] f9[varint=0] f10[bytes=55] f11[bytes=63] f13[varint=12] f14[bytes=49] f17[varint=0] f18[bytes=487] f19[bytes=736] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=9434] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=3192594940567128] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f57[bytes=9] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f78[bytes=257] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=1051] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=1659] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3153] f242[bytes=12] f243[bytes=225] f247[bytes=1197] f248[bytes=33] f249[bytes=13,bytes=20,bytes=19] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f282[bytes=715] f284[bytes=660] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=72] f297[varint=0] f301[bytes=43] f302[bytes=2422] f303[varint=0] f304[bytes=6] f305[bytes=21] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=173] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=20] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=195] f396[bytes=0] f399[bytes=319,bytes=2667] f400[bytes=461] f403[bytes=195] f408[bytes=6] f414[bytes=0] f415[bytes=285] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=31] f460[bytes=0] f463[varint=0] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f501[bytes=193] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=40] f564[bytes=40] f566[bytes=125] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=945] f1010[varint=0] f1019[bytes=0] f1033[varint=1] f1034[varint=1] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1047[bytes=426] f1049[bytes=2] f1053[bytes=234] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1078[bytes=35] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:33:11  [23:33:11] FEED item a[0] id=7707987189984993209 type=0 static=ok redirect=ok dur=9434
+23:33:11  [23:33:11] FEED first url[7707987189984993209]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbs4aafog65idq2ivck0&line=0&file_id=913604ae710746a986cff4cd552cb76f&sign=c4f
+23:33:11  [23:33:11] FEED item a[1] id=7706193246019613115 type=0 static=ok redirect=ok dur=17434
+23:33:11  [23:33:11] FEED skip-item a[2] id=7704343220100585337 type=0 dur=0 reason=nodur
+23:33:11  [23:33:11] FEED item a[3] id=7703568678600925819 type=0 static=ok redirect=ok dur=9934
+23:33:11  [23:33:11] FEED item a[4] id=7704315891853491914 type=0 static=ok redirect=ok dur=9367
+23:33:11  [23:33:11] FEED item a[5] id=7707631293945505189 type=0 static=ok redirect=ok dur=8010
+23:33:11  [23:33:11] FEED mobile page refresh_index=5: awemes=6 usable=5 filtered=1 redirect=5 total_seen=26
+23:33:11  [23:33:11] ENGINE merge total=26 index=14 replace=false auto=false redirect=5
+23:33:12  [23:33:12] WATCH repair idx=14 reason=stall
+23:33:12  [23:33:12] MGR rebuild idx=14 (redirect)
+23:33:12  [23:33:12] MGR url idx=14 src=redirect forced
+23:33:12  [23:33:12] MGR acquire idx=14 total=5
+23:33:12  [23:33:12] SETTINGS panel open (menu #1)
+23:33:13  [23:33:12] MGR ready idx=15
+23:33:15  [23:33:15] SETTINGS panel exit-app (menu #2)
+23:33:18  [23:33:18] DYTV v143 launched
+23:33:18  [23:33:18] SIGNER init start
+23:33:18  [23:33:18] LOGSRV ready on port 8765
+23:33:18  [23:33:18] SIGNER load shim ok
+23:33:18  [23:33:18] SIGNER load abogus ok
+23:33:18  [23:33:18] LOGSRV advertising as DYTV-541
+23:33:18  [23:33:18] SIGNER load sign ok
+23:33:18  [23:33:18] FEEDCOLL viewDidLoad
+23:33:18  [23:33:18] ROOT auto-start v143
+23:33:18  [23:33:18] SIGNER load abogus_dy ok
+23:33:18  [23:33:18] SIGNER extras sign=true dy=true
+23:33:18  [23:33:18] SIGNER bdms=yes
+23:33:18  [23:33:18] SIGNER initABogus=true
+23:33:18  [23:33:18] SIGNER fns=AB (期望 AB)
+23:33:18  [23:33:18] SIGNER smoke={"ok":true,"value":"OfWqBduhdk6NXD6D5XcLfY3qVW33Ysld0SVkMDhezVfPCL39HMTP9exE3ATv0AbeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+23:33:18  [23:33:18] SIGNER READY a_bogus len=180
+23:33:18  [23:33:18] FEED native pipeline armed (source=mobile)
+23:33:18  [23:33:18] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+23:33:19  [23:33:19] LOGSRV Bonjour published: DYTV-541
+23:33:20  [23:33:20] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+23:33:20  [23:33:20] FEED video-dump a[0] f1[bytes=344] f2[bytes=1057] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1004] f7[bytes=4] f8[bytes=383] f9[varint=1] f10[bytes=344] f11[bytes=2584] f13[varint=13467] f15[varint=0] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794843213] f24[varint=0] f25[bytes=1821] f26[bytes=0] f30[bytes=3079] f33[varint=1] f34[bytes=0] f44[bytes=3]
+23:33:20  [23:33:20] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=63] f3[varint=1794046517] f4[bytes=5083] f5[bytes=4373] f6[bytes=405] f7[bytes=11396] f8[bytes=472] f9[varint=0] f10[bytes=53] f11[bytes=63] f13[varint=12] f14[bytes=51,bytes=45,bytes=43] f17[varint=0] f18[bytes=488] f19[bytes=841] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=13467] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=100878429594] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=977] f104[varint=1] f105[varint=1] f106[bytes=57] f109[bytes=8] f115[bytes=847] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=2686] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3278] f242[bytes=12] f243[bytes=225] f247[bytes=1377] f248[bytes=33] f249[bytes=13,bytes=20,bytes=6] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=735] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=75] f297[varint=0] f301[bytes=43] f302[bytes=11517] f303[varint=0] f304[bytes=6] f305[bytes=33] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=5] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=30] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=181] f396[bytes=0] f399[bytes=433,bytes=1401] f400[bytes=595] f403[bytes=190] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=63] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=36,bytes=44,bytes=36] f564[bytes=40] f566[bytes=158] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=943] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=229] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=296] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+23:33:20  [23:33:20] FEED item a[0] id=7705371118312867145 type=0 static=ok redirect=ok dur=13467
+23:33:20  [23:33:20] FEED first url[7705371118312867145]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbnfj67og65ooh59s6dg&line=0&file_id=a19823075465413b878e74e236a41e56&sign=401
+23:33:20  [23:33:20] FEED item a[1] id=7707877816045703914 type=0 static=ok redirect=ok dur=7731
+23:33:20  [23:33:20] FEED item a[2] id=7703181140824352378 type=0 static=ok redirect=ok dur=7932
+23:33:20  [23:33:20] FEED item a[3] id=7706735154487643442 type=0 static=ok redirect=ok dur=20267
+23:33:20  [23:33:20] FEED item a[4] id=7707606717495775347 type=0 static=ok redirect=ok dur=7220
+23:33:20  [23:33:20] FEED item a[5] id=7706406542329779449 type=0 static=ok redirect=ok dur=36919
+23:33:20  [23:33:20] FEED mobile page refresh_index=1: awemes=6 usable=6 filtered=0 redirect=6 total_seen=6
+23:33:20  [23:33:20] ENGINE merge total=6 index=0 replace=false auto=true redirect=6
+23:33:20  [23:33:20] ENGINE needMore (index=0 count=6)
+23:33:20  [23:33:20] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+23:33:20  [23:33:20] MGR url idx=0 src=redirect forced
+23:33:20  [23:33:20] MGR acquire idx=0 total=1
+23:33:20  [23:33:20] MGR cold-start defer neighbors=[1, 2]
+23:33:20  [23:33:20] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+23:33:21  [23:33:21] DMLOAD id=7705371118312867145 dur=13467
+23:33:21  [23:33:21] MGR ready idx=0
+23:33:21  [23:33:21] MGR url idx=1 src=static age=1s
+23:33:21  [23:33:21] MGR acquire idx=1 total=2
+23:33:21  [23:33:21] MGR url idx=2 src=static age=1s
+23:33:21  [23:33:21] MGR acquire idx=2 total=3
+23:33:21  [23:33:21] MGR cold-start neighbors acquired=[1, 2]
+23:33:21  [23:33:21] DANM get id=7705371118312867145 [0-13s] ttwid=127
+23:33:22  [23:33:22] DANM all-segments done id=7705371118312867145 total=7 retry=0
+23:33:22  [23:33:22] DMLOAD done id=7705371118312867145 total=7
+23:33:22  [23:33:22] MGR ready idx=1
+23:33:22  [23:33:22] MGR ready idx=2
+23:33:23  [23:33:23] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+23:33:23  [23:33:23] FEED video-dump a[0] f1[bytes=1302] f2[bytes=1068] f3[varint=1936] f4[varint=1591] f5[bytes=8] f6[bytes=1001] f7[bytes=7] f9[varint=0] f13[varint=0] f15[varint=0] f17[varint=0] f26[bytes=0] f30[bytes=1174] f34[bytes=0]
+23:33:23  [23:33:23] FEED skip-item a[0] id=7706856819763716282 type=0 dur=0 reason=nodur
+23:33:23  [23:33:23] FEED item a[1] id=7697146336839208192 type=0 static=ok redirect=ok dur=22454
+23:33:23  [23:33:23] FEED first url[7697146336839208192]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000db8s35fog65j6tpaf7u0&line=0&file_id=f338c3905bdf4369976124cc69818a88&sign=ef0
+23:33:23  [23:33:23] FEED item a[2] id=7702778060626604955 type=0 static=ok redirect=ok dur=7967
+23:33:23  [23:33:23] FEED item a[3] id=7707626670639294450 type=0 static=ok redirect=ok dur=9380
+23:33:23  [23:33:23] FEED item a[4] id=7697662284152284857 type=0 static=ok redirect=ok dur=23967
+23:33:23  [23:33:23] FEED item a[5] id=7705380588554915114 type=0 static=ok redirect=ok dur=191821
+23:33:23  [23:33:23] FEED mobile page refresh_index=2: awemes=6 usable=5 filtered=1 redirect=5 total_seen=11
+23:33:23  [23:33:23] ENGINE merge total=11 index=0 replace=false auto=false redirect=5
+23:33:23  [23:33:23] SETTINGS panel open (menu #1)
+23:33:24  [23:33:24] WATCH repair idx=0 reason=stall
+23:33:24  [23:33:24] MGR rebuild idx=0 (redirect)
+23:33:24  [23:33:24] MGR url idx=0 src=redirect forced
+23:33:24  [23:33:24] MGR acquire idx=0 total=3
+23:33:25  [23:33:25] FEED source switch mobile -> web
+23:33:25  [23:33:25] ENGINE reset (source switch)
+23:33:25  [23:33:25] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+23:33:25  [23:33:25] FEEDCOLL reset view (source switch)
+23:33:25  [23:33:25] MGR ready idx=0
+23:33:26  [23:33:26] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+23:33:26  [23:33:26] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+23:33:26  [23:33:26] ENGINE needMore (index=0 count=6)
+23:33:26  [23:33:26] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+23:33:26  [23:33:26] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+23:33:26  [23:33:26] DMLOAD id=7689079011930842469 dur=8200
+23:33:26  [23:33:26] DANM get id=7689079011930842469 [0-8s] ttwid=127
+23:33:27  [23:33:26] DANM all-segments done id=7689079011930842469 total=98 retry=0
+23:33:27  [23:33:26] DMLOAD done id=7689079011930842469 total=98
+23:33:28  [23:33:28] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=12
+23:33:28  [23:33:28] ENGINE merge total=12 index=0 replace=false auto=false redirect=0
+23:33:29  [23:33:29] ENGINE next -> index=1
+23:33:29  [23:33:29] MGR url idx=3 src=static age=2s
+23:33:29  [23:33:29] MGR acquire idx=3 total=4
+23:33:29  [23:33:29] FEEDCOLL scrollTo idx=1 y=1080.0 items=12
+23:33:29  [23:33:29] DMLOAD id=7707582978150485288 dur=1154473
+23:33:29  [23:33:29] DANM get id=7707582978150485288 [0-60s] ttwid=127
+23:33:29  [23:33:29] MGR ready idx=3
+23:33:30  [23:33:30] DANM get id=7707582978150485288 [60-120s] ttwid=127
+23:33:30  [23:33:30] DANM get id=7707582978150485288 [120-180s] ttwid=127
+23:33:30  [23:33:30] DANM get id=7707582978150485288 [180-240s] ttwid=127
+23:33:31  [23:33:31] DANM get id=7707582978150485288 [240-300s] ttwid=127
+23:33:31  [23:33:31] DANM get id=7707582978150485288 [300-360s] ttwid=127
+23:33:31  [23:33:31] ENGINE next -> index=2
+23:33:31  [23:33:31] MGR url idx=4 src=static age=4s
+23:33:31  [23:33:31] MGR acquire idx=4 total=5
+23:33:31  [23:33:31] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+23:33:31  [23:33:31] DANM get id=7707582978150485288 [360-420s] ttwid=127
+23:33:31  [23:33:31] DMLOAD id=7679061464597974298 dur=17967
+23:33:31  [23:33:31] DANM get id=7679061464597974298 [0-17s] ttwid=127
+23:33:32  [23:33:31] DANM get id=7707582978150485288 [420-480s] ttwid=127
+23:33:32  [23:33:31] MGR ready idx=4
+23:33:32  [23:33:32] DANM all-segments done id=7679061464597974298 total=228 retry=0
+23:33:32  [23:33:32] DMLOAD done id=7679061464597974298 total=228
+23:33:32  [23:33:32] DANM get id=7707582978150485288 [480-540s] ttwid=127
+23:33:32  [23:33:32] DANM get id=7707582978150485288 [540-600s] ttwid=127
+23:33:33  [23:33:32] DANM get id=7707582978150485288 [600-660s] ttwid=127
+23:33:33  [23:33:33] ENGINE next -> index=3
+23:33:33  [23:33:33] MGR evict idx=0
+23:33:33  [23:33:33] MGR url idx=5 src=static age=6s
+23:33:33  [23:33:33] MGR acquire idx=5 total=5
+23:33:33  [23:33:33] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:33:33  [23:33:33] DANM get id=7707582978150485288 [660-720s] ttwid=127
+23:33:33  [23:33:33] DMLOAD id=7696820782051183899 dur=16905
+23:33:33  [23:33:33] DANM get id=7696820782051183899 [0-16s] ttwid=127
+23:33:33  [23:33:33] DANM get id=7707582978150485288 [720-780s] ttwid=127
+23:33:33  [23:33:33] MGR ready idx=5
+23:33:33  [23:33:33] DANM all-segments done id=7696820782051183899 total=97 retry=0
+23:33:33  [23:33:33] DMLOAD done id=7696820782051183899 total=97
+23:33:33  [23:33:33] DANM get id=7707582978150485288 [780-840s] ttwid=127
+23:33:34  [23:33:34] DANM get id=7707582978150485288 [840-900s] ttwid=127
+23:33:34  [23:33:34] DANM get id=7707582978150485288 [900-960s] ttwid=127
+23:33:34  [23:33:34] DANM get id=7707582978150485288 [960-1020s] ttwid=127
+23:33:35  [23:33:34] DANM get id=7707582978150485288 [1020-1080s] ttwid=127
+23:33:35  [23:33:35] DANM get id=7707582978150485288 [1080-1140s] ttwid=127
+23:33:35  [23:33:35] DANM get id=7707582978150485288 [1140-1154s] ttwid=127
+23:33:36  [23:33:35] DANM all-segments done id=7707582978150485288 total=166 retry=0
+23:33:36  [23:33:35] DMLOAD done id=7707582978150485288 total=166
+23:33:36  [23:33:36] SETTINGS panel open (menu #1)
+23:33:40  [23:33:40] SETTINGS panel auto-hide (3s idle)
+23:33:44  [23:33:44] ENGINE next -> index=4
+23:33:44  [23:33:44] MGR evict idx=1
+23:33:44  [23:33:44] MGR url idx=6 src=static age=16s
+23:33:44  [23:33:44] MGR acquire idx=6 total=5
+23:33:44  [23:33:44] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+23:33:44  [23:33:44] DMLOAD id=7707709283407842587 dur=683329
+23:33:44  [23:33:44] DANM get id=7707709283407842587 [0-60s] ttwid=127
+23:33:44  [23:33:44] DANM get id=7707709283407842587 [60-120s] ttwid=127
+23:33:45  [23:33:45] MGR ready idx=6
+23:33:45  [23:33:45] DANM get id=7707709283407842587 [120-180s] ttwid=127
+23:33:45  [23:33:45] DANM get id=7707709283407842587 [180-240s] ttwid=127
+23:33:45  [23:33:45] DANM get id=7707709283407842587 [240-300s] ttwid=127
+23:33:46  [23:33:46] DANM get id=7707709283407842587 [300-360s] ttwid=127
+23:33:46  [23:33:46] ENGINE prev -> index=3
+23:33:46  [23:33:46] MGR evict idx=6
+23:33:46  [23:33:46] MGR url idx=1 src=static age=19s
+23:33:46  [23:33:46] MGR acquire idx=1 total=5
+23:33:46  [23:33:46] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:33:46  [23:33:46] DANM get id=7707709283407842587 [360-420s] ttwid=127
+23:33:46  [23:33:46] DANM get id=7707709283407842587 [420-480s] ttwid=127
+23:33:47  [23:33:46] DANM get id=7707709283407842587 [480-540s] ttwid=127
+23:33:47  [23:33:47] DANM get id=7707709283407842587 [540-600s] ttwid=127
+23:33:47  [23:33:47] MGR ready idx=1
+23:33:47  [23:33:47] DANM get id=7707709283407842587 [600-660s] ttwid=127
+23:33:47  [23:33:47] DANM get id=7707709283407842587 [660-683s] ttwid=127
+23:33:48  [23:33:47] DANM all-segments done id=7707709283407842587 total=97 retry=0
+23:33:48  [23:33:48] DMLOAD done id=7707709283407842587 total=97
+23:33:56  [23:33:56] ENGINE prev -> index=2
+23:33:56  [23:33:56] MGR evict idx=5
+23:33:56  [23:33:56] MGR url idx=0 src=static age=29s
+23:33:56  [23:33:56] MGR acquire idx=0 total=5
+23:33:56  [23:33:56] FEEDCOLL scrollTo idx=2 y=2160.0 items=12
+23:33:56  [23:33:56] MGR ready idx=0
+23:33:57  [23:33:56] ENGINE next -> index=3
+23:33:57  [23:33:56] MGR evict idx=0
+23:33:57  [23:33:56] MGR url idx=5 src=static age=30s
+23:33:57  [23:33:56] MGR acquire idx=5 total=5
+23:33:57  [23:33:56] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:33:58  [23:33:58] MGR ready idx=5
+23:34:00  [23:34:00] ENGINE next -> index=4
+23:34:00  [23:34:00] MGR evict idx=1
+23:34:00  [23:34:00] MGR url idx=6 src=static age=32s
+23:34:00  [23:34:00] MGR acquire idx=6 total=5
+23:34:00  [23:34:00] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+23:34:01  [23:34:01] MGR ready idx=6
+23:34:01  [23:34:01] ENGINE prev -> index=3
+23:34:01  [23:34:01] MGR evict idx=6
+23:34:01  [23:34:01] MGR url idx=1 src=static age=35s
+23:34:01  [23:34:01] MGR acquire idx=1 total=5
+23:34:01  [23:34:01] FEEDCOLL scrollTo idx=3 y=3240.0 items=12
+23:34:02  [23:34:02] MGR ready idx=1
+23:34:05  [23:34:05] ENGINE next -> index=4
+23:34:05  [23:34:05] MGR evict idx=1
+23:34:05  [23:34:05] MGR url idx=6 src=static age=37s
+23:34:05  [23:34:05] MGR acquire idx=6 total=5
+23:34:05  [23:34:05] FEEDCOLL scrollTo idx=4 y=4320.0 items=12
+23:34:05  [23:34:05] MGR ready idx=6

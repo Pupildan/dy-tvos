@@ -238,6 +238,17 @@
   - 重启时优先查：①offset_time 语义（是否真 ms 偏移——周期性空窗与段 offset 分布存疑）；②DanmakuTrack 轨道占满/释放时序；③isOverlap 观感；④取回/展示时序对齐。
   - 重启入口：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + dm_drop/dm_shoot/dm_items 计数器 + 探针 _tmp/danmaku_hist_probe.js。
 
+## 24. v143 PC 版 UI 上线（2026-11-14 用户规格，CI 过待真机验收）
+
+- **布局（参考 web 版截图）**：右侧动作轨（上下切换箭头 + 圆头像 66px + 点赞/评论/收藏/分享 SF Symbols + 计数万缩写，距右 118px、从 28% 高度起竖排）；左下信息区（头像 44px + @昵称 + 文案 + 话题行，避让底部进度条）。层级：player < danmaku < cover < PC 信息层（封面期一并盖住）。计数纯展示（tvOS 导航仍是箭头键）。
+- **数据（wire 实测字段号，dev 探针 _tmp/aweme_fields_probe.js 双样本一致）**：
+  - mobile proto：`desc=aweme f2`、`纯话题行=f459`、`author=f4（f3=昵称，f5/6/7=头像 url_list）`、`statistics=f10（f3=digg f2=comment f6=share f11=collect）`——与 s13.e 构造序完全一致。
+  - web JSON：`author.nickname / author.avatar_thumb.url_list / statistics.{digg,comment,share,collect}_count / desc` 直取。
+  - 存储：`DYVideoInfo` + `PlaybackEngine.infos` + merge `allInfos` 参数 + `videoInfo(at:)` 访问器；源切换随 reset 清空。
+- **头像**：`AvatarLoader`（NSCache 记忆化异步加载）。
+- **CI 踩坑**：PlayerCell 重写时丢了 `bind` 方法；rail 图标 `let` 重赋值（改 var）。产物 output/DYTV-tvos-unsigned-v143.ipa。
+- **验收**：左下作者/文案/话题、右轨计数与头像随视频切换；数字万缩写；计数与 PC 网页版数值一致即数据映射正确。
+
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 
 - ①去白底：根因 = DanmakuAsyncLayer 在 layer isOpaque==true 时主动填白（UIColor.white）；修 = DanmakuTextCell `required init(frame:)`（官方 example 同款写法）+ backgroundColor=.clear + isOpaque=false + layer.isOpaque=false。

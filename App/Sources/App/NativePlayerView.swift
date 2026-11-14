@@ -30,16 +30,13 @@ final class PlayerCell: UICollectionViewCell {
         iv.isHidden = true
         return iv
     }()
-    // MARK: PC 版 UI（v143）——左下信息区
+    // MARK: PC 版 UI（v143/v144）——左下信息区
     private let nicknameLabel = UILabel()
     private let descLabel = UILabel()
     private let hashtagLabel = UILabel()
-    private let avatarImageView = UIImageView()
     // MARK: PC 版 UI——右侧动作轨
-    private let railUpButton = UIImageView()
-    private let railDownButton = UIImageView()
     private let railAvatarView = UIImageView()
-    private var railLikeIcon = UIImageView()
+    private let railLikeIcon = UIImageView()
     private let railLikeLabel = UILabel()
     private var railCommentIcon = UIImageView()
     private let railCommentLabel = UILabel()
@@ -70,14 +67,10 @@ final class PlayerCell: UICollectionViewCell {
     }
 
     /// PC 版 UI 构建（层级：player < danmaku < cover < PC 信息层——封面期一并盖住）
+    /// v144 修正：去上下箭头、去左下头像；昵称字号大于标题；昵称后跟发布时间；文案自动换行；话题独立行。
     private func buildPCOverlay() {
-        // 左下：头像 + 昵称 + 文案 + 话题
-        avatarImageView.contentMode = .scaleAspectFill
-        avatarImageView.clipsToBounds = true
-        avatarImageView.layer.cornerRadius = 10
-        avatarImageView.layer.borderColor = UIColor.white.withAlphaComponent(0.6).cgColor
-        avatarImageView.layer.borderWidth = 1
-        nicknameLabel.font = .boldSystemFont(ofSize: 28)
+        // 左下：@昵称+发布时间 / 文案(3行自动换行) / 话题(独立行)
+        nicknameLabel.font = .boldSystemFont(ofSize: 32)
         nicknameLabel.textColor = .white
         nicknameLabel.shadowColor = .black
         nicknameLabel.shadowOffset = CGSize(width: 1, height: 1)
@@ -85,29 +78,22 @@ final class PlayerCell: UICollectionViewCell {
         descLabel.textColor = .white
         descLabel.shadowColor = .black
         descLabel.shadowOffset = CGSize(width: 1, height: 1)
+        descLabel.numberOfLines = 3
         hashtagLabel.font = .systemFont(ofSize: 24, weight: .medium)
         hashtagLabel.textColor = UIColor.white.withAlphaComponent(0.9)
         hashtagLabel.shadowColor = .black
         hashtagLabel.shadowOffset = CGSize(width: 1, height: 1)
-        contentView.addSubview(avatarImageView)
         contentView.addSubview(nicknameLabel)
         contentView.addSubview(descLabel)
         contentView.addSubview(hashtagLabel)
 
-        // 右侧动作轨（纯展示；图标 SF Symbols，计数万缩写）
-        let railX: CGFloat = -104   // 距右边缘
+        // 右侧动作轨（纯展示；图标 SF Symbols，计数万缩写；v144 去掉上下箭头）
         func railIcon(_ name: String) -> UIImageView {
             let iv = UIImageView(image: UIImage(systemName: name))
             iv.tintColor = .white
             iv.contentMode = .center
             return iv
         }
-        railUpButton.image = UIImage(systemName: "chevron.up")
-        railUpButton.tintColor = .white
-        railUpButton.contentMode = .center
-        railDownButton.image = UIImage(systemName: "chevron.down")
-        railDownButton.tintColor = .white
-        railDownButton.contentMode = .center
         railAvatarView.contentMode = .scaleAspectFill
         railAvatarView.clipsToBounds = true
         railAvatarView.layer.cornerRadius = 33
@@ -122,52 +108,72 @@ final class PlayerCell: UICollectionViewCell {
             l.textColor = .white
             l.textAlignment = .center
         }
-        for v in [railUpButton, railDownButton, railAvatarView, railLikeIcon, railLikeLabel, railCommentIcon, railCommentLabel, railStarIcon, railStarLabel, railShareIcon, railShareLabel] {
+        for v in [railAvatarView, railLikeIcon, railLikeLabel, railCommentIcon, railCommentLabel, railStarIcon, railStarLabel, railShareIcon, railShareLabel] {
             contentView.addSubview(v)
         }
     }
 
-    /// PC 版 UI 布局（右轨距右 104px 居中竖排；左下信息区避让进度条）
+    /// PC 版 UI 布局（右轨距右 118px 竖排起于 28% 高度；左下信息区避让进度条，底部锚定向上排）
     private func layoutPCOverlay() {
         let b = contentView.bounds
         let railX = b.width - 118
         let railW: CGFloat = 92
-        var y = b.height * 0.28
-        railUpButton.frame = CGRect(x: railX, y: y, width: railW, height: 54); y += 62
-        railDownButton.frame = CGRect(x: railX, y: y, width: railW, height: 54); y += 66
+        var y = b.height * 0.32
         railAvatarView.frame = CGRect(x: railX + 16, y: y, width: 66, height: 66); y += 78
         for (icon, label) in [(railLikeIcon, railLikeLabel), (railCommentIcon, railCommentLabel), (railStarIcon, railStarLabel), (railShareIcon, railShareLabel)] {
             icon.frame = CGRect(x: railX, y: y, width: railW, height: 44)
             label.frame = CGRect(x: railX - 14, y: y + 44, width: railW + 28, height: 30)
             y += 84
         }
-        // 左下信息区（避让底部进度条 13px + 余量）
+        // 左下信息区（无头像；底部锚定向上：话题 → 文案(3行) → 昵称+时间）
         let infoLeft: CGFloat = 24
         let infoBottom: CGFloat = 40
-        hashtagLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 38, width: b.width - railW - 160, height: 34)
-        descLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 84, width: b.width - railW - 160, height: 40)
-        nicknameLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 126, width: b.width - railW - 160, height: 36)
-        avatarImageView.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 126, width: 44, height: 44)
-    }
-
-    /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
-    func bind(player: AVPlayer) {
-        playerLayerView.player = player
+        let infoW = b.width - railW - 160
+        hashtagLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34, width: infoW, height: 34)
+        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102, width: infoW, height: 102)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102 - 8 - 42, width: infoW, height: 42)
     }
 
     /// 填充 PC 版 UI 数据（willDisplay 时按 index 调用）。
     func applyInfo(_ info: DYVideoInfo?) {
-        nicknameLabel.text = info?.nickname.isEmpty == false ? "@\(info!.nickname)" : ""
-        descLabel.text = info?.desc
-        hashtagLabel.text = info?.hashtags
-        avatarImageView.image = nil
+        // 昵称 + 发布时间（同一行：名字号大于标题字号）
+        let nick = info?.nickname.isEmpty == false ? "@\(info!.nickname)" : ""
+        let time = info?.createTimeText ?? ""
+        if nick.isEmpty && time.isEmpty {
+            nicknameLabel.attributedText = nil
+        } else {
+            let s = NSMutableAttributedString()
+            if !nick.isEmpty {
+                s.append(NSAttributedString(string: nick, attributes: [.font: UIFont.boldSystemFont(ofSize: 32), .foregroundColor: UIColor.white, .shadow: Self.textShadow]))
+                if !time.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
+            }
+            if !time.isEmpty {
+                s.append(NSAttributedString(string: time, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
+            }
+            nicknameLabel.attributedText = s
+        }
+        descLabel.text = info?.desc.isEmpty == false ? info?.desc : nil
+        hashtagLabel.text = info?.hashtags.isEmpty == false ? info?.hashtags : nil
         railAvatarView.image = nil
         if let urlStr = info?.avatarUrl, let url = URL(string: urlStr) {
             AvatarLoader.shared.load(url) { [weak self] img in
-                self?.avatarImageView.image = img
                 self?.railAvatarView.image = img
             }
         }
+        railLikeLabel.text = Self.cnCount(info?.digg ?? 0)
+        railCommentLabel.text = Self.cnCount(info?.comment ?? 0)
+        railStarLabel.text = Self.cnCount(info?.collect ?? 0)
+        railShareLabel.text = Self.cnCount(info?.share ?? 0)
+    }
+
+    /// 文字阴影（左下信息区可读性）
+    private static let textShadow: NSShadow = {
+        let s = NSShadow()
+        s.shadowColor = UIColor.black
+        s.shadowOffset = CGSize(width: 1, height: 1)
+        s.shadowBlurRadius = 2
+        return s
+    }()
         railLikeLabel.text = Self.cnCount(info?.digg ?? 0)
         railCommentLabel.text = Self.cnCount(info?.comment ?? 0)
         railStarLabel.text = Self.cnCount(info?.collect ?? 0)
