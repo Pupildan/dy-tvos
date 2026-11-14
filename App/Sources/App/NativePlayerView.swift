@@ -60,7 +60,7 @@ final class PlayerCell: UICollectionViewCell {
     func updateDanmakuFrame() {
         let b = contentView.bounds
         guard b.width > 1, b.height > 1 else { return }
-        let ps = playerLayer.player?.currentItem?.presentationSize
+        let ps = playerLayerView.player?.currentItem?.presentationSize
         guard let w = ps?.width, let h = ps?.height, w > 1, h > 1, w.isFinite, h.isFinite else {
             danmakuOverlay.frame = b   // 尺寸未知（未 ready）兜底全屏，ready 后会再校准
             return

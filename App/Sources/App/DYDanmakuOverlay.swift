@@ -37,12 +37,13 @@ final class DanmakuTextCellModel: DanmakuCellModel {
 
 /// 弹幕文字 Cell：DanmakuKit 异步图层上画纯色文字（v134 用户要求：无背景、无描边，保留弹幕本身颜色）。
 final class DanmakuTextCell: DanmakuCell {
-    override init(frame: CGRect) {
+    required init(frame: CGRect) {
         super.init(frame: frame)
-        // 关键：DanmakuAsyncLayer 在 isOpaque==true 时会主动填白（白底来源）——必须显式关掉
+        // 关键：DanmakuAsyncLayer 在 layer isOpaque==true 时会主动填白（白底来源）——显式关掉
+        // （官方 example 同款：backgroundColor = .clear；再加 isOpaque=false 双保险）
+        backgroundColor = .clear
         isOpaque = false
         layer.isOpaque = false
-        backgroundColor = nil
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
