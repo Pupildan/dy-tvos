@@ -23,6 +23,19 @@ final class DYDanmakuClient {
     static let webUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
     private let host = "https://www.douyin.com"
     private let path = "/aweme/v1/web/danmaku/get_v2/"
+    /// web 公共参数（v133 探针实锤：缺 aid=6383 等一律 status_code=3 "AppId不合法"）
+    private static let webCommon: [(String, String)] = [
+        ("device_platform", "webapp"),
+        ("aid", "6383"),
+        ("channel", "channel_pc_web"),
+        ("cookie_enabled", "true"),
+        ("browser_language", "zh-CN"),
+        ("browser_platform", "Win32"),
+        ("browser_name", "Chrome"),
+        ("browser_version", "147.0.0.0"),
+    ]
+    /// 分段窗口（v138 探针实锤：单次响应 ~460 条上限，60s 窗口可取全量）
+    private static let segmentWindowMs: Int = 60_000
 
     private let session: URLSession
     private var cache: [String: [DYDanmakuItem]] = [:]
@@ -44,21 +57,32 @@ final class DYDanmakuClient {
         session = URLSession(configuration: cfg)
     }
 
-    /// 取 awemeId 的弹幕（缓存优先；inflight 去重；completion 主队列回调，可能为空数组）。
-    func items(for awemeId: String, durationMs: Int, completion: @escaping ([DYDanmakuItem]) -> Void) {
-        guard !awemeId.isEmpty else { completion([]); return }
-        if let hit = cache[awemeId] { completion(hit); return }
-        guard !inflight.contains(awemeId) else { completion([]); return }
+    /// 取 awemeId 的弹幕（v138 分段版：60s 窗口顺序请求——单次响应有 ~460 条上限，
+    /// 长视频一次请求只拿到第一段就断流；分段合并去重，开发机探针实锤 186s 视频 458→1183 条）。
+    /// onSegment 每段增量回调（主队列，段内按 offset_time 有序、段间时间递增）；
+    /// completion 全部段完成后回调（主队列）。缓存优先；inflight 去重。
+    func items(for awemeId: String, durationMs: Int,
+               onSegment: @escaping ([DYDanmakuItem]) -> Void,
+               completion: @escaping () -> Void) {
+        guard !awemeId.isEmpty else { completion(); return }
+        if let hit = cache[awemeId] {
+            DispatchQueue.main.async { onSegment(hit) }
+            completion(); return
+        }
+        guard !inflight.contains(awemeId) else { completion(); return }
         inflight.insert(awemeId)
         queue.async { [weak self] in
             guard let self else { return }
             self.ensureTTWIDInternal { [weak self] in
-                self?.fetch(awemeId: awemeId, durationMs: durationMs) { [weak self] items in
+                self?.fetch(awemeId: awemeId, durationMs: durationMs) { [weak self] allItems in
                     guard let self else { return }
                     self.queue.async {
                         self.inflight.remove(awemeId)
-                        if !items.isEmpty { self.cache[awemeId] = items }
-                        DispatchQueue.main.async { completion(items) }
+                        if !allItems.isEmpty { self.cache[awemeId] = allItems }
+                        DispatchQueue.main.async {
+                            onSegment(allItems)
+                            completion()
+                        }
                     }
                 }
             }
@@ -116,101 +140,98 @@ final class DYDanmakuClient {
 
     // MARK: - 弹幕请求（照抄 u11.K 参数表 + r() web GET 链）
 
-    private func fetch(awemeId: String, durationMs: Int, completion: @escaping ([DYDanmakuItem]) -> Void) {
+    /// 分段取回（v138）：60s 窗口顺序请求合并去重——单次响应 ~460 条上限是弹幕断流根因。
+    /// onSegment 每段增量回调（主队列）；completion 全量合并数组（主队列）。
+    private func fetch(awemeId: String, durationMs: Int,
+                       onSegment: @escaping ([DYDanmakuItem]) -> Void,
+                       completion: @escaping ([DYDanmakuItem]) -> Void) {
         let d = max(0, durationMs)
-        // web 公共参数（v133 开发机探针实锤：缺这些 douyin web 网关一律 status_code=3 "AppId不合法"）
-        let webCommon: [(String, String)] = [
-            ("device_platform", "webapp"),
-            ("aid", "6383"),
-            ("channel", "channel_pc_web"),
-            ("cookie_enabled", "true"),
-            ("browser_language", "zh-CN"),
-            ("browser_platform", "Win32"),
-            ("browser_name", "Chrome"),
-            ("browser_version", "147.0.0.0"),
-        ]
-        var p: [(String, String)] = webCommon + [
-            ("app_name", "aweme"),
-            ("format", "json"),
-            ("group_id", awemeId),
-            ("item_id", awemeId),
-            ("start_time", "0"),
-            ("end_time", String(d)),
-            ("duration", String(d)),
-            // authentication_token 传空即可（v133 探针实锤：mobile proto 无此字段且空值能通）
-            ("authentication_token", ""),
-            ("pc_libra_divert", "Windows"),
-            ("support_h265", "0"),
-            ("support_dash", "1"),
-            ("version_code", "170400"),
-            ("version_name", "17.4.0"),
-        ]
-        // D0() 公共参数（照抄 DYFeedClient 同款）
-        p.append(("msToken", Self.randomMsToken()))
-        p.append(("screen_width", "2560"))
-        p.append(("screen_height", "1440"))
-        p.append(("cpu_core_num", "24"))
-        p.append(("device_memory", "8"))
-        // 签名输入 = 完整 query 含 timestamp（v133 探针原样：baseQuery+timestamp → sign → a_bogus 后置）
-        let ts = String(Int(Date().timeIntervalSince1970))
-        let baseQuery = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&") + "&timestamp=\(ts)"
-        guard let sr = DYSigner.shared.sign(query: baseQuery, data: "", path: path, ua: DYDanmakuClient.webUA) else {
-            DYLog.shared.log("DANM sign fail (not ready)")
-            completion([])
-            return
-        }
-        var finalQuery = baseQuery
-        if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
-        guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else {
-            DYLog.shared.log("DANM url parse fail")
-            completion([])
-            return
-        }
-        var req = URLRequest(url: url)
-        req.timeoutInterval = 12
-        req.setValue(DYDanmakuClient.webUA, forHTTPHeaderField: "User-Agent")
-        req.setValue("*/*", forHTTPHeaderField: "Accept")
-        if !ttwid.isEmpty { req.setValue("ttwid=\(ttwid)", forHTTPHeaderField: "Cookie") }
-        req.setValue("\(host)/video/\(awemeId)", forHTTPHeaderField: "Referer")
+        guard d > 0 else { completion([]); return }
+        let window = Self.segmentWindowMs
+        var merged: [DYDanmakuItem] = []
+        var seen = Set<String>()
 
-        DYLog.shared.log("DANM get id=\(awemeId) dur=\(d) bogus_len=\(sr.value.count) ttwid=\(ttwid.isEmpty ? 0 : ttwid.count)")
-        session.dataTask(with: req) { [weak self] data, resp, err in
-            guard let self else { return }
-            if let err { DYLog.shared.event("DANM http err: \(err.localizedDescription)"); completion([]); return }
-            guard let http = resp as? HTTPURLResponse else { completion([]); return }
-            guard let data, !data.isEmpty else {
-                DYLog.shared.log("DANM empty body http=\(http.statusCode)")
-                completion([])
+        func requestWindow(start: Int, done: @escaping () -> Void) {
+            let end = min(start + window, d)
+            var p: [(String, String)] = Self.webCommon + [
+                ("app_name", "aweme"),
+                ("format", "json"),
+                ("group_id", awemeId),
+                ("item_id", awemeId),
+                ("start_time", String(start)),
+                ("end_time", String(end)),
+                ("duration", String(d)),
+                ("authentication_token", ""),   // 传空即可（探针实锤）
+                ("pc_libra_divert", "Windows"),
+                ("support_h265", "0"),
+                ("support_dash", "1"),
+                ("version_code", "170400"),
+                ("version_name", "17.4.0"),
+                ("msToken", Self.randomMsToken()),
+                ("screen_width", "2560"),
+                ("screen_height", "1440"),
+                ("cpu_core_num", "24"),
+                ("device_memory", "8"),
+            ]
+            let ts = String(Int(Date().timeIntervalSince1970))
+            let baseQuery = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&") + "&timestamp=\(ts)"
+            guard let sr = DYSigner.shared.sign(query: baseQuery, data: "", path: path, ua: DYDanmakuClient.webUA) else {
+                DYLog.shared.log("DANM sign fail (not ready)")
+                done(); return
+            }
+            var finalQuery = baseQuery
+            if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
+            guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else { done(); return }
+            var req = URLRequest(url: url)
+            req.timeoutInterval = 12
+            req.setValue(DYDanmakuClient.webUA, forHTTPHeaderField: "User-Agent")
+            req.setValue("*/*", forHTTPHeaderField: "Accept")
+            if !ttwid.isEmpty { req.setValue("ttwid=\(ttwid)", forHTTPHeaderField: "Cookie") }
+            req.setValue("\(host)/video/\(awemeId)", forHTTPHeaderField: "Referer")
+
+            DYLog.shared.log("DANM get id=\(awemeId) [\(start / 1000)-\(end / 1000)s] ttwid=\(ttwid.isEmpty ? 0 : ttwid.count)")
+            session.dataTask(with: req) { data, resp, err in
+                let httpStatus = (resp as? HTTPURLResponse)?.statusCode ?? -1
+                guard err == nil, httpStatus == 200, let data, !data.isEmpty,
+                      let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+                      (obj["status_code"] as? Int ?? -1) == 0,
+                      let list = obj["danmaku_list"] as? [[String: Any]] else {
+                    // 单段失败记日志继续（不中断整体取回）
+                    DYLog.shared.log("DANM segment [\(start / 1000)-\(end / 1000)s] fail/empty http=\(httpStatus)")
+                    DispatchQueue.main.async { done() }
+                    return
+                }
+                var fresh: [DYDanmakuItem] = []
+                for e in list {
+                    guard let text = e["text"] as? String, !text.isEmpty else { continue }
+                    let did = (e["danmaku_id"] as? NSNumber)?.stringValue ?? (e["danmaku_id"] as? String ?? "")
+                    guard !seen.contains(did) else { continue }
+                    let off = (e["offset_time"] as? NSNumber)?.doubleValue ?? 0
+                    seen.insert(did)
+                    fresh.append(DYDanmakuItem(danmakuId: did, offsetTime: off, text: text))
+                }
+                fresh.sort { $0.offsetTime < $1.offsetTime }
+                merged.append(contentsOf: fresh)
+                DYLog.shared.count("dm_items", by: fresh.count)
+                DispatchQueue.main.async {
+                    if !fresh.isEmpty { onSegment(fresh) }
+                    done()
+                }
+            }.resume()
+        }
+
+        func runNext(start: Int) {
+            if start >= d {
+                DYLog.shared.event("DANM all-segments done id=\(awemeId) total=\(merged.count)")
+                completion(merged)
                 return
             }
-            guard http.statusCode == 200 else {
-                DYLog.shared.event("DANM http=\(http.statusCode) bytes=\(data.count) (端点拒绝?观察 status_code)")
-                completion([])
-                return
+            requestWindow(start: start) { [weak self] in
+                guard self != nil else { return }
+                runNext(start: start + window)
             }
-            // JSON 解析（web 端点返回 JSON；DanmakuResponse{status_code, danmaku_list[]}）
-            guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
-                DYLog.shared.log("DANM json parse fail (body=\(String(data: data.prefix(80), encoding: .utf8) ?? "?"))")
-                completion([])
-                return
-            }
-            let sc = obj["status_code"] as? Int ?? -1
-            guard sc == 0, let list = obj["danmaku_list"] as? [[String: Any]] else {
-                DYLog.shared.event("DANM status_code=\(sc) items=0 (0=ok 其他=错误码;若需 token/登录这里会暴露)")
-                completion([])
-                return
-            }
-            var items: [DYDanmakuItem] = []
-            for e in list {
-                guard let text = e["text"] as? String, !text.isEmpty else { continue }
-                let off = (e["offset_time"] as? NSNumber)?.doubleValue ?? 0
-                let did = (e["danmaku_id"] as? NSNumber)?.stringValue ?? (e["danmaku_id"] as? String ?? "")
-                items.append(DYDanmakuItem(danmakuId: did, offsetTime: off, text: text))
-            }
-            items.sort { $0.offsetTime < $1.offsetTime }
-            DYLog.shared.event("DANM ok id=\(awemeId) items=\(items.count) bytes=\(data.count)")
-            completion(items)
-        }.resume()
+        }
+        runNext(start: 0)
     }
 
     static func randomMsToken() -> String {

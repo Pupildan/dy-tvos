@@ -169,7 +169,7 @@ struct SettingsPanelView: View {
                        badge: (model.source == target ? "当前" : nil),
                        focused: focusedRow == row)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PanelRowButtonStyle())
         .focused($focusedRow, equals: row)
     }
 
@@ -181,7 +181,7 @@ struct SettingsPanelView: View {
                        badge: model.danmakuOn ? "开" : "关",
                        focused: focusedRow == .danmaku)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PanelRowButtonStyle())
         .focused($focusedRow, equals: .danmaku)
     }
 
@@ -191,7 +191,7 @@ struct SettingsPanelView: View {
         } label: {
             rowContent(title: title, subtitle: subtitle, badge: "待上线", focused: focusedRow == row)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PanelRowButtonStyle())
         .focused($focusedRow, equals: row)
         .opacity(0.55)
     }
@@ -219,11 +219,36 @@ struct SettingsPanelView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(Color.white, lineWidth: focused ? 4 : 0)
-        )
+        .background {
+            if focused {
+                // v138：焦点行 = 液态玻璃底板 + 白色描边（描边本身随玻璃质感）
+                if #available(tvOS 26.0, *) {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(Color.clear)
+                        .glassEffect(.regular.tint(.white.opacity(0.10)), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .strokeBorder(Color.white, lineWidth: 4)
+                        )
+                } else {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .strokeBorder(Color.white, lineWidth: 4)
+                        )
+                }
+            }
+        }
         .scaleEffect(focused ? 1.05 : 1.0)
         .animation(.spring(response: 0.28, dampingFraction: 0.72), value: focused)
+    }
+}
+
+/// 自定义按钮样式：label 原样返回——去掉 tvOS 系统 Button 聚焦时的灰色底板
+/// （截图实锤：.plain 样式在 tvOS 26 仍有系统焦点底板），焦点视觉完全由 rowContent 自绘。
+private struct PanelRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }

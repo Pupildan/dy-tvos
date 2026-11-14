@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v137"
-    static let changes = "v137: 视频源持久化——用户选过的源存 UserDefaults(dy_feed_source),下次启动直接用上次设置过的源(面板徽标同步);源切换真机验收已通过(web ready x10)"
+    static let version = "v138"
+    static let changes = "v138: ①弹幕断流修复——danmaku get_v2 单次响应~460条上限是根因(开发机探针实锤186s视频458/total3564);改60s窗口分段顺序取回合并去重,增量回调段追加,探针实测同视频1183条全量;②面板焦点去系统灰底(自定义ButtonStyle,label原样返回)+焦点行液态玻璃底板+白描边(按用户要求描边也加玻璃质感)"
 }

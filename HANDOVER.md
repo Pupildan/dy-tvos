@@ -185,6 +185,13 @@
 - **架构**：`DYFeedSource` 枚举 + `PlaybackEngine.reset()`（源切换清空）+ `DYFeedClient.setSource()`（重置分页状态）+ reloadIfNeeded 空态重置；源切换后池清空 → 冷启动收敛自动生效。
 - **CI 踩坑**：ensureTTWID 私有重名 → 改 ensureTTWIDInternal。产物 output/DYTV-tvos-unsigned-v135.ipa。
 - **真机验收**：Menu 呼出面板/再按退出；源切换到抖音精选后视频正常播放（web 直链 AVPlayer 播放是本版唯一未实测点——HEAD 403 是测试方法问题，真机 GET+带头待验）；弹幕开关即时生效。
+- **✅ v135 真机验收全通（日志实锤）**：面板呼出 → 选抖音精选 → ENGINE reset → web GET usable=7 → web 直链 MGR ready ×10 / itemErr=0，18 分钟长视频弹幕 652 条，弹幕开关生效，menu#2 退出正常。**双源架构全通。**
+
+## 18. v136/v137 面板打磨 + 源持久化（2026-11-14，CI 过）
+
+- **v136**：①面板 **3s 无操作自动隐藏**（DYSettingsModel.startAutoHide/noteInteraction——焦点移动、按键都刷新计时）；②焦点样式：去灰底 → **焦点行白色描边 + 1.05 缩放弹簧动画**（@FocusState PanelRow）；③**弹幕区域回退 v133 全屏行为**（删 v134 aspectFit 内切矩形——用户报有 bug，待后修）。
+- **v137**：**视频源持久化**——选过的源存 UserDefaults(dy_feed_source)，启动 tryStart 同步 engine.source，面板徽标同步；下次启动直接用上次设置过的源。
+- 验收：面板 3s 自动消失；焦点行白描边+放大；弹幕回全屏；换源后杀 app 重启直接是上次选的源。
 
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 

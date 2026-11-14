@@ -103,6 +103,7 @@ final class DanmakuOverlay: UIView {
     }
 
     /// 换片：清空 + 重取该 aweme 的弹幕（awemeId 未变则跳过）。
+    /// v138 分段取回：onSegment 每段增量追加（段间 offset 递增保序，shotIndex 无需重排）。
     func load(awemeId: String, durationMs: Int) {
         guard loadedAwemeId != awemeId else { return }
         loadedAwemeId = awemeId
@@ -114,11 +115,13 @@ final class DanmakuOverlay: UIView {
         guard !awemeId.isEmpty else { return }
         fetchRequested = true
         DYLog.shared.log("DMLOAD id=\(awemeId) dur=\(durationMs)")
-        DYDanmakuClient.shared.items(for: awemeId, durationMs: durationMs) { [weak self] items in
+        DYDanmakuClient.shared.items(for: awemeId, durationMs: durationMs, onSegment: { [weak self] seg in
             guard let self, self.loadedAwemeId == awemeId else { return }   // 已换片则丢弃
-            self.items = items
-            DYLog.shared.count("dm_items", by: items.count)
-        }
+            self.items.append(contentsOf: seg)
+        }, completion: { [weak self] in
+            guard let self, self.loadedAwemeId == awemeId else { return }
+            DYLog.shared.log("DMLOAD done id=\(awemeId) total=\(self.items.count)")
+        })
     }
 
     /// 播放态同步（居中且在播 → play 并对齐时钟；否则 pause）。
