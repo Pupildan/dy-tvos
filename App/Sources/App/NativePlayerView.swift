@@ -170,23 +170,22 @@ final class PlayerManager {
         p.replaceCurrentItem(with: item)
         players[index] = p
         readyObservers[index]?.invalidate()
-        readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+        readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] newStatus, _ in
             // readyToPlay 无视频轨(图集/纯音频) 或 failed(Cannot Open/无权限) → 跳过这条坏视频。
             // 直接 engine.next() 精确 +1（不经 advance/centeredIndex，避免动画中途反推跳多页）。
-            // failedIndices 防重：同一 index 只跳一次，重复 failed 不再 next（防级联跳多页）。
-            guard it.status == .readyToPlay || it.status == .failed else { return }
+            guard newStatus.status == .readyToPlay || newStatus.status == .failed else { return }
             DispatchQueue.main.async {
                 guard let self else { return }
                 let engine = PlaybackEngine.shared
                 let isCurrent = (index == engine.index)
                 // 视频轨检测：readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）
-                if it.status == .readyToPlay, it.tracks(withMediaType: .video).isEmpty {
+                if newStatus.status == .readyToPlay, item.tracks(withMediaType: .video).isEmpty {
                     DYLog.shared.log("MGR ready idx=\(index) 无视频轨 -> skip")
                     if isCurrent { engine.next() }
                     return
                 }
-                if it.status == .failed {
-                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
+                if newStatus.status == .failed {
+                    DYLog.shared.log("MGR failed idx=\(index) err=\(newStatus.error?.localizedDescription ?? "?") -> skip")
                     if isCurrent { engine.next() }
                     return
                 }
