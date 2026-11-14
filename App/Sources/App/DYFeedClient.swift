@@ -169,6 +169,7 @@ final class DYFeedClient {
         var rawVideos: [[UInt8]] = []
         var redirects: [URL?] = []
         var loggedFirst = false
+        var filtered = 0
         var ei = 0
         for entry in awemeEntries {
             guard let aweme = Proto.parse(entry) else { DYLog.shared.count("parse_aweme_nil"); ei += 1; continue }
@@ -192,6 +193,27 @@ final class DYFeedClient {
             }
             // aweme_id = field 1（s13.b 优先 str，退化为 varint）
             guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.count("parse_id_nil"); ei += 1; continue }
+            // 无感过滤（v129，照 myDV filterPrimaryPlayableAwemes 语义 type==0 才进池）：
+            // ① awemeType != 0（图集/特殊帖；照 s13.e:371 探字段 43/55/61）
+            // ② dur=0（wire 实锤：v128 两个 novideo 坏条目 idx=69/82 的时长字段全缺）
+            // 命中即不进池 → 用户永远刷不到；runtime repair→skip 仍兜底极罕见 type=0 坏媒体。
+            let awemeType = aweme.awemeType()
+            // 时长（wire 实证 f13=真实时长 ms；f12/f32 兜底；f22 是标志位非时长——v128 取值链被它污染，已修正）
+            let dur = video.varint(13) ?? video.varint(12) ?? video.varint(32) ?? 0
+            if awemeType != 0 {
+                DYLog.shared.event("FEED skip-item a[\(ei)] id=\(id) type=\(awemeType) dur=\(dur) reason=type")
+                DYLog.shared.count("filter_type")
+                filtered += 1
+                ei += 1
+                continue
+            }
+            if dur == 0 {
+                DYLog.shared.event("FEED skip-item a[\(ei)] id=\(id) type=\(awemeType) dur=\(dur) reason=nodur")
+                DYLog.shared.count("filter_nodur")
+                filtered += 1
+                ei += 1
+                continue
+            }
             // 默认直链（静态）：移动端无 bit_rate 子消息（field21=varint 时间戳），pickHighestQuality 恒 nil 不再调用。
             // 实测 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向，field 9 兜底。优先 8→1→9。
             var chosen: URL? = nil
@@ -221,8 +243,7 @@ final class DYFeedClient {
                 if redirect != nil { break }
             }
             // 每视频一行紧凑诊断（替代旧 7 行 loop 噪音）
-            let dur = video.varint(12) ?? video.varint(22) ?? video.varint(32) ?? video.varint(13) ?? 0
-            DYLog.shared.log("FEED item a[\(ei)] id=\(id) static=\(chosen != nil ? "ok" : "none") redirect=\(redirect != nil ? "ok" : "none") dur=\(dur)")
+            DYLog.shared.log("FEED item a[\(ei)] id=\(id) type=\(awemeType) static=\(chosen != nil ? "ok" : "none") redirect=\(redirect != nil ? "ok" : "none") dur=\(dur)")
             // 四数组同点对齐 append（rawVideos/redirects 索引必须与 ids 一致，merge 按同下标对位）；
             // 静态无但重定向有的条目也收（urls 直接用重定向链，播放时 302 出新鲜直链）。
             guard let url = chosen ?? redirect else { DYLog.shared.count("parse_no_url"); ei += 1; continue }
@@ -237,7 +258,7 @@ final class DYFeedClient {
         DYLog.shared.count("feed_usable", by: ids.count)
         DYLog.shared.count("feed_redirect", by: redirects.compactMap { $0 }.count)
         consumedIds.append(contentsOf: ids)
-        DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) redirect=\(redirects.compactMap { $0 }.count) total_seen=\(consumedIds.count)")
+        DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) filtered=\(filtered) redirect=\(redirects.compactMap { $0 }.count) total_seen=\(consumedIds.count)")
         guard !ids.isEmpty else {
             DYLog.shared.event("FEED page refresh_index=\(refreshIndex): 0 usable videos — 检查 video/play_addr 字段号")
             PlaybackEngine.shared.reportFailure()
@@ -393,6 +414,15 @@ struct Proto {
         case bytes([UInt8])
     }
     let fields: [Int: [Value]]
+
+    /// aweme_type（照抄 s13.e:371：依次探字段 {43,55,61}，第一个落在 [0,201) 的值即 type；
+    /// 全缺时 myDV 模型默认 0 → 视为纯视频帖）。myDV filterPrimaryPlayableAwemes 只留 type==0。
+    func awemeType() -> Int {
+        for f in [43, 55, 61] {
+            if let v = varint(f), v < 201 { return Int(v) }
+        }
+        return 0
+    }
 
     static func parse(_ data: [UInt8]) -> Proto? {
         return parse(data, depth: 0)
