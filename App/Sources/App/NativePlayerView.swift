@@ -39,7 +39,7 @@ final class PlayerCell: UICollectionViewCell {
     private let railUpButton = UIImageView()
     private let railDownButton = UIImageView()
     private let railAvatarView = UIImageView()
-    private let railLikeIcon = UIImageView()
+    private var railLikeIcon = UIImageView()
     private let railLikeLabel = UILabel()
     private var railCommentIcon = UIImageView()
     private let railCommentLabel = UILabel()
