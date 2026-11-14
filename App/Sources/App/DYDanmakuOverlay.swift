@@ -64,7 +64,7 @@ final class DanmakuTextCell: DanmakuCell {
 /// 弹幕覆盖层：包 DanmakuView（Core Animation 驱动，滚屏平滑）+ 按播放时钟发射器。
 /// 生命周期由控制器驱动：load(awemeId:) 换片 → syncPlaying 播放态 → seekSync 拖动。
 /// tvOS 焦点隔离：isUserInteractionEnabled=false，不参与焦点/按键（渲染纯展示层）。
-final class DanmakuOverlay: UIView, DanmakuViewDelegate {
+final class DanmakuOverlay: UIView {
     private let danmakuView: DanmakuView
     private weak var player: AVPlayer?
     private var items: [DYDanmakuItem] = []
