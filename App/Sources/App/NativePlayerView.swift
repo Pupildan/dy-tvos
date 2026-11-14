@@ -36,7 +36,7 @@ final class PlayerCell: UICollectionViewCell {
     private let hashtagLabel = UILabel()
     // MARK: PC 版 UI——右侧动作轨
     private let railAvatarView = UIImageView()
-    private let railLikeIcon = UIImageView()
+    private var railLikeIcon = UIImageView()
     private let railLikeLabel = UILabel()
     private var railCommentIcon = UIImageView()
     private let railCommentLabel = UILabel()
@@ -132,6 +132,11 @@ final class PlayerCell: UICollectionViewCell {
         hashtagLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34, width: infoW, height: 34)
         descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102, width: infoW, height: 102)
         nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 34 - 8 - 102 - 8 - 42, width: infoW, height: 42)
+    }
+
+    /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
+    func bind(player: AVPlayer) {
+        playerLayerView.player = player
     }
 
     /// 填充 PC 版 UI 数据（willDisplay 时按 index 调用）。
