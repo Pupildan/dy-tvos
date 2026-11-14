@@ -171,28 +171,26 @@ final class PlayerManager {
         players[index] = p
         readyObservers[index]?.invalidate()
         readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            // 只在 readyToPlay 时 onPlayerReady。failed 不再自动 advance/skip：
-            // 那会导致跳多页 + 声画不同步（advance 用动画中途的 centeredIndex 反推）。
-            // failed 时保持封面、不 play，等用户手动按↓跳过。
-            guard it.status == .readyToPlay else { return }
+            // readyToPlay 无视频轨(图集/纯音频) 或 failed(Cannot Open/无权限) → 跳过这条坏视频。
+            // 直接 engine.next() 精确 +1（不经 advance/centeredIndex，避免动画中途反推跳多页）。
+            // failedIndices 防重：同一 index 只跳一次，重复 failed 不再 next（防级联跳多页）。
+            guard it.status == .readyToPlay || it.status == .failed else { return }
             DispatchQueue.main.async {
-                // 编码诊断：查视频轨编码格式，确认黑屏是否 HEVC 解不出
-                var codec = "none"
-                if let track = it.asset.tracks(withMediaType: .video).first {
-                    codec = track.formatDescriptions.map { desc -> String in
-                        let cm = desc as! CMFormatDescription
-                        let code = CMFormatDescriptionGetMediaSubType(cm)
-                        // FourCharCode(UInt32) 转可读字符串（如 'hvc1'/'avc1'）
-                        let chars = [24, 16, 8, 0].map { Character(UnicodeScalar((code >> $0) & 0xFF)!) }
-                        let s = String(chars)
-                        return s.allSatisfy { $0.isASCII && !$0.isWhitespace } ? s : "raw(\(code))"
-                    }.joined(separator: ",")
-                    if codec.isEmpty { codec = "empty" }
-                } else {
-                    codec = "no-video-track"
+                guard let self else { return }
+                let engine = PlaybackEngine.shared
+                let isCurrent = (index == engine.index)
+                // 视频轨检测：readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）
+                if it.status == .readyToPlay, it.tracks(withMediaType: .video).isEmpty {
+                    DYLog.shared.log("MGR ready idx=\(index) 无视频轨 -> skip")
+                    if isCurrent { engine.next() }
+                    return
                 }
-                DYLog.shared.log("CODEC idx=\(index) codec=\(codec)")
-                self?.onPlayerReady?(index)
+                if it.status == .failed {
+                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
+                    if isCurrent { engine.next() }
+                    return
+                }
+                self.onPlayerReady?(index)
                 DYLog.shared.log("MGR ready idx=\(index)")
             }
         }
