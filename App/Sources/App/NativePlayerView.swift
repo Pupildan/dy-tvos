@@ -311,6 +311,55 @@ final class PlayerManager {
     }
 }
 
+/// 底部播放进度条（v140）：液态玻璃细条贴屏幕底部，低调但可辨。纯展示（左右键 seek 已有，条随 seek 跳动）。
+final class DYProgressBar: UIView {
+    private let blurView: UIVisualEffectView
+    private let fillLayer = CALayer()
+    private var ratio: Double = 0
+
+    override init(frame: CGRect) {
+        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+        super.init(frame: frame)
+        backgroundColor = .clear
+        layer.cornerRadius = 2.5
+        layer.masksToBounds = true
+        // 液态玻璃质感：细窄系统材质底 + 白色进度
+        blurView.frame = bounds
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        blurView.alpha = 0.55   // 低调：仔细看才明显
+        addSubview(blurView)
+        fillLayer.backgroundColor = UIColor.white.withAlphaComponent(0.75).cgColor
+        fillLayer.cornerRadius = 2.5
+        blurView.contentView.layer.addSublayer(fillLayer)
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        blurView.frame = bounds
+        applyRatio()
+    }
+
+    /// current/duration 秒；duration 无效时整条隐藏。
+    func update(current: Double, duration: Double) {
+        guard duration > 1, current.isFinite, duration.isFinite else {
+            isHidden = true
+            return
+        }
+        isHidden = false
+        ratio = min(1, max(0, current / duration))
+        applyRatio()
+    }
+
+    private func applyRatio() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)   // 进度推进不做隐式动画（0.5s tick 步进即可）
+        fillLayer.frame = CGRect(x: 0, y: 0, width: bounds.width * CGFloat(ratio), height: bounds.height)
+        CATransaction.commit()
+    }
+}
+
 /// 原生播放器：UICollectionView 垂直分页 + PlayerManager 上限 3 池。
 /// 真实图层滑动（铁律）：滑动=前后 Cell 连同真实视频画面一起位移（UIScrollView 原生物理）。
 /// 解码器上限 3（current±1）+ 超范围驱逐回收 → 根治解码器耗尽黑屏；未就绪显示封面兜底 → 无黑屏。
@@ -319,6 +368,9 @@ final class DYPlayerViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
+    /// 底部播放进度条（v140：液态玻璃细条，纯展示）
+    private let progressBar = DYProgressBar(frame: .zero)
+    private var progressTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -338,6 +390,11 @@ final class DYPlayerViewController: UIViewController {
         collectionView.delegate = self
         collectionView.showsVerticalScrollIndicator = false
         view.addSubview(collectionView)
+        // 底部播放进度条（最顶层；0.5s 随播放推进，seek 即时跳动）
+        view.addSubview(progressBar)
+        let pt = Timer(timeInterval: 0.5, repeats: true) { [weak self] _ in self?.updateProgress() }
+        RunLoop.main.add(pt, forMode: .common)
+        progressTimer = pt
 
         PlaybackEngine.shared.$urls
             .receive(on: DispatchQueue.main)
@@ -358,6 +415,8 @@ final class DYPlayerViewController: UIViewController {
         super.viewDidLayoutSubviews()
         guard view.bounds.height > 0 else { return }
         collectionView.frame = view.bounds
+        // 进度条贴屏幕最底部（左右留 24px，高 5px）
+        progressBar.frame = CGRect(x: 24, y: view.bounds.height - 13, width: view.bounds.width - 48, height: 5)
         if !didInitialScroll, !PlaybackEngine.shared.urls.isEmpty {
             didInitialScroll = true
             scrollTo(index: PlaybackEngine.shared.index, animated: false)
@@ -366,6 +425,15 @@ final class DYPlayerViewController: UIViewController {
             (cell as? PlayerCell)?.playerLayerView.frame = (cell as? PlayerCell)?.contentView.bounds ?? .zero
             (cell as? PlayerCell)?.coverImageView.frame = (cell as? PlayerCell)?.contentView.bounds ?? .zero
         }
+    }
+
+    /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration
+    private func updateProgress() {
+        guard let p = PlayerManager.shared.player(at: currentIndex),
+              let item = p.currentItem else { progressBar.update(current: 0, duration: 0); return }
+        let dur = item.duration().seconds
+        let cur = item.currentTime().seconds
+        progressBar.update(current: cur, duration: dur)
     }
 
     private var lastKnownCount = 0

@@ -1,4 +1,4 @@
-import Foundation
+﻿import Foundation
 
 /// 单条弹幕（DanmakuItem JSON 字段的 Swift 映射，myDV DanmakuItem.java 对应）。
 struct DYDanmakuItem {
@@ -141,21 +141,23 @@ final class DYDanmakuClient {
 
     // MARK: - 弹幕请求（照抄 u11.K 参数表 + r() web GET 链）
 
-    /// 分段取回（v138；v139 加失败重试+节流）：60s 窗口顺序请求合并去重——单次响应 ~460 条上限是弹幕断流根因。
-    /// v139：段间 0.15s 节流（连发 20 请求会零星触发风控拒绝）+ 失败段统一重试一次（0.4s 间隔）。
-    /// onSegment 每段增量回调（主队列，可能乱序——Overlay 用 id 去重扫描容忍）；completion 全量合并数组（主队列）。
+    /// 分段取回（v140 自适应切分版）：
+    /// - 单次响应 ~460 条硬上限（探针实锤）→ 一次请求拿不到全量，但**自适应切分**可以等价拿全：
+    ///   某段返回 ≥ capThreshold 条（=被截断）自动对半再拆，直到每段都在上限内。
+    /// - 段间 0.15s 节流 + 失败段重试一次（v139）。
+    /// - onSegment 每段增量回调（主队列，可能乱序——Overlay 用 id 去重扫描容忍）；completion 全量合并数组（主队列）。
     private func fetch(awemeId: String, durationMs: Int,
                        onSegment: @escaping ([DYDanmakuItem]) -> Void,
                        completion: @escaping ([DYDanmakuItem]) -> Void) {
         let d = max(0, durationMs)
         guard d > 0 else { completion([]); return }
-        let window = Self.segmentWindowMs
         var merged: [DYDanmakuItem] = []
         var seen = Set<String>()
         var failedWindows: [(Int, Int)] = []
 
-        func requestWindow(start: Int, end: Int, done: @escaping (_ ok: Bool) -> Void) {
-            var p: [(String, String)] = Self.webCommon + [
+        // 单窗口请求。done(ok, items)——ok=false 表示被拒/解析失败（交重试）；items 为原始解析结果（未去重）。
+        func requestWindow(start: Int, end: Int, done: @escaping (_ ok: Bool, _ items: [DYDanmakuItem]) -> Void) {
+            let p: [(String, String)] = Self.webCommon + [
                 ("app_name", "aweme"),
                 ("format", "json"),
                 ("group_id", awemeId),
@@ -179,11 +181,11 @@ final class DYDanmakuClient {
             let baseQuery = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&") + "&timestamp=\(ts)"
             guard let sr = DYSigner.shared.sign(query: baseQuery, data: "", path: path, ua: DYDanmakuClient.webUA) else {
                 DYLog.shared.log("DANM sign fail (not ready)")
-                done(false); return
+                done(false, []); return
             }
             var finalQuery = baseQuery
             if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
-            guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else { done(false); return }
+            guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else { done(false, []); return }
             var req = URLRequest(url: url)
             req.timeoutInterval = 12
             req.setValue(DYDanmakuClient.webUA, forHTTPHeaderField: "User-Agent")
@@ -197,48 +199,65 @@ final class DYDanmakuClient {
                 guard err == nil, httpStatus == 200, let data, !data.isEmpty,
                       let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
                       (obj["status_code"] as? Int ?? -1) == 0 else {
-                    // 段被拒/解析失败（连发触风控零星拒绝）——交给重试
-                    DYLog.shared.log("DANM segment [\(start / 1000)-\(end / 1000)s] fail http=\(httpStatus) → retry")
-                    DispatchQueue.main.async { done(false) }
+                    DYLog.shared.log("DANM segment [\(start / 1000)-\(end / 1000)s] fail http=\(httpStatus)")
+                    DispatchQueue.main.async { done(false, []) }
                     return
                 }
                 let list = obj["danmaku_list"] as? [[String: Any]] ?? []
-                var fresh: [DYDanmakuItem] = []
+                var items: [DYDanmakuItem] = []
                 for e in list {
                     guard let text = e["text"] as? String, !text.isEmpty else { continue }
                     let did = (e["danmaku_id"] as? NSNumber)?.stringValue ?? (e["danmaku_id"] as? String ?? "")
-                    guard !did.isEmpty, !seen.contains(did) else { continue }
+                    guard !did.isEmpty else { continue }
                     let off = (e["offset_time"] as? NSNumber)?.doubleValue ?? 0
-                    seen.insert(did)
-                    fresh.append(DYDanmakuItem(danmakuId: did, offsetTime: off, text: text))
+                    items.append(DYDanmakuItem(danmakuId: did, offsetTime: off, text: text))
                 }
-                fresh.sort { $0.offsetTime < $1.offsetTime }
-                merged.append(contentsOf: fresh)
-                DYLog.shared.count("dm_items", by: fresh.count)
-                DispatchQueue.main.async {
-                    if !fresh.isEmpty { onSegment(fresh) }
-                    done(true)
-                }
+                DispatchQueue.main.async { done(true, items) }
             }.resume()
         }
 
-        // 主轮次：段间 0.15s 节流（防连发风控），记录失败段
-        func runMain(start: Int) {
-            if start >= d {
-                runRetries()
-                return
+        // 去重入库 + 增量回调
+        func accept(_ items: [DYDanmakuItem]) {
+            var fresh: [DYDanmakuItem] = []
+            for it in items {
+                guard !seen.contains(it.danmakuId) else { continue }
+                seen.insert(it.danmakuId)
+                fresh.append(it)
             }
-            let end = min(start + window, d)
-            requestWindow(start: start, end: end) { ok in
-                if !ok { failedWindows.append((start, end)) }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
-                    guard self != nil else { return }
-                    runMain(start: start + window)
+            guard !fresh.isEmpty else { return }
+            fresh.sort { $0.offsetTime < $1.offsetTime }
+            merged.append(contentsOf: fresh)
+            DYLog.shared.count("dm_items", by: fresh.count)
+            onSegment(fresh)
+        }
+
+        /// 取 [start,end) 区间：按 window 切片顺序请求；命中上限（≥capThreshold）自动对半递归拆分。
+        func fetchRange(start: Int, end: Int, depth: Int, done: @escaping () -> Void) {
+            if start >= end { done(); return }
+            let chunkEnd = min(start + Self.segmentWindowMs, end)
+            requestWindow(start: start, end: chunkEnd) { [weak self] ok, items in
+                if !ok {
+                    failedWindows.append((start, chunkEnd))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { fetchRange(start: chunkEnd, end: end, depth: depth, done: done) }
+                    return
                 }
+                if items.count >= Self.capThreshold, chunkEnd - start > 10_000, depth < 4 {
+                    // 命中响应上限=截断 → 对半递归拆分（已回的 458 条也会被 halves 覆盖，seen 去重兜底）
+                    DYLog.shared.log("DANM cap-hit [\(start / 1000)-\(chunkEnd / 1000)s] n=\(items.count) → split")
+                    let mid = (start + chunkEnd) / 2
+                    fetchRange(start: start, end: mid, depth: depth + 1) {
+                        fetchRange(start: mid, end: chunkEnd, depth: depth + 1) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { fetchRange(start: chunkEnd, end: end, depth: depth, done: done) }
+                        }
+                    }
+                    return
+                }
+                accept(items)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { fetchRange(start: chunkEnd, end: end, depth: depth, done: done) }
             }
         }
 
-        // 重试轮：失败段逐个重试一次（0.4s 间隔），乱序追加由 Overlay id 去重扫描容忍
+        // 失败段重试轮（v139 保持）：0.4s 间隔逐个重试一次
         func runRetries() {
             guard !failedWindows.isEmpty else {
                 DYLog.shared.event("DANM all-segments done id=\(awemeId) total=\(merged.count) retry=0")
@@ -254,14 +273,18 @@ final class DYDanmakuClient {
                     return
                 }
                 let (s, e) = remaining.removeFirst()
-                requestWindow(start: s, end: e) { _ in
+                requestWindow(start: s, end: e) { [weak self] ok, items in
+                    if ok { accept(items) }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { retryNext() }
                 }
             }
             retryNext()
         }
 
-        runMain(start: 0)
+        fetchRange(start: 0, end: d, depth: 0) { [weak self] in
+            guard let self else { return }
+            runRetries()
+        }
     }
 
     static func randomMsToken() -> String {
