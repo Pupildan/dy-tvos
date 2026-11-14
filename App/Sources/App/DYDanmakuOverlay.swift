@@ -2,8 +2,13 @@ import UIKit
 import AVFoundation
 
 /// 弹幕文字模型（DanmakuKit DanmakuCellModel 协议实现）。
-/// displayTime = 滚屏总时长 = (屏宽+文字宽)/速度；identifier 用 danmaku_id（去重/等值判断）。
+/// displayTime = 滚屏总时长 = (区域宽+文字宽)/速度；identifier 用 danmaku_id（去重/等值判断）。
 final class DanmakuTextCellModel: DanmakuCellModel {
+    /// v141：字号统一 34（轨道高 34 的观感匹配；测量与绘制必须同源）
+    static let fontSize: CGFloat = 34
+    /// v141：滚动速度 380px/s（吞吐提升：更多轨道 + 更快翻台，密集视频不再被吞吐卡成间歇）
+    static let scrollSpeed: CGFloat = 380
+
     let text: String
     let sizeValue: CGSize
     let displayTimeValue: Double
@@ -23,15 +28,13 @@ final class DanmakuTextCellModel: DanmakuCellModel {
     init(danmakuId: String, text: String, screenW: CGFloat) {
         self.text = text
         self.identifierValue = danmakuId
-        // tvOS 1080p 场景字号
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 38),
+            .font: UIFont.boldSystemFont(ofSize: Self.fontSize),
         ]
         let measured = (text as NSString).size(withAttributes: attrs)
         let w = min(measured.width + 8, screenW - 40)
-        sizeValue = CGSize(width: w, height: measured.height + 8)
-        // 滚动速度 ~300px/s（1080p 观感与主流播放器一致）
-        displayTimeValue = max(4.0, (screenW + w) / 300.0)
+        sizeValue = CGSize(width: w, height: measured.height + 6)
+        displayTimeValue = max(4.0, (screenW + w) / Self.scrollSpeed)
     }
 }
 
@@ -51,7 +54,7 @@ final class DanmakuTextCell: DanmakuCell {
     override func displaying(_ context: CGContext, _ size: CGSize, _ isCancelled: Bool) {
         guard let model = model as? DanmakuTextCellModel else { return }
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: UIFont.boldSystemFont(ofSize: 38),
+            .font: UIFont.boldSystemFont(ofSize: DanmakuTextCellModel.fontSize),
             .foregroundColor: UIColor.white,
         ]
         model.text.draw(in: CGRect(x: 0, y: 2, width: size.width, height: size.height), withAttributes: attrs)
@@ -61,7 +64,7 @@ final class DanmakuTextCell: DanmakuCell {
 /// 弹幕覆盖层：包 DanmakuView（Core Animation 驱动，滚屏平滑）+ 按播放时钟发射器。
 /// 生命周期由控制器驱动：load(awemeId:) 换片 → syncPlaying 播放态 → seekSync 拖动。
 /// tvOS 焦点隔离：isUserInteractionEnabled=false，不参与焦点/按键（渲染纯展示层）。
-final class DanmakuOverlay: UIView {
+final class DanmakuOverlay: UIView, DanmakuViewDelegate {
     private let danmakuView: DanmakuView
     private weak var player: AVPlayer?
     private var items: [DYDanmakuItem] = []
@@ -84,11 +87,13 @@ final class DanmakuOverlay: UIView {
         super.init(frame: frame)
         isUserInteractionEnabled = false
         danmakuView.isUserInteractionEnabled = false
-        // tvOS 1080p 参数：轨道高 46px，弹幕铺上半屏（55%），不重叠（密集时让位）
-        danmakuView.trackHeight = 46
-        danmakuView.displayArea = 0.55
+        // tvOS 1080p 参数（v141 吞吐提升）：轨道高 34 → 约 23 条轨道，铺 75% 高度，不重叠；
+        // 吞吐 ≈ 轨道数/滚屏时长 ≈ 23/7 ≈ 3.3 条/s（v141 前 12 轨×9s ≈ 1.3 条/s，密集视频超量被丢弃=间歇）
+        danmakuView.trackHeight = 34
+        danmakuView.displayArea = 0.75
         danmakuView.isOverlap = false
         danmakuView.enableCellReusable = true
+        danmakuView.delegate = self
         addSubview(danmakuView)
     }
 
@@ -187,5 +192,12 @@ final class DanmakuOverlay: UIView {
             shot += 1
         }
         if shot > 0 { DYLog.shared.count("dm_shoot", by: shot) }
+    }
+}
+
+extension DanmakuOverlay: DanmakuViewDelegate {
+    /// 轨道满被丢弃的弹幕（v141 证据计数：dm_drop ≈ items - shoot = 吞吐不足的直接量化）
+    func danmakuView(_ danmakuView: DanmakuView, noSpaceShoot danmaku: DanmakuCellModel) {
+        DYLog.shared.count("dm_drop")
     }
 }

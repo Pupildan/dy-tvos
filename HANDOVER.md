@@ -209,6 +209,14 @@
 - **修复**：①段间 **0.15s 节流**（防连发）；②**失败段统一重试一次**（0.4s 间隔，乱序追加）；③发射器 `shotIndex` → **`shotIds` 集合扫描**（容忍乱序追加，迟到 40s 放弃，seek 保留已射集合防重复）。
 - **查证记录**：zq5.e → mp5 → u11.K 是薄包装（窗口值由上层 VM 传）；dp5（弹幕编排）jadx 缺失。
 - **验收**：长视频弹幕无空隙；日志 `DANM retry N failed segments` 应趋零；`DANM all-segments done total=N`。
+- **✅ v139 真机验收结果**：弹幕仍间歇稀疏——**第二根因**：60s 窗口命中 460 上限被截断（密集视频每窗都截，段内也稀疏）。
+
+## 21. v140 弹幕自适应切分 + 底部进度条（2026-11-14 用户要求，CI 过待真机验收）
+
+- **弹幕自适应切分**：回答用户"一次请求拿全量"=不行（服务端 ~460 条/响应硬上限，探针实锤）。等价方案：段返回 ≥450 条（`capThreshold`，=被截断）**自动对半递归拆分**（depth<4、窗>10s 才拆；已回的部分条目由 seen 去重兜底不重复），直到每段都在上限内 → 加载开始即全量预取，密集段截断导致的间歇稀疏一并解决。节流 0.15s + 失败段重试（v139）保持。
+- **底部播放进度条**：`DYProgressBar`——5px 细条贴屏幕最底部（左右留 24px），`UIBlurEffect(style: .regular)`（**tvOS 专属样式，systemThin/systemChrome 均 unavailable in tvOS**）+ 白色进度层（0.75）+ 整体 alpha 0.55 低调；0.5s Timer 随播放推进（`item.duration` 属性非方法），seek 即时跳动，duration 无效自动隐藏。
+- **CI 踩坑**：Self.capThreshold 忘定义；tvOS blur 样式限制；duration 属性。产物 output/DYTV-tvos-unsigned-v140.ipa。
+- **验收**：密集弹幕视频全程无稀疏/空隙（日志 cap-hit → split 行可见）；底部细进度条随播放推进。
 
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 
