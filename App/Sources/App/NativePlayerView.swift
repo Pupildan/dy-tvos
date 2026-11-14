@@ -170,7 +170,7 @@ final class PlayerManager {
         p.replaceCurrentItem(with: item)
         players[index] = p
         readyObservers[index]?.invalidate()
-        readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] newStatus, _ in
+        readyObservers[index] = observedItem.observe(\.status, options: [.new]) { [weak self] newStatus, _ in
             // readyToPlay 无视频轨(图集/纯音频) 或 failed(Cannot Open/无权限) → 跳过这条坏视频。
             // 直接 engine.next() 精确 +1（不经 advance/centeredIndex，避免动画中途反推跳多页）。
             guard newStatus.status == .readyToPlay || newStatus.status == .failed else { return }
@@ -179,7 +179,7 @@ final class PlayerManager {
                 let engine = PlaybackEngine.shared
                 let isCurrent = (index == engine.index)
                 // 视频轨检测：readyToPlay 但无视频轨 = 图集/纯音频（黑屏无声）
-                if newStatus.status == .readyToPlay, item.tracks(withMediaType: .video).isEmpty {
+                if newStatus.status == .readyToPlay, observedItem.tracks(withMediaType: .video).isEmpty {
                     DYLog.shared.log("MGR ready idx=\(index) 无视频轨 -> skip")
                     if isCurrent { engine.next() }
                     return
