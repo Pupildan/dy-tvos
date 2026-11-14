@@ -212,7 +212,7 @@ struct DYCommentScreen: View {
             guard !loaded else { return }
             loaded = true
             loading = true
-            DYCommentClient.shared.comments(for: model.commentAwemeId, pages: 3) { items in
+            DYCommentClient.shared.comments(for: model.awemeId, pages: 3) { items in
                 comments = items
                 loading = false
             }
