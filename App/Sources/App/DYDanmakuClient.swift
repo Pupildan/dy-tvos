@@ -106,7 +106,18 @@ final class DYDanmakuClient {
 
     private func fetch(awemeId: String, durationMs: Int, completion: @escaping ([DYDanmakuItem]) -> Void) {
         let d = max(0, durationMs)
-        var p: [(String, String)] = [
+        // web 公共参数（v133 开发机探针实锤：缺这些 douyin web 网关一律 status_code=3 "AppId不合法"）
+        let webCommon: [(String, String)] = [
+            ("device_platform", "webapp"),
+            ("aid", "6383"),
+            ("channel", "channel_pc_web"),
+            ("cookie_enabled", "true"),
+            ("browser_language", "zh-CN"),
+            ("browser_platform", "Win32"),
+            ("browser_name", "Chrome"),
+            ("browser_version", "147.0.0.0"),
+        ]
+        var p: [(String, String)] = webCommon + [
             ("app_name", "aweme"),
             ("format", "json"),
             ("group_id", awemeId),
@@ -114,7 +125,8 @@ final class DYDanmakuClient {
             ("start_time", "0"),
             ("end_time", String(d)),
             ("duration", String(d)),
-            ("authentication_token", ""),   // proto 字段号未知（aweme-dump 探针中），先传空——端点是否必需由 DANM 日志实锤
+            // authentication_token 传空即可（v133 探针实锤：mobile proto 无此字段且空值能通）
+            ("authentication_token", ""),
             ("pc_libra_divert", "Windows"),
             ("support_h265", "0"),
             ("support_dash", "1"),
@@ -127,15 +139,15 @@ final class DYDanmakuClient {
         p.append(("screen_height", "1440"))
         p.append(("cpu_core_num", "24"))
         p.append(("device_memory", "8"))
-        let query = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&")
-        // web 签名探针：复用 4 参 getABogus（第 4 参传 web UA）；web 链另需 timestamp（无 UIFID 时不带 x-secsdk）
+        // 签名输入 = 完整 query 含 timestamp（v133 探针原样：baseQuery+timestamp → sign → a_bogus 后置）
         let ts = String(Int(Date().timeIntervalSince1970))
-        guard let sr = DYSigner.shared.sign(query: query, data: "", path: path, ua: DYDanmakuClient.webUA) else {
+        let baseQuery = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&") + "&timestamp=\(ts)"
+        guard let sr = DYSigner.shared.sign(query: baseQuery, data: "", path: path, ua: DYDanmakuClient.webUA) else {
             DYLog.shared.log("DANM sign fail (not ready)")
             completion([])
             return
         }
-        var finalQuery = query + "&timestamp=\(ts)"
+        var finalQuery = baseQuery
         if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
         guard let url = URL(string: "\(host)\(path)?\(finalQuery)") else {
             DYLog.shared.log("DANM url parse fail")

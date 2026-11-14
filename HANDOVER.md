@@ -1,11 +1,12 @@
-# DYTV 交接文档（v131 去水印 · 2026-11-14）
+# DYTV 交接文档（v132 弹幕 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
-> **v128 真机验收通过（用户："体验有很大提升"）**：三靶点全过，15 分钟连刷 142 条，仅 2 坏条目各 3-7s 自动治愈，0 级联 0 误杀。
-> **v129 真机验收通过（用户："趋近完美"）**：parse 无感过滤（8 命中全 nodur；⚠️awemeType 信号在此 schema 无效，实际全靠 dur=0），novideo/autoskip 归零，6 次 repair 全部 1-4s 恢复。见 §11。
-> **v130 = 冷启动首帧提速 + 坏链快速恢复**（用户确认"确实提速了不少"）：冷启动收敛（首 prepare 只装居中+redirect 优先，邻居 ready 后补）+ idle 看门狗 4s→2s。见 §12。
-> **v131 = 去水印（用户拍板）**：选链照抄 myDV——play_addr(f1/f9 无水印版)优先 + selectBestPlayUrl 四级优先级，f8(download_addr 水印版)降兜底。见 §13。
+> **v128 真机验收通过（用户："体验有很大提升"）**：三靶点全过，0 级联 0 误杀。
+> **v129 真机验收通过（用户："趋近完美"）**：parse 无感过滤（实际全靠 dur=0 信号；awemeType 信号在此 schema 无效）。
+> **v130 真机验收通过（用户："确实提速了不少"）**：冷启动收敛 + idle 4s→2s。
+> **v131 真机验收通过（用户："水印没了，播放体验趋于完美"）**：选链照抄 myDV（play_addr 优先 + selectBestPlayUrl 四级优先级），f8=download_addr 水印版降兜底。见 §13。
+> **v132 = 弹幕功能上线（探针版）**：数据照抄 myDV u11.K/u11.A；渲染 vendor DanmakuKit(MIT)。见 §14。
 > **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"（见 §8）。
 
 ---
@@ -145,6 +146,26 @@
   2. 候选内四级优先级原样：① `douyinvod.com/[32hex]/[8hex]/` 签名直链 ② `douyin.com/aweme/v1/play` ③ douyinvod+`signature=` ④ 列表最后一个；
   3. v128 双链/age/repair 机制不动（redirect 取自 f1/9 本就是无水印家族）。
 - **验收**：first url 路径形状（签名直链 = 快+无水印；若 f1/9 只有重定向 URL 则首播多一跳 302）；真机肉眼确认无水印；ready 率/首帧时长不得回退。
+- **v131 验收结果（2026-11-14）**：用户确认"水印没了，播放体验趋于完美"。播放线（黑屏/跳页/无感过滤/水印/冷启动）全部收工。
+
+## 14. v132 弹幕功能（2026-11-14 探针版，待真机验收）
+
+**数据链（照抄 myDV 反编译）**：
+- 请求：GET `https://www.douyin.com/aweme/v1/web/danmaku/get_v2/`，参数照抄 u11.K:1310（app_name=aweme/format=json/group_id/item_id/start_time=0/end_time/duration/authentication_token/pc_libra_divert=Windows/support_h265=0/support_dash=1/version_code=170400/version_name=17.4.0 + D0 公共参数）。
+- 响应：JSON `{status_code, danmaku_list:[{danmaku_id, offset_time(ms), text, ...}]}`（DanmakuResponse/DanmakuItem.java 对应）。
+- web 身份：Chrome 147 桌面 UA（u11.A 原文）+ **ttwid 匿名注册**（POST ttwid.bytedance.com/ttwid/union/register/，body/headers u11.A 原文，Set-Cookie 取 ttwid，存 UserDefaults dy_ttwid）+ Referer `https://www.douyin.com/video/<id>`。无需登录。
+- 签名：web 链 myDV 用 generateABogusParam/G0（蓝本 §5）；v132 探针复用现有 4 参 getABogus（第 4 参传 web UA）+ timestamp 参数——可用性由 DANM 日志实锤。
+- ⚠️ **已知未知数（探针中）**：authentication_token / group_id 的 mobile proto 字段号未知（s13.e 未映射）——aweme-dump 探针同跑；v132 先传 awemeId/空 token，若 status_code!=0 或 items=0 按日志定论。
+
+**渲染（vendor DanmakuKit，MIT）**：
+- `qyz777/DanmakuKit` core 源码 vendored 到 `App/Sources/DanmakuKit/`（LICENSE-DanmakuKit.txt 保留归属；未走 SPM——其 Package.swift 无 tvOS 平台声明；未用 fndanmu——用户明确其渲染不行）。
+- 架构 = 业界成熟模式：**CABasicAnimation(position.x) 由 Core Animation 合成器驱动 + DanmakuAsyncLayer 异步位图绘制 + cell 复用池** → 滚屏流畅性由系统渲染管线保证。
+- vendored 修补（v132）：Sentinel 的 OSAtomicIncrement32（已废弃/新 SDK 可能移除）→ NSLock 等价实现；其余 tvOS 兼容零改动（PlatformTypes.swift 已有 tvOS awareness，扫描无 iOS-only API）。
+- 集成：`DYDanmakuOverlay`（PlayerCell 内，视频层之上/封面之下，isUserInteractionEnabled=false 焦点隔离）——DanmakuTextCellModel/DanmakuTextCell（黑描边白字）+ 按播放时钟发射器（0.25s tick，迟到 >2.5s 不补射）；参数 trackHeight=46/displayArea=0.55/速度 300px/s/字号 38。
+- 播放同步：load(awemeId)（换片清屏重取）→ syncPlaying（居中在播=play+游标对齐）→ seekSync（清屏重对齐）→ toggle/seek/togglePlayPause 全接。
+- 弹幕总开关 `DanmakuOverlay.enabled` 默认 true（UI 开关待美化阶段统一做）。
+- 日志：DANM 前缀（get/ttwid/ok/status_code/http err）+ FEED aweme-dump（每页首条 aweme 级字段 dump）+ 计数器 dm_items/dm_shoot。
+- **验收**：真机弹幕是否显示；DANM ok（status_code=0+items>0）还是被拒（token/签名/cookie 哪个缺失由日志定论）；滚屏流畅度。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
