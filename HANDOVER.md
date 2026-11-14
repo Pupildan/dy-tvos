@@ -1,10 +1,11 @@
-# DYTV 交接文档（v129 无感过滤 · 2026-11-14）
+# DYTV 交接文档（v130 冷启动提速 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
-> **v128 = 残余黑屏攻坚版（真机验收通过，用户确认"体验有很大提升"）**：三靶点全过——真新鲜 URL（重定向链 100% 提取且 /aweme/v1/play 对未登录设备可用）、空轨检测、isReadyForDisplay 看门狗；15 分钟连刷 142 条，仅 2 个坏条目各 3-7s 自动治愈，0 级联 0 误杀 0 长黑屏。
-> **v129 = 无感跳过图集/novideo（parse 阶段过滤，用户拍板）**：坏条目不进池，用户永远刷不到；runtime repair→skip 保留兜底。见 §11。
-> **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"，与 v123-v127 的失败原因逐条对上（见 §8）。
+> **v128 真机验收通过（用户："体验有很大提升"）**：三靶点全过，15 分钟连刷 142 条，仅 2 坏条目各 3-7s 自动治愈，0 级联 0 误杀。
+> **v129 真机验收通过（用户："趋近完美"）**：parse 无感过滤（8 命中全 nodur；⚠️awemeType 信号在此 schema 无效，实际全靠 dur=0），novideo/autoskip 归零，6 次 repair 全部 1-4s 恢复。见 §11。
+> **v130 = 冷启动首帧提速 + 坏链快速恢复（用户拍板，UI 美化统一后期做）**：①冷启动收敛——首个 prepare 只装居中条且 redirect 优先，邻居等居中 ready 后补装载（v129 实锤首帧 11s：静态 4s 空等 + rebuild 4s + 并发 TLS error；预期首帧 ~6s）；②idle 看门狗 4s→2s（repair 实测 1-2s 恢复）。见 §12。
+> **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"（见 §8）。
 
 ---
 
@@ -126,6 +127,14 @@
 - **过滤日志**：`FEED skip-item a[i] id=.. type=.. dur=.. reason=type|nodur`（事件环）；页统计行加 `filtered=N`；计数器 filter_type/filter_nodur。
 - **runtime repair→skip 保留兜底**（极罕见 type=0 但媒体真坏）。
 - **图集显示（暂缓，可行性已分析给用户）**：myDV 不做图集展示无参照；图片字段号未知、服务器是否填充未证实，需 aweme 级字段 dump 探针；UI 方案已设计好（ImageCell 横滑 pager + 左右键翻图/上下键切条，cell 不可聚焦按键集中在 pressesBegan，不碰滚动路径）。全会话 dur=0 仅 5/175（2.9%），价值中等。待用户决定。
+- **v129 验收补充**：冷启动首帧实测 11s（17:44:04 启动→17:44:06 首页解析完→idx=0 静态直链 age=0 但 4s 不 ready→17:44:11 repair→17:44:15 ready）；两链都慢=网络首连/冷门 CDN 域名慢，非 URL 选择问题 → 催生 v130。
+
+## 12. v130 冷启动首帧提速 + 坏链快速恢复（2026-11-14 用户拍板"其他的问题一次性解决"，UI 美化后期统一做）
+
+- **冷启动收敛（PlayerManager.prepare）**：池全空（会话首个 prepare）→ 只 acquire 居中条且 `forceRedirect: true`（省掉静态直链 4s 空等 + repair 重建来回）；邻居 index 记入 `pendingNeighbors`，居中 ready 后 `drainPendingNeighbors()` 补装载（此时网络已暖，邻居仍走静态快启动）。规避启动瞬间 3 个并发 TLS 握手互拖（v129 idx=1 TLS error 实锤）。正常路径（池非空）行为与 v122 完全一致。
+- **idle 看门狗 4s→2s**（watchIdleTicks）：repair 实测 1-2s 恢复，静态直链打不开少等 2s；stall=3s、black=2s 不动（stall 要区分正常缓冲）。
+- **验收指标**：启动→首帧时长（v129 基线 11s，目标 ~6s）；`MGR cold-start defer/acquired` 日志；`cold_start` 计数器；TLS error 是否随并发收敛消失。
+- **用户决定搁置**：启动 loading spinner 等 UI 美化（v76 曾有 spinner，v122 重构丢失）——待基础功能完美后统一做。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。

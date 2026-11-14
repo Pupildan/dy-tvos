@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v130"
-    static let changes = "v130: 冷启动首帧提速+坏链快速恢复——①冷启动收敛:首个prepare只装居中条且直接走重定向直链(省掉静态直链4s空等+repair重建来回,v129实锤首帧11s→预期6s),邻居等居中ready再补装载(避免启动3个并发TLS握手互拖,v129 idx=1 TLS error实锤);②idle看门狗阈值4s→2s(repair实测1-2s恢复,静态直链打不开少等2s);UI美化(spinner等)按用户决定后期统一做"
+    static let version = "v131"
+    static let changes = "v131: 去水印——选链照抄 myDV resolveFinalPlayUrl(auto)+selectBestPlayUrl:候选改 play_addr(f1/f9,无水印播放版)优先,f8(download_addr水印版,路径/video/cn/mps/logo/实锤)降为兜底;候选内四级优先级(签名douyinvod直链→/aweme/v1/play→signature=→最后一个)原样;旧v58顺序8→1→9踩了download_addr是水印根因;双链/age/repair机制不动"
 }

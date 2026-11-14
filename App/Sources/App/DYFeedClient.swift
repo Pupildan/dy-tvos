@@ -214,21 +214,39 @@ final class DYFeedClient {
                 ei += 1
                 continue
             }
-            // 默认直链（静态）：移动端无 bit_rate 子消息（field21=varint 时间戳），pickHighestQuality 恒 nil 不再调用。
-            // 实测 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向，field 9 兜底。优先 8→1→9。
-            var chosen: URL? = nil
-            var pa: Proto? = nil
-            for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
-                if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
-            }
-            if let playAddr = pa {
-                for raw in Proto.urlList(playAddr, 0) {
-                    var u = raw
-                    if u.hasPrefix("//") { u = "https:" + u }
-                    guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
-                    if let url = URL(string: u) { chosen = url; break }
+            // 默认直链选链（v131，照抄 myDV resolveFinalPlayUrl(auto)+selectBestPlayUrl）：
+            // 候选 = play_addr（video f1/f9，无水印播放版）url_list，空则退化 f8（=download_addr 水印版）。
+            // ⚠️ 旧 v58 顺序 8→1→9 优先拿的是 download_addr（水印版，路径 /video/cn/mps/logo/ 实锤）
+            // → 画面烧录漂移水印；myDV 播放只从 play_addr 选 → 无水印。v131 改正。
+            // 候选内四级优先级（selectBestPlayUrl 原样）：
+            //   ① douyinvod.com/[32hex]/[8hex]/ 签名直链（快+无水印）
+            //   ② douyin.com/aweme/v1/play 重定向
+            //   ③ douyinvod 带 signature=
+            //   ④ 列表最后一个
+            var candidates: [String] = []
+            for pb in video.bytesFields(1) + video.bytesFields(9) {
+                if let cand = Proto.parse(pb) {
+                    let urls = Proto.urlList(cand, 0)
+                    if !urls.isEmpty { candidates.append(contentsOf: urls); break }   // myDV：取第一个 url_list 非空的子消息（f1 优先 f9）
                 }
             }
+            if candidates.isEmpty {
+                for pb in video.bytesFields(8) {
+                    if let cand = Proto.parse(pb) {
+                        let urls = Proto.urlList(cand, 0)
+                        if !urls.isEmpty { candidates.append(contentsOf: urls); break }
+                    }
+                }
+            }
+            var normalized: [String] = []
+            for raw in candidates {
+                var u = raw
+                if u.hasPrefix("//") { u = "https:" + u }
+                let low = u.lowercased()
+                guard low.hasPrefix("https://") || low.hasPrefix("http://") else { continue }
+                normalized.append(u)
+            }
+            let chosen = Self.selectBestPlayUrl(normalized).flatMap { URL(string: $0) }
             // 重定向直链：play_addr（field 1/9，退化 8）url_list 里的 /aweme/v1/play/ 端点——
             // URL 不带时效签名，播放时请求→服务器现场 302→新鲜 CDN 直链（照 myDV selectBestPlayUrl 第②优先级）。
             var redirect: URL? = nil
@@ -372,6 +390,27 @@ final class DYFeedClient {
         let douyin = cookies.filter { $0.domain.contains("douyin") || $0.domain.contains("snssdk") }
         let header = douyin.map { "\($0.name)=\($0.value)" }.joined(separator: "; ")
         return header.isEmpty ? nil : header
+    }
+
+    // MARK: - 选链（照抄 myDV VideoPlayUrlResolver.selectBestPlayUrl / isPathSigned，v131）
+
+    private static let signedPathRegex = try? NSRegularExpression(pattern: "douyinvod\\.com/[0-9a-f]{32}/[0-9a-f]{8}/")
+
+    /// isPathSigned 原样：douyinvod.com/[0-9a-f]{32}/[0-9a-f]{8}/ 即带签名直链。
+    private static func isPathSigned(_ s: String) -> Bool {
+        guard s.contains("douyinvod.com"), let re = signedPathRegex else { return false }
+        let range = NSRange(s.startIndex..., in: s)
+        return re.firstMatch(in: s, range: range) != nil
+    }
+
+    /// selectBestPlayUrl 四级优先级原样：
+    /// ① 第一个带签名直链 ② 第一个 douyin.com/aweme/v1/play ③ 第一个 douyinvod+signature= ④ 最后一个。
+    static func selectBestPlayUrl(_ list: [String]) -> String? {
+        guard !list.isEmpty else { return nil }
+        if let signed = list.first(where: { isPathSigned($0) }) { return signed }
+        if let play = list.first(where: { $0.contains("douyin.com/aweme/v1/play") }) { return play }
+        if let sig = list.first(where: { $0.contains("signature=") && $0.contains("douyinvod.com") }) { return sig }
+        return list.last
     }
 
     private func cookieHeader() -> String? { cookieHeaderForPlayback() }
