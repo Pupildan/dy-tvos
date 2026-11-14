@@ -174,11 +174,6 @@ final class PlayerCell: UICollectionViewCell {
         s.shadowBlurRadius = 2
         return s
     }()
-        railLikeLabel.text = Self.cnCount(info?.digg ?? 0)
-        railCommentLabel.text = Self.cnCount(info?.comment ?? 0)
-        railStarLabel.text = Self.cnCount(info?.collect ?? 0)
-        railShareLabel.text = Self.cnCount(info?.share ?? 0)
-    }
 
     /// 数字万/亿缩写（3.9万 / 1.2亿），对齐 PC 版风格。
     static func cnCount(_ n: Int) -> String {
