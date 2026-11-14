@@ -52,7 +52,7 @@ final class DYDanmakuClient {
         inflight.insert(awemeId)
         queue.async { [weak self] in
             guard let self else { return }
-            self.ensureTTWID { [weak self] in
+            self.ensureTTWIDInternal { [weak self] in
                 self?.fetch(awemeId: awemeId, durationMs: durationMs) { [weak self] items in
                     guard let self else { return }
                     self.queue.async {
@@ -73,13 +73,13 @@ final class DYDanmakuClient {
     /// 确保 ttwid 已注册（web 源切换前调用；幂等，完成即回调）。
     func ensureTTWID(_ done: @escaping () -> Void) {
         queue.async { [weak self] in
-            self?.ensureTTWID { done() }
+            self?.ensureTTWIDInternal { done() }
         }
     }
 
     // MARK: - ttwid 匿名注册（照抄 u11.A 原文：POST ttwid.bytedance.com/ttwid/union/register/）
 
-    private func ensureTTWID(_ done: @escaping () -> Void) {
+    private func ensureTTWIDInternal(_ done: @escaping () -> Void) {
         if !ttwid.isEmpty { done(); return }
         let body = "{\"region\":\"cn\",\"aid\":1768,\"needFid\":false,\"service\":\"www.ixigua.com\",\"migrate_info\":{\"ticket\":\"\",\"source\":\"node\"},\"cbUrlProtocol\":\"https\",\"union\":true}"
         var req = URLRequest(url: URL(string: "https://ttwid.bytedance.com/ttwid/union/register/")!)
