@@ -20,8 +20,8 @@ final class DYFeedClient {
 
     // MARK: - 视频源（v135 设置面板切换：mobile=移动端推荐；web=抖音精选/PC端）
 
-    /// 当前视频源（源切换时重置分页状态 + 引擎清空 + 立即拉新源首页）
-    private(set) var source: DYFeedSource = .mobile
+    /// 当前视频源（持久化：v136 用户要求下次启动沿用上次选择）
+    private(set) var source: DYFeedSource = DYFeedSource(rawValue: UserDefaults.standard.string(forKey: "dy_feed_source") ?? "") ?? .mobile
     /// web 源分页游标（refresh_index 递增，b0 配方）
     private var webRefreshIndex = 1
 
@@ -57,7 +57,8 @@ final class DYFeedClient {
     private func tryStart() {
         guard signerReady, !booted else { return }
         booted = true
-        DYLog.shared.log("FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)")
+        PlaybackEngine.shared.source = source   // 启动即同步持久化的源（v136 记忆用户选择）
+        DYLog.shared.log("FEED native pipeline armed (source=\(source.rawValue))")
         fetchPage()
     }
 
@@ -71,11 +72,12 @@ final class DYFeedClient {
         }
     }
 
-    /// 源切换（设置面板）：重置分页 + 引擎清空 + 立即拉新源首页。
+    /// 源切换（设置面板）：持久化 + 重置分页 + 引擎清空 + 立即拉新源首页。
     func setSource(_ s: DYFeedSource) {
         guard s != source else { return }
         DYLog.shared.event("FEED source switch \(source) -> \(s)")
         source = s
+        UserDefaults.standard.set(s.rawValue, forKey: "dy_feed_source")
         refreshIndex = 1
         isFirstPage = true
         consumedIds = []

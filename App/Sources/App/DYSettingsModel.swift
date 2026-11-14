@@ -8,8 +8,8 @@ final class DYSettingsModel: ObservableObject {
 
     /// 面板是否显示（Menu 第一次按=呼出；显示中再按 Menu=退出应用，由 onExitCommand 处理）
     @Published var isOpen = false
-    /// 当前视频源（面板选中态）
-    @Published var source: DYFeedSource = .mobile
+    /// 当前视频源（面板选中态；与 DYFeedClient 持久化值同步——下次启动沿用上次选择）
+    @Published var source: DYFeedSource = DYFeedSource(rawValue: UserDefaults.standard.string(forKey: "dy_feed_source") ?? "") ?? .mobile
     /// 弹幕开关（弹幕设置项；持久化）
     @Published var danmakuOn: Bool {
         didSet { UserDefaults.standard.set(danmakuOn, forKey: "dy_danmaku_on") }
