@@ -1,10 +1,11 @@
-# DYTV 交接文档（v130 冷启动提速 · 2026-11-14）
+# DYTV 交接文档（v131 去水印 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > 稳定回退点仍是 **v122**（黑屏未达预期时 `git checkout` 回 v122 三文件即可）。
 > **v128 真机验收通过（用户："体验有很大提升"）**：三靶点全过，15 分钟连刷 142 条，仅 2 坏条目各 3-7s 自动治愈，0 级联 0 误杀。
 > **v129 真机验收通过（用户："趋近完美"）**：parse 无感过滤（8 命中全 nodur；⚠️awemeType 信号在此 schema 无效，实际全靠 dur=0），novideo/autoskip 归零，6 次 repair 全部 1-4s 恢复。见 §11。
-> **v130 = 冷启动首帧提速 + 坏链快速恢复（用户拍板，UI 美化统一后期做）**：①冷启动收敛——首个 prepare 只装居中条且 redirect 优先，邻居等居中 ready 后补装载（v129 实锤首帧 11s：静态 4s 空等 + rebuild 4s + 并发 TLS error；预期首帧 ~6s）；②idle 看门狗 4s→2s（repair 实测 1-2s 恢复）。见 §12。
+> **v130 = 冷启动首帧提速 + 坏链快速恢复**（用户确认"确实提速了不少"）：冷启动收敛（首 prepare 只装居中+redirect 优先，邻居 ready 后补）+ idle 看门狗 4s→2s。见 §12。
+> **v131 = 去水印（用户拍板）**：选链照抄 myDV——play_addr(f1/f9 无水印版)优先 + selectBestPlayUrl 四级优先级，f8(download_addr 水印版)降兜底。见 §13。
 > **决策记录**：v111-v126 反复横跳后锁定 v122；v128 三个修复直指"从未被测过的洞"（见 §8）。
 
 ---
@@ -135,6 +136,15 @@
 - **idle 看门狗 4s→2s**（watchIdleTicks）：repair 实测 1-2s 恢复，静态直链打不开少等 2s；stall=3s、black=2s 不动（stall 要区分正常缓冲）。
 - **验收指标**：启动→首帧时长（v129 基线 11s，目标 ~6s）；`MGR cold-start defer/acquired` 日志；`cold_start` 计数器；TLS error 是否随并发收敛消失。
 - **用户决定搁置**：启动 loading spinner 等 UI 美化（v76 曾有 spinner，v122 重构丢失）——待基础功能完美后统一做。
+
+## 13. v131 去水印（2026-11-14 用户拍板）
+
+- **根因**：抖音每条视频两份转码——play_addr（f1/f9，播放版**无水印**）+ download_addr（f8，下载版**烧录漂移水印**）。myDV 播放只从 play_addr 选（s13.e：f8 在其模型里就是 downloadAddr）；我们 v58 时代实测"f8 直连快"固定 8→1→9 选链 = 踩 download_addr。日志铁证：我们播放的 URL 路径带 `/video/cn/mps/logo/`（转码服务+水印模板）。
+- **修复**（DYFeedClient.parse + 新增 selectBestPlayUrl/isPathSigned，均照抄 VideoPlayUrlResolver）：
+  1. 候选 = play_addr（f1/f9）url_list（取第一个非空子消息，f1 优先 f9），空则退化 f8；
+  2. 候选内四级优先级原样：① `douyinvod.com/[32hex]/[8hex]/` 签名直链 ② `douyin.com/aweme/v1/play` ③ douyinvod+`signature=` ④ 列表最后一个；
+  3. v128 双链/age/repair 机制不动（redirect 取自 f1/9 本就是无水印家族）。
+- **验收**：first url 路径形状（签名直链 = 快+无水印；若 f1/9 只有重定向 URL 则首播多一跳 302）；真机肉眼确认无水印；ready 率/首帧时长不得回退。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。

@@ -19,6 +19,8 @@ final class PlaybackEngine: ObservableObject {
     private var redirectUrls: [Int: URL] = [:]
     /// 每条静态直链的生成时刻（index→Date，≈该批 feed 抓取时刻）——acquire 判断静态直链是否可能已过期
     private var mintedAt: [Int: Date] = [:]
+    /// 每条视频时长 ms（index→ms，弹幕请求 end_time/duration 用）
+    private var durations: [Int: Int] = [:]
 
     /// 直链批次拉取时间（用于过期判断）
     private(set) var fetchedAt: Date = .distantPast
@@ -60,6 +62,16 @@ final class PlaybackEngine: ObservableObject {
         return Date().timeIntervalSince(t)
     }
 
+    /// 取 index 的 awemeId（弹幕请求 item_id/group_id 用）。
+    func awemeId(at index: Int) -> String? {
+        awemeOrder.indices.contains(index) ? awemeOrder[index] : nil
+    }
+
+    /// 取 index 的视频时长 ms（弹幕请求 end_time/duration 用；无记录 0）。
+    func durationMs(at index: Int) -> Int {
+        durations[index] ?? 0
+    }
+
     /// 已消费（当前及之前）的 aweme id——feed 直连翻页时作 presented_ids 排除重复推荐。
     var consumedIds: [String] {
         Array(awemeOrder.prefix(max(0, min(index + 1, awemeOrder.count))))
@@ -69,7 +81,7 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil, allRedirectUrls: [URL?]? = nil) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil, allRedirectUrls: [URL?]? = nil, allDurations: [Int]? = nil) {
         let previousAwemeId = currentAwemeId
         let oldCount = awemeOrder.count
         var mergedIds = awemeOrder
@@ -102,6 +114,9 @@ final class PlaybackEngine: ObservableObject {
             if p >= oldCount || replaceExisting { mintedAt[p] = now }
             if let redirects = allRedirectUrls, i < redirects.count {
                 redirectUrls[p] = redirects[i]
+            }
+            if let durs = allDurations, i < durs.count {
+                durations[p] = durs[i]
             }
         }
         fetchedAt = Date()

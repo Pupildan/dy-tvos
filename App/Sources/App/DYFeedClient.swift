@@ -168,6 +168,7 @@ final class DYFeedClient {
         var urls: [URL] = []
         var rawVideos: [[UInt8]] = []
         var redirects: [URL?] = []
+        var durations: [Int] = []
         var loggedFirst = false
         var filtered = 0
         var ei = 0
@@ -260,12 +261,27 @@ final class DYFeedClient {
                 }
                 if redirect != nil { break }
             }
+            // 每页首条 aweme 级字段 dump（v132 探针：定位 authentication_token/group_id 的 proto 字段号——
+            // s13.e 未映射这两个字段，弹幕请求需要它们；token 形状=长字符串 bytes）
+            if ei == 0 {
+                let awemeDump = aweme.fields.keys.sorted().map { k -> String in
+                    let vals = aweme.fields[k] ?? []
+                    let desc = vals.map { v -> String in
+                        switch v {
+                        case .varint(let n): return "varint=\(n)"
+                        case .bytes(let b): return "bytes=\(b.count)"
+                        }
+                    }
+                    return "f\(k)[\(desc.joined(separator: ","))]"
+                }.joined(separator: " ")
+                DYLog.shared.log("FEED aweme-dump a[0] \(awemeDump)")
+            }
             // 每视频一行紧凑诊断（替代旧 7 行 loop 噪音）
             DYLog.shared.log("FEED item a[\(ei)] id=\(id) type=\(awemeType) static=\(chosen != nil ? "ok" : "none") redirect=\(redirect != nil ? "ok" : "none") dur=\(dur)")
             // 四数组同点对齐 append（rawVideos/redirects 索引必须与 ids 一致，merge 按同下标对位）；
             // 静态无但重定向有的条目也收（urls 直接用重定向链，播放时 302 出新鲜直链）。
             guard let url = chosen ?? redirect else { DYLog.shared.count("parse_no_url"); ei += 1; continue }
-            ids.append(id); urls.append(url); rawVideos.append(videoBytes); redirects.append(redirect)
+            ids.append(id); urls.append(url); rawVideos.append(videoBytes); redirects.append(redirect); durations.append(Int(dur))
             if !loggedFirst {
                 loggedFirst = true
                 DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
@@ -287,7 +303,8 @@ final class DYFeedClient {
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
                                     refresh: false,
                                     allRawVideos: rawVideos,
-                                    allRedirectUrls: redirects)
+                                    allRedirectUrls: redirects,
+                                    allDurations: durations)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {

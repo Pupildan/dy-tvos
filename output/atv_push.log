@@ -17701,3 +17701,272 @@
 18:19:02  [18:19:02] FEED item a[5] id=7707483122238463130 type=0 static=ok redirect=ok dur=9134
 18:19:02  [18:19:02] FEED mobile page refresh_index=6: awemes=6 usable=6 filtered=0 redirect=6 total_seen=36
 18:19:02  [18:19:02] ENGINE merge total=36 index=23 replace=false auto=false redirect=6
+18:33:39  [18:33:39] DYTV v131 launched
+18:33:39  [18:33:39] SIGNER init start
+18:33:39  [18:33:39] LOGSRV ready on port 8765
+18:33:39  [18:33:39] LOGSRV advertising as DYTV-690
+18:33:39  [18:33:39] SIGNER load shim ok
+18:33:39  [18:33:39] SIGNER load abogus ok
+18:33:39  [18:33:39] SIGNER load sign ok
+18:33:39  [18:33:39] SIGNER load abogus_dy ok
+18:33:39  [18:33:39] SIGNER extras sign=true dy=true
+18:33:39  [18:33:39] SIGNER bdms=yes
+18:33:39  [18:33:39] SIGNER initABogus=true
+18:33:39  [18:33:39] SIGNER fns=AB (期望 AB)
+18:33:39  [18:33:39] SIGNER smoke={"ok":true,"value":"DfRMMQhgdi6BvV6k5X9LfY3qVW33Yslz0SVkMDhezVfPfy39HMYy9exE3uXvxEyeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+18:33:39  [18:33:39] SIGNER READY a_bogus len=180
+18:33:39  [18:33:39] FEEDCOLL viewDidLoad
+18:33:39  [18:33:39] ROOT auto-start v131
+18:33:39  [18:33:39] FEED native mobile pipeline armed (aweme.snssdk.com/v2/feed)
+18:33:39  [18:33:39] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+18:33:40  [18:33:39] LOGSRV Bonjour published: DYTV-690
+18:33:41  [18:33:41] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+18:33:41  [18:33:41] FEED video-dump a[0] f1[bytes=344] f2[bytes=999] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=966] f7[bytes=4] f8[bytes=1499] f9[varint=1] f10[bytes=344] f11[bytes=2613] f13[varint=13367] f14[bytes=1499] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794825234] f24[varint=0] f26[bytes=0] f30[bytes=3214] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:33:41  [18:33:41] FEED item a[0] id=7707851844252437769 type=0 static=ok redirect=ok dur=13367
+18:33:41  [18:33:41] FEED first url[7707851844252437769]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0300fg10000dbrskjnog65p3j2jbavg&line=0&file_id=7420ed3bd1cf43999ba78af773fcdf05&sign=d45
+18:33:41  [18:33:41] FEED item a[1] id=7707627271724900544 type=0 static=ok redirect=ok dur=31367
+18:33:41  [18:33:41] FEED item a[2] id=7703803999195321265 type=0 static=ok redirect=ok dur=8173
+18:33:41  [18:33:41] FEED item a[3] id=7704278089505695333 type=0 static=ok redirect=ok dur=93413
+18:33:41  [18:33:41] FEED item a[4] id=7700421134831095268 type=0 static=ok redirect=ok dur=12767
+18:33:41  [18:33:41] FEED item a[5] id=7706680112704285018 type=0 static=ok redirect=ok dur=127385
+18:33:41  [18:33:41] FEED mobile page refresh_index=1: awemes=6 usable=6 filtered=0 redirect=6 total_seen=6
+18:33:41  [18:33:41] ENGINE merge total=6 index=0 replace=false auto=true redirect=6
+18:33:41  [18:33:41] ENGINE needMore (index=0 count=6)
+18:33:42  [18:33:41] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+18:33:42  [18:33:41] MGR url idx=0 src=redirect forced
+18:33:42  [18:33:41] MGR acquire idx=0 total=1
+18:33:42  [18:33:41] MGR cold-start defer neighbors=[1, 2]
+18:33:42  [18:33:41] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+18:33:44  [18:33:44] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+18:33:44  [18:33:44] FEED video-dump a[0] f1[bytes=344] f2[bytes=1064] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1012] f7[bytes=4] f8[bytes=1516] f9[varint=1] f10[bytes=344] f11[bytes=2577,bytes=2581] f13[varint=52267] f14[bytes=1516] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794825275] f24[varint=0] f25[bytes=1830] f26[bytes=0] f29[bytes=1395] f30[bytes=3343] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:33:44  [18:33:44] FEED item a[0] id=7698720301625959089 type=0 static=ok redirect=ok dur=52267
+18:33:44  [18:33:44] FEED first url[7698720301625959089]: https://api-play.amemv.com/aweme/v1/play/?video_id=v1e00fgi0000dbbli07og65m1a4rklm0&line=0&file_id=509f4953086e47f098f80b9114724117&sign=cc6
+18:33:44  [18:33:44] FEED item a[1] id=7706121137462531493 type=0 static=ok redirect=ok dur=15234
+18:33:44  [18:33:44] FEED skip-item a[2] id=7705414464469142090 type=0 dur=0 reason=nodur
+18:33:44  [18:33:44] FEED item a[3] id=7700431091874276218 type=0 static=ok redirect=ok dur=29734
+18:33:44  [18:33:44] FEED item a[4] id=7707505750789171302 type=0 static=ok redirect=ok dur=16671
+18:33:44  [18:33:44] FEED item a[5] id=7706360607368471801 type=0 static=ok redirect=ok dur=14600
+18:33:44  [18:33:44] FEED mobile page refresh_index=2: awemes=6 usable=5 filtered=1 redirect=5 total_seen=11
+18:33:44  [18:33:44] ENGINE merge total=11 index=0 replace=false auto=false redirect=5
+18:33:44  [18:33:44] WATCH repair idx=0 reason=idle
+18:33:44  [18:33:44] MGR rebuild idx=0 (redirect)
+18:33:44  [18:33:44] MGR url idx=0 src=redirect forced
+18:33:44  [18:33:44] MGR acquire idx=0 total=1
+18:33:45  [18:33:45] MGR ready idx=0
+18:33:45  [18:33:45] MGR url idx=1 src=static age=3s
+18:33:45  [18:33:45] MGR acquire idx=1 total=2
+18:33:45  [18:33:45] MGR url idx=2 src=static age=3s
+18:33:45  [18:33:45] MGR acquire idx=2 total=3
+18:33:45  [18:33:45] MGR cold-start neighbors acquired=[1, 2]
+18:33:45  [18:33:45] MGR ready idx=1
+18:33:46  [18:33:46] MGR ready idx=2
+18:33:49  [18:33:48] ENGINE next -> index=1
+18:33:49  [18:33:48] MGR url idx=3 src=static age=7s
+18:33:49  [18:33:48] MGR acquire idx=3 total=4
+18:33:49  [18:33:48] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+18:33:49  [18:33:49] MGR ready idx=3
+18:33:51  [18:33:51] ENGINE next -> index=2
+18:33:51  [18:33:51] MGR url idx=4 src=static age=9s
+18:33:51  [18:33:51] MGR acquire idx=4 total=5
+18:33:51  [18:33:51] FEEDCOLL scrollTo idx=2 y=2160.0 items=11
+18:33:51  [18:33:51] MGR ready idx=4
+18:33:53  [18:33:53] ENGINE next -> index=3
+18:33:53  [18:33:53] MGR evict idx=0
+18:33:53  [18:33:53] MGR url idx=5 src=static age=11s
+18:33:53  [18:33:53] MGR acquire idx=5 total=5
+18:33:53  [18:33:53] FEEDCOLL scrollTo idx=3 y=3240.0 items=11
+18:33:53  [18:33:53] MGR ready idx=5
+18:33:55  [18:33:55] ENGINE next -> index=4
+18:33:55  [18:33:55] ENGINE needMore (index=4 count=11)
+18:33:55  [18:33:55] FEED mobile GET refresh_index=3 cold=0 count=10 bogus_len=180 seen=11
+18:33:55  [18:33:55] MGR evict idx=1
+18:33:55  [18:33:55] MGR url idx=6 src=static age=11s
+18:33:55  [18:33:55] MGR acquire idx=6 total=5
+18:33:55  [18:33:55] FEEDCOLL scrollTo idx=4 y=4320.0 items=11
+18:33:57  [18:33:57] MGR ready idx=6
+18:33:57  [18:33:57] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=3)
+18:33:57  [18:33:57] FEED video-dump a[0] f1[bytes=344] f2[bytes=1063] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=996] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=344] f11[bytes=2600] f13[varint=23000] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794825259] f24[varint=0] f25[bytes=1824] f26[bytes=0] f29[bytes=725] f30[bytes=2927] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:33:57  [18:33:57] FEED item a[0] id=7698367343446340529 type=0 static=ok redirect=ok dur=23000
+18:33:57  [18:33:57] FEED first url[7698367343446340529]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dbb1ga7og65nnob95v90&line=0&file_id=ebeddc0cfc194fe2832bafe91ae2b7e8&sign=dbd
+18:33:57  [18:33:57] FEED item a[1] id=7703811324496579855 type=0 static=ok redirect=ok dur=604321
+18:33:57  [18:33:57] FEED item a[2] id=7700035524007087077 type=0 static=ok redirect=ok dur=8000
+18:33:57  [18:33:57] FEED item a[3] id=7707640100096838513 type=0 static=ok redirect=ok dur=7100
+18:33:57  [18:33:57] FEED item a[4] id=7699841983591201211 type=0 static=ok redirect=ok dur=12400
+18:33:57  [18:33:57] FEED item a[5] id=7700905391655357711 type=0 static=ok redirect=ok dur=40167
+18:33:57  [18:33:57] FEED mobile page refresh_index=3: awemes=6 usable=6 filtered=0 redirect=6 total_seen=17
+18:33:57  [18:33:57] ENGINE merge total=17 index=4 replace=false auto=false redirect=6
+18:33:58  [18:33:58] ENGINE next -> index=5
+18:33:58  [18:33:58] MGR evict idx=2
+18:33:58  [18:33:58] MGR url idx=7 src=static age=14s
+18:33:58  [18:33:58] MGR acquire idx=7 total=5
+18:33:58  [18:33:58] FEEDCOLL scrollTo idx=5 y=5400.0 items=17
+18:33:58  [18:33:58] MGR ready idx=7
+18:33:59  [18:33:59] ENGINE next -> index=6
+18:33:59  [18:33:59] MGR evict idx=3
+18:33:59  [18:33:59] MGR url idx=8 src=static age=15s
+18:33:59  [18:33:59] MGR acquire idx=8 total=5
+18:33:59  [18:33:59] FEEDCOLL scrollTo idx=6 y=6480.0 items=17
+18:34:01  [18:34:00] MGR ready idx=8
+18:34:03  [18:34:03] WATCH repair idx=6 reason=stall
+18:34:03  [18:34:03] MGR rebuild idx=6 (redirect)
+18:34:03  [18:34:03] MGR url idx=6 src=redirect forced
+18:34:03  [18:34:03] MGR acquire idx=6 total=5
+18:34:04  [18:34:04] MGR ready idx=6
+18:34:06  [18:34:06] ENGINE next -> index=7
+18:34:06  [18:34:06] MGR evict idx=4
+18:34:06  [18:34:06] MGR url idx=9 src=static age=22s
+18:34:06  [18:34:06] MGR acquire idx=9 total=5
+18:34:06  [18:34:06] FEEDCOLL scrollTo idx=7 y=7560.0 items=17
+18:34:06  [18:34:06] MGR ready idx=9
+18:34:07  [18:34:07] ENGINE next -> index=8
+18:34:07  [18:34:07] MGR evict idx=5
+18:34:07  [18:34:07] MGR url idx=10 src=static age=23s
+18:34:07  [18:34:07] MGR acquire idx=10 total=5
+18:34:07  [18:34:07] FEEDCOLL scrollTo idx=8 y=8640.0 items=17
+18:34:08  [18:34:08] MGR ready idx=10
+18:34:09  [18:34:09] ENGINE next -> index=9
+18:34:09  [18:34:09] MGR evict idx=6
+18:34:09  [18:34:09] MGR url idx=11 src=static age=11s
+18:34:09  [18:34:09] MGR acquire idx=11 total=5
+18:34:09  [18:34:09] FEEDCOLL scrollTo idx=9 y=9720.0 items=17
+18:34:10  [18:34:10] MGR ready idx=11
+18:34:12  [18:34:12] ENGINE next -> index=10
+18:34:12  [18:34:12] ENGINE needMore (index=10 count=17)
+18:34:12  [18:34:12] FEED mobile GET refresh_index=4 cold=0 count=10 bogus_len=180 seen=17
+18:34:12  [18:34:12] MGR evict idx=7
+18:34:12  [18:34:12] MGR url idx=12 src=static age=14s
+18:34:12  [18:34:12] MGR acquire idx=12 total=5
+18:34:12  [18:34:12] FEEDCOLL scrollTo idx=10 y=10800.0 items=17
+18:34:14  [18:34:14] MGR ready idx=12
+18:34:14  [18:34:14] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=4)
+18:34:14  [18:34:14] FEED video-dump a[0] f1[bytes=343] f2[bytes=1069] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=1002] f7[bytes=4] f8[bytes=1512] f9[varint=1] f10[bytes=343] f11[bytes=2598] f13[varint=49807] f14[bytes=1512] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794825303] f24[varint=0] f26[bytes=0] f29[bytes=1062] f30[bytes=3168] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:34:14  [18:34:14] FEED item a[0] id=7706131009465164987 type=0 static=ok redirect=ok dur=49807
+18:34:14  [18:34:14] FEED first url[7706131009465164987]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2700fgi0000dboqqgfog65vrk1f5ehg&line=0&file_id=3ec418a59a3f41a6969d35877cbe44a3&sign=556
+18:34:14  [18:34:14] FEED skip-item a[1] id=7707518821339808744 type=0 dur=0 reason=nodur
+18:34:14  [18:34:14] FEED item a[2] id=7706102078225042698 type=0 static=ok redirect=ok dur=10367
+18:34:14  [18:34:14] FEED item a[3] id=7698684171616031673 type=0 static=ok redirect=ok dur=8200
+18:34:14  [18:34:14] FEED item a[4] id=7700634132711717887 type=0 static=ok redirect=ok dur=9381
+18:34:14  [18:34:14] FEED item a[5] id=7704555759463304491 type=0 static=ok redirect=ok dur=10700
+18:34:14  [18:34:14] FEED mobile page refresh_index=4: awemes=6 usable=5 filtered=1 redirect=5 total_seen=22
+18:34:14  [18:34:14] ENGINE merge total=22 index=10 replace=false auto=false redirect=5
+18:34:15  [18:34:14] ENGINE next -> index=11
+18:34:15  [18:34:14] MGR evict idx=8
+18:34:15  [18:34:14] MGR url idx=13 src=static age=17s
+18:34:15  [18:34:14] MGR acquire idx=13 total=5
+18:34:15  [18:34:14] FEEDCOLL scrollTo idx=11 y=11880.0 items=22
+18:34:16  [18:34:16] MGR ready idx=13
+18:34:17  [18:34:17] ENGINE next -> index=12
+18:34:17  [18:34:17] MGR evict idx=9
+18:34:17  [18:34:17] MGR url idx=14 src=static age=19s
+18:34:17  [18:34:17] MGR acquire idx=14 total=5
+18:34:17  [18:34:17] FEEDCOLL scrollTo idx=12 y=12960.0 items=22
+18:34:18  [18:34:18] MGR ready idx=14
+18:34:20  [18:34:20] ENGINE next -> index=13
+18:34:20  [18:34:20] MGR evict idx=10
+18:34:20  [18:34:20] MGR url idx=15 src=static age=22s
+18:34:20  [18:34:20] MGR acquire idx=15 total=5
+18:34:20  [18:34:20] FEEDCOLL scrollTo idx=13 y=14040.0 items=22
+18:34:21  [18:34:21] MGR ready idx=15
+18:34:24  [18:34:24] ENGINE next -> index=14
+18:34:24  [18:34:24] MGR evict idx=11
+18:34:24  [18:34:24] MGR url idx=16 src=static age=26s
+18:34:24  [18:34:24] MGR acquire idx=16 total=5
+18:34:24  [18:34:24] FEEDCOLL scrollTo idx=14 y=15120.0 items=22
+18:34:29  [18:34:29] ENGINE next -> index=15
+18:34:30  [18:34:29] ENGINE needMore (index=15 count=22)
+18:34:30  [18:34:29] FEED mobile GET refresh_index=5 cold=0 count=10 bogus_len=180 seen=22
+18:34:30  [18:34:29] MGR evict idx=12
+18:34:30  [18:34:29] MGR url idx=17 src=static age=15s
+18:34:30  [18:34:29] MGR acquire idx=17 total=5
+18:34:30  [18:34:29] FEEDCOLL scrollTo idx=15 y=16200.0 items=22
+18:34:30  [18:34:30] MGR ready idx=17
+18:34:31  [18:34:31] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=5)
+18:34:31  [18:34:31] FEED video-dump a[0] f1[bytes=344] f2[bytes=989] f3[varint=576] f4[varint=1024] f5[bytes=8] f6[bytes=968] f7[bytes=4] f8[bytes=1510] f9[varint=1] f10[bytes=344] f11[bytes=2734] f13[varint=162049] f14[bytes=1510] f15[varint=1] f16[bytes=346] f17[varint=0] f18[bytes=344] f21[varint=1794825433] f22[varint=1] f23[bytes=0] f24[varint=0] f25[bytes=1810] f26[bytes=0] f29[bytes=1683] f30[bytes=3053] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:34:31  [18:34:31] FEED item a[0] id=7706546531217804595 type=0 static=ok redirect=ok dur=162049
+18:34:31  [18:34:31] FEED first url[7706546531217804595]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbpidlvog65v78lb79vg&line=0&file_id=92bbde796f0f4b6aabba40aeb3d66237&sign=f68
+18:34:31  [18:34:31] FEED item a[1] id=7706852015258883827 type=0 static=ok redirect=ok dur=13767
+18:34:31  [18:34:31] FEED item a[2] id=7707933635332503003 type=0 static=ok redirect=ok dur=342034
+18:34:31  [18:34:31] FEED skip-item a[3] id=7707646639590154614 type=0 dur=0 reason=nodur
+18:34:31  [18:34:31] FEED item a[4] id=7705022882417708966 type=0 static=ok redirect=ok dur=28600
+18:34:31  [18:34:31] FEED skip-item a[5] id=7705750188711768694 type=0 dur=0 reason=nodur
+18:34:31  [18:34:31] FEED mobile page refresh_index=5: awemes=6 usable=4 filtered=2 redirect=4 total_seen=26
+18:34:31  [18:34:31] ENGINE merge total=26 index=15 replace=false auto=false redirect=4
+18:34:31  [18:34:31] MGR ready idx=16
+18:34:34  [18:34:34] ENGINE next -> index=16
+18:34:35  [18:34:34] MGR evict idx=13
+18:34:35  [18:34:34] MGR url idx=18 src=static age=20s
+18:34:35  [18:34:34] MGR acquire idx=18 total=5
+18:34:35  [18:34:34] FEEDCOLL scrollTo idx=16 y=17280.0 items=26
+18:34:37  [18:34:37] MGR ready idx=18
+18:34:39  [18:34:39] ENGINE next -> index=17
+18:34:40  [18:34:39] MGR evict idx=14
+18:34:40  [18:34:39] MGR url idx=19 src=static age=25s
+18:34:40  [18:34:39] MGR acquire idx=19 total=5
+18:34:40  [18:34:39] FEEDCOLL scrollTo idx=17 y=18360.0 items=26
+18:34:40  [18:34:40] MGR ready idx=19
+18:34:42  [18:34:41] ENGINE next -> index=18
+18:34:42  [18:34:41] MGR evict idx=15
+18:34:42  [18:34:41] MGR url idx=20 src=static age=27s
+18:34:42  [18:34:41] MGR acquire idx=20 total=5
+18:34:42  [18:34:41] FEEDCOLL scrollTo idx=18 y=19440.0 items=26
+18:34:42  [18:34:42] MGR ready idx=20
+18:34:44  [18:34:44] ENGINE next -> index=19
+18:34:44  [18:34:44] ENGINE needMore (index=19 count=26)
+18:34:44  [18:34:44] FEED mobile GET refresh_index=6 cold=0 count=10 bogus_len=180 seen=26
+18:34:44  [18:34:44] MGR evict idx=16
+18:34:44  [18:34:44] MGR url idx=21 src=static age=29s
+18:34:44  [18:34:44] MGR acquire idx=21 total=5
+18:34:44  [18:34:44] FEEDCOLL scrollTo idx=19 y=20520.0 items=26
+18:34:45  [18:34:45] MGR ready idx=21
+18:34:46  [18:34:46] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=6)
+18:34:46  [18:34:46] FEED video-dump a[0] f1[bytes=344] f2[bytes=1033] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=989] f7[bytes=4] f8[bytes=1504] f9[varint=1] f10[bytes=344] f11[bytes=2622] f13[varint=11200] f14[bytes=1504] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794825297] f24[varint=0] f25[bytes=1808] f26[bytes=0] f30[bytes=3258] f33[varint=1] f34[bytes=0] f44[bytes=3]
+18:34:46  [18:34:46] FEED item a[0] id=7702071045306718592 type=0 static=ok redirect=ok dur=11200
+18:34:46  [18:34:46] FEED first url[7702071045306718592]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0d00fg10000dbhk18fog65i3ephrc50&line=0&file_id=da82c9a4533b4c22b7651bb6eb0221ae&sign=867
+18:34:46  [18:34:46] FEED item a[1] id=7706099753901691897 type=0 static=ok redirect=ok dur=31734
+18:34:46  [18:34:46] FEED skip-item a[2] id=7707567617544070373 type=0 dur=0 reason=nodur
+18:34:46  [18:34:46] FEED item a[3] id=7707596288007890033 type=0 static=ok redirect=ok dur=64066
+18:34:46  [18:34:46] FEED item a[4] id=7699035649101962347 type=0 static=ok redirect=ok dur=29117
+18:34:46  [18:34:46] FEED skip-item a[5] id=7700972565564702310 type=0 dur=0 reason=nodur
+18:34:46  [18:34:46] FEED mobile page refresh_index=6: awemes=6 usable=4 filtered=2 redirect=4 total_seen=30
+18:34:46  [18:34:46] ENGINE merge total=30 index=19 replace=false auto=false redirect=4
+18:34:47  [18:34:47] ENGINE next -> index=20
+18:34:47  [18:34:47] MGR evict idx=17
+18:34:47  [18:34:47] MGR url idx=22 src=static age=15s
+18:34:47  [18:34:47] MGR acquire idx=22 total=5
+18:34:47  [18:34:47] FEEDCOLL scrollTo idx=20 y=21600.0 items=30
+18:34:49  [18:34:49] ENGINE next -> index=21
+18:34:49  [18:34:49] MGR evict idx=18
+18:34:49  [18:34:49] MGR url idx=23 src=static age=17s
+18:34:49  [18:34:49] MGR acquire idx=23 total=5
+18:34:49  [18:34:49] FEEDCOLL scrollTo idx=21 y=22680.0 items=30
+18:34:50  [18:34:50] MGR ready idx=23
+18:34:51  [18:34:51] ENGINE next -> index=22
+18:34:51  [18:34:51] MGR evict idx=19
+18:34:51  [18:34:51] MGR url idx=24 src=static age=19s
+18:34:51  [18:34:51] MGR acquire idx=24 total=5
+18:34:51  [18:34:51] FEEDCOLL scrollTo idx=22 y=23760.0 items=30
+18:34:52  [18:34:52] MGR ready idx=24
+18:34:53  [18:34:53] WATCH repair idx=22 reason=idle
+18:34:53  [18:34:53] MGR rebuild idx=22 (redirect)
+18:34:53  [18:34:53] MGR url idx=22 src=redirect forced
+18:34:53  [18:34:53] MGR acquire idx=22 total=5
+18:34:54  [18:34:54] MGR ready idx=22
+18:34:58  [18:34:58] ENGINE next -> index=23
+18:34:58  [18:34:58] ENGINE needMore (index=23 count=30)
+18:34:58  [18:34:58] FEED mobile GET refresh_index=7 cold=0 count=10 bogus_len=180 seen=30
+18:34:58  [18:34:58] MGR evict idx=20
+18:34:58  [18:34:58] MGR url idx=25 src=static age=26s
+18:34:58  [18:34:58] MGR acquire idx=25 total=5
+18:34:58  [18:34:58] FEEDCOLL scrollTo idx=23 y=24840.0 items=30
+18:35:00  [18:35:00] MGR ready idx=25
+18:35:00  [18:35:00] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=7)
+18:35:00  [18:35:00] FEED video-dump a[0] f1[bytes=343] f2[bytes=1068] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1002] f7[bytes=4] f8[bytes=1531] f9[varint=1] f10[bytes=343] f11[bytes=2583] f13[varint=7467] f14[bytes=1531] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794825307] f24[varint=0] f25[bytes=1841] f26[bytes=0] f30[bytes=3438] f33[varint=0] f34[bytes=0] f44[bytes=3]
+18:35:00  [18:35:00] FEED item a[0] id=7702024604874104251 type=0 static=ok redirect=ok dur=7467
+18:35:00  [18:35:00] FEED first url[7702024604874104251]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbhhclfog65jrs73o9ig&line=0&file_id=b26499f4aeb841bda4e4fdb76b7f544e&sign=64f
+18:35:00  [18:35:00] FEED item a[1] id=7704989457535028530 type=0 static=ok redirect=ok dur=48234
+18:35:00  [18:35:00] FEED item a[2] id=7704729011896765750 type=0 static=ok redirect=ok dur=15767
+18:35:00  [18:35:00] FEED item a[3] id=7706874311630049913 type=0 static=ok redirect=ok dur=12434
+18:35:00  [18:35:00] FEED item a[4] id=7700954394171002993 type=0 static=ok redirect=ok dur=13515
+18:35:00  [18:35:00] FEED item a[5] id=7699808426353025471 type=0 static=ok redirect=ok dur=27767
+18:35:00  [18:35:00] FEED mobile page refresh_index=7: awemes=6 usable=6 filtered=0 redirect=6 total_seen=36
+18:35:00  [18:35:00] ENGINE merge total=36 index=23 replace=false auto=false redirect=6

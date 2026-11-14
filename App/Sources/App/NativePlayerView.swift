@@ -18,6 +18,8 @@ final class PlayerLayerView: UIView {
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
 final class PlayerCell: UICollectionViewCell {
     let playerLayerView = PlayerLayerView()
+    /// 弹幕覆盖层：真实视频层之上、封面之下（未 ready 时被封面盖住）；tvOS 焦点隔离（纯展示层）
+    let danmakuOverlay = DanmakuOverlay()
     /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
     let coverImageView: UIImageView = {
         let iv = UIImageView()
@@ -32,6 +34,7 @@ final class PlayerCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = .black
         contentView.addSubview(playerLayerView)
+        contentView.addSubview(danmakuOverlay)
         contentView.addSubview(coverImageView)
         playerLayerView.playerLayer.videoGravity = .resizeAspect
         // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
@@ -42,6 +45,7 @@ final class PlayerCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         playerLayerView.frame = contentView.bounds
+        danmakuOverlay.frame = contentView.bounds
         coverImageView.frame = contentView.bounds
     }
 
@@ -430,6 +434,7 @@ final class DYPlayerViewController: UIViewController {
 
     /// 居中 Cell 播放（player 已 ready），非居中暂停；未 ready 的显示封面兜底，绝不强行 play。
     /// 不调 prepare（那会用 centeredIndex 和 scrollTo 的目标 index 打架→池抖动→黑屏）；只查池控播放态。
+    /// 弹幕同步：居中在播 → load(换片)+play；否则 pause。
     private func updatePlaybackStates(center index: Int) {
         for cell in collectionView.visibleCells {
             guard let c = cell as? PlayerCell,
@@ -442,11 +447,16 @@ final class DYPlayerViewController: UIViewController {
                 if isCenter, ready {
                     p.play()
                     c.setCoverVisible(false)
+                    c.danmakuOverlay.bind(player: p)
+                    c.danmakuOverlay.load(awemeId: PlaybackEngine.shared.awemeId(at: idx) ?? "",
+                                          durationMs: PlaybackEngine.shared.durationMs(at: idx))
+                    c.danmakuOverlay.syncPlaying(true)
                 } else {
                     p.pause()
                     // 未 ready（或非居中）显示封面兜底
                     if !ready { loadCover(for: c, index: idx) }
                     c.setCoverVisible(!ready)
+                    c.danmakuOverlay.syncPlaying(false)
                 }
             } else {
                 // 无 player（超范围）：显示封面兜底
@@ -471,7 +481,13 @@ final class DYPlayerViewController: UIViewController {
                   let p = PlayerManager.shared.player(at: ip.item) else { continue }
             if p.currentItem?.status == .readyToPlay {
                 c.setCoverVisible(false)
-                if ip.item == currentIndex { p.play() }
+                if ip.item == currentIndex {
+                    p.play()
+                    c.danmakuOverlay.bind(player: p)
+                    c.danmakuOverlay.load(awemeId: PlaybackEngine.shared.awemeId(at: ip.item) ?? "",
+                                          durationMs: PlaybackEngine.shared.durationMs(at: ip.item))
+                    c.danmakuOverlay.syncPlaying(true)
+                }
             }
         }
     }
@@ -625,15 +641,23 @@ final class DYPlayerViewController: UIViewController {
     }
 
     private func seek(by seconds: Double) {
-        guard let p = PlayerManager.shared.player(at: centeredIndex()),
+        let idx = centeredIndex()
+        guard let p = PlayerManager.shared.player(at: idx),
               let t = p.currentItem?.currentTime().seconds, t.isFinite else { return }
         let target = max(0, t + seconds)
         p.seek(to: CMTime(seconds: target, preferredTimescale: 600), toleranceBefore: .zero, toleranceAfter: .zero)
         DYLog.shared.log("FEEDCOLL seek \(seconds)s -> \(target)")
+        // 弹幕随 seek 清屏重对齐
+        (collectionView.cellForItem(at: IndexPath(item: idx, section: 0)) as? PlayerCell)?.danmakuOverlay.seekSync()
     }
     private func togglePlayPause() {
-        guard let p = PlayerManager.shared.player(at: centeredIndex()) else { return }
-        if p.timeControlStatus == .playing { p.pause() } else { p.play() }
+        let idx = centeredIndex()
+        guard let p = PlayerManager.shared.player(at: idx) else { return }
+        let wasPlaying = (p.timeControlStatus == .playing)
+        if wasPlaying { p.pause() } else { p.play() }
+        if let cell = collectionView.cellForItem(at: IndexPath(item: idx, section: 0)) as? PlayerCell {
+            cell.danmakuOverlay.syncPlaying(!wasPlaying)
+        }
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
