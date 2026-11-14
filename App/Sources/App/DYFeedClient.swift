@@ -119,9 +119,10 @@ final class DYFeedClient {
         refreshIndex += 1
         isFirstPage = false
 
+        DYLog.shared.count("feed_page")
         session.dataTask(with: req) { [weak self] data, resp, err in
             guard let self else { return }
-            if let err { DYLog.shared.log("FEED http err: \(err.localizedDescription)"); return }
+            if let err { DYLog.shared.event("FEED http err: \(err.localizedDescription)"); DYLog.shared.count("feed_http_err"); return }
             guard let http = resp as? HTTPURLResponse else { return }
             guard var data, !data.isEmpty else {
                 DYLog.shared.log("FEED empty body (refresh_index=\(usedIndex) http=\(http.statusCode))")
@@ -165,60 +166,89 @@ final class DYFeedClient {
         }
         var ids: [String] = []
         var urls: [URL] = []
+        var rawVideos: [[UInt8]] = []
+        var redirects: [URL?] = []
         var loggedFirst = false
         var ei = 0
         for entry in awemeEntries {
-            DYLog.shared.log("FEED loop a[\(ei)] begin bytes=\(entry.count)")
-            guard let aweme = Proto.parse(entry) else { DYLog.shared.log("FEED loop a[\(ei)] parse-nil"); ei += 1; continue }
-            DYLog.shared.log("FEED loop a[\(ei)] aweme-ok")
+            guard let aweme = Proto.parse(entry) else { DYLog.shared.count("parse_aweme_nil"); ei += 1; continue }
             // video = aweme field 7，退化 field 8（s13.e:229）
             guard let videoBytes = aweme.bytesFields(7).first ?? aweme.bytesFields(8).first,
-                  let video = Proto.parse(videoBytes) else { DYLog.shared.log("FEED loop a[\(ei)] video-nil"); ei += 1; continue }
-            DYLog.shared.log("FEED loop a[\(ei)] video-ok")
-            // aweme_id = field 1（s13.b 优先 str，退化为 varint）
-            guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.log("FEED loop a[\(ei)] id-nil"); ei += 1; continue }
-            DYLog.shared.log("FEED loop a[\(ei)] id=\(id) pick-start")
-            // 最高画质：bit_rate 数组（field 21/31）挑最高档；无 bit_rate 则退回默认 play_addr
-            var chosen: URL? = pickHighestQuality(from: video, awemeId: id)
-            DYLog.shared.log("FEED loop a[\(ei)] pick-done chosen=\(chosen != nil)")
-            if chosen == nil {
-                // 默认 play_addr：s13.e:229 是 f1(d(7), d(8))。
-                // 实测移动端 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向（540p，慢）。
-                // 故优先 field 8，退化 field 1（含 field 9 兜底）。
-                var pa: Proto? = nil
-                for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
-                    if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
-                }
-                if let playAddr = pa {
-                    for raw in Proto.urlList(playAddr, 0) {
-                        var u = raw
-                        if u.hasPrefix("//") { u = "https:" + u }
-                        guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
-                        if let url = URL(string: u) { chosen = url; break }
+                  let video = Proto.parse(videoBytes) else { DYLog.shared.count("parse_video_nil"); ei += 1; continue }
+            // 每页首条 dump video 全字段（号/wire/长度）——监控 schema 漂移。
+            // 已实锤：field 21 = 单 varint 时间戳（URL 生成时刻，epoch 解码≈抓取时刻），非 bit_rate 子消息。
+            if ei == 0 {
+                let videoDump = video.fields.keys.sorted().map { k -> String in
+                    let vals = video.fields[k] ?? []
+                    let desc = vals.map { v -> String in
+                        switch v {
+                        case .varint(let n): return "varint=\(n)"
+                        case .bytes(let b): return "bytes=\(b.count)"
+                        }
                     }
+                    return "f\(k)[\(desc.joined(separator: ","))]"
+                }.joined(separator: " ")
+                DYLog.shared.log("FEED video-dump a[0] \(videoDump)")
+            }
+            // aweme_id = field 1（s13.b 优先 str，退化为 varint）
+            guard let id = aweme.string(1) ?? aweme.varint(1).map(String.init), !id.isEmpty else { DYLog.shared.count("parse_id_nil"); ei += 1; continue }
+            // 默认直链（静态）：移动端无 bit_rate 子消息（field21=varint 时间戳），pickHighestQuality 恒 nil 不再调用。
+            // 实测 video field 8 = 直连 douyinvod CDN（720p，快），field 1 = api-play 重定向，field 9 兜底。优先 8→1→9。
+            var chosen: URL? = nil
+            var pa: Proto? = nil
+            for pb in video.bytesFields(8) + video.bytesFields(1) + video.bytesFields(9) {
+                if let cand = Proto.parse(pb), !Proto.urlList(cand, 0).isEmpty { pa = cand; break }
+            }
+            if let playAddr = pa {
+                for raw in Proto.urlList(playAddr, 0) {
+                    var u = raw
+                    if u.hasPrefix("//") { u = "https:" + u }
+                    guard u.lowercased().hasPrefix("https://") || u.lowercased().hasPrefix("http://") else { continue }
+                    if let url = URL(string: u) { chosen = url; break }
                 }
             }
-            DYLog.shared.log("FEED loop a[\(ei)] final chosen=\(chosen != nil)")
-            if let url = chosen {
-                ids.append(id); urls.append(url)
-                if !loggedFirst {
-                    loggedFirst = true
-                    DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
+            // 重定向直链：play_addr（field 1/9，退化 8）url_list 里的 /aweme/v1/play/ 端点——
+            // URL 不带时效签名，播放时请求→服务器现场 302→新鲜 CDN 直链（照 myDV selectBestPlayUrl 第②优先级）。
+            var redirect: URL? = nil
+            for pb in video.bytesFields(1) + video.bytesFields(9) + video.bytesFields(8) {
+                guard let cand = Proto.parse(pb) else { continue }
+                for raw in Proto.urlList(cand, 0) {
+                    var u = raw
+                    if u.hasPrefix("//") { u = "https:" + u }
+                    guard u.lowercased().hasPrefix("https://") else { continue }
+                    if u.contains("/aweme/v1/play/"), let url = URL(string: u) { redirect = url; break }
                 }
+                if redirect != nil { break }
+            }
+            // 每视频一行紧凑诊断（替代旧 7 行 loop 噪音）
+            let dur = video.varint(12) ?? video.varint(22) ?? video.varint(32) ?? video.varint(13) ?? 0
+            DYLog.shared.log("FEED item a[\(ei)] id=\(id) static=\(chosen != nil ? "ok" : "none") redirect=\(redirect != nil ? "ok" : "none") dur=\(dur)")
+            // 四数组同点对齐 append（rawVideos/redirects 索引必须与 ids 一致，merge 按同下标对位）；
+            // 静态无但重定向有的条目也收（urls 直接用重定向链，播放时 302 出新鲜直链）。
+            guard let url = chosen ?? redirect else { DYLog.shared.count("parse_no_url"); ei += 1; continue }
+            ids.append(id); urls.append(url); rawVideos.append(videoBytes); redirects.append(redirect)
+            if !loggedFirst {
+                loggedFirst = true
+                DYLog.shared.log("FEED first url[\(id)]: \(url.absoluteString.prefix(140))")
             }
             ei += 1
         }
+        DYLog.shared.count("feed_aweme", by: awemeEntries.count)
+        DYLog.shared.count("feed_usable", by: ids.count)
+        DYLog.shared.count("feed_redirect", by: redirects.compactMap { $0 }.count)
         consumedIds.append(contentsOf: ids)
-        DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) total_seen=\(consumedIds.count)")
+        DYLog.shared.log("FEED mobile page refresh_index=\(refreshIndex): awemes=\(awemeEntries.count) usable=\(ids.count) redirect=\(redirects.compactMap { $0 }.count) total_seen=\(consumedIds.count)")
         guard !ids.isEmpty else {
-            DYLog.shared.log("FEED proto parsed 0 usable videos (refresh_index=\(refreshIndex)) — 检查 video/play_addr 字段号")
+            DYLog.shared.event("FEED page refresh_index=\(refreshIndex): 0 usable videos — 检查 video/play_addr 字段号")
             PlaybackEngine.shared.reportFailure()
             return
         }
         PlaybackEngine.shared.merge(ids: ids, urls: urls,
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
-                                    refresh: false)
+                                    refresh: false,
+                                    allRawVideos: rawVideos,
+                                    allRedirectUrls: redirects)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {
@@ -254,6 +284,10 @@ final class DYFeedClient {
     // MARK: - 最高画质（照抄 s13.e BitRate 解析 + DataModelKt.highestQualityBitRate 排序）
 
     /// 从 video 子消息挑最高清直链。
+    /// ⚠️ v128 起不再被播放路径调用：真机 video-dump 实锤移动端响应 field 21 是单 varint
+    /// （URL 生成时刻时间戳），不是 bit_rate 子消息 → bytesFields(21/31) 恒空 → 恒返回 nil。
+    /// v122 的 resolveFreshURL 曾依赖它"现取新鲜 URL"，被日志证伪（381 次 fallback static/0 次成功）。
+    /// 保留作参考：若未来接入带 bit_rate 的响应（网页 JSON/其他 schema），此函数照 myDV highestQualityBitRate 可直接用。
     /// bit_rate 数组 = video field 21（退化 31）；每档：field 1=gearName、2=width、3=height、
     /// 4=playAddr(内含 url_list)、5(退化 7)=bitRateValue。
     /// 排序（highestQualityBitRate，取最大）：分辨率 h*w → fps → bitRateValue → gearName!=adapt_lowest。
@@ -264,8 +298,24 @@ final class DYFeedClient {
 
         struct Variant { let url: URL; let w: Int; let h: Int; let fps: Int; let bitrate: Int; let gear: String }
         var variants: [Variant] = []
+        var dumped = false
         for e in entries {
             guard let br = Proto.parse(e) else { continue }
+            // 一次性诊断：dump bit_rate 首条的所有 field（号/wire/长度），确认真实结构（is_h265/play_addr 字段号）
+            if !dumped {
+                dumped = true
+                let dump = br.fields.keys.sorted().map { k -> String in
+                    let vals = br.fields[k] ?? []
+                    let sizes = vals.map { v -> String in
+                        switch v {
+                        case .varint(let n): return "varint=\(n)"
+                        case .bytes(let b): return "bytes=\(b.count)"
+                        }
+                    }
+                    return "f\(k)[\(sizes.joined(separator: ","))]"
+                }.joined(separator: " ")
+                DYLog.shared.log("FEED bitrate-dump aweme=\(awemeId) entries=\(entries.count) \(dump)")
+            }
             let gear = br.string(1) ?? ""
             let w = Int(br.varint(2) ?? 0)
             let h = Int(br.varint(3) ?? 0)

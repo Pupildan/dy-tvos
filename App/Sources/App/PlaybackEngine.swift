@@ -11,6 +11,14 @@ final class PlaybackEngine: ObservableObject {
 
     @Published var urls: [URL] = []
     @Published var index: Int = 0
+    /// 每条视频的原始 video 子消息 bytes（index→bytes）
+    private var rawVideos: [Int: [UInt8]] = [:]
+    /// 每条视频的备用重定向直链（index→URL）：/aweme/v1/play 端点——URL 本身不带时效签名，
+    /// 播放时请求由服务器现场 302 生成新鲜 CDN 直链（AVPlayer 自动跟随）。
+    /// 静态直链（douyinvod，URL 内嵌过期签名）超龄时的唯一可靠"真新鲜"来源。
+    private var redirectUrls: [Int: URL] = [:]
+    /// 每条静态直链的生成时刻（index→Date，≈该批 feed 抓取时刻）——acquire 判断静态直链是否可能已过期
+    private var mintedAt: [Int: Date] = [:]
 
     /// 直链批次拉取时间（用于过期判断）
     private(set) var fetchedAt: Date = .distantPast
@@ -36,6 +44,22 @@ final class PlaybackEngine: ObservableObject {
 
     var count: Int { urls.count }
 
+    /// 取 index 的原始 video 子消息 bytes。
+    func rawVideo(at index: Int) -> [UInt8]? {
+        rawVideos[index]
+    }
+
+    /// 取 index 的重定向直链（静态直链过期时的播放来源）。
+    func redirectURL(at index: Int) -> URL? {
+        redirectUrls[index]
+    }
+
+    /// 静态直链年龄（秒）；无记录视为刚生成（0）。
+    func urlAge(at index: Int) -> TimeInterval {
+        guard let t = mintedAt[index] else { return 0 }
+        return Date().timeIntervalSince(t)
+    }
+
     /// 已消费（当前及之前）的 aweme id——feed 直连翻页时作 presented_ids 排除重复推荐。
     var consumedIds: [String] {
         Array(awemeOrder.prefix(max(0, min(index + 1, awemeOrder.count))))
@@ -45,8 +69,9 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil, allRedirectUrls: [URL?]? = nil) {
         let previousAwemeId = currentAwemeId
+        let oldCount = awemeOrder.count
         var mergedIds = awemeOrder
         var mergedUrls = self.urls
         var position = [String: Int]()
@@ -62,6 +87,23 @@ final class PlaybackEngine: ObservableObject {
         }
         awemeOrder = mergedIds
         self.urls = mergedUrls
+        // 存原始 video bytes（按最终 position）
+        if let raws = allRawVideos {
+            for (i, id) in ids.enumerated() {
+                if let p = position[id], i < raws.count {
+                    rawVideos[p] = raws[i]
+                }
+            }
+        }
+        // 存重定向直链 + 静态直链生成时刻（本批 merge 时刻；仅新增/替换的条目刷新时刻，去重旧条目保留原时刻）
+        let now = Date()
+        for (i, id) in ids.enumerated() {
+            guard let p = position[id] else { continue }
+            if p >= oldCount || replaceExisting { mintedAt[p] = now }
+            if let redirects = allRedirectUrls, i < redirects.count {
+                redirectUrls[p] = redirects[i]
+            }
+        }
         fetchedAt = Date()
         consecutiveFailures = 0
         if refresh, !previousAwemeId.isEmpty, let pos = awemeOrder.firstIndex(of: previousAwemeId) {
@@ -69,7 +111,8 @@ final class PlaybackEngine: ObservableObject {
         } else if autoPlay {
             index = 0
         }
-        DYLog.shared.log("ENGINE merge total=\(mergedUrls.count) index=\(index) replace=\(replaceExisting) auto=\(autoPlay)")
+        let redirectCount = allRedirectUrls?.compactMap { $0 }.count ?? 0
+        DYLog.shared.log("ENGINE merge total=\(mergedUrls.count) index=\(index) replace=\(replaceExisting) auto=\(autoPlay) redirect=\(redirectCount)")
     }
 
     /// 注入一批有序直链。isNewBatch=true（首次/翻页新增）时自动播 index 0；

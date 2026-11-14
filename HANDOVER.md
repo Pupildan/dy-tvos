@@ -1,7 +1,8 @@
-# DYTV 交接文档（v124 状态 · 2026-11-14）
+# DYTV 交接文档（v122 稳定版 · 2026-11-14）
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> 当前版本 **v124**。**跳多页、声画不同步、冻屏已修复**；**黑屏（有声/无声）未解决**，是唯一遗留问题。
+> 当前稳定版 **v122**。**跳多页、声画不同步、冻屏已修复**；**黑屏有声已大幅减少**（播放时现取新鲜 URL）；**黑屏无声仍有残留**（偶发，见 §5）。
+> **决策记录**：v111-v126 在黑屏问题上反复横跳（加 skip/看门狗/视频轨检测又回退），最终**锁定 v122 为稳定发布版**，残余黑屏作为独立任务后续攻。详见 §5-§8。
 
 ---
 
@@ -20,10 +21,11 @@
 - ATV 崩溃拿不到堆栈 → 靠"分步日志 + 二分排除"；**崩溃可隔空投送导出 `.ips` 读堆栈**（见 §7）。
 - 日志：ATV 推送到开发机 `output/atv_push.log`（player 前缀 `MGR`/`CODEC`/`STALL`/`ENGINE`/`FEED`）。
 
-## 3. 当前架构（v124 实际状态）
+## 3. 当前架构（v122 实际状态）
 
 - **数据层** `DYFeedClient`：移动端 `aweme.snssdk.com/aweme/v2/feed/` protobuf 直连。`DYSigner` 用 JavaScriptCore 跑 abogus.js 算 4 参签名。响应 protobuf 手工 wire 解码（`Proto` struct）。零 WebView。
 - **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 上限 3 池（current±1）。
+- **播放时现取新鲜 URL（v122 关键，治黑屏有声）**：`PlaybackEngine` 存每条 video 原始 bytes（`rawVideos[index]`），`acquire` 建 player 时用 `resolveFreshURL` 现跑 `pickHighestQuality` 取**当下新鲜 URL**，不用预载静态 URL（会过期→黑屏）。照 myDV `resolveFinalPlayUrl` 播放时现算模式。
 - **跳多页已修**：删 `scrollViewDidEnd` 两委托（动画中途 `centeredIndex()` 反推致正反馈）、`advance/rewind` 直接 `engine.next()/prev()`、`scrollTo` 删 `for{next()}` 对齐循环。
 - **声画不同步已修**：同上（不再有 skip 引发的换源错位）。
 - **冻屏已修**：基本没有。
@@ -36,20 +38,26 @@
 | 跳多页 | 删 `scrollViewDidEnd` 两委托 + `advance` 直接 `engine.next()` + `scrollTo` 删对齐循环 | v115/v121 |
 | 声画不同步 | 同上（不再有 skip 换源错位） | v121 |
 | 冻屏 | 基本没有 | v108+ |
+| **黑屏有声（大幅减少）** | **播放时现取新鲜 URL**（`resolveFreshURL`+`rawVideos`），不用预载过期静态 URL | **v122** |
 
 ## 5. 未解决问题：黑屏（有声/无声）——唯一遗留
 
-### 5.1 现象
-- **黑屏有声**：有声音、没画面。频次中等。
+### 5.1 现象（v122 真机实测）
+- **黑屏有声**：有声音、没画面。**v122 已大幅减少**（播放时现取新鲜 URL），但仍有残留。
 - **黑屏无声**：既无声音也无画面。较少。
 
-### 5.2 根因诊断（v124 CODEC 诊断实锤）
-- 可播视频编码 **全是 `avc1`(H.264)**，无 hvc1(HEVC) → **黑屏不是 HEVC 解不出**（推翻早期假设）。
-- idx=31 出现 `codec=no-video-track` 但仍 `MGR ready` → **无视频轨的视频没被跳过**（图集/纯音频帖）。
-- 看门狗抓到的黑屏是 `status=0`(`.idle`)、`t=0.0` → **player 压根没起来**（URL 无效/过期/无权限），看门狗能跳过这类。
+### 5.2 根因诊断（v124 CODEC 诊断 + video-dump 实锤）
+- 可播视频编码 **全是 `avc1`(H.264)**，无 hvc1(HEVC) → **黑屏不是 HEVC 解不出**（推翻早期 HEVC 假设，别再往解码方向猜）。
+- **黑屏无声**：部分视频 `currentItem.tracks(video)` 为空（无视频轨，如图集/纯音频/无效媒体）→ player ready 但无画面。
+- **黑屏有声**：player 停在 `.idle`（`status=0`、`t=0.0`）→ URL 无效/过期/无权限，拿不到可播媒体。
 
 ### 5.3 根本困境
 **移动端 protobuf 没有 bit_rate 子消息、没有 is_h265 字段**（video-dump 实锤：field21=单 varint 码率）→ **无法在 parse 阶段预判坏视频**，只能在播放时实测。而"播放时跳过"用 `centeredIndex()` 反推会跳多页，用 `engine.next()` 又要防级联——反复横跳。
+
+### 5.4 v122 已做的缓解 + 残余
+- **黑屏有声（大幅减少）**：`resolveFreshURL` 播放时现取新鲜 URL（`rawVideos[index]` 现跑选链），不用预载过期静态 URL → `Cannot Open` 大幅减少。
+- **残余黑屏有声**：仍有部分 URL 现取后仍无效（无权限/CDN 节点抖动），待定位。
+- **黑屏无声**：无视频轨视频（`tracks(video)` 空）当前**不跳过**，会停在黑屏。**待办**：见 §8 双层检测方案。
 
 ## 6. 试过的方法（重点：哪些有效、哪些失败）
 
@@ -77,15 +85,22 @@
 6. **AVPlayer 原生解 HEVC**（myDV VideoPlayUrlResolver 证明）→ 黑屏非 HEVC，别再往解码方向猜。
 7. **`item` 变量遮蔽**：KVO 闭包内 `item` 易被外层 `enumerated()` 循环变量遮蔽，导致 `item.tracks` 编译错。用 `playerItem`/`observedItem` 等无歧义名。
 
-## 8. 黑屏问题的下一步建议（未验证，需决策）
+## 8. 黑屏问题的下一步建议（基于 v124 CODEC 诊断实锤，需决策）
 
-**推荐：播放时用 `currentItem.tracks(video)` 查视频轨 + 看门狗兜底（双层）**
-- `readyToPlay` 时用 **`currentItem.tracks(video)`**（不是之前误判的 `asset.tracks`）查视频轨，空则跳过 → 治"无视频轨"黑屏。
-- 看门狗（已有）兜底"有轨但时间不走"的黑屏 → 治"player 停 idle"。
-- **风险**：`currentItem.tracks` 也有异步时序，需实测确认在 readyToPlay 后已加载完（v119 用 asset.tracks 误判过）。
-- **先小范围验证**：加日志确认 `currentItem.tracks(video)` 在 readyToPlay 后是否稳定非空，再决定是否用它做跳过判据。
+**已排除的方向（别再重复）**：
+- ❌ HEVC 解不出（v124 CODEC 诊断：可播视频全是 `avc1`/H.264，无 hvc1）。
+- ❌ 图集/图文帖（黑屏 index 全是 `final chosen=true` 真视频，非图集）。
+- ❌ 解码器耗尽（v110 单解码器仍黑屏）。
+- ❌ CDN 域名（同一域名既 ok 又 FAIL）。
 
-**备选**：若双层仍不理想，考虑集成 libVLC 软解（能解 HEVC），但违背"原生 AVPlayer"铁律 + 包体积暴涨 + 滑动重做，需拍板。
+**剩余嫌疑（按可能性排序，均需实测确认）**：
+1. **无视频轨的视频未跳过**：v124 CODEC 诊断抓到 idx=31 `codec=no-video-track` 但仍 `MGR ready` → player ready 但没有可播视频轨 → 黑屏。**修法**：KVO ready 分支查 `currentItem.tracks(video)`，空则跳过（v122 底座已删此检测，需重新加回并用 `currentItem.tracks` 而非误判的 `asset.tracks`）。
+2. **URL 无权限/过期**：部分 URL `Cannot Open`/`no permission`（v122 已用现取新鲜 URL 大幅减少，但仍有残留）。
+3. **播放停滞**：有轨但时间不走（看门狗 `STALL` 能抓，已能跳过）。
+
+**推荐下一步**：先用 §8 第一条的 `currentItem.tracks(video)` 检测（在 v122 底座重新加回），实测黑屏是否减少。**这是当前最有实锤支撑的方向**（CODEC 诊断已证明黑屏视频存在无视频轨情况）。
+
+**备选**：若视频轨检测仍不理想，考虑集成 libVLC 软解（能解 HEVC），但违背"原生 AVPlayer"铁律 + 包体积暴涨 + 滑动重做，需拍板。
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。

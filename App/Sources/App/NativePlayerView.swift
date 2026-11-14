@@ -34,7 +34,10 @@ final class PlayerCell: UICollectionViewCell {
         contentView.addSubview(playerLayerView)
         contentView.addSubview(coverImageView)
         playerLayerView.playerLayer.videoGravity = .resizeAspect
+        // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
+        isUserInteractionEnabled = false
     }
+    override var canBecomeFocused: Bool { false }
     required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -68,7 +71,12 @@ final class PlayerManager {
     private var coversLoading = Set<Int>()
     /// player ready 变化回调（index）——供控制器刷新封面显隐
     var onPlayerReady: ((Int) -> Void)?
+    /// 无视频轨回调（index，已 0.6s 复查确认）——控制器决定是否跳过（仅居中会跳）
+    var onNoVideoTrack: ((Int) -> Void)?
     private var readyObservers: [Int: NSKeyValueObservation] = [:]
+    /// 静态直链保鲜期（秒）：douyinvod 直链 URL 内嵌时效签名，实测超龄后 Cannot Open → 黑屏。
+    /// 超过此年龄的静态直链改用 /aweme/v1/play 重定向端点（服务器现场 302 出新鲜直链）。
+    private let staleSeconds: TimeInterval = 90
 
     private init() {}
 
@@ -105,12 +113,38 @@ final class PlayerManager {
     }
 
     /// index 的封面兜底图（异步生成，未就绪返回 nil，生成完回调刷新）。
+    /// 静态直链过期时封面同样生成失败 → 用重定向直链重试一次（与播放选链同源逻辑，防封面黑屏）。
     func cover(at index: Int, completion: @escaping (UIImage?) -> Void) {
         if let img = covers[index] { completion(img); return }
         guard PlaybackEngine.shared.urls.indices.contains(index) else { completion(nil); return }
         if coversLoading.contains(index) { completion(nil); return }
         coversLoading.insert(index)
-        let url = PlaybackEngine.shared.urls[index]
+        let staticURL = PlaybackEngine.shared.urls[index]
+        let redirect = PlaybackEngine.shared.redirectURL(at: index)
+        let finish: (UIImage?) -> Void = { [weak self] img in
+            DispatchQueue.main.async {
+                self?.coversLoading.remove(index)
+                completion(img)
+            }
+        }
+        generateCover(url: staticURL) { [weak self] img in
+            if let img {
+                self?.covers[index] = img
+                finish(img)
+                return
+            }
+            guard let redirect else { finish(nil); return }
+            DYLog.shared.log("COVER retry redirect idx=\(index)")
+            DYLog.shared.count("cover_retry")
+            self?.generateCover(url: redirect) { img2 in
+                if let img2 { self?.covers[index] = img2 }
+                finish(img2)
+            }
+        }
+    }
+
+    /// 用单个 URL 生成封面帧（静态/重定向直链共用）。
+    private func generateCover(url: URL, completion: @escaping (UIImage?) -> Void) {
         var headers = ["User-Agent": DYFeedClient.mobileUA]
         if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
             headers["Cookie"] = cookie
@@ -119,65 +153,110 @@ final class PlayerManager {
         let gen = AVAssetImageGenerator(asset: asset)
         gen.appliesPreferredTrackTransform = true
         gen.maximumSize = CGSize(width: 1080, height: 1920)
-        gen.generateCGImagesAsynchronously(forTimes: [NSValue(time: CMTime.zero)]) { [weak self] _, cg, _, result, _ in
+        gen.generateCGImagesAsynchronously(forTimes: [NSValue(time: CMTime.zero)]) { _, cg, _, result, _ in
             DispatchQueue.main.async {
-                guard let self else { return }
-                self.coversLoading.remove(index)
                 guard result == .succeeded, let cg else { completion(nil); return }
-                let img = UIImage(cgImage: cg)
-                self.covers[index] = img
-                completion(img)
+                completion(UIImage(cgImage: cg))
             }
         }
     }
 
-    /// 新建 player 装载 index，挂 ready KVO（ready 时回调刷新封面显隐）。
-    private func acquire(index: Int) -> AVPlayer {
-        let url = PlaybackEngine.shared.urls[index]
+    /// 播放时选链（v128，照 myDV selectBestPlayUrl 优先级适配）：
+    /// 静态直链年龄 ≤ staleSeconds → 用静态（快启动、全清晰度）；
+    /// 超龄且备有重定向直链 → 用 /aweme/v1/play 重定向端点（URL 不带时效签名，
+    /// 服务器在请求瞬间 302 出新鲜 CDN 直链，AVPlayer 自动跟随）——真·现取新鲜。
+    /// ⚠️ v122 旧实现"用 rawVideos 重跑 pickHighestQuality"被日志证伪（381 次 fallback/0 次成功）：
+    /// bytes 里只有同一批静态链接，重解析永远选不出新 URL——新鲜只能靠重新网络请求。
+    private func resolveFreshURL(index: Int, forceRedirect: Bool) -> URL {
+        let engine = PlaybackEngine.shared
+        let age = engine.urlAge(at: index)
+        let staticURL = engine.urls.indices.contains(index) ? engine.urls[index] : nil
+        let redirect = engine.redirectURL(at: index)
+        if forceRedirect, let redirect {
+            DYLog.shared.log("MGR url idx=\(index) src=redirect forced")
+            DYLog.shared.count("url_redirect")
+            return redirect
+        }
+        if let staticURL, age <= staleSeconds {
+            DYLog.shared.log("MGR url idx=\(index) src=static age=\(Int(age))s")
+            DYLog.shared.count("url_static")
+            return staticURL
+        }
+        if let redirect {
+            DYLog.shared.log("MGR url idx=\(index) src=redirect age=\(Int(age))s stale")
+            DYLog.shared.count("url_redirect")
+            return redirect
+        }
+        // 无重定向可用（理论少见）：陈旧静态也是唯一选择
+        DYLog.shared.log("MGR url idx=\(index) src=static-stale-no-redirect age=\(Int(age))s")
+        DYLog.shared.count("url_static_stale")
+        if let staticURL { return staticURL }
+        return redirect ?? engine.urls.first ?? URL(fileURLWithPath: "/dev/null")
+    }
+
+    /// 新建 player 装载 index，挂 status KVO：
+    /// ready → onPlayerReady 刷新封面显隐 + 视频轨检测（空则 0.6s 复查后判黑屏无声）；
+    /// failed → 只记日志不自动跳（v121 教训：自动跳会跳多页），交给看门狗统一处理。
+    private func acquire(index: Int, forceRedirect: Bool = false) -> AVPlayer {
+        let url = resolveFreshURL(index: index, forceRedirect: forceRedirect)
         var headers = ["User-Agent": DYFeedClient.mobileUA]
         if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
             headers["Cookie"] = cookie
         }
         let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
-        let item = AVPlayerItem(asset: asset)
-        item.preferredForwardBufferDuration = 8
+        let playerItem = AVPlayerItem(asset: asset)
+        playerItem.preferredForwardBufferDuration = 8
         let p = AVPlayer()
-        p.replaceCurrentItem(with: item)
+        p.replaceCurrentItem(with: playerItem)
         players[index] = p
         readyObservers[index]?.invalidate()
-        readyObservers[index] = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-            // ready → 回调刷新封面；failed(Cannot Open，如 HEVC 解不出) → 预处理无感跳过
-            guard it.status == .readyToPlay || it.status == .failed else { return }
-            let failed = (it.status == .failed)
+        readyObservers[index] = playerItem.observe(\.status, options: [.new]) { [weak self] observedItem, _ in
+            if observedItem.status == .failed {
+                let err = observedItem.error?.localizedDescription ?? "?"
+                DispatchQueue.main.async {
+                    DYLog.shared.event("MGR itemErr idx=\(index) err=\(err)")
+                    DYLog.shared.count("itemErr")
+                }
+                return
+            }
+            guard observedItem.status == .readyToPlay else { return }
             DispatchQueue.main.async {
-                if failed {
-                    DYLog.shared.log("MGR failed idx=\(index) err=\(it.error?.localizedDescription ?? "?") -> skip")
-                    self?.skipFailed(index: index)
-                } else {
-                    self?.onPlayerReady?(index)
-                    DYLog.shared.log("MGR ready idx=\(index)")
+                self?.onPlayerReady?(index)
+                DYLog.shared.log("MGR ready idx=\(index)")
+                DYLog.shared.count("ready")
+            }
+            // 黑屏无声检测：ready 但无视频轨（图集/纯音频/无效媒体；v124 实锤 idx=31 codec=no-video-track）。
+            // 0.6s 后复查一次防异步误杀（v119 教训：ready 瞬间轨可能未加载完）。
+            // identity 守卫：该 index 已被驱逐/重建（currentItem 换了）则不判，防旧 item 延迟回调误伤。
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+                guard let self else { return }
+                guard observedItem.status == .readyToPlay,
+                      self.players[index]?.currentItem === observedItem else { return }
+                if observedItem.tracks(withMediaType: .video).isEmpty {
+                    DYLog.shared.event("MGR novideo idx=\(index) (double-checked)")
+                    DYLog.shared.count("novideo")
+                    self.onNoVideoTrack?(index)
                 }
             }
         }
         DYLog.shared.log("MGR acquire idx=\(index) total=\(players.count)")
+        DYLog.shared.count("acquire")
         return p
     }
 
-    /// 预处理无感跳过：index 的视频打不开(Cannot Open，如 HEVC 解不出)时，驱逐它并回调跳过。
-    /// 无条件回调，由控制器判断"失败的是否当前居中"再 advance（manager 不持有 currentIndex）。
-    func skipFailed(index: Int) {
+    /// 看门狗修复动作：就地换源——驱逐旧 player，强制走重定向直链现取新鲜 URL 重建。
+    /// 照 myDV onPlayerError「先重试一次 prepare 再跳过」的思路，把"跳过"降级为兜底。
+    func rebuildWithRedirect(index: Int) {
         if let p = players[index] {
             p.pause()
             p.replaceCurrentItem(with: nil)
-            readyObservers[index]?.invalidate()
-            readyObservers.removeValue(forKey: index)
-            players.removeValue(forKey: index)
         }
-        onSkipFailed?(index)
+        readyObservers[index]?.invalidate()
+        readyObservers.removeValue(forKey: index)
+        players.removeValue(forKey: index)
+        DYLog.shared.log("MGR rebuild idx=\(index) (redirect)")
+        _ = acquire(index: index, forceRedirect: true)
     }
-
-    /// 失败跳过回调（index）——控制器接到后 advance 到下一个。
-    var onSkipFailed: ((Int) -> Void)?
 }
 
 /// 原生播放器：UICollectionView 垂直分页 + PlayerManager 上限 3 池。
@@ -216,12 +295,11 @@ final class DYPlayerViewController: UIViewController {
         PlayerManager.shared.onPlayerReady = { [weak self] idx in
             self?.refreshCoverForVisible()
         }
-        // player 打不开(Cannot Open/HEVC) → 预处理无感跳过：仅当失败的是当前居中才 advance（邻位预载失败不跳）
-        PlayerManager.shared.onSkipFailed = { [weak self] idx in
-            guard idx == self?.currentIndex else { return }
-            DYLog.shared.log("FEEDCOLL skip failed idx=\(idx) -> advance")
-            self?.advance()
+        // 无视频轨（已 0.6s 复查确认）→ 统一跳过入口（护栏内：仅居中才跳）
+        PlayerManager.shared.onNoVideoTrack = { [weak self] idx in
+            self?.skipIfCentered(idx, reason: "novideo")
         }
+        startWatchdog()
     }
 
     override func viewDidLayoutSubviews() {
@@ -304,6 +382,11 @@ final class DYPlayerViewController: UIViewController {
         // 核心：让 PlayerManager 只保留 [idx-1, idx+1] 三个 player，超范围驱逐回收解码器
         PlayerManager.shared.prepare(center: clampedIndex)
         DYLog.shared.log("FEEDCOLL scrollTo idx=\(clampedIndex) y=\(targetY) items=\(count)")
+        DYLog.shared.count("scroll")
+        // 看门狗状态复位：新 center 重新观察（修复标记/宽限期/计数全清）
+        repairedFor = nil
+        graceUntil = .distantPast
+        resetWatchCounters()
         // 滚动到位刷新播放态 + 封面显隐
         DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
             self?.updatePlaybackStates(center: clampedIndex)
@@ -366,6 +449,139 @@ final class DYPlayerViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
+    // MARK: - 看门狗（v128 统一三层检测：idle 一直不 ready / stall 时间停滞 / black 有播放无首帧）
+    // 动作阶梯：先 repair（换重定向直链就地重建，照 myDV onPlayerError 先重试）→ 仍异常才 skip。
+    // 护栏：只监控居中（index==engine.index）；连续自动跳 ≥3 停手等用户；绝不用 centeredIndex 反推。
+
+    /// 修复后缓冲宽限期（秒）：新 player 需要重新装载，期间只观察不动作
+    private let watchGraceSeconds: TimeInterval = 6
+    private let watchIdleTicks = 4     // status 非 ready 连续 4s → idle（URL 打不开/无权限）
+    private let watchStallTicks = 3    // ready+非暂停但时间停滞连续 3s → stall（有轨但解不出）
+    private let watchBlackTicks = 2    // ready+时间在走但无首帧连续 2s → black（黑屏有声，v123 停滞看门狗的盲区）
+    private var idleTicks = 0
+    private var stallTicks = 0
+    private var blackTicks = 0
+    private var lastWatchTime: Double = -1
+    private var repairedFor: Int? = nil
+    private var graceUntil = Date.distantPast
+    private var autoSkipStreak = 0     // 连续自动跳计数（手动按键/播放恢复健康时清零）
+    private var autoSkipDisabled = false
+
+    private func startWatchdog() {
+        let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in self?.watchTick() }
+        RunLoop.main.add(t, forMode: .common)
+    }
+
+    /// 看门狗心跳（1s）。三层检测对应三类黑屏：
+    /// idle=URL 无效（黑屏无声/停封面）；stall=有轨但时间不走（黑屏无声）；
+    /// black=音频在走时间在走但首帧渲染不出（黑屏有声——v123 停滞看门狗永远抓不到的盲区）。
+    private func watchTick() {
+        guard isViewLoaded, view.window != nil, !PlaybackEngine.shared.urls.isEmpty else { return }
+        let idx = currentIndex
+        let engine = PlaybackEngine.shared
+        guard idx == engine.index else { return }   // 护栏：引擎索引为唯一真相源
+        guard let p = PlayerManager.shared.player(at: idx), let item = p.currentItem else { resetWatchCounters(); return }
+        // 首帧信号：居中 cell 的 playerLayer.isReadyForDisplay（myDV onRenderedFirstFrame 的 AVPlayer 等价信号）
+        let rfd: Bool
+        if let cell = collectionView.cellForItem(at: IndexPath(item: idx, section: 0)) as? PlayerCell {
+            rfd = cell.playerLayerView.playerLayer.isReadyForDisplay
+        } else {
+            rfd = false
+        }
+        let t = item.currentTime()
+        let tSec = t.seconds.isFinite ? t.seconds : 0
+        if lastWatchTime < 0 {
+            lastWatchTime = tSec   // 首跳只采样不判断
+            return
+        }
+        let advanced = tSec > lastWatchTime + 0.05
+        lastWatchTime = tSec
+        // 健康恢复：首帧已渲染且时间在走 → 清看门狗/自动跳状态
+        if rfd && advanced {
+            onPlayHealthy()
+            return
+        }
+        // 修复后宽限期：只观察不动作（重建的 player 需要重新装载缓冲）
+        if Date() < graceUntil { return }
+        // 三层检测
+        var reason: String? = nil
+        if item.status != .readyToPlay {
+            idleTicks += 1; stallTicks = 0; blackTicks = 0
+            if idleTicks >= watchIdleTicks { reason = item.status == .failed ? "idle-failed" : "idle" }
+        } else if p.timeControlStatus != .paused && !advanced {
+            stallTicks += 1; idleTicks = 0; blackTicks = 0
+            if stallTicks >= watchStallTicks { reason = "stall" }
+        } else if p.timeControlStatus != .paused && advanced && !rfd {
+            blackTicks += 1; idleTicks = 0; stallTicks = 0
+            if blackTicks >= watchBlackTicks { reason = "black" }
+        } else {
+            resetWatchCounters()
+        }
+        guard let r = reason else { return }
+        actOnWatch(index: idx, reason: r)
+    }
+
+    /// 检测命中 → 修复一次；修复后仍命中 → 跳过。
+    private func actOnWatch(index: Int, reason: String) {
+        if repairedFor != index {
+            repairedFor = index
+            DYLog.shared.event("WATCH repair idx=\(index) reason=\(reason)")
+            DYLog.shared.count("repair")
+            PlayerManager.shared.rebuildWithRedirect(index: index)
+            updatePlaybackStates(center: index)
+            graceUntil = Date().addingTimeInterval(watchGraceSeconds)
+            resetWatchCounters()
+            return
+        }
+        skipIfCentered(index, reason: reason)
+    }
+
+    /// 播放恢复健康（首帧渲染 + 时间前进）：清连续自动跳/看门狗状态。
+    private func onPlayHealthy() {
+        if autoSkipStreak > 0 || autoSkipDisabled {
+            DYLog.shared.log("WATCH healthy idx=\(currentIndex) auto-skip streak reset")
+        }
+        autoSkipStreak = 0
+        autoSkipDisabled = false
+        repairedFor = nil
+        resetWatchCounters()
+    }
+
+    private func resetWatchCounters() {
+        idleTicks = 0
+        stallTicks = 0
+        blackTicks = 0
+        lastWatchTime = -1
+    }
+
+    /// 统一跳过入口（看门狗/无轨检测共用）。护栏（v111/v112 血泪教训）：
+    /// 1) 只跳居中（index==engine.index，非居中/中途反推会跳多页）；
+    /// 2) 连续自动跳 ≥3 停手（防级联跳穿），等用户手动按键复位；
+    /// 3) 跳过 = engine.next() + 显式 scrollTo 目标，绝不用 centeredIndex 反推。
+    private func skipIfCentered(_ index: Int, reason: String) {
+        let engine = PlaybackEngine.shared
+        guard index == engine.index else {
+            DYLog.shared.log("WATCH skip-guard idx=\(index) != engine=\(engine.index) (non-center)")
+            return
+        }
+        if autoSkipDisabled {
+            DYLog.shared.log("WATCH skip-disabled idx=\(index) (wait user key)")
+            return
+        }
+        guard autoSkipStreak < 3 else {
+            autoSkipDisabled = true
+            DYLog.shared.event("WATCH cascade-stop idx=\(index) streak=3 (auto-skip disabled)")
+            return
+        }
+        autoSkipStreak += 1
+        DYLog.shared.event("WATCH skip idx=\(index) reason=\(reason) streak=\(autoSkipStreak)")
+        DYLog.shared.count("autoskip")
+        resetWatchCounters()
+        repairedFor = nil
+        engine.next()
+        scrollTo(index: engine.index, animated: true)
+    }
+
     private func advance() {
         scrollTo(index: centeredIndex() + 1, animated: true)
     }
@@ -386,6 +602,9 @@ final class DYPlayerViewController: UIViewController {
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        // 手动按键：复位自动跳护栏（连续跳停手后按任意键恢复）
+        autoSkipStreak = 0
+        autoSkipDisabled = false
         for press in presses {
             switch press.type {
             case .downArrow: advance(); return

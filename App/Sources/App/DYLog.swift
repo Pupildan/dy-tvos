@@ -13,6 +13,11 @@ final class DYLog: NSObject {
     private var service: NetService?
     private var lines: [String] = []
     private let maxLines = 500
+    /// 事件计数器(key→次数)——/stat 一屏看全,快速定位问题在哪个环节(ready/novideo/stall/repair/skip/...)
+    private var counters: [String: Int] = [:]
+    /// 诊断事件环(最近 40 条)——/stat 直接给关键事件时间线,免 grep 500 行
+    private var events: [String] = []
+    private let maxEvents = 40
 
     // 出站推送：ATV 主动连开发机收集器（出站稳，绕开入站监听/ATS 限制）
     static let collectorHost = "192.168.10.122"
@@ -34,6 +39,22 @@ final class DYLog: NSObject {
             self.push(line)
         }
         NSLog("%@", line) // 兜底进系统日志
+    }
+
+    /// 计数器 +1（任意 key，/stat 汇总输出）。用于各环节量级监控：成功率、跳过次数等。
+    func count(_ key: String, by increment: Int = 1) {
+        queue.async { self.counters[key, default: 0] += increment }
+    }
+
+    /// 诊断事件：进常规日志（推送开发机）+ 进 /stat 事件环。
+    /// 用于坏视频/看门狗动作/换源等关键节点——真机出问题时 `curl http://<ATV-IP>:8765/stat` 一次看全。
+    func event(_ msg: String) {
+        let stamp = "[\(Self.ts())] \(msg)"
+        queue.async {
+            self.events.append(stamp)
+            if self.events.count > self.maxEvents { self.events.removeFirst(self.events.count - self.maxEvents) }
+        }
+        log(msg)
     }
 
     /// 推送就绪时回灌缓冲历史（连接建立前的日志不再丢失——SIGNER 早期行可见）。
@@ -101,14 +122,22 @@ final class DYLog: NSObject {
         }
     }
 
-    /// 极小统计（/stat 专用，始终可读）：总行数 + 含视频直链标记的行数 + 最近一条直链。
+    /// /stat 诊断总览：版本 + 计数器全量 + 最近诊断事件环 + 最近直链。
+    /// 真机排障一次 curl 看全：哪个环节失败（novideo/stall/repair/skip 计数）+ 时间线。
     private func stats() -> String {
         queue.sync {
-            let total = lines.count
+            var out: [String] = []
+            out.append("version=\(DYBuild.version)")
+            out.append("total_lines=\(lines.count)")
+            let pairs = counters.sorted { $0.key < $1.key }.map { "\($0.key)=\($0.value)" }
+            out.append("counters: " + (pairs.isEmpty ? "(none)" : pairs.joined(separator: " ")))
+            out.append("--- recent diag events (\(events.count)) ---")
+            out.append(contentsOf: events.suffix(15))
             let videoLines = lines.filter { $0.contains(".mp4") || $0.contains(".m3u8") || $0.contains("douyinvod") }
             let lastVideo = videoLines.last ?? "(none)"
             let trimmedLast = lastVideo.count > 200 ? String(lastVideo.prefix(200)) + "…" : lastVideo
-            return "total_lines=\(total)\nvideo_link_lines=\(videoLines.count)\nlast_video=\(trimmedLast)"
+            out.append("last_video=\(trimmedLast)")
+            return out.joined(separator: "\n")
         }
     }
 
