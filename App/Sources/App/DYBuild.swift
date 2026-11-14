@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v135"
-    static let changes = "v135: 设置面板上线——Menu呼出(第二次按=退出应用);屏幕左侧悬浮iOS26液态玻璃(tvOS26 glassEffect,低版本ultraThinMaterial回退);五项:移动端推荐(现源)/抖音精选(web tab/feed b0配方+webCommon,开发机探针已验证status0分页正常)/弹幕设置(开关)/直播+登录(占位);双源架构:engine.reset+PlayerManager按源选请求头(web=ChromeUA+Referer+ttwid)"
+    static let version = "v136"
+    static let changes = "v136: ①源切换真机验收通过(web ready x10/itemErr 0,18分钟长视频弹幕652条);②面板3s无操作自动隐藏(焦点移动/按键刷新计时);③弹幕区域回退v133行为(删v134 aspectFit内切,有bug待后修);④面板焦点样式:去灰底→焦点行白色描边+1.05缩放弹簧动画(@FocusState)"
 }

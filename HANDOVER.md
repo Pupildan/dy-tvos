@@ -177,6 +177,15 @@
 - **验收**：真机弹幕显示 + `DANM ok items=N` 日志 + 滚屏流畅度（DanmakuKit Core Animation 驱动）。
 - 后续可选：弹幕开关 UI（enabled 属性已预留）、按 user_id 过滤、密度限制。
 
+## 17. v135 设置面板 + 双视频源（2026-11-14 用户规格，CI 过待真机验收）
+
+- **Menu 状态机**：面板关闭按 Menu → 呼出设置面板（DYPlayerViewController.pressesBegan 拦截 .menu）；面板显示中按 Menu → 退出应用（焦点在面板内走面板 `.onExitCommand` → `exit(0)`，sideload 可用）。
+- **面板 UI**：屏幕左侧悬浮 SwiftUI；tvOS 26 原生 **Liquid Glass**（`.glassEffect(.regular.tint(.black.opacity(0.35)))`，Xcode 26.6 SDK 编译实锤存在；低版本 ultraThinMaterial 回退）。五项：移动端推荐 / 抖音精选 / 弹幕设置（开关，UserDefaults dy_danmaku_on + DanmakuOverlay.globalEnabled）/ 直播（占位）/ 登录（占位）。
+- **抖音精选（web 源）**：GET `https://www.douyin.com/aweme/v1/web/tab/feed/`，b0 配方 u11.java:2701 参数原样 + webCommon（danmaku 探针实锤必需）+ web 签名 + ttwid cookie；**开发机探针（_tmp/webfeed_probe.js）已验证**：status_code=0、refresh_index 分页正常、JSON 含 play_addr/play_addr_265/bit_rate(8-24档) 全量数据；播放链复用 selectBestPlayUrl；播放请求头按源切换（PlayerManager.playbackHeaders：web=Chrome UA+Referer+ttwid）。
+- **架构**：`DYFeedSource` 枚举 + `PlaybackEngine.reset()`（源切换清空）+ `DYFeedClient.setSource()`（重置分页状态）+ reloadIfNeeded 空态重置；源切换后池清空 → 冷启动收敛自动生效。
+- **CI 踩坑**：ensureTTWID 私有重名 → 改 ensureTTWIDInternal。产物 output/DYTV-tvos-unsigned-v135.ipa。
+- **真机验收**：Menu 呼出面板/再按退出；源切换到抖音精选后视频正常播放（web 直链 AVPlayer 播放是本版唯一未实测点——HEAD 403 是测试方法问题，真机 GET+带头待验）；弹幕开关即时生效。
+
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 
 - ①去白底：根因 = DanmakuAsyncLayer 在 layer isOpaque==true 时主动填白（UIColor.white）；修 = DanmakuTextCell `required init(frame:)`（官方 example 同款写法）+ backgroundColor=.clear + isOpaque=false + layer.isOpaque=false。
