@@ -69,7 +69,11 @@ final class DanmakuOverlay: UIView {
     private var loadedAwemeId = ""
     private var fetchRequested = false
     private var timer: Timer?
-    /// 弹幕总开关（v132 默认开；UI 开关待美化阶段统一做）
+    /// 弹幕总开关（v132 默认开；v135 起由设置面板「弹幕设置」统一控制）
+    static var globalEnabled = UserDefaults.standard.object(forKey: "dy_danmaku_on") == nil
+        ? true
+        : UserDefaults.standard.bool(forKey: "dy_danmaku_on")
+    /// 单 overlay 开关（预留）
     var enabled = true
 
     var currentAwemeId: String { loadedAwemeId }
@@ -167,7 +171,7 @@ final class DanmakuOverlay: UIView {
 
     /// 发射器：按播放时钟把到点的弹幕 shoot 出去（shoot 要求 danmakuView 处于 .play）。
     private func tick() {
-        guard enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
+        guard Self.globalEnabled, enabled, !items.isEmpty, danmakuView.status == .play, player?.timeControlStatus == .playing else { return }
         guard shotIndex < items.count else { return }
         let t = (player?.currentTime().seconds ?? 0) * 1000
         while shotIndex < items.count, items[shotIndex].offsetTime <= t {

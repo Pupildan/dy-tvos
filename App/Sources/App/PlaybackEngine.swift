@@ -1,13 +1,22 @@
 import Foundation
 import Combine
 
+/// 视频源（v135 设置面板切换）：mobile=移动端推荐(aweme.snssdk.com protobuf)；web=抖音精选(www.douyin.com tab/feed JSON)
+enum DYFeedSource: String {
+    case mobile
+    case web
+}
+
 /// 原生播放引擎：持有有序视频直链 + 当前索引，驱动 AVPlayer。
-/// 数据源：DYFeedClient（myDV 移动端 /aweme/v2/feed/ 直连）解析 aweme_list 后 merge 进来。
+/// 数据源：DYFeedClient（mobile=myDV 移动端 /aweme/v2/feed/ protobuf 直连；v135 web=抖音精选 /aweme/v1/web/tab/feed/ JSON）
 /// 无限刷：接近末尾自动回调 onNeedMore 让 DYFeedClient 翻页（refresh_index 递增）；
 ///         整批过期/连续失败回调 onRefresh 重拉当前页。回调由 DYTVApp 接线，不经任何 WebView。
 /// 焦点意图：本类无 UI；上/下键切 prev/next 在 DYPlayerViewController 处理。
 final class PlaybackEngine: ObservableObject {
     static let shared = PlaybackEngine()
+
+    /// 当前视频源（PlayerManager 按 source 选播放请求头：mobile UA/Cookie vs web UA/Referer/ttwid）
+    var source: DYFeedSource = .mobile
 
     @Published var urls: [URL] = []
     @Published var index: Int = 0
@@ -45,6 +54,21 @@ final class PlaybackEngine: ObservableObject {
     }
 
     var count: Int { urls.count }
+
+    /// 源切换时清空全部状态（urls 空 → 控制器 reloadIfNeeded 走空态重置；旧 player 由下次 prepare 驱逐）
+    func reset() {
+        urls = []
+        index = 0
+        rawVideos = [:]
+        redirectUrls = [:]
+        mintedAt = [:]
+        durations = [:]
+        awemeOrder = []
+        currentAwemeId = ""
+        fetchedAt = .distantPast
+        consecutiveFailures = 0
+        DYLog.shared.log("ENGINE reset (source switch)")
+    }
 
     /// 取 index 的原始 video 子消息 bytes。
     func rawVideo(at index: Int) -> [UInt8]? {

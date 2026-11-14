@@ -210,6 +210,23 @@ final class PlayerManager {
         }
     }
 
+    /// 播放请求头按源切换（v135）：mobile=移动端 UA/Cookie；web=Chrome UA+Referer+ttwid（web CDN 需要）
+    private func playbackHeaders() -> [String: String] {
+        var headers: [String: String] = [:]
+        if PlaybackEngine.shared.source == .web {
+            headers["User-Agent"] = DYDanmakuClient.webUA
+            headers["Referer"] = "https://www.douyin.com/"
+            let ttwid = DYDanmakuClient.shared.ttwidValue
+            if !ttwid.isEmpty { headers["Cookie"] = "ttwid=\(ttwid)" }
+        } else {
+            headers["User-Agent"] = DYFeedClient.mobileUA
+            if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
+                headers["Cookie"] = cookie
+            }
+        }
+        return headers
+    }
+
     /// 播放时选链（v128，照 myDV selectBestPlayUrl 优先级适配）：
     /// 静态直链年龄 ≤ staleSeconds → 用静态（快启动、全清晰度）；
     /// 超龄且备有重定向直链 → 用 /aweme/v1/play 重定向端点（URL 不带时效签名，
@@ -248,11 +265,7 @@ final class PlayerManager {
     /// failed → 只记日志不自动跳（v121 教训：自动跳会跳多页），交给看门狗统一处理。
     private func acquire(index: Int, forceRedirect: Bool = false) -> AVPlayer {
         let url = resolveFreshURL(index: index, forceRedirect: forceRedirect)
-        var headers = ["User-Agent": DYFeedClient.mobileUA]
-        if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
-            headers["Cookie"] = cookie
-        }
-        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
+        let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": playbackHeaders()])
         let playerItem = AVPlayerItem(asset: asset)
         playerItem.preferredForwardBufferDuration = 8
         let p = AVPlayer()
@@ -375,7 +388,15 @@ final class DYPlayerViewController: UIViewController {
 
     private func reloadIfNeeded() {
         let newCount = PlaybackEngine.shared.urls.count
-        guard newCount > 0 else { return }
+        guard newCount > 0 else {
+            // 空态（v135 源切换后引擎 reset）：视图整体重置，等新源首批
+            if lastKnownCount != 0 {
+                lastKnownCount = 0
+                collectionView.reloadData()
+                DYLog.shared.log("FEEDCOLL reset view (source switch)")
+            }
+            return
+        }
         let oldCount = lastKnownCount
         if oldCount == 0 {
             // 首批：全量建池（一次性）
@@ -689,6 +710,14 @@ final class DYPlayerViewController: UIViewController {
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
             case .playPause: togglePlayPause(); return
+            case .menu:
+                // Menu 状态机（v135）：面板关闭 → 呼出设置面板；面板显示中 → 放行系统默认（退出应用）。
+                // 显示中时焦点在面板内，本方法收不到按键（面板 onExitCommand 负责退出）——此处只处理关闭态。
+                if !DYSettingsModel.shared.isOpen {
+                    DYSettingsModel.shared.openPanel()
+                    return
+                }
+                break
             default: break
             }
         }

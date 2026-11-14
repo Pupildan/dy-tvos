@@ -65,6 +65,18 @@ final class DYDanmakuClient {
         }
     }
 
+    /// 当前 ttwid（web 源播放请求头/设置面板复用；可能为空串）。
+    var ttwidValue: String {
+        queue.sync { ttwid }
+    }
+
+    /// 确保 ttwid 已注册（web 源切换前调用；幂等，完成即回调）。
+    func ensureTTWID(_ done: @escaping () -> Void) {
+        queue.async { [weak self] in
+            self?.ensureTTWID { done() }
+        }
+    }
+
     // MARK: - ttwid 匿名注册（照抄 u11.A 原文：POST ttwid.bytedance.com/ttwid/union/register/）
 
     private func ensureTTWID(_ done: @escaping () -> Void) {

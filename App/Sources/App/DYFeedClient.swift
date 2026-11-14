@@ -18,6 +18,13 @@ final class DYFeedClient {
     private var signerReady = false
     private var booted = false
 
+    // MARK: - 视频源（v135 设置面板切换：mobile=移动端推荐；web=抖音精选/PC端）
+
+    /// 当前视频源（源切换时重置分页状态 + 引擎清空 + 立即拉新源首页）
+    private(set) var source: DYFeedSource = .mobile
+    /// web 源分页游标（refresh_index 递增，b0 配方）
+    private var webRefreshIndex = 1
+
     /// 分页游标：refresh_index 每页递增（首页 1）
     private var refreshIndex = 1
     /// 首批 cold_start=1，之后 0
@@ -56,8 +63,30 @@ final class DYFeedClient {
 
     // MARK: - 翻页
 
-    /// 拉一页移动端推荐。cookie 可选（有登录态则带，无则靠 device_id 刷）。
+    /// 拉一页当前源的推荐（移动端=protobuf；web=抖音精选 JSON）。
     func fetchPage() {
+        switch source {
+        case .mobile: fetchMobilePage()
+        case .web: fetchWebPage()
+        }
+    }
+
+    /// 源切换（设置面板）：重置分页 + 引擎清空 + 立即拉新源首页。
+    func setSource(_ s: DYFeedSource) {
+        guard s != source else { return }
+        DYLog.shared.event("FEED source switch \(source) -> \(s)")
+        source = s
+        refreshIndex = 1
+        isFirstPage = true
+        consumedIds = []
+        webRefreshIndex = 1
+        PlaybackEngine.shared.source = s
+        PlaybackEngine.shared.reset()
+        fetchPage()
+    }
+
+    /// 拉一页移动端推荐。cookie 可选（有登录态则带，无则靠 device_id 刷）。
+    private func fetchMobilePage() {
         let coldStart = isFirstPage
         let count = 10
 
@@ -130,6 +159,149 @@ final class DYFeedClient {
             }
             self.parse(data: data, refreshIndex: usedIndex, http: http)
         }.resume()
+    }
+
+    /// 拉一页抖音精选（web tab/feed）。b0 配方照抄 u11.java:2701（参数原样）+
+    /// webCommon（v133 danmaku 探针实锤：www.douyin.com web API 缺 aid=6383 等一律"AppId不合法"）+
+    /// web 签名 getABogus(webUA) + ttwid cookie（u11.A 匿名注册）。
+    /// 开发机探针已验证：status_code=0、分页正常、play_addr.url_list 含 douyinvod 直链。
+    private func fetchWebPage() {
+        let usedIndex = webRefreshIndex
+        let pullType = usedIndex == 1 ? 1 : 0
+        let gids = consumedIds.suffix(10).joined(separator: ",")
+        let cold = isFirstPage
+        let raw = cold
+            ? "{\"is_client\":false,\"ff_danmaku_status\":1,\"danmaku_switch_status\":0,\"is_dash_user\":1,\"related_recommend\":1,\"is_xigua_user\":0}"
+            : "{\"videoPrefer\":{\"fsn\":[],\"like\":[],\"halfMin\":[\(gids)],\"min\":[\(gids)]},\"seo_info\":\"\",\"is_client\":false,\"ff_danmaku_status\":1,\"danmaku_switch_status\":1,\"is_dash_user\":1,\"is_auto_play\":0,\"is_full_screen\":0,\"is_full_webscreen\":0,\"is_mute\":0,\"is_speed\":1,\"is_visible\":1,\"related_recommend\":1,\"is_xigua_user\":0}"
+        var p: [(String, String)] = [
+            ("device_platform", "webapp"),
+            ("aid", "6383"),
+            ("channel", "channel_pc_web"),
+            ("cookie_enabled", "true"),
+            ("browser_language", "zh-CN"),
+            ("browser_platform", "Win32"),
+            ("browser_name", "Chrome"),
+            ("browser_version", "147.0.0.0"),
+            ("filterGids", gids),
+            ("tag_id", ""),
+            ("share_aweme_id", ""),
+            ("live_insert_type", ""),
+            ("count", "10"),
+            ("refresh_index", String(usedIndex)),
+            ("video_type_select", "1"),
+            ("aweme_pc_rec_raw_data", raw),
+            ("pull_type", String(pullType)),
+            ("min_window", "0"),
+            ("free_right", "0"),
+            ("view_count", "0"),
+            ("plug_block", "0"),
+            ("ug_source", ""),
+            ("creative_id", ""),
+            ("pc_libra_divert", "Windows"),
+            ("support_h265", "1"),
+            ("support_dash", "1"),
+            ("webcast_sdk_version", "170400"),
+            ("webcast_version_code", "170400"),
+            ("screen_width", "2560"),
+            ("screen_height", "1440"),
+            ("cpu_core_num", "24"),
+            ("device_memory", "8"),
+            ("timestamp", String(Int(Date().timeIntervalSince1970))),
+            ("msToken", msToken()),
+        ]
+        let query = p.map { "\($0.0)=\($0.1)" }.joined(separator: "&")
+        guard let sr = DYSigner.shared.sign(query: query, data: "", path: "/aweme/v1/web/tab/feed/", ua: DYDanmakuClient.webUA) else {
+            DYLog.shared.log("FEED web sign fail (refresh_index=\(usedIndex))")
+            PlaybackEngine.shared.reportFailure()
+            return
+        }
+        var finalQuery = query
+        if !sr.value.isEmpty { finalQuery += "&a_bogus=\(sr.value)" }
+        guard let url = URL(string: "https://www.douyin.com/aweme/v1/web/tab/feed/?\(finalQuery)") else {
+            DYLog.shared.log("FEED web URL parse fail")
+            return
+        }
+        var req = URLRequest(url: url)
+        req.timeoutInterval = 15
+        req.setValue(DYDanmakuClient.webUA, forHTTPHeaderField: "User-Agent")
+        req.setValue("*/*", forHTTPHeaderField: "Accept")
+        req.setValue("zh-CN,zh;q=0.9", forHTTPHeaderField: "Accept-Language")
+        req.setValue("https://www.douyin.com/", forHTTPHeaderField: "Referer")
+        let ttwid = DYDanmakuClient.shared.ttwidValue
+        if !ttwid.isEmpty { req.setValue("ttwid=\(ttwid)", forHTTPHeaderField: "Cookie") }
+
+        webRefreshIndex += 1
+        isFirstPage = false
+        DYLog.shared.log("FEED web GET refresh_index=\(usedIndex) cold=\(cold ? 1 : 0) bogus_len=\(sr.value.count) ttwid=\(ttwid.isEmpty ? 0 : ttwid.count)")
+
+        DYLog.shared.count("feed_page")
+        session.dataTask(with: req) { [weak self] data, resp, err in
+            guard let self else { return }
+            if let err { DYLog.shared.event("FEED web http err: \(err.localizedDescription)"); DYLog.shared.count("feed_http_err"); return }
+            guard let http = resp as? HTTPURLResponse else { return }
+            guard let data, !data.isEmpty else {
+                DYLog.shared.log("FEED web empty body (refresh_index=\(usedIndex) http=\(http.statusCode))")
+                return
+            }
+            self.parseWeb(data: data, refreshIndex: usedIndex, http: http)
+        }.resume()
+    }
+
+    /// 解析 web tab/feed JSON（{status_code, aweme_list:[{aweme_id, desc, video:{play_addr, play_addr_265, download_addr, duration, bit_rate}, images, ...}], has_more}）。
+    /// 过滤：图集(images 非空)、无 play_addr 直链的条目。播放链复用 selectBestPlayUrl 四级优先级（web url_list 同样适配）。
+    private func parseWeb(data: Data, refreshIndex: Int, http: HTTPURLResponse) {
+        guard let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else {
+            DYLog.shared.log("FEED web json parse fail (refresh_index=\(refreshIndex) bytes=\(data.count))")
+            PlaybackEngine.shared.reportFailure()
+            return
+        }
+        let statusCode = obj["status_code"] as? Int ?? -1
+        guard statusCode == 0 else {
+            DYLog.shared.event("FEED web status_code=\(statusCode) msg=\(obj["status_msg"] as? String ?? "?")")
+            PlaybackEngine.shared.reportFailure()
+            return
+        }
+        let list = obj["aweme_list"] as? [[String: Any]] ?? []
+        var ids: [String] = []
+        var urls: [URL] = []
+        var durations: [Int] = []
+        var filtered = 0
+        for a in list {
+            guard let id = a["aweme_id"] as? String, !id.isEmpty else { DYLog.shared.count("web_parse_id_nil"); continue }
+            if let imgs = a["images"] as? [[String: Any]], !imgs.isEmpty {
+                DYLog.shared.count("filter_type")
+                filtered += 1
+                continue   // 图集帖
+            }
+            guard let video = a["video"] as? [String: Any] else { DYLog.shared.count("web_parse_video_nil"); filtered += 1; continue }
+            var candidates: [String] = []
+            if let pa = video["play_addr"] as? [String: Any], let ul = pa["url_list"] as? [String] { candidates = ul }
+            if candidates.isEmpty, let p265 = video["play_addr_265"] as? [String: Any], let ul = p265["url_list"] as? [String] { candidates = ul }
+            if candidates.isEmpty, let da = video["download_addr"] as? [String: Any], let ul = da["url_list"] as? [String] { candidates = ul }   // 兜底（水印版）
+            let normalized = candidates.filter { $0.lowercased().hasPrefix("https://") || $0.lowercased().hasPrefix("http://") }
+            guard let raw = Self.selectBestPlayUrl(normalized), let url = URL(string: raw) else {
+                DYLog.shared.count("parse_no_url")
+                filtered += 1
+                continue
+            }
+            let dur = (video["duration"] as? NSNumber)?.intValue ?? 0
+            guard dur > 0 else { DYLog.shared.count("filter_nodur"); filtered += 1; continue }
+            ids.append(id); urls.append(url); durations.append(dur)
+        }
+        DYLog.shared.count("feed_aweme", by: list.count)
+        DYLog.shared.count("feed_usable", by: ids.count)
+        consumedIds.append(contentsOf: ids)
+        DYLog.shared.log("FEED web page refresh_index=\(refreshIndex): awemes=\(list.count) usable=\(ids.count) filtered=\(filtered) total_seen=\(consumedIds.count)")
+        guard !ids.isEmpty else {
+            DYLog.shared.event("FEED web page refresh_index=\(refreshIndex): 0 usable videos")
+            PlaybackEngine.shared.reportFailure()
+            return
+        }
+        PlaybackEngine.shared.merge(ids: ids, urls: urls,
+                                    replaceExisting: false,
+                                    autoPlay: PlaybackEngine.shared.urls.isEmpty,
+                                    refresh: false,
+                                    allDurations: durations)
     }
 
     // MARK: - 解析（protobuf 优先，JSON 兜底）

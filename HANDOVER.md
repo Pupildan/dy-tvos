@@ -177,6 +177,13 @@
 - **验收**：真机弹幕显示 + `DANM ok items=N` 日志 + 滚屏流畅度（DanmakuKit Core Animation 驱动）。
 - 后续可选：弹幕开关 UI（enabled 属性已预留）、按 user_id 过滤、密度限制。
 
+## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
+
+- ①去白底：根因 = DanmakuAsyncLayer 在 layer isOpaque==true 时主动填白（UIColor.white）；修 = DanmakuTextCell `required init(frame:)`（官方 example 同款写法）+ backgroundColor=.clear + isOpaque=false + layer.isOpaque=false。
+- ②去描边：弹幕 JSON 无颜色字段（danmaku_type/score/text_extra，无 color），默认色即白 → 纯白字无 stroke。
+- ③弹幕区域限定视频 aspectFit 内切矩形（用户：手机竖版源弹幕不该飘全屏黑边）：PlayerCell.updateDanmakuFrame() 用 presentationSize 算内切矩形（ready 后 presentationSize 才有效；bind/layoutSubviews/updatePlaybackStates/refreshCoverForVisible 四处触发）；滚屏时长按区域实际宽度算。
+- CI 踩坑：子类实现父类 required init 要写 `required` 不带 override（官方 example 同款）；PlayerCell 里是 playerLayerView.player 不是 playerLayer。产物 output/DYTV-tvos-unsigned-v134.ipa。
+
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层（UICollectionView + PlayerManager cap-3 池 + 黑屏看门狗 + CODEC 诊断）。
 - `DYFeedClient.swift`：移动端 feed 直连 + protobuf 解码 + `pickHighestQuality`（恒 nil，待修）。

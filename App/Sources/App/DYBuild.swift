@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v134"
-    static let changes = "v134: 弹幕样式按用户要求修正——①去白底(DanmakuAsyncLayer 在 isOpaque=true 时主动填白是白底来源,DanmakuTextCell 显式 isOpaque=false);②去描边(纯白字,弹幕数据无颜色字段,默认色即白);③弹幕区域限定视频aspectFit内切矩形(手机竖版源在16:9屏是居中窄条,弹幕只飘画面不飘黑边,presentationSize ready后校准+滚屏时长按区域宽计算)"
+    static let version = "v135"
+    static let changes = "v135: 设置面板上线——Menu呼出(第二次按=退出应用);屏幕左侧悬浮iOS26液态玻璃(tvOS26 glassEffect,低版本ultraThinMaterial回退);五项:移动端推荐(现源)/抖音精选(web tab/feed b0配方+webCommon,开发机探针已验证status0分页正常)/弹幕设置(开关)/直播+登录(占位);双源架构:engine.reset+PlayerManager按源选请求头(web=ChromeUA+Referer+ttwid)"
 }
