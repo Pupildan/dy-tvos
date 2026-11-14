@@ -318,7 +318,7 @@ final class DYProgressBar: UIView {
     private var ratio: Double = 0
 
     override init(frame: CGRect) {
-        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))   // tvOS 专属样式（system* 系列在 tvOS 不可用）
         super.init(frame: frame)
         backgroundColor = .clear
         layer.cornerRadius = 2.5
