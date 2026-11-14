@@ -72,7 +72,7 @@ struct DYQuickPanelView: View {
         }
         .onAppear { focusedRow = .home }
         .onExitCommand { model.close() }   // 面板内 Menu=关闭回播放（不退出应用）
-        .transition(.opacity.combined(with: .scale(scaleEffect: 0.92, anchor: .bottom)))
+        .transition(.opacity.combined(with: .scale(scale: 0.92, anchor: .bottom)))
     }
 
     private var panel: some View {

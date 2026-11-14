@@ -247,7 +247,7 @@ struct SettingsPanelView: View {
 
 /// 自定义按钮样式：label 原样返回——去掉 tvOS 系统 Button 聚焦时的灰色底板
 /// （截图实锤：.plain 样式在 tvOS 26 仍有系统焦点底板），焦点视觉完全由 rowContent 自绘。
-private struct PanelRowButtonStyle: ButtonStyle {
+struct PanelRowButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
     }
