@@ -41,11 +41,11 @@ final class PlayerCell: UICollectionViewCell {
     private let railAvatarView = UIImageView()
     private let railLikeIcon = UIImageView()
     private let railLikeLabel = UILabel()
-    private let railCommentIcon = UIImageView()
+    private var railCommentIcon = UIImageView()
     private let railCommentLabel = UILabel()
-    private let railStarIcon = UIImageView()
+    private var railStarIcon = UIImageView()
     private let railStarLabel = UILabel()
-    private let railShareIcon = UIImageView()
+    private var railShareIcon = UIImageView()
     private let railShareLabel = UILabel()
 
     override init(frame: CGRect) {
@@ -148,6 +148,11 @@ final class PlayerCell: UICollectionViewCell {
         descLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 84, width: b.width - railW - 160, height: 40)
         nicknameLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 126, width: b.width - railW - 160, height: 36)
         avatarImageView.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 126, width: 44, height: 44)
+    }
+
+    /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
+    func bind(player: AVPlayer) {
+        playerLayerView.player = player
     }
 
     /// 填充 PC 版 UI 数据（willDisplay 时按 index 调用）。
