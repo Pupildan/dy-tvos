@@ -74,17 +74,18 @@ final class DYDanmakuClient {
         queue.async { [weak self] in
             guard let self else { return }
             self.ensureTTWIDInternal { [weak self] in
-                self?.fetch(awemeId: awemeId, durationMs: durationMs) { [weak self] allItems in
+                self?.fetch(awemeId: awemeId, durationMs: durationMs, onSegment: { seg in
+                    DispatchQueue.main.async { onSegment(seg) }
+                }, completion: { [weak self] allItems in
                     guard let self else { return }
                     self.queue.async {
                         self.inflight.remove(awemeId)
                         if !allItems.isEmpty { self.cache[awemeId] = allItems }
                         DispatchQueue.main.async {
-                            onSegment(allItems)
                             completion()
                         }
                     }
-                }
+                })
             }
         }
     }
