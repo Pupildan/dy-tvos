@@ -267,6 +267,7 @@ final class DYFeedClient {
         var ids: [String] = []
         var urls: [URL] = []
         var durations: [Int] = []
+        var infos: [DYVideoInfo] = []
         var filtered = 0
         for a in list {
             guard let id = a["aweme_id"] as? String, !id.isEmpty else { DYLog.shared.count("web_parse_id_nil"); continue }
@@ -288,6 +289,23 @@ final class DYFeedClient {
             }
             let dur = (video["duration"] as? NSNumber)?.intValue ?? 0
             guard dur > 0 else { DYLog.shared.count("filter_nodur"); filtered += 1; continue }
+            // 展示信息（web JSON 键直取）
+            var info = DYVideoInfo()
+            info.desc = a["desc"] as? String ?? ""
+            info.hashtags = info.desc
+            if let author = a["author"] as? [String: Any] {
+                info.nickname = author["nickname"] as? String ?? ""
+                if let av = author["avatar_thumb"] as? [String: Any], let ul = av["url_list"] as? [String] {
+                    info.avatarUrl = ul.first(where: { $0.hasPrefix("http") }) ?? ""
+                }
+            }
+            if let st = a["statistics"] as? [String: Any] {
+                info.digg = (st["digg_count"] as? NSNumber)?.intValue ?? 0
+                info.comment = (st["comment_count"] as? NSNumber)?.intValue ?? 0
+                info.share = (st["share_count"] as? NSNumber)?.intValue ?? 0
+                info.collect = (st["collect_count"] as? NSNumber)?.intValue ?? 0
+            }
+            infos.append(info)
             ids.append(id); urls.append(url); durations.append(dur)
         }
         DYLog.shared.count("feed_aweme", by: list.count)
@@ -303,7 +321,8 @@ final class DYFeedClient {
                                     replaceExisting: false,
                                     autoPlay: PlaybackEngine.shared.urls.isEmpty,
                                     refresh: false,
-                                    allDurations: durations)
+                                    allDurations: durations,
+                                    allInfos: infos)
     }
 
     // MARK: - 解析（protobuf 优先，JSON 兜底）
@@ -343,6 +362,7 @@ final class DYFeedClient {
         var rawVideos: [[UInt8]] = []
         var redirects: [URL?] = []
         var durations: [Int] = []
+        var infos: [DYVideoInfo] = []
         var loggedFirst = false
         var filtered = 0
         var ei = 0
@@ -455,6 +475,27 @@ final class DYFeedClient {
             // 四数组同点对齐 append（rawVideos/redirects 索引必须与 ids 一致，merge 按同下标对位）；
             // 静态无但重定向有的条目也收（urls 直接用重定向链，播放时 302 出新鲜直链）。
             guard let url = chosen ?? redirect else { DYLog.shared.count("parse_no_url"); ei += 1; continue }
+            // 展示信息（v143 PC 版 UI；字段号 wire 实测：desc=f2, hashtags=f459, author=f4(f3=昵称), stats=f10(f3赞 f2评 f6享 f11藏)）
+            var info = DYVideoInfo()
+            info.desc = aweme.string(2) ?? ""
+            info.hashtags = aweme.string(459) ?? ""
+            if let ab = aweme.bytesFields(4).first, let af = Proto.parse(ab) {
+                info.nickname = af.string(3) ?? af.string(2) ?? ""
+                // 头像：author f5/f6/f7（PlayAddr 同构，url_list 取第一个）
+                for ak in [5, 6, 7] {
+                    if let ab2 = af.bytesFields(ak).first, let cand = Proto.parse(ab2), let u = Proto.urlList(cand, 0).first, u.hasPrefix("http") {
+                        info.avatarUrl = u
+                        break
+                    }
+                }
+            }
+            if let sb = aweme.bytesFields(10).first, let sf = Proto.parse(sb) {
+                info.digg = Int(sf.varint(3) ?? 0)
+                info.comment = Int(sf.varint(2) ?? 0)
+                info.share = Int(sf.varint(6) ?? 0)
+                info.collect = Int(sf.varint(11) ?? 0)
+            }
+            infos.append(info)
             ids.append(id); urls.append(url); rawVideos.append(videoBytes); redirects.append(redirect); durations.append(Int(dur))
             if !loggedFirst {
                 loggedFirst = true
@@ -478,7 +519,8 @@ final class DYFeedClient {
                                     refresh: false,
                                     allRawVideos: rawVideos,
                                     allRedirectUrls: redirects,
-                                    allDurations: durations)
+                                    allDurations: durations,
+                                    allInfos: infos)
     }
 
     private func extractJSON(list: [[String: Any]], root: [String: Any], refreshIndex: Int) {

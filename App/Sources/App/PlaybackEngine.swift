@@ -7,6 +7,20 @@ enum DYFeedSource: String {
     case web
 }
 
+/// 单条视频的展示信息（v143 PC 版 UI：右轨计数 + 左下作者/文案）。
+/// 字段号 wire 实测（dev 探针 _tmp/aweme_fields_probe.js，双样本一致）：
+/// mobile proto: desc=aweme f2, hashtags=f459, author=f4(f3=昵称, f5/6/7=头像), statistics=f10(f3=赞 f2=评论 f6=分享 f11=收藏)
+struct DYVideoInfo {
+    var nickname: String = ""
+    var avatarUrl: String = ""
+    var digg: Int = 0
+    var comment: Int = 0
+    var share: Int = 0
+    var collect: Int = 0
+    var desc: String = ""
+    var hashtags: String = ""
+}
+
 /// 原生播放引擎：持有有序视频直链 + 当前索引，驱动 AVPlayer。
 /// 数据源：DYFeedClient（mobile=myDV 移动端 /aweme/v2/feed/ protobuf 直连；v135 web=抖音精选 /aweme/v1/web/tab/feed/ JSON）
 /// 无限刷：接近末尾自动回调 onNeedMore 让 DYFeedClient 翻页（refresh_index 递增）；
@@ -30,6 +44,8 @@ final class PlaybackEngine: ObservableObject {
     private var mintedAt: [Int: Date] = [:]
     /// 每条视频时长 ms（index→ms，弹幕请求 end_time/duration 用）
     private var durations: [Int: Int] = [:]
+    /// 每条视频展示信息（v143 PC 版 UI：昵称/头像/计数/文案）
+    private var infos: [Int: DYVideoInfo] = [:]
 
     /// 直链批次拉取时间（用于过期判断）
     private(set) var fetchedAt: Date = .distantPast
@@ -63,6 +79,7 @@ final class PlaybackEngine: ObservableObject {
         redirectUrls = [:]
         mintedAt = [:]
         durations = [:]
+        infos = [:]
         awemeOrder = []
         currentAwemeId = ""
         fetchedAt = .distantPast
@@ -96,6 +113,11 @@ final class PlaybackEngine: ObservableObject {
         durations[index] ?? 0
     }
 
+    /// 取 index 的展示信息（PC 版 UI：昵称/计数/文案）。
+    func videoInfo(at index: Int) -> DYVideoInfo? {
+        infos[index]
+    }
+
     /// 已消费（当前及之前）的 aweme id——feed 直连翻页时作 presented_ids 排除重复推荐。
     var consumedIds: [String] {
         Array(awemeOrder.prefix(max(0, min(index + 1, awemeOrder.count))))
@@ -105,7 +127,7 @@ final class PlaybackEngine: ObservableObject {
     /// 按 aweme_id 去重保序；replaceExisting=true 时用新 URL 替换已有（过期重拉）。
     /// autoPlay=true 时跳到 index 0（首批）；否则保持当前 index（翻页追加）；
     /// refresh=true 时按 id 对齐回原位置。
-    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil, allRedirectUrls: [URL?]? = nil, allDurations: [Int]? = nil) {
+    func merge(ids: [String], urls newUrls: [URL], replaceExisting: Bool, autoPlay: Bool, refresh: Bool, allRawVideos: [[UInt8]]? = nil, allRedirectUrls: [URL?]? = nil, allDurations: [Int]? = nil, allInfos: [DYVideoInfo]? = nil) {
         let previousAwemeId = currentAwemeId
         let oldCount = awemeOrder.count
         var mergedIds = awemeOrder
@@ -141,6 +163,9 @@ final class PlaybackEngine: ObservableObject {
             }
             if let durs = allDurations, i < durs.count {
                 durations[p] = durs[i]
+            }
+            if let pinfos = allInfos, i < pinfos.count {
+                infos[p] = pinfos[i]
             }
         }
         fetchedAt = Date()

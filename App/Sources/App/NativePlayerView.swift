@@ -16,9 +16,10 @@ final class PlayerLayerView: UIView {
 
 /// Feed Cell：不自己创建 Player。willDisplay 时向 PlayerManager 申请绑定对应的 Player 层。
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
+/// v143 PC 版 UI：左下作者/文案区 + 右侧动作轨（计数纯展示，随视频自动切换）。
 final class PlayerCell: UICollectionViewCell {
     let playerLayerView = PlayerLayerView()
-    /// 弹幕覆盖层：真实视频层之上、封面之下（未 ready 时被封面盖住）；tvOS 焦点隔离（纯展示层）
+    /// 弹幕覆盖层：真实视频层之上、封面之下（未 ready 时被封面盖住）；tvOS 焦点隔离（渲染纯展示层）
     let danmakuOverlay = DanmakuOverlay()
     /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
     let coverImageView: UIImageView = {
@@ -29,6 +30,23 @@ final class PlayerCell: UICollectionViewCell {
         iv.isHidden = true
         return iv
     }()
+    // MARK: PC 版 UI（v143）——左下信息区
+    private let nicknameLabel = UILabel()
+    private let descLabel = UILabel()
+    private let hashtagLabel = UILabel()
+    private let avatarImageView = UIImageView()
+    // MARK: PC 版 UI——右侧动作轨
+    private let railUpButton = UIImageView()
+    private let railDownButton = UIImageView()
+    private let railAvatarView = UIImageView()
+    private let railLikeIcon = UIImageView()
+    private let railLikeLabel = UILabel()
+    private let railCommentIcon = UIImageView()
+    private let railCommentLabel = UILabel()
+    private let railStarIcon = UIImageView()
+    private let railStarLabel = UILabel()
+    private let railShareIcon = UIImageView()
+    private let railShareLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,6 +55,7 @@ final class PlayerCell: UICollectionViewCell {
         contentView.addSubview(danmakuOverlay)
         contentView.addSubview(coverImageView)
         playerLayerView.playerLayer.videoGravity = .resizeAspect
+        buildPCOverlay()
         // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
         isUserInteractionEnabled = false
     }
@@ -47,11 +66,114 @@ final class PlayerCell: UICollectionViewCell {
         playerLayerView.frame = contentView.bounds
         danmakuOverlay.frame = contentView.bounds
         coverImageView.frame = contentView.bounds
+        layoutPCOverlay()
     }
 
-    /// 绑定 PlayerManager 分配的 player（Cell 不创建、不持有 player 生命周期）。
-    func bind(player: AVPlayer) {
-        playerLayerView.player = player
+    /// PC 版 UI 构建（层级：player < danmaku < cover < PC 信息层——封面期一并盖住）
+    private func buildPCOverlay() {
+        // 左下：头像 + 昵称 + 文案 + 话题
+        avatarImageView.contentMode = .scaleAspectFill
+        avatarImageView.clipsToBounds = true
+        avatarImageView.layer.cornerRadius = 10
+        avatarImageView.layer.borderColor = UIColor.white.withAlphaComponent(0.6).cgColor
+        avatarImageView.layer.borderWidth = 1
+        nicknameLabel.font = .boldSystemFont(ofSize: 28)
+        nicknameLabel.textColor = .white
+        nicknameLabel.shadowColor = .black
+        nicknameLabel.shadowOffset = CGSize(width: 1, height: 1)
+        descLabel.font = .systemFont(ofSize: 26, weight: .medium)
+        descLabel.textColor = .white
+        descLabel.shadowColor = .black
+        descLabel.shadowOffset = CGSize(width: 1, height: 1)
+        hashtagLabel.font = .systemFont(ofSize: 24, weight: .medium)
+        hashtagLabel.textColor = UIColor.white.withAlphaComponent(0.9)
+        hashtagLabel.shadowColor = .black
+        hashtagLabel.shadowOffset = CGSize(width: 1, height: 1)
+        contentView.addSubview(avatarImageView)
+        contentView.addSubview(nicknameLabel)
+        contentView.addSubview(descLabel)
+        contentView.addSubview(hashtagLabel)
+
+        // 右侧动作轨（纯展示；图标 SF Symbols，计数万缩写）
+        let railX: CGFloat = -104   // 距右边缘
+        func railIcon(_ name: String) -> UIImageView {
+            let iv = UIImageView(image: UIImage(systemName: name))
+            iv.tintColor = .white
+            iv.contentMode = .center
+            return iv
+        }
+        railUpButton.image = UIImage(systemName: "chevron.up")
+        railUpButton.tintColor = .white
+        railUpButton.contentMode = .center
+        railDownButton.image = UIImage(systemName: "chevron.down")
+        railDownButton.tintColor = .white
+        railDownButton.contentMode = .center
+        railAvatarView.contentMode = .scaleAspectFill
+        railAvatarView.clipsToBounds = true
+        railAvatarView.layer.cornerRadius = 33
+        railAvatarView.layer.borderColor = UIColor.white.withAlphaComponent(0.7).cgColor
+        railAvatarView.layer.borderWidth = 2
+        railLikeIcon = railIcon("heart.fill")
+        railCommentIcon = railIcon("bubble.left.fill")
+        railStarIcon = railIcon("star.fill")
+        railShareIcon = railIcon("arrowshape.turn.up.right.fill")
+        for l in [railLikeLabel, railCommentLabel, railStarLabel, railShareLabel] {
+            l.font = .systemFont(ofSize: 24, weight: .semibold)
+            l.textColor = .white
+            l.textAlignment = .center
+        }
+        for v in [railUpButton, railDownButton, railAvatarView, railLikeIcon, railLikeLabel, railCommentIcon, railCommentLabel, railStarIcon, railStarLabel, railShareIcon, railShareLabel] {
+            contentView.addSubview(v)
+        }
+    }
+
+    /// PC 版 UI 布局（右轨距右 104px 居中竖排；左下信息区避让进度条）
+    private func layoutPCOverlay() {
+        let b = contentView.bounds
+        let railX = b.width - 118
+        let railW: CGFloat = 92
+        var y = b.height * 0.28
+        railUpButton.frame = CGRect(x: railX, y: y, width: railW, height: 54); y += 62
+        railDownButton.frame = CGRect(x: railX, y: y, width: railW, height: 54); y += 66
+        railAvatarView.frame = CGRect(x: railX + 16, y: y, width: 66, height: 66); y += 78
+        for (icon, label) in [(railLikeIcon, railLikeLabel), (railCommentIcon, railCommentLabel), (railStarIcon, railStarLabel), (railShareIcon, railShareLabel)] {
+            icon.frame = CGRect(x: railX, y: y, width: railW, height: 44)
+            label.frame = CGRect(x: railX - 14, y: y + 44, width: railW + 28, height: 30)
+            y += 84
+        }
+        // 左下信息区（避让底部进度条 13px + 余量）
+        let infoLeft: CGFloat = 24
+        let infoBottom: CGFloat = 40
+        hashtagLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 38, width: b.width - railW - 160, height: 34)
+        descLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 84, width: b.width - railW - 160, height: 40)
+        nicknameLabel.frame = CGRect(x: infoLeft + 56, y: b.height - infoBottom - 126, width: b.width - railW - 160, height: 36)
+        avatarImageView.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 126, width: 44, height: 44)
+    }
+
+    /// 填充 PC 版 UI 数据（willDisplay 时按 index 调用）。
+    func applyInfo(_ info: DYVideoInfo?) {
+        nicknameLabel.text = info?.nickname.isEmpty == false ? "@\(info!.nickname)" : ""
+        descLabel.text = info?.desc
+        hashtagLabel.text = info?.hashtags
+        avatarImageView.image = nil
+        railAvatarView.image = nil
+        if let urlStr = info?.avatarUrl, let url = URL(string: urlStr) {
+            AvatarLoader.shared.load(url) { [weak self] img in
+                self?.avatarImageView.image = img
+                self?.railAvatarView.image = img
+            }
+        }
+        railLikeLabel.text = Self.cnCount(info?.digg ?? 0)
+        railCommentLabel.text = Self.cnCount(info?.comment ?? 0)
+        railStarLabel.text = Self.cnCount(info?.collect ?? 0)
+        railShareLabel.text = Self.cnCount(info?.share ?? 0)
+    }
+
+    /// 数字万/亿缩写（3.9万 / 1.2亿），对齐 PC 版风格。
+    static func cnCount(_ n: Int) -> String {
+        if n >= 100_000_000 { return String(format: "%.1f亿", Double(n) / 100_000_000) }
+        if n >= 10_000 { return String(format: "%.1f万", Double(n) / 10_000) }
+        return String(n)
     }
     /// 设置封面兜底图。
     func setCover(_ image: UIImage?) {
@@ -308,6 +430,21 @@ final class PlayerManager {
         players.removeValue(forKey: index)
         DYLog.shared.log("MGR rebuild idx=\(index) (redirect)")
         _ = acquire(index: index, forceRedirect: true)
+    }
+}
+
+/// 头像异步加载（NSCache 记忆化；PC 版 UI 头像用）。
+final class AvatarLoader {
+    static let shared = AvatarLoader()
+    private let cache = NSCache<NSURL, UIImage>()
+
+    func load(_ url: URL, completion: @escaping (UIImage?) -> Void) {
+        if let img = cache.object(forKey: url as NSURL) { completion(img); return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            let img = data.flatMap(UIImage.init(data:))
+            if let img { self?.cache.setObject(img, forKey: url as NSURL) }
+            DispatchQueue.main.async { completion(img) }
+        }.resume()
     }
 }
 
@@ -789,12 +926,13 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         collectionView.bounds.size
     }
-    /// willDisplay：向 PlayerManager 申请绑定对应 player + 封面兜底
+    /// willDisplay：向 PlayerManager 申请绑定对应 player + 封面兜底 + PC 版信息填充
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let c = cell as? PlayerCell else { return }
         c.playerLayerView.frame = c.contentView.bounds
         c.coverImageView.frame = c.contentView.bounds
         let idx = indexPath.item
+        c.applyInfo(PlaybackEngine.shared.videoInfo(at: idx))
         // peekPlayer 纯查询不 acquire——避免快速滑动时 willDisplay 把池撑大（抖动→黑屏）
         if let p = PlayerManager.shared.peekPlayer(at: idx) {
             c.bind(player: p)

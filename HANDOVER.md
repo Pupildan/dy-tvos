@@ -225,6 +225,18 @@
 - **新增 `dm_drop` 计数器**：`DanmakuOverlay` 实现 `DanmakuViewDelegate.noSpaceShoot`——丢弃量直接量化（dm_items - dm_shoot ≈ dm_drop），下一版数据说话（若 drop 仍高，可继续加轨道/开 isOverlap/降字号）。
 - **CI 踩坑**：类声明与 extension 双重 conformance（redundant conformance）。
 - **验收**：密集视频弹幕密度观感（不再间歇）；日志 `dm_drop` 与 `dm_shoot` 比例。
+- **✅ v141 真机验收结果**：仍间歇——用户澄清"间歇"=**明显空窗期（一条都没有）过一会儿又扎堆出现**（非密度稀疏）。
+
+## 23. v142 弹幕空窗+扎堆修复（2026-11-14 用户澄清，CI 过待真机验收）
+
+- **决定性证据（开发机直方图探针 _tmp/danmaku_hist_probe.js）**：79s 视频 1212 条全量取回，30s 桶直方图**连续、无 ≥60s 零桶**（数据本身无空窗），但**峰值密度 41 条/s、avg 15.4 条/s**。
+- **空窗+扎堆机制**：发射器同 tick 把到点的弹幕全部射出——峰值 41 条同时抢 23 条轨道（isOverlap=false 不重叠），大部分瞬间被 `noSpaceShoot` 丢弃 → 轨道清空期间零星补入 = **空窗**；下一个高峰秒再扎堆。
+- **修复（对齐 PC 版观感）**：①发射器**每 tick 限量 6 条**（0.25s×6=24/s，峰值期排队平滑射出，积压在 40s grace 内消化）；②**isOverlap=true** 允许同轨重叠（PC 版同密度全显示、接受重叠）。
+- **验收**：密集视频弹幕持续流动无空窗（观感偏密、允许重叠=PC 同款）；日志 `dm_shoot≈dm_items`、`dm_drop` 大幅下降。
+- **⏸️ v142 真机验收结果 + 弹幕任务暂停（2026-11-14 用户拍板）**：用户反馈改法没到点子——真实现象是「获取→展示」循环：一段时间一条都没有，过一会又有，循环。**弹幕整体暂停，记录在此随时重启**：
+  - 已做且保留：数据链全通（web get_v2 + ttwid 匿名注册 + webCommon + 60s 分段 + 460 上限自适应对半拆 + 失败重试）；直方图探针证实**数据无空窗但峰值密度 41 条/s**；样式=纯白字无底无描边；发射器=shotIds 集合扫描；面板弹幕开关可用。
+  - 重启时优先查：①offset_time 语义（是否真 ms 偏移——周期性空窗与段 offset 分布存疑）；②DanmakuTrack 轨道占满/释放时序；③isOverlap 观感；④取回/展示时序对齐。
+  - 重启入口：DYDanmakuClient.fetch + DYDanmakuOverlay.tick + dm_drop/dm_shoot/dm_items 计数器 + 探针 _tmp/danmaku_hist_probe.js。
 
 ## 16. v134 弹幕样式修正（2026-11-14 用户反馈：弹幕出现了但要改样式）
 
