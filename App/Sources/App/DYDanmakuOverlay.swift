@@ -62,6 +62,8 @@ final class DanmakuOverlay: UIView {
     private var loadedAwemeId = ""
     private var fetchRequested = false
     private var timer: Timer?
+    /// 弹幕总开关（v132 默认开；UI 开关待美化阶段统一做）
+    var enabled = true
 
     var currentAwemeId: String { loadedAwemeId }
 
