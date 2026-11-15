@@ -228,9 +228,11 @@ final class PlayerCell: UICollectionViewCell {
             adj.setValue(-0.12, forKey: kCIInputBrightnessKey)
             adj.setValue(1.1, forKey: kCIInputSaturationKey)
             guard let out = adj.outputImage, let cg = ambientContext.createCGImage(out, from: ci.extent) else {
+                DYLog.shared.count("ambient_fail")
                 DispatchQueue.main.async { done(nil) }
                 return
             }
+            DYLog.shared.count("ambient_ok")
             DispatchQueue.main.async { done(UIImage(cgImage: cg)) }
         }
     }
@@ -654,6 +656,8 @@ final class DYPlayerViewController: UIViewController {
     /// 但 pan 必触发——pan 开始后位移持续 <60px 达 0.6s 也判定为悬停）
     private var panBeganAt: Date?
     private var pan2xFired = false
+    /// 本次触摸已判定为滑动（与悬停互斥；滑动后禁用悬停防误触）
+    private var panSwiped = false
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
@@ -662,20 +666,28 @@ final class DYPlayerViewController: UIViewController {
         case .began:
             panBeganAt = Date()
             pan2xFired = false
+            panSwiped = false
         case .changed:
-            // 悬停判定：位移一直 <60px 且 pan 已开始 ≥0.6s → 两倍速（正常滑动 0.2s 内就超 60px，不误触）
-            if !pan2xFired, abs(t.y) < 60, abs(t.x) < 60,
+            // 悬停判定（v152 放宽）：pan 开始 ≥0.6s 且总位移从未越过滑动阈值(<100px) → 两倍速。
+            // v151 的 <60px 阈值敌不过悬停时的自然手抖（漂移 60-100px 之间两通道全灭=「不触发」）。
+            if !pan2xFired, !panSwiped, abs(t.y) < 100, abs(t.x) < 100,
                let began = panBeganAt, Date().timeIntervalSince(began) >= 0.6 {
                 pan2xFired = true
                 startHold2x()
             }
-            guard abs(t.y) > 100 else { return }   // 滑动阈值
+            guard abs(t.y) > 100 else { return }
+            if pan2xFired {
+                // 2x 悬停中的漂移不再当滑动（v151 实锤：2x 点亮后被漂移切视频=秒灭）
+                return
+            }
+            panSwiped = true   // 本次触摸已判定为滑动，禁用悬停（滑动与悬停互斥）
             g.setTranslation(.zero, in: view)
             if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
             DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
         case .ended, .cancelled, .failed:
             if pan2xFired { stopHold2x() }
             pan2xFired = false
+            panSwiped = false
             panBeganAt = nil
         default: break
         }
@@ -855,11 +867,10 @@ final class DYPlayerViewController: UIViewController {
                     c.danmakuOverlay.syncPlaying(true)
                 } else {
                     p.pause()
-                    // 未 ready（或非居中）显示封面兜底
-                    if !ready { loadCover(for: c, index: idx) }
                     c.setCoverVisible(!ready)
                     c.danmakuOverlay.syncPlaying(false)
                 }
+                loadCover(for: c, index: idx)   // v151 修复：无条件（含已就绪视频——氛围层需要封面做底）
             } else {
                 // 无 player（超范围）：显示封面兜底
                 loadCover(for: c, index: idx)
@@ -1125,7 +1136,8 @@ extension DYPlayerViewController: UICollectionViewDataSource, UICollectionViewDe
             c.bind(player: p)
             let ready = (p.currentItem?.status == .readyToPlay)
             c.setCoverVisible(!ready)
-            if !ready { loadCover(for: c, index: idx) }
+            loadCover(for: c, index: idx)   // v151 修复：无条件加载——只 !ready 才加载的话，
+                                            // 预载就绪的视频永远拿不到封面→氛围模糊层永远空白
         } else {
             c.setCoverVisible(true)
             loadCover(for: c, index: idx)
