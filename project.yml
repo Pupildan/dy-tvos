@@ -41,5 +41,7 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: DYTV
         # tvOS：无启动 storyboard（全屏黑屏启动即可），无状态栏
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        # v160：WebView ObjC shim 回归（DYWebViewShim.h/.m）——隐形 cookie 引导用
+        SWIFT_OBJC_BRIDGING_HEADER: "App/Sources/App/DYTV-Bridging-Header.h"
     # 明确不链接任何测试 framework，不生成 test target
-    # 注：WebView ObjC shim 已删除，无桥接头（纯 Swift + JavaScriptCore）。
+    # 注：shim 仅用于隐形 cookie 引导（tvOS 无公开 WebKit，dlopen 私有框架），不做任何 UI。

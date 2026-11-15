@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v160**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v161**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -69,7 +69,8 @@
 | v157 | 主页深挖：补齐 myDV 静态浏览器头 n（u11:80）+ mssdk 真 msToken（DYMsSdk.swift 程序化照抄 u11:729）+ aweme/detail 探针全通 | ❌ **浏览器一致性头与 URLSession 指纹自相矛盾触发风控，资料接口 200 空**（v153 最小头才是可用态）；真机 mssdk MISS |
 | v158 | ①资料接口回退 v153 最小头配方；②触摸倍速按图上方案实现（0.8s/10px 紧容差/失败排序）；③确认键长按保留 | ❌ 触摸悬停真机仍不触发——**用户拍板最终删除** |
 | v159 | **触摸悬停最终删除**（恢复 v156 手势）；主页深挖：反编译 classes2/3.dex 得 myDV 完整 UI 层——作品=aweme/post、作者合集列表=**series/list（探针全通 sc=0，字段 series_infos）**、合集内容=series/aweme/aweme/detail；发现 **z() 引导**（u11:5400） | ✅ 真机定论：URLSession 也被 jsvmp 挑战页拦（challenge=1） |
-| v160 | **隐形 WebView 引导落地**（用户拍板）：DYWebViewBootstrap——1x1 离屏 WebView 从不挂视图层级（铁律边界：非 UI 仅引导，同扫码登录路线），加载抖音首页让 jsvmp 挑战 JS 自动种信任 cookie，didFinish+2s/+6s/15s 兜底收割 s_v_web_id/uifid/odin_tt/msToken 进 DYProfileClient 罐；资料链=WebView→首页跳链→UIFID_TEMP→profile/works | ✅ CI 过，待真机定论（日志 WEBBOOT 行） |
+| v160 | 隐形 WebView 引导第一版（公开 WebKit 模块） | ❌ CI 实锤 **tvOS 无公开 WebKit**（unable to resolve WebKit） |
+| v161 | **改回 v2-v8 真机验证过的私有方案**：DYWebViewShim.m 回归（dlopen 私有 WebKit.framework + objc_msgSend 建 WKWebView，桥接头 DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER）+ 引导改 isLoading 轮询 + evaluateJavaScript 收 document.cookie（挑战页 JS 种的 s_v_web_id/__ac_signature/uifid）+ 失败 2s 重试 6 轮 + 20s 兜底 | ✅ CI 过，待真机定论（日志 WEBBOOT 行） |
 
 ## 5. 未解决问题清单（按优先级）
 
