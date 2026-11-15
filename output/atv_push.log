@@ -56432,3 +56432,30 @@
 11:51:50  [11:51:50] DMSYNC t=7s due=175 marked=52 items=485 stall=0
 11:51:54  [11:51:54] DMSYNC t=11s due=226 marked=80 items=485 stall=0
 11:51:58  [11:51:58] DMSYNC t=15s due=330 marked=104 items=485 stall=0
+11:55:07  [11:55:07] ENGINE next -> index=4
+11:55:07  [11:55:07] MGR evict idx=1
+11:55:07  [11:55:07] MGR url idx=6 src=static-stale-no-redirect age=435s
+11:55:07  [11:55:07] MGR acquire idx=6 total=5
+11:55:07  [11:55:07] FEEDCOLL scrollTo idx=4 y=4320.0 items=18
+11:55:08  [11:55:08] MGR ready idx=6
+11:55:09  [11:55:09] QUICK panel open (ok) mix=0
+11:55:09  [11:55:09] DMSYNC t=14s due=0 marked=20 items=108 stall=0
+11:55:11  [11:55:11] QUICK select comment id=7690136110244138282
+11:55:11  [11:55:11] CMT get id=7690136110244138282 cursor=0
+11:55:12  [11:55:12] CMT get id=7690136110244138282 cursor=20
+11:55:12  [11:55:12] CMT get id=7690136110244138282 cursor=40
+11:55:13  [11:55:13] DMSYNC t=18s due=0 marked=26 items=108 stall=0
+11:55:17  [11:55:17] DMSYNC t=22s due=0 marked=28 items=108 stall=13
+11:55:21  [11:55:21] DMSYNC t=26s due=0 marked=34 items=108 stall=2
+11:55:25  [11:55:25] DMSYNC t=30s due=0 marked=41 items=108 stall=4
+11:55:29  [11:55:29] DMSYNC t=34s due=0 marked=47 items=108 stall=4
+11:55:33  [11:55:33] DMSYNC t=38s due=0 marked=47 items=108 stall=20
+11:55:37  [11:55:37] DMSYNC t=42s due=0 marked=47 items=108 stall=36
+11:55:41  [11:55:41] DMSYNC t=46s due=0 marked=47 items=108 stall=52
+11:55:45  [11:55:45] DMSYNC t=50s due=0 marked=47 items=108 stall=68
+11:55:49  [11:55:49] DMSYNC t=54s due=0 marked=48 items=108 stall=15
+11:55:53  [11:55:53] DMSYNC t=58s due=0 marked=48 items=108 stall=31
+11:55:57  [11:55:57] DMSYNC t=62s due=0 marked=48 items=108 stall=47
+11:56:01  [11:56:01] DMSYNC t=66s due=0 marked=53 items=108 stall=4
+11:56:05  [11:56:05] DMSYNC t=70s due=0 marked=53 items=108 stall=20
+11:56:09  [11:56:09] DMSYNC t=74s due=0 marked=55 items=108 stall=14

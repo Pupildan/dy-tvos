@@ -661,6 +661,17 @@ final class DYPlayerViewController: UIViewController {
         DYLog.shared.event("PLAYBACK 2x off (release)")
     }
 
+    /// 触摸悬停通道（v158 图上方案：LongPress 挂 collectionView 容器，0.8s/漂移 10px 紧容差；
+    /// 与确认键长按通道共用 start/stopHold2x，isHolding2x 互斥）
+    @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        switch g.state {
+        case .began: startHold2x()
+        case .ended, .cancelled, .failed: stopHold2x()
+        default: break
+        }
+    }
+
     /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration + 时长文本（悬停倍速时加 ▶▶2x 角标）
     private func updateProgress() {
         guard let p = PlayerManager.shared.player(at: currentIndex),
