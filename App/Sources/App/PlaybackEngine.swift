@@ -306,7 +306,7 @@ final class PlaybackEngine: ObservableObject {
         rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.compactMap { (p, v) -> (Int, [UInt8])? in
             (p >= start && p < start + count) ? nil : (oldPos(p), v)
         })
-        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.compactMap { (p, v) -> (Int, URL?)? in
+        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.compactMap { (p, v) -> (Int, URL)? in
             (p >= start && p < start + count) ? nil : (oldPos(p), v)
         })
         mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.compactMap { (p, v) -> (Int, Date)? in
