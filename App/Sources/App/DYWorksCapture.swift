@@ -12,6 +12,8 @@ struct DYCapturedWork {
     let durationMs: Int
     let isImages: Bool
     let createTime: Int
+    /// 合集名（aweme/post 的 mix_info.mix_name；空=非合集）
+    let mixName: String
 }
 
 /// v166+ 作品/合集 WebView 截获（用户拍板降维打击路线）——已接 UI。
@@ -69,7 +71,8 @@ final class DYWorksCapture: NSObject {
               var cov='';
               if(v.cover&&v.cover.url_list&&v.cover.url_list[0])cov=v.cover.url_list[0];
               else if(v.origin_cover&&v.origin_cover.url_list&&v.origin_cover.url_list[0])cov=v.origin_cover.url_list[0];
-              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,
+              var mx=''; if(a.mix_info&&a.mix_info.mix_name)mx=a.mix_info.mix_name;
+              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,mix:mx,
                 imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
             }
             window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0)})});
@@ -235,7 +238,8 @@ final class DYWorksCapture: NSObject {
                 playUrls: urls,
                 durationMs: (w["dur"] as? NSNumber)?.intValue ?? 0,
                 isImages: (w["imgs"] as? NSNumber)?.intValue == 1,
-                createTime: (w["ct"] as? NSNumber)?.intValue ?? 0
+                createTime: (w["ct"] as? NSNumber)?.intValue ?? 0,
+                mixName: w["mix"] as? String ?? ""
             ))
         }
         DYLog.shared.event("WORKSCAP works ok n=\(works.count) hasMore=\(hasMore ? 1 : 0)")

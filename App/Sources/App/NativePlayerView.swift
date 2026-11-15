@@ -158,6 +158,12 @@ final class PlayerCell: UICollectionViewCell {
             if !time.isEmpty {
                 s.append(NSAttributedString(string: time, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
             }
+            // v169 合集标记：合集视频在发布时间后显示金黄 ▦ + 合集名
+            // （DYVideoInfo.isMix/mixName：mobile=f14 / web=mix_info / WebView 截获作品=JS mix 字段）
+            if info?.isMix == true {
+                let mixText = "  ▦ " + (info?.mixName.isEmpty == false ? info!.mixName : "合集")
+                s.append(NSAttributedString(string: mixText, attributes: [.font: UIFont.boldSystemFont(ofSize: 24), .foregroundColor: UIColor(red: 1.0, green: 0.78, blue: 0.25, alpha: 1.0), .shadow: Self.textShadow]))
+            }
             nicknameLabel.attributedText = s
         }
         descLabel.text = info?.desc.isEmpty == false ? info?.desc : nil

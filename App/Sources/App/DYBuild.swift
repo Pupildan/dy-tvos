@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v168"
-    static let changes = "v168: 作品网格+点击播放——①修v167作品parse fail根因(JS端预解析精简aweme/post响应只传id/desc/封面/直链/duration,300KB截断不再发生);②DYCapturedWork模型+delegate作品回调;③DYProfileScreen作品网格(3列封面+标题,图集标记);④点击作品merge进PlaybackEngine+跳index+关主页屏回播放;⑤busy,skip修为同作者静默去重/换作者重启捕获"
+    static let version = "v169"
+    static let changes = "v169: 修v168作品网格焦点不可点(tvOS焦点引擎要求ScrollView内Button绑@FocusState,评论屏v148同款教训,workCell加.focused绑定);播放层合集标记(发布时间后金黄▦+合集名,mobile=f14/web=mix_info/截获作品=JS mix字段全打通);作品网格封面加▦合集角标;JS精简提取mix_info.mix_name"
 }

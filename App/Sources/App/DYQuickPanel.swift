@@ -537,6 +537,8 @@ struct DYProfileScreen: View {
     }
 
     /// v168 作品网格单元：封面(9:16) + 标题两行；图集帖标「图集」
+    /// v169：⚠️ tvOS 焦点引擎要求 ScrollView 内 Button 绑 @FocusState 才能移入焦点
+    /// （v168 无 .focused 绑定=焦点进不去网格、无选中效果、不可点——评论屏 v148 同款教训）
     private func workCell(_ w: DYCapturedWork) -> some View {
         Button {
             playWork(w)
@@ -558,6 +560,17 @@ struct DYProfileScreen: View {
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                             .padding(6)
                     }
+                    if !w.mixName.isEmpty {
+                        Text("▦ \(w.mixName)")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 6))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                            .padding(6)
+                    }
                 }
                 .frame(height: 190)
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
@@ -569,6 +582,7 @@ struct DYProfileScreen: View {
             }
         }
         .buttonStyle(PanelRowButtonStyle())
+        .focused($focused, equals: w.id)
     }
 
     /// v168 点击作品 → merge 进 PlaybackEngine + 跳到该作品 + 关主页屏回播放
@@ -597,6 +611,8 @@ struct DYProfileScreen: View {
             info.avatarUrl = user?.avatarUrl ?? ""
             info.secUid = user?.secUid ?? ""
             info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
+            info.isMix = !item.mixName.isEmpty
+            info.mixName = item.mixName
             infos.append(info)
         }
         guard !ids.isEmpty else { return }
