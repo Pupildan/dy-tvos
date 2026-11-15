@@ -1518,3 +1518,487 @@
 15:03:32  [15:03:31] DANM get id=7706113502745808155 [1060-1065s] ttwid=127
 15:03:32  [15:03:32] DANM all-segments done id=7706113502745808155 total=487 retry=0
 15:03:32  [15:03:32] DMLOAD done id=7706113502745808155 total=487
+15:12:02  [15:12:01] DYTV v164 launched
+15:12:02  [15:12:01] SIGNER init start
+15:12:02  [15:12:01] LOGSRV ready on port 8765
+15:12:02  [15:12:01] LOGSRV advertising as DYTV-620
+15:12:02  [15:12:02] SIGNER load shim ok
+15:12:02  [15:12:02] SIGNER load abogus ok
+15:12:02  [15:12:02] SIGNER load sign ok
+15:12:02  [15:12:02] SIGNER load abogus_dy ok
+15:12:02  [15:12:02] SIGNER extras sign=true dy=true
+15:12:02  [15:12:02] SIGNER bdms=yes
+15:12:02  [15:12:02] SIGNER initABogus=true
+15:12:02  [15:12:02] SIGNER fns=AB (期望 AB)
+15:12:02  [15:12:02] SIGNER smoke={"ok":true,"value":"dJmwQVz6DD6PvfSk5XOLfY3qVW33YsUe0SVkMDhezVfPNg39HMO19exEVXUvv9WeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+15:12:02  [15:12:02] SIGNER READY a_bogus len=180
+15:12:02  [15:12:02] FEEDCOLL viewDidLoad
+15:12:02  [15:12:02] ROOT auto-start v164
+15:12:02  [15:12:02] FEED native pipeline armed (source=mobile)
+15:12:02  [15:12:02] FEED mobile GET refresh_index=1 cold=1 count=10 bogus_len=180 seen=0
+15:12:02  [15:12:02] LOGSRV Bonjour published: DYTV-620
+15:12:04  [15:12:04] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=1)
+15:12:04  [15:12:04] FEED video-dump a[0] f1[bytes=343] f2[bytes=1033] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=978] f7[bytes=4] f8[bytes=1620] f9[varint=1] f10[bytes=343] f11[bytes=2542] f13[varint=4644] f14[bytes=1620] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=343] f21[varint=1794899528] f24[varint=0] f25[bytes=1819] f26[bytes=0] f30[bytes=2964] f33[varint=0] f34[bytes=0] f44[bytes=3]
+15:12:04  [15:12:04] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=72] f3[varint=1793358004] f4[bytes=4794] f5[bytes=3740] f6[bytes=423] f7[bytes=14044] f8[bytes=472] f9[varint=0] f10[bytes=55] f11[bytes=63] f13[varint=12] f14[bytes=51,bytes=48,bytes=51] f17[varint=0] f18[bytes=487] f19[bytes=847] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=4644] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=10] f38[varint=0] f40[bytes=1] f44[varint=3485870859756664] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=1] f81[varint=0] f91[bytes=2] f99[bytes=229] f104[varint=1] f105[varint=1] f106[bytes=168] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=1] f205[bytes=0] f218[bytes=3487] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3156] f242[bytes=12] f243[bytes=225] f247[bytes=1379] f248[bytes=8] f249[bytes=13,bytes=17,bytes=23] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=669] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=73] f297[varint=0] f301[bytes=43] f302[bytes=9044] f303[varint=0] f304[bytes=6] f305[bytes=33] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=176] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=30] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=181] f396[bytes=0] f399[bytes=464,bytes=2842] f400[bytes=626] f403[bytes=192] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=18446744073709551615] f435[bytes=3] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=72] f460[bytes=0] f463[varint=1] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f501[bytes=47] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32,bytes=36,bytes=44,bytes=40] f566[bytes=125] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=944] f1019[bytes=0] f1033[varint=0] f1035[bytes=233] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=252] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1088[bytes=1408] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6]
+15:12:05  [15:12:04] FEED item a[0] id=7702413975073795242 type=0 static=ok redirect=ok dur=4644
+15:12:05  [15:12:04] FEED mix a[0] name=强制撸猫
+15:12:05  [15:12:04] FEED first url[7702413975073795242]: https://api-play.amemv.com/aweme/v1/play/?video_id=v0200fg10000dbi7hbvog65lf5s0v460&line=0&file_id=63b31f00da214235b26e6e41f45d6f6a&sign=dcd
+15:12:05  [15:12:04] FEED item a[1] id=7707533593781938275 type=0 static=ok redirect=ok dur=12434
+15:12:05  [15:12:04] FEED mix a[1] name=折叠屏正确打开方式
+15:12:05  [15:12:04] FEED item a[2] id=7698639234131579327 type=0 static=ok redirect=ok dur=8615
+15:12:05  [15:12:04] FEED mix a[2] name=隋宏伟
+15:12:05  [15:12:04] FEED item a[3] id=7706922873612980392 type=0 static=ok redirect=ok dur=12600
+15:12:05  [15:12:04] FEED mix a[3] name=校园青春回忆
+15:12:05  [15:12:04] FEED item a[4] id=7708216378482478784 type=0 static=ok redirect=ok dur=12867
+15:12:05  [15:12:04] FEED mix a[4] name=大熊猫
+15:12:05  [15:12:04] FEED item a[5] id=7702245734817889147 type=0 static=ok redirect=ok dur=10008
+15:12:05  [15:12:04] FEED mix a[5] name=剪映
+15:12:05  [15:12:04] FEED mobile page refresh_index=1: awemes=6 usable=6 filtered=0 redirect=6 total_seen=6
+15:12:05  [15:12:04] ENGINE merge total=6 index=0 replace=false auto=true redirect=6
+15:12:05  [15:12:04] ENGINE needMore (index=0 count=6)
+15:12:05  [15:12:04] FEED mobile GET refresh_index=2 cold=0 count=10 bogus_len=180 seen=6
+15:12:05  [15:12:04] MGR url idx=0 src=redirect forced
+15:12:05  [15:12:04] MGR acquire idx=0 total=1
+15:12:05  [15:12:04] MGR cold-start defer neighbors=[1, 2]
+15:12:05  [15:12:04] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+15:12:05  [15:12:05] DMLOAD id=7702413975073795242 dur=4644
+15:12:05  [15:12:05] MGR ready idx=0
+15:12:05  [15:12:05] MGR url idx=1 src=static age=0s
+15:12:05  [15:12:05] MGR acquire idx=1 total=2
+15:12:05  [15:12:05] MGR url idx=2 src=static age=0s
+15:12:05  [15:12:05] MGR acquire idx=2 total=3
+15:12:05  [15:12:05] MGR cold-start neighbors acquired=[1, 2]
+15:12:05  [15:12:05] DANM get id=7702413975073795242 [0-4s] ttwid=127
+15:12:05  [15:12:05] DANM all-segments done id=7702413975073795242 total=156 retry=0
+15:12:06  [15:12:05] DMLOAD done id=7702413975073795242 total=156
+15:12:06  [15:12:05] MGR ready idx=2
+15:12:06  [15:12:05] MGR ready idx=1
+15:12:06  [15:12:06] FEED proto root fields=1,2,3,4,5,7,8,9,10,14,17,18,21,23,24 awemes=6 (refresh_index=2)
+15:12:06  [15:12:06] FEED video-dump a[0] f1[bytes=344] f2[bytes=1063] f3[varint=1024] f4[varint=576] f5[bytes=8] f6[bytes=1011] f7[bytes=4] f8[bytes=1521] f9[varint=1] f10[bytes=344] f11[bytes=2590] f13[varint=30634] f14[bytes=1521] f15[varint=1] f16[bytes=345] f17[varint=0] f18[bytes=344] f21[varint=1794899556] f24[varint=0] f25[bytes=1830] f26[bytes=0] f29[bytes=1063] f30[bytes=3301] f33[varint=0] f34[bytes=0] f44[bytes=3]
+15:12:06  [15:12:06] FEED aweme-dump a[0] f1[bytes=19] f2[bytes=57] f3[varint=1793963575] f4[bytes=5213] f5[bytes=4315] f6[bytes=441] f7[bytes=15376] f8[bytes=472] f9[varint=0] f10[bytes=52] f11[bytes=63] f13[varint=12] f14[bytes=55] f17[varint=0] f18[bytes=488] f19[bytes=831] f21[bytes=0] f25[varint=0] f27[varint=0] f29[varint=30634] f30[varint=0] f34[varint=0] f35[varint=0] f37[bytes=2513] f38[varint=0] f40[bytes=1] f44[varint=2577670436827534] f45[varint=0] f47[varint=1] f48[varint=0] f49[bytes=2] f51[varint=0] f54[varint=0] f63[bytes=19] f65[varint=0] f68[varint=0] f73[varint=0] f75[bytes=2] f80[varint=0] f81[varint=0] f91[bytes=2] f99[bytes=976] f104[varint=1] f105[varint=1] f106[bytes=139] f109[bytes=8] f116[bytes=0] f125[varint=1] f130[bytes=40] f135[bytes=9] f141[varint=0] f148[varint=0] f149[varint=0] f151[bytes=6] f152[varint=0] f162[varint=0] f166[varint=0] f167[varint=0] f170[bytes=4] f173[varint=0] f181[bytes=0] f191[bytes=0] f195[varint=0] f199[varint=0] f205[bytes=0] f218[bytes=3207] f220[bytes=190] f224[varint=0] f225[varint=0] f227[bytes=10] f239[bytes=3197] f242[bytes=12] f243[bytes=225] f248[bytes=33] f249[bytes=19,bytes=14,bytes=22] f250[varint=1] f265[bytes=25] f266[bytes=43] f279[bytes=6] f284[bytes=642] f286[varint=0] f289[bytes=4] f293[bytes=2] f295[bytes=76] f297[varint=0] f298[bytes=23] f301[bytes=43] f302[bytes=5339] f303[varint=0] f304[bytes=6] f305[bytes=57] f306[varint=1] f307[varint=1] f313[bytes=0] f316[bytes=177] f321[varint=0] f323[bytes=4] f329[varint=1] f330[varint=0] f332[varint=0] f337[bytes=20] f343[varint=0] f344[varint=0] f347[bytes=20] f349[varint=0] f365[bytes=4] f370[bytes=227] f373[bytes=111] f378[bytes=0] f383[bytes=2] f385[bytes=43] f390[bytes=268] f391[bytes=431] f395[bytes=175] f396[bytes=0] f399[bytes=355,bytes=2834] f400[bytes=497] f403[bytes=193] f408[bytes=6] f414[bytes=0] f417[varint=0] f424[varint=4] f432[varint=0] f440[varint=1] f449[varint=1] f450[varint=1] f456[bytes=99] f458[bytes=6] f459[bytes=57] f460[bytes=0] f463[varint=0] f466[bytes=0] f468[varint=0] f478[bytes=8] f480[varint=0] f486[bytes=22] f492[bytes=4] f494[varint=0] f495[varint=0] f499[varint=0] f502[bytes=30] f510[bytes=339] f515[bytes=8] f520[varint=1] f524[varint=0] f531[bytes=76] f532[varint=0] f538[varint=1] f550[bytes=6] f555[bytes=27] f563[bytes=32] f566[bytes=92] f567[varint=0] f569[bytes=240] f1001[varint=0] f1009[bytes=942] f1010[varint=0] f1019[bytes=0] f1033[varint=0] f1035[bytes=238] f1039[bytes=0] f1040[bytes=0] f1045[varint=1] f1049[bytes=2] f1053[bytes=256] f1054[bytes=2] f1056[bytes=17] f1062[bytes=0] f1066[bytes=2] f1069[bytes=12] f1077[bytes=2] f1084[varint=3] f1091[varint=0] f1092[varint=0] f1093[varint=0] f1097[bytes=34] f1099[bytes=7] f1102[bytes=6] f1103[bytes=15]
+15:12:06  [15:12:06] FEED item a[0] id=7705014883817919721 type=0 static=ok redirect=ok dur=30634
+15:12:06  [15:12:06] FEED mix a[0] name=内容过于真实
+15:12:07  [15:12:06] FEED first url[7705014883817919721]: https://api-play.amemv.com/aweme/v1/play/?video_id=v2800fgi0000dbmra5vog65k3gg38s30&line=0&file_id=4592da957cc3445b8ee5f253a89cc417&sign=465
+15:12:07  [15:12:06] FEED item a[1] id=7706523553361573731 type=0 static=ok redirect=ok dur=16167
+15:12:07  [15:12:06] FEED mix a[1] name=鲻鱼头
+15:12:07  [15:12:06] FEED item a[2] id=7707149899033701082 type=0 static=ok redirect=ok dur=7700
+15:12:07  [15:12:06] FEED item a[3] id=7705351774672500672 type=0 static=ok redirect=ok dur=21067
+15:12:07  [15:12:06] FEED mix a[3] name=撸猫第一视角
+15:12:07  [15:12:06] FEED item a[4] id=7704291136353118321 type=0 static=ok redirect=ok dur=15500
+15:12:07  [15:12:06] FEED mix a[4] name=校国旗护卫队
+15:12:07  [15:12:06] FEED item a[5] id=7707550722058254266 type=0 static=ok redirect=ok dur=9034
+15:12:07  [15:12:06] FEED mix a[5] name=蓝兄蓝弟
+15:12:07  [15:12:06] FEED mobile page refresh_index=2: awemes=6 usable=6 filtered=0 redirect=6 total_seen=12
+15:12:07  [15:12:06] ENGINE merge total=12 index=0 replace=false auto=false redirect=6
+15:12:09  [15:12:09] DMSYNC t=3s due=101 marked=22 items=156 stall=1
+15:12:10  [15:12:10] SETTINGS panel open (menu #1)
+15:12:12  [15:12:12] FEED source switch mobile -> web
+15:12:12  [15:12:12] ENGINE reset (source switch)
+15:12:12  [15:12:12] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+15:12:12  [15:12:12] FEEDCOLL reset view (source switch)
+15:12:13  [15:12:13] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+15:12:14  [15:12:13] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+15:12:14  [15:12:13] ENGINE needMore (index=0 count=2)
+15:12:14  [15:12:13] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+15:12:14  [15:12:13] MGR evict idx=2
+15:12:14  [15:12:13] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+15:12:14  [15:12:13] DMLOAD id=7688292804497329451 dur=1475200
+15:12:14  [15:12:13] DANM get id=7688292804497329451 [0-20s] ttwid=127
+15:12:14  [15:12:13] DANM cap-hit [0-20s] n=1012 → split
+15:12:14  [15:12:13] DANM get id=7688292804497329451 [0-10s] ttwid=127
+15:12:14  [15:12:14] DANM get id=7688292804497329451 [10-20s] ttwid=127
+15:12:15  [15:12:14] DANM get id=7688292804497329451 [20-40s] ttwid=127
+15:12:15  [15:12:15] DANM cap-hit [20-40s] n=525 → split
+15:12:15  [15:12:15] DANM get id=7688292804497329451 [20-30s] ttwid=127
+15:12:15  [15:12:15] ENGINE next -> index=1
+15:12:15  [15:12:15] FEEDCOLL scrollTo idx=1 y=1080.0 items=2
+15:12:15  [15:12:15] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+15:12:15  [15:12:15] ENGINE merge total=8 index=1 replace=false auto=false redirect=0
+15:12:15  [15:12:15] DANM get id=7688292804497329451 [30-40s] ttwid=127
+15:12:15  [15:12:15] DMLOAD id=7691048552303403257 dur=1223134
+15:12:15  [15:12:15] DANM get id=7691048552303403257 [0-20s] ttwid=127
+15:12:16  [15:12:15] DANM get id=7691048552303403257 [20-40s] ttwid=127
+15:12:16  [15:12:15] DANM get id=7688292804497329451 [40-60s] ttwid=127
+15:12:16  [15:12:16] DANM get id=7691048552303403257 [40-60s] ttwid=127
+15:12:16  [15:12:16] DANM get id=7688292804497329451 [60-80s] ttwid=127
+15:12:16  [15:12:16] DANM get id=7691048552303403257 [60-80s] ttwid=127
+15:12:16  [15:12:16] DANM get id=7688292804497329451 [80-100s] ttwid=127
+15:12:17  [15:12:16] DANM get id=7691048552303403257 [80-100s] ttwid=127
+15:12:17  [15:12:16] DANM get id=7688292804497329451 [100-120s] ttwid=127
+15:12:17  [15:12:17] DANM get id=7691048552303403257 [100-120s] ttwid=127
+15:12:17  [15:12:17] DANM get id=7688292804497329451 [120-140s] ttwid=127
+15:12:17  [15:12:17] DANM get id=7691048552303403257 [120-140s] ttwid=127
+15:12:17  [15:12:17] DANM get id=7688292804497329451 [140-160s] ttwid=127
+15:12:18  [15:12:17] DANM get id=7691048552303403257 [140-160s] ttwid=127
+15:12:18  [15:12:17] DANM get id=7688292804497329451 [160-180s] ttwid=127
+15:12:18  [15:12:18] DANM get id=7691048552303403257 [160-180s] ttwid=127
+15:12:18  [15:12:18] DANM get id=7688292804497329451 [180-200s] ttwid=127
+15:12:18  [15:12:18] DANM get id=7691048552303403257 [180-200s] ttwid=127
+15:12:18  [15:12:18] DANM get id=7688292804497329451 [200-220s] ttwid=127
+15:12:19  [15:12:18] QUICK panel open (ok) mix=0
+15:12:19  [15:12:18] DANM get id=7691048552303403257 [200-220s] ttwid=127
+15:12:19  [15:12:18] DANM get id=7688292804497329451 [220-240s] ttwid=127
+15:12:19  [15:12:18] DANM get id=7691048552303403257 [220-240s] ttwid=127
+15:12:19  [15:12:19] DANM get id=7688292804497329451 [240-260s] ttwid=127
+15:12:19  [15:12:19] DANM get id=7691048552303403257 [240-260s] ttwid=127
+15:12:19  [15:12:19] DANM get id=7688292804497329451 [260-280s] ttwid=127
+15:12:19  [15:12:19] DMSYNC t=3s due=0 marked=21 items=1093 stall=0
+15:12:19  [15:12:19] DANM get id=7691048552303403257 [260-280s] ttwid=127
+15:12:20  [15:12:19] DANM get id=7688292804497329451 [280-300s] ttwid=127
+15:12:20  [15:12:19] DANM get id=7691048552303403257 [280-300s] ttwid=127
+15:12:20  [15:12:20] DANM get id=7688292804497329451 [300-320s] ttwid=127
+15:12:20  [15:12:20] DANM get id=7691048552303403257 [300-320s] ttwid=127
+15:12:20  [15:12:20] DANM get id=7688292804497329451 [320-340s] ttwid=127
+15:12:20  [15:12:20] DANM get id=7691048552303403257 [320-340s] ttwid=127
+15:12:20  [15:12:20] QUICK select comment id=7691048552303403257
+15:12:21  [15:12:20] DANM get id=7688292804497329451 [340-360s] ttwid=127
+15:12:21  [15:12:20] DANM get id=7691048552303403257 [340-360s] ttwid=127
+15:12:21  [15:12:21] DANM get id=7688292804497329451 [360-380s] ttwid=127
+15:12:21  [15:12:21] DANM get id=7691048552303403257 [360-380s] ttwid=127
+15:12:21  [15:12:21] CMT get id=7691048552303403257 cursor=0
+15:12:21  [15:12:21] DANM get id=7688292804497329451 [380-400s] ttwid=127
+15:12:21  [15:12:21] DANM get id=7691048552303403257 [380-400s] ttwid=127
+15:12:21  [15:12:21] CMT get id=7691048552303403257 cursor=20
+15:12:22  [15:12:21] DANM get id=7688292804497329451 [400-420s] ttwid=127
+15:12:22  [15:12:21] DANM get id=7691048552303403257 [400-420s] ttwid=127
+15:12:22  [15:12:21] CMT get id=7691048552303403257 cursor=40
+15:12:22  [15:12:21] DANM get id=7688292804497329451 [420-440s] ttwid=127
+15:12:22  [15:12:21] DANM get id=7691048552303403257 [420-440s] ttwid=127
+15:12:22  [15:12:22] DANM get id=7688292804497329451 [440-460s] ttwid=127
+15:12:22  [15:12:22] DANM get id=7691048552303403257 [440-460s] ttwid=127
+15:12:23  [15:12:22] DANM get id=7688292804497329451 [460-480s] ttwid=127
+15:12:23  [15:12:22] DANM get id=7691048552303403257 [460-480s] ttwid=127
+15:12:23  [15:12:23] DANM get id=7688292804497329451 [480-500s] ttwid=127
+15:12:23  [15:12:23] DANM get id=7691048552303403257 [480-500s] ttwid=127
+15:12:23  [15:12:23] DANM get id=7688292804497329451 [500-520s] ttwid=127
+15:12:23  [15:12:23] DANM get id=7691048552303403257 [500-520s] ttwid=127
+15:12:23  [15:12:23] DMSYNC t=7s due=0 marked=30 items=1807 stall=5
+15:12:24  [15:12:23] DANM get id=7688292804497329451 [520-540s] ttwid=127
+15:12:24  [15:12:23] DANM get id=7691048552303403257 [520-540s] ttwid=127
+15:12:24  [15:12:23] DANM get id=7688292804497329451 [540-560s] ttwid=127
+15:12:24  [15:12:24] DANM get id=7691048552303403257 [540-560s] ttwid=127
+15:12:24  [15:12:24] DANM get id=7688292804497329451 [560-580s] ttwid=127
+15:12:24  [15:12:24] DANM get id=7691048552303403257 [560-580s] ttwid=127
+15:12:24  [15:12:24] DANM get id=7688292804497329451 [580-600s] ttwid=127
+15:12:25  [15:12:24] DANM get id=7691048552303403257 [580-600s] ttwid=127
+15:12:25  [15:12:24] DANM get id=7688292804497329451 [600-620s] ttwid=127
+15:12:25  [15:12:24] DANM get id=7691048552303403257 [600-620s] ttwid=127
+15:12:25  [15:12:25] QUICK panel open (ok) mix=0
+15:12:25  [15:12:25] DANM get id=7688292804497329451 [620-640s] ttwid=127
+15:12:25  [15:12:25] DANM get id=7691048552303403257 [620-640s] ttwid=127
+15:12:25  [15:12:25] DANM get id=7688292804497329451 [640-660s] ttwid=127
+15:12:26  [15:12:25] DANM get id=7691048552303403257 [640-660s] ttwid=127
+15:12:26  [15:12:25] DANM get id=7688292804497329451 [660-680s] ttwid=127
+15:12:26  [15:12:25] DANM get id=7691048552303403257 [660-680s] ttwid=127
+15:12:26  [15:12:26] DANM get id=7688292804497329451 [680-700s] ttwid=127
+15:12:26  [15:12:26] DANM get id=7691048552303403257 [680-700s] ttwid=127
+15:12:26  [15:12:26] QUICK select home sec=MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1GhorvGsozzshT-PYH0
+15:12:26  [15:12:26] DANM get id=7688292804497329451 [700-720s] ttwid=127
+15:12:26  [15:12:26] DANM get id=7691048552303403257 [700-720s] ttwid=127
+15:12:27  [15:12:26] DANM get id=7688292804497329451 [720-740s] ttwid=127
+15:12:27  [15:12:26] ROOT profile open → WORKSCAP secUid=MS4wLjABAAAAuCoh...
+15:12:27  [15:12:26] WORKSCAP load user page secUid=MS4wLjABAAAAuCoh... (doc-start inject)
+15:12:27  [15:12:26] WEBBOOT load douyin home (invisible shim webview)
+15:12:27  [15:12:27] DANM get id=7691048552303403257 [720-740s] ttwid=127
+15:12:27  [15:12:27] DANM get id=7688292804497329451 [740-760s] ttwid=127
+15:12:27  [15:12:27] DANM get id=7688292804497329451 [760-780s] ttwid=127
+15:12:27  [15:12:27] DANM get id=7691048552303403257 [740-760s] ttwid=127
+15:12:27  [15:12:27] DMSYNC t=11s due=0 marked=38 items=3267 stall=0
+15:12:28  [15:12:27] DANM get id=7688292804497329451 [780-800s] ttwid=127
+15:12:28  [15:12:27] DANM get id=7691048552303403257 [760-780s] ttwid=127
+15:12:28  [15:12:27] DANM get id=7688292804497329451 [800-820s] ttwid=127
+15:12:28  [15:12:27] DANM get id=7691048552303403257 [780-800s] ttwid=127
+15:12:28  [15:12:28] DANM get id=7688292804497329451 [820-840s] ttwid=127
+15:12:28  [15:12:28] DANM get id=7691048552303403257 [800-820s] ttwid=127
+15:12:28  [15:12:28] DANM get id=7691048552303403257 [820-840s] ttwid=127
+15:12:28  [15:12:28] DANM get id=7688292804497329451 [840-860s] ttwid=127
+15:12:29  [15:12:28] DANM get id=7691048552303403257 [840-860s] ttwid=127
+15:12:29  [15:12:28] DANM get id=7688292804497329451 [860-880s] ttwid=127
+15:12:29  [15:12:29] DANM get id=7691048552303403257 [860-880s] ttwid=127
+15:12:29  [15:12:29] DANM get id=7688292804497329451 [880-900s] ttwid=127
+15:12:29  [15:12:29] DANM get id=7691048552303403257 [880-900s] ttwid=127
+15:12:29  [15:12:29] DANM get id=7688292804497329451 [900-920s] ttwid=127
+15:12:29  [15:12:29] DANM get id=7691048552303403257 [900-920s] ttwid=127
+15:12:30  [15:12:29] WORKSCAP[p3] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:30  [15:12:29] DANM get id=7688292804497329451 [920-940s] ttwid=127
+15:12:30  [15:12:30] DANM get id=7691048552303403257 [920-940s] ttwid=127
+15:12:30  [15:12:30] DANM get id=7688292804497329451 [940-960s] ttwid=127
+15:12:30  [15:12:30] DANM get id=7691048552303403257 [940-960s] ttwid=127
+15:12:30  [15:12:30] DANM get id=7688292804497329451 [960-980s] ttwid=127
+15:12:30  [15:12:30] DANM get id=7691048552303403257 [960-980s] ttwid=127
+15:12:31  [15:12:30] DANM get id=7688292804497329451 [980-1000s] ttwid=127
+15:12:31  [15:12:30] DANM get id=7691048552303403257 [980-1000s] ttwid=127
+15:12:31  [15:12:30] WEBBOOT[settled] document.cookie=UIFID_TEMP,__ac_nonce,__ac_signature,s_v_web_id,UIFID_TEMP
+15:12:31  [15:12:30] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:12:31  [15:12:31] DANM get id=7688292804497329451 [1000-1020s] ttwid=127
+15:12:31  [15:12:31] PROFILE fetch fail http=200 len=0
+15:12:31  [15:12:31] DANM get id=7691048552303403257 [1000-1020s] ttwid=127
+15:12:31  [15:12:31] DANM get id=7688292804497329451 [1020-1040s] ttwid=127
+15:12:32  [15:12:31] DANM get id=7691048552303403257 [1020-1040s] ttwid=127
+15:12:32  [15:12:31] DANM get id=7688292804497329451 [1040-1060s] ttwid=127
+15:12:32  [15:12:31] DANM get id=7691048552303403257 [1040-1060s] ttwid=127
+15:12:32  [15:12:32] DANM get id=7688292804497329451 [1060-1080s] ttwid=127
+15:12:32  [15:12:32] DANM get id=7691048552303403257 [1060-1080s] ttwid=127
+15:12:32  [15:12:32] DANM get id=7688292804497329451 [1080-1100s] ttwid=127
+15:12:32  [15:12:32] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:12:32  [15:12:32] DANM get id=7691048552303403257 [1080-1100s] ttwid=127
+15:12:32  [15:12:32] PROFILE fetch fail http=200 len=0
+15:12:32  [15:12:32] PROFILE GET /aweme/v1/web/aweme/post/ uifid=160
+15:12:32  [15:12:32] WORKS probe empty http=200 len=0 (TLS 疑点待真机)
+15:12:33  [15:12:32] DANM get id=7688292804497329451 [1100-1120s] ttwid=127
+15:12:33  [15:12:32] DANM get id=7691048552303403257 [1100-1120s] ttwid=127
+15:12:33  [15:12:33] WORKSCAP[p6] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:33  [15:12:33] DANM get id=7688292804497329451 [1120-1140s] ttwid=127
+15:12:33  [15:12:33] DANM get id=7691048552303403257 [1120-1140s] ttwid=127
+15:12:33  [15:12:33] DANM get id=7688292804497329451 [1140-1160s] ttwid=127
+15:12:33  [15:12:33] DANM get id=7691048552303403257 [1140-1160s] ttwid=127
+15:12:33  [15:12:33] DANM get id=7688292804497329451 [1160-1180s] ttwid=127
+15:12:34  [15:12:33] DANM get id=7691048552303403257 [1160-1180s] ttwid=127
+15:12:34  [15:12:33] DANM get id=7688292804497329451 [1180-1200s] ttwid=127
+15:12:34  [15:12:33] DANM get id=7691048552303403257 [1180-1200s] ttwid=127
+15:12:34  [15:12:34] DANM get id=7688292804497329451 [1200-1220s] ttwid=127
+15:12:34  [15:12:34] DANM get id=7691048552303403257 [1200-1220s] ttwid=127
+15:12:34  [15:12:34] DANM get id=7688292804497329451 [1220-1240s] ttwid=127
+15:12:34  [15:12:34] DANM get id=7691048552303403257 [1220-1223s] ttwid=127
+15:12:35  [15:12:34] DANM all-segments done id=7691048552303403257 total=5065 retry=0
+15:12:35  [15:12:34] DANM get id=7688292804497329451 [1240-1260s] ttwid=127
+15:12:35  [15:12:34] DMLOAD done id=7691048552303403257 total=5065
+15:12:35  [15:12:34] ENGINE needMore (index=1 count=8)
+15:12:35  [15:12:34] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+15:12:35  [15:12:34] ENGINE next -> index=2
+15:12:35  [15:12:34] MGR url idx=2 src=static age=19s
+15:12:35  [15:12:34] MGR acquire idx=2 total=3
+15:12:35  [15:12:34] MGR url idx=3 src=static age=19s
+15:12:35  [15:12:34] MGR acquire idx=3 total=4
+15:12:35  [15:12:34] MGR url idx=4 src=static age=19s
+15:12:35  [15:12:34] MGR acquire idx=4 total=5
+15:12:35  [15:12:34] FEEDCOLL scrollTo idx=2 y=2160.0 items=8
+15:12:35  [15:12:35] DANM get id=7688292804497329451 [1260-1280s] ttwid=127
+15:12:35  [15:12:35] DANM get id=7688292804497329451 [1280-1300s] ttwid=127
+15:12:35  [15:12:35] DANM get id=7688292804497329451 [1300-1320s] ttwid=127
+15:12:36  [15:12:35] WORKSCAP[p9] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:36  [15:12:35] MGR ready idx=4
+15:12:36  [15:12:35] MGR ready idx=3
+15:12:36  [15:12:36] DANM get id=7688292804497329451 [1320-1340s] ttwid=127
+15:12:36  [15:12:36] DMLOAD id=7692276710641154394 dur=430545
+15:12:36  [15:12:36] MGR ready idx=2
+15:12:36  [15:12:36] DANM get id=7692276710641154394 [0-20s] ttwid=127
+15:12:36  [15:12:36] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=14
+15:12:36  [15:12:36] ENGINE merge total=14 index=2 replace=false auto=false redirect=0
+15:12:36  [15:12:36] DANM get id=7688292804497329451 [1340-1360s] ttwid=127
+15:12:36  [15:12:36] DANM get id=7692276710641154394 [20-40s] ttwid=127
+15:12:37  [15:12:36] DANM get id=7688292804497329451 [1360-1380s] ttwid=127
+15:12:37  [15:12:36] DANM get id=7692276710641154394 [40-60s] ttwid=127
+15:12:37  [15:12:36] DANM get id=7688292804497329451 [1380-1400s] ttwid=127
+15:12:37  [15:12:37] DANM get id=7692276710641154394 [60-80s] ttwid=127
+15:12:37  [15:12:37] DANM get id=7688292804497329451 [1400-1420s] ttwid=127
+15:12:37  [15:12:37] DANM get id=7692276710641154394 [80-100s] ttwid=127
+15:12:38  [15:12:37] DANM get id=7688292804497329451 [1420-1440s] ttwid=127
+15:12:38  [15:12:37] DANM get id=7692276710641154394 [100-120s] ttwid=127
+15:12:38  [15:12:37] DANM get id=7692276710641154394 [120-140s] ttwid=127
+15:12:38  [15:12:37] DANM get id=7688292804497329451 [1440-1460s] ttwid=127
+15:12:38  [15:12:38] DANM get id=7692276710641154394 [140-160s] ttwid=127
+15:12:38  [15:12:38] DANM get id=7688292804497329451 [1460-1475s] ttwid=127
+15:12:38  [15:12:38] DANM get id=7692276710641154394 [160-180s] ttwid=127
+15:12:38  [15:12:38] DANM all-segments done id=7688292804497329451 total=3944 retry=0
+15:12:38  [15:12:38] DMLOAD done id=7688292804497329451 total=3944
+15:12:39  [15:12:38] DANM get id=7692276710641154394 [180-200s] ttwid=127
+15:12:39  [15:12:38] WORKSCAP[p12] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:39  [15:12:39] DANM get id=7692276710641154394 [200-220s] ttwid=127
+15:12:39  [15:12:39] DANM get id=7692276710641154394 [220-240s] ttwid=127
+15:12:40  [15:12:39] DANM get id=7692276710641154394 [240-260s] ttwid=127
+15:12:40  [15:12:39] ENGINE next -> index=3
+15:12:40  [15:12:39] MGR evict idx=0
+15:12:40  [15:12:39] MGR url idx=5 src=static age=24s
+15:12:40  [15:12:39] MGR acquire idx=5 total=5
+15:12:40  [15:12:40] FEEDCOLL scrollTo idx=3 y=3240.0 items=14
+15:12:40  [15:12:40] DANM get id=7692276710641154394 [260-280s] ttwid=127
+15:12:40  [15:12:40] DMSYNC t=3s due=0 marked=2 items=335 stall=9
+15:12:40  [15:12:40] DMLOAD id=7697209929345551625 dur=573334
+15:12:40  [15:12:40] DANM get id=7697209929345551625 [0-20s] ttwid=127
+15:12:40  [15:12:40] DANM get id=7692276710641154394 [280-300s] ttwid=127
+15:12:40  [15:12:40] DANM get id=7697209929345551625 [20-40s] ttwid=127
+15:12:40  [15:12:40] DANM get id=7692276710641154394 [300-320s] ttwid=127
+15:12:41  [15:12:40] DANM get id=7697209929345551625 [40-60s] ttwid=127
+15:12:41  [15:12:40] MGR ready idx=5
+15:12:41  [15:12:40] DANM get id=7692276710641154394 [320-340s] ttwid=127
+15:12:41  [15:12:41] ENGINE prev -> index=2
+15:12:41  [15:12:41] MGR evict idx=5
+15:12:41  [15:12:41] MGR url idx=0 src=static age=27s
+15:12:41  [15:12:41] MGR acquire idx=0 total=5
+15:12:41  [15:12:41] FEEDCOLL scrollTo idx=2 y=2160.0 items=14
+15:12:41  [15:12:41] DANM get id=7697209929345551625 [60-80s] ttwid=127
+15:12:41  [15:12:41] DANM get id=7692276710641154394 [340-360s] ttwid=127
+15:12:41  [15:12:41] DANM get id=7697209929345551625 [80-100s] ttwid=127
+15:12:41  [15:12:41] DANM get id=7692276710641154394 [360-380s] ttwid=127
+15:12:41  [15:12:41] DANM get id=7697209929345551625 [100-120s] ttwid=127
+15:12:42  [15:12:41] DANM get id=7692276710641154394 [380-400s] ttwid=127
+15:12:42  [15:12:41] WORKSCAP[p15] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:42  [15:12:41] DANM get id=7697209929345551625 [120-140s] ttwid=127
+15:12:42  [15:12:41] MGR ready idx=0
+15:12:42  [15:12:42] DANM get id=7692276710641154394 [400-420s] ttwid=127
+15:12:42  [15:12:42] DANM get id=7697209929345551625 [140-160s] ttwid=127
+15:12:42  [15:12:42] DANM get id=7692276710641154394 [420-430s] ttwid=127
+15:12:42  [15:12:42] DANM get id=7697209929345551625 [160-180s] ttwid=127
+15:12:42  [15:12:42] QUICK panel open (ok) mix=1
+15:12:42  [15:12:42] DANM all-segments done id=7692276710641154394 total=410 retry=0
+15:12:42  [15:12:42] DMLOAD done id=7692276710641154394 total=410
+15:12:43  [15:12:42] DANM get id=7697209929345551625 [180-200s] ttwid=127
+15:12:43  [15:12:43] DANM get id=7697209929345551625 [200-220s] ttwid=127
+15:12:43  [15:12:43] DANM get id=7697209929345551625 [220-240s] ttwid=127
+15:12:43  [15:12:43] DANM get id=7697209929345551625 [240-260s] ttwid=127
+15:12:44  [15:12:43] DANM get id=7697209929345551625 [260-280s] ttwid=127
+15:12:44  [15:12:44] DANM get id=7697209929345551625 [280-300s] ttwid=127
+15:12:44  [15:12:44] DANM get id=7697209929345551625 [300-320s] ttwid=127
+15:12:44  [15:12:44] DANM get id=7697209929345551625 [320-340s] ttwid=127
+15:12:45  [15:12:44] WORKSCAP[p18] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAuCohCdxZnah5VnV8AzDPHp66vE9megork1nVgaqZyzjUa1Ghor
+15:12:45  [15:12:44] QUICK select home sec=MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0RwJoSE2p1A2mis
+15:12:45  [15:12:44] DANM get id=7697209929345551625 [340-360s] ttwid=127
+15:12:45  [15:12:45] DANM get id=7697209929345551625 [360-380s] ttwid=127
+15:12:45  [15:12:45] DMSYNC t=7s due=0 marked=6 items=410 stall=0
+15:12:45  [15:12:45] ROOT profile open → WORKSCAP secUid=MS4wLjABAAAAniyJ...
+15:12:45  [15:12:45] WORKSCAP busy,skip
+15:12:45  [15:12:45] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:12:45  [15:12:45] PROFILE fetch fail http=200 len=0
+15:12:45  [15:12:45] DANM get id=7697209929345551625 [380-400s] ttwid=127
+15:12:46  [15:12:45] DANM get id=7697209929345551625 [400-420s] ttwid=127
+15:12:46  [15:12:45] DANM get id=7697209929345551625 [420-440s] ttwid=127
+15:12:46  [15:12:46] DANM get id=7697209929345551625 [440-460s] ttwid=127
+15:12:46  [15:12:46] DANM get id=7697209929345551625 [460-480s] ttwid=127
+15:12:46  [15:12:46] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:12:47  [15:12:46] PROFILE fetch fail http=200 len=0
+15:12:47  [15:12:46] PROFILE GET /aweme/v1/web/aweme/post/ uifid=160
+15:12:47  [15:12:46] DANM get id=7697209929345551625 [480-500s] ttwid=127
+15:12:47  [15:12:46] WORKS probe empty http=200 len=0 (TLS 疑点待真机)
+15:12:47  [15:12:46] WORKSCAP deadline
+15:12:47  [15:12:47] DANM get id=7697209929345551625 [500-520s] ttwid=127
+15:12:47  [15:12:47] DANM get id=7697209929345551625 [520-540s] ttwid=127
+15:12:47  [15:12:47] DANM get id=7697209929345551625 [540-560s] ttwid=127
+15:12:48  [15:12:47] DANM get id=7697209929345551625 [560-573s] ttwid=127
+15:12:48  [15:12:48] DANM all-segments done id=7697209929345551625 total=0 retry=0
+15:12:48  [15:12:48] DMLOAD done id=7697209929345551625 total=0
+15:12:49  [15:12:49] DMSYNC t=11s due=0 marked=13 items=410 stall=0
+15:12:53  [15:12:53] DMSYNC t=15s due=0 marked=16 items=410 stall=6
+15:12:57  [15:12:57] DMSYNC t=19s due=0 marked=18 items=410 stall=7
+15:13:01  [15:13:01] DMSYNC t=23s due=0 marked=21 items=410 stall=6
+15:13:05  [15:13:05] DMSYNC t=27s due=0 marked=23 items=410 stall=3
+15:13:06  [15:13:06] QUICK panel open (ok) mix=1
+15:13:09  [15:13:09] DMSYNC t=31s due=0 marked=28 items=410 stall=0
+15:13:13  [15:13:13] DMSYNC t=35s due=0 marked=30 items=410 stall=10
+15:13:14  [15:13:14] QUICK select comment id=7692276710641154394
+15:13:15  [15:13:14] CMT get id=7692276710641154394 cursor=0
+15:13:15  [15:13:15] CMT get id=7692276710641154394 cursor=20
+15:13:15  [15:13:15] CMT get id=7692276710641154394 cursor=40
+15:13:17  [15:13:17] DMSYNC t=40s due=0 marked=35 items=410 stall=1
+15:13:18  [15:13:18] QUICK panel open (ok) mix=1
+15:13:19  [15:13:19] QUICK select home sec=MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0RwJoSE2p1A2mis
+15:13:19  [15:13:19] ROOT profile open → WORKSCAP secUid=MS4wLjABAAAAniyJ...
+15:13:20  [15:13:19] WORKSCAP load user page secUid=MS4wLjABAAAAniyJ... (doc-start inject)
+15:13:20  [15:13:19] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:13:20  [15:13:19] PROFILE fetch fail http=200 len=0
+15:13:21  [15:13:20] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:13:21  [15:13:21] PROFILE fetch fail http=200 len=0
+15:13:21  [15:13:21] DMSYNC t=44s due=0 marked=39 items=410 stall=0
+15:13:22  [15:13:22] WORKSCAP[p3] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:25  [15:13:25] DMSYNC t=48s due=0 marked=46 items=410 stall=2
+15:13:26  [15:13:25] WORKSCAP[p6] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:28  [15:13:28] WORKSCAP[p9] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:29  [15:13:29] DMSYNC t=52s due=0 marked=54 items=410 stall=0
+15:13:31  [15:13:31] WORKSCAP[p12] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:33  [15:13:33] DMSYNC t=56s due=0 marked=57 items=410 stall=4
+15:13:34  [15:13:34] WORKSCAP[p15] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:37  [15:13:37] DMSYNC t=60s due=0 marked=63 items=410 stall=2
+15:13:38  [15:13:37] WORKSCAP[p18] page rs=complete hooked=0 xhrTotal=0 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAniyJ7EAg9CnWl7mwsEzwxhA85pugWJ2BZ3Bkk6o0un4JL9EtP0
+15:13:39  [15:13:39] WORKSCAP deadline
+15:13:41  [15:13:41] DMSYNC t=64s due=0 marked=70 items=410 stall=2
+15:13:45  [15:13:45] DMSYNC t=68s due=4 marked=90 items=410 stall=0
+15:13:49  [15:13:49] DMSYNC t=72s due=3 marked=115 items=410 stall=0
+15:13:53  [15:13:53] DMSYNC t=76s due=1 marked=134 items=410 stall=0
+15:13:57  [15:13:57] DMSYNC t=80s due=0 marked=139 items=410 stall=4
+15:14:01  [15:14:01] DMSYNC t=84s due=0 marked=158 items=410 stall=0
+15:14:05  [15:14:05] DMSYNC t=88s due=0 marked=165 items=410 stall=4
+15:14:09  [15:14:09] DMSYNC t=92s due=0 marked=170 items=410 stall=0
+15:14:13  [15:14:13] DMSYNC t=96s due=0 marked=176 items=410 stall=0
+15:14:17  [15:14:17] DMSYNC t=100s due=0 marked=181 items=410 stall=0
+15:14:21  [15:14:21] DMSYNC t=104s due=0 marked=185 items=410 stall=1
+15:14:25  [15:14:25] DMSYNC t=108s due=0 marked=188 items=410 stall=3
+15:14:29  [15:14:29] DMSYNC t=112s due=0 marked=188 items=410 stall=19
+15:14:33  [15:14:33] DMSYNC t=116s due=0 marked=190 items=410 stall=1
+15:14:37  [15:14:37] DMSYNC t=120s due=0 marked=194 items=410 stall=1
+15:14:41  [15:14:41] DMSYNC t=124s due=0 marked=196 items=410 stall=7
+15:14:45  [15:14:45] DMSYNC t=128s due=0 marked=198 items=410 stall=10
+15:14:49  [15:14:49] DMSYNC t=132s due=0 marked=200 items=410 stall=2
+15:14:53  [15:14:53] DMSYNC t=136s due=0 marked=202 items=410 stall=2
+15:14:57  [15:14:57] DMSYNC t=140s due=0 marked=204 items=410 stall=6
+15:15:01  [15:15:01] DMSYNC t=144s due=0 marked=208 items=410 stall=2
+15:15:05  [15:15:05] DMSYNC t=148s due=0 marked=216 items=410 stall=1
+15:15:09  [15:15:09] DMSYNC t=152s due=0 marked=217 items=410 stall=8
+15:15:13  [15:15:13] DMSYNC t=156s due=0 marked=221 items=410 stall=3
+15:15:17  [15:15:17] DMSYNC t=160s due=0 marked=222 items=410 stall=14
+15:15:21  [15:15:21] DMSYNC t=164s due=0 marked=233 items=410 stall=0
+15:15:25  [15:15:25] DMSYNC t=168s due=0 marked=240 items=410 stall=2
+15:15:29  [15:15:29] DMSYNC t=172s due=0 marked=247 items=410 stall=4
+15:15:33  [15:15:33] DMSYNC t=176s due=0 marked=249 items=410 stall=5
+15:15:37  [15:15:37] DMSYNC t=180s due=0 marked=254 items=410 stall=1
+15:15:41  [15:15:41] DMSYNC t=184s due=0 marked=260 items=410 stall=1
+15:15:45  [15:15:45] DMSYNC t=188s due=0 marked=267 items=410 stall=0
+15:15:49  [15:15:49] DMSYNC t=192s due=0 marked=272 items=410 stall=1
+15:15:53  [15:15:53] DMSYNC t=196s due=0 marked=276 items=410 stall=2
+15:15:57  [15:15:57] DMSYNC t=200s due=0 marked=278 items=410 stall=11
+15:16:01  [15:16:01] DMSYNC t=204s due=0 marked=280 items=410 stall=3
+15:16:05  [15:16:05] DMSYNC t=208s due=0 marked=283 items=410 stall=2
+15:16:09  [15:16:09] DMSYNC t=212s due=0 marked=287 items=410 stall=3
+15:16:13  [15:16:13] DMSYNC t=216s due=0 marked=294 items=410 stall=4
+15:16:17  [15:16:17] DMSYNC t=220s due=0 marked=296 items=410 stall=10
+15:16:21  [15:16:21] DMSYNC t=224s due=0 marked=301 items=410 stall=0
+15:16:25  [15:16:25] DMSYNC t=228s due=0 marked=301 items=410 stall=16
+15:16:29  [15:16:29] DMSYNC t=232s due=0 marked=302 items=410 stall=7
+15:16:33  [15:16:33] DMSYNC t=236s due=0 marked=304 items=410 stall=3
+15:16:37  [15:16:37] DMSYNC t=240s due=0 marked=309 items=410 stall=3
+15:16:41  [15:16:41] DMSYNC t=244s due=0 marked=312 items=410 stall=3
+15:16:45  [15:16:45] DMSYNC t=248s due=0 marked=317 items=410 stall=0
+15:16:49  [15:16:49] DMSYNC t=252s due=0 marked=322 items=410 stall=2
+15:16:53  [15:16:53] DMSYNC t=256s due=0 marked=327 items=410 stall=1
+15:16:57  [15:16:57] DMSYNC t=260s due=0 marked=329 items=410 stall=1
+15:17:01  [15:17:01] DMSYNC t=264s due=0 marked=332 items=410 stall=9
+15:17:05  [15:17:05] DMSYNC t=268s due=0 marked=333 items=410 stall=14
+15:17:09  [15:17:09] DMSYNC t=272s due=0 marked=335 items=410 stall=4
+15:17:13  [15:17:13] DMSYNC t=276s due=0 marked=342 items=410 stall=2
+15:17:17  [15:17:17] DMSYNC t=280s due=0 marked=345 items=410 stall=10
+15:17:21  [15:17:21] DMSYNC t=284s due=0 marked=346 items=410 stall=14
+15:17:25  [15:17:25] DMSYNC t=288s due=0 marked=348 items=410 stall=6
+15:17:29  [15:17:29] DMSYNC t=292s due=0 marked=349 items=410 stall=8
+15:17:33  [15:17:33] DMSYNC t=296s due=0 marked=352 items=410 stall=0
+15:17:37  [15:17:37] DMSYNC t=300s due=0 marked=357 items=410 stall=7
+15:17:41  [15:17:41] DMSYNC t=304s due=0 marked=361 items=410 stall=4
+15:17:45  [15:17:45] DMSYNC t=308s due=0 marked=363 items=410 stall=4
+15:17:49  [15:17:49] DMSYNC t=312s due=0 marked=365 items=410 stall=3
+15:17:53  [15:17:53] DMSYNC t=316s due=0 marked=367 items=410 stall=7
+15:17:57  [15:17:57] DMSYNC t=320s due=0 marked=369 items=410 stall=5
+15:18:01  [15:18:01] DMSYNC t=324s due=0 marked=374 items=410 stall=0
+15:18:05  [15:18:05] DMSYNC t=328s due=0 marked=375 items=410 stall=5
+15:18:09  [15:18:09] DMSYNC t=332s due=0 marked=379 items=410 stall=0
+15:18:13  [15:18:13] DMSYNC t=336s due=0 marked=381 items=410 stall=2
+15:18:17  [15:18:17] DMSYNC t=340s due=0 marked=389 items=410 stall=1
+15:18:21  [15:18:21] DMSYNC t=344s due=0 marked=392 items=410 stall=3
+15:18:25  [15:18:25] DMSYNC t=348s due=0 marked=394 items=410 stall=5
+15:18:29  [15:18:29] DMSYNC t=352s due=0 marked=395 items=410 stall=14
+15:18:33  [15:18:33] DMSYNC t=356s due=0 marked=397 items=410 stall=0
+15:18:37  [15:18:37] DMSYNC t=360s due=0 marked=401 items=410 stall=0
+15:18:41  [15:18:41] DMSYNC t=364s due=0 marked=404 items=410 stall=12
+15:18:45  [15:18:45] DMSYNC t=368s due=0 marked=404 items=410 stall=28
+15:18:49  [15:18:49] DMSYNC t=372s due=0 marked=405 items=410 stall=4
+15:18:53  [15:18:53] DMSYNC t=376s due=0 marked=406 items=410 stall=3
+15:18:57  [15:18:57] DMSYNC t=380s due=0 marked=408 items=410 stall=7
+15:19:01  [15:19:01] DMSYNC t=384s due=0 marked=410 items=410 stall=10
+15:19:05  [15:19:05] DMSYNC t=388s due=0 marked=410 items=410 stall=26
+15:19:09  [15:19:09] DMSYNC t=392s due=0 marked=410 items=410 stall=42
+15:19:13  [15:19:13] DMSYNC t=396s due=0 marked=410 items=410 stall=58
+15:19:17  [15:19:17] DMSYNC t=400s due=0 marked=410 items=410 stall=74
+15:19:21  [15:19:21] DMSYNC t=404s due=0 marked=410 items=410 stall=90
+15:19:25  [15:19:25] DMSYNC t=408s due=0 marked=410 items=410 stall=106
+15:19:29  [15:19:29] DMSYNC t=412s due=0 marked=410 items=410 stall=122
+15:19:33  [15:19:33] DMSYNC t=416s due=0 marked=410 items=410 stall=138
+15:19:37  [15:19:37] DMSYNC t=420s due=0 marked=410 items=410 stall=154
+15:19:41  [15:19:41] DMSYNC t=424s due=0 marked=410 items=410 stall=170
+15:19:45  [15:19:45] DMSYNC t=428s due=0 marked=410 items=410 stall=186

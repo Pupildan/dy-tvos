@@ -17,6 +17,7 @@ final class DYWorksCapture: NSObject {
     private var gotWorks = false
     private var pollCount = 0
     private var totalCap = 0
+    private var rehooked = false
 
     /// document-start 注入的拦截器：命中作品/合集端点的响应体存 window.__dyCap
     private static let hookJS = """
@@ -67,6 +68,7 @@ final class DYWorksCapture: NSObject {
             self.webView = wv
             self.gotWorks = false
             self.totalCap = 0
+            self.rehooked = false
             DYLog.shared.log("WORKSCAP load user page secUid=\(secUid.prefix(16))... (doc-start inject)")
             let url = "https://www.douyin.com/user/\(secUid)"
             wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: url)!))
@@ -105,6 +107,12 @@ final class DYWorksCapture: NSObject {
             let hooked = diag["hooked"] as? Bool ?? false
             let xhr = diag["xhr"] as? Int ?? 0
             let cap = diag["cap"] as? [[String: Any]] ?? []
+            // 兜底：document-start 注入没生效(hooked=0)→ 用 evaluateJavaScript 补装 hook
+            if !hooked, !self.rehooked {
+                self.rehooked = true
+                DYLog.shared.log("WORKSCAP[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
+                self.evalJS(Self.hookJS, tag: "rehook")
+            }
             // 诊断透视：每 3 次轮询打一条 page 状态
             if self.pollCount % 3 == 0 {
                 DYLog.shared.log("WORKSCAP[\(tag)] page rs=\(rs) hooked=\(hooked ? 1 : 0) xhrTotal=\(xhr) cap=\(cap.count) href=\(href)")

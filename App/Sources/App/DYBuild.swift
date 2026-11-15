@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v164"
-    static let changes = "v164: 修v163 WebView截获零捕获根因——改用WKUserContentController document-start注入hook(DYCreateWebViewWithInject),page JS跑之前装好拦截器(v163用evaluateJavaScript事后注入漏首屏XHR);拦截器扩到aweme/post+series+mix合集端点;加诊断透视(readyState/href/hooked/xhrTotal/cap数)定位页面加载;离屏数据泵非UI"
+    static let version = "v165"
+    static let changes = "v165: 修v164 hooked=0根因——shim里setConfiguration:在initWithFrame:之后=WKWebView已拷贝config换不掉,addUserScript加到没被采用的config上;改为先配userContentController(hook)再建WKWebView;另加evaluateJavaScript补装hook兜底(drain查__dyHooked=0则rehook),双保险确保拦截器装上"
 }

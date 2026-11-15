@@ -53,6 +53,8 @@ id DYCreateWebViewWithInject(CGRect frame, NSString * __nullable userAgent, NSSt
     }
 
     // document-start 注入：page JS 跑之前装拦截器（零漏）
+    // ⚠️ 必须在 initWithFrame: 之前配好 config——WKWebView 在 initWithFrame 时拷贝 configuration，
+    //    之后再 setConfiguration: 换不掉（v164 首版 hooked=0 根因：addUserScript 加到了没被采用的 config 上）。
     if (injectScript && UserScriptCls && ContentCtlCls && [config respondsToSelector:@selector(userContentController)]) {
         id contentCtl = [config valueForKey:@"userContentController"];
         id script = ((id(*)(id, SEL))objc_msgSend)(UserScriptCls, @selector(alloc));
@@ -71,8 +73,5 @@ id DYCreateWebViewWithInject(CGRect frame, NSString * __nullable userAgent, NSSt
     if (![raw respondsToSelector:frameSel]) return nil;
     id wv = ((id(*)(id, SEL, CGRect))objc_msgSend)(raw, frameSel, frame);
     if (!wv) return nil;
-    if ([wv respondsToSelector:@selector(setConfiguration:)]) {
-        [wv setValue:config forKey:@"configuration"];
-    }
     return wv;
 }
