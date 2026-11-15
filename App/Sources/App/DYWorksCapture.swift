@@ -99,6 +99,8 @@ final class DYWorksCapture: NSObject {
     private var loadedAuthorSec = ""
     /// v180 变体推进节流（XHR/fetch 双通道会同时回两条空响应，避免一次连跳两级）
     private var lastVariantAt = Date.distantPast
+    /// v181 全端点透视去重（同一 URL 只打一次日志）
+    private var seenURLLogged: Set<String> = []
 
     // MARK: - 对外入口
 
@@ -215,7 +217,7 @@ final class DYWorksCapture: NSObject {
     /// need_time_list(首页1 翻页0)/time_list_query/whale_cut_token/cut_version/
     /// publish_video_strategy_type/from_user_page/version_code=290100/version_name=29.1.0
     /// v174 缺 6 参数且 need_time_list 恒 1 → 第二页 200 空（真机 len=17 实锤）。
-    private static func postFetchURL(secUid: String, maxCursor: Int, count: Int = 50) -> String {
+    private static func postFetchURL(secUid: String, maxCursor: Int, count: Int = 100) -> String {
         let needTimeList = maxCursor == 0 ? "1" : "0"
         return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=\(count)&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0"
     }
@@ -413,6 +415,7 @@ final class DYWorksCapture: NSObject {
         if let wv = webView, wv.superview != nil { wv.removeFromSuperview() }
         webView = nil
         loadedAuthorSec = ""
+        seenURLLogged = []
         sessionReady = false
         pendingQueue = []
     }
@@ -433,6 +436,13 @@ final class DYWorksCapture: NSObject {
                   let diag = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return }
             let hooked = diag["hooked"] as? Bool ?? false
             let cap = diag["cap"] as? [[String: Any]] ?? []
+            // v181 全端点透视日志（去重）：确认页面作者页滚动到底走哪个端点
+            for s in (diag["seen"] as? [String] ?? []) {
+                let key = String(s.prefix(120))
+                if self.seenURLLogged.insert(key).inserted {
+                    DYLog.shared.log("SESSION page-url \(s.prefix(220))")
+                }
+            }
             if !hooked, !self.rehooked {
                 self.rehooked = true
                 DYLog.shared.log("SESSION[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
@@ -606,6 +616,10 @@ final class DYWorksCapture: NSObject {
                 if let c = obj["cursor"] as? Int, c > 0 { nextCursor = c }
                 else if let mc = obj["maxCursor"] as? Int, mc > 0 { nextCursor = mc; altCursor = mc }
                 if let mc = obj["maxCursor"] as? Int, mc > 0 { altCursor = mc }
+                // v181 时间分组探测（若非空，下一版可走 time_list_query=1 按月取）
+                if let tl = obj["tl"] as? String, !tl.isEmpty {
+                    DYLog.shared.log("CAP post TIME LIST \(tl.prefix(500))")
+                }
                 mixName = obj["mixName"] as? String ?? ""
             } else if let list = obj["aweme_list"] as? [[String: Any]] {
                 // 裸 JSON 兜底（grab 端 JSON.parse 失败/超长响应）
@@ -810,7 +824,9 @@ final class DYWorksCapture: NSObject {
     private static let drainJS = """
     (function(){
       var cap=[]; try{ cap=window.__dyCap.splice(0); }catch(e){}
-      var diag={rs:'',href:'',hooked:false,n:cap.length};
+      var diag={rs:'',href:'',hooked:false,n:cap.length,seen:[]};
+      // v181 全端点透视：页面自己发的 web API 端点（翻页可能走我们没拦的路径）
+      try{ diag.seen=window.__dySeenUrls.splice(0); }catch(e){}
       try{ diag.rs=document.readyState; }catch(e){}
       try{ diag.href=String(location.href).slice(0,90); }catch(e){}
       try{ diag.hooked=!!window.__dyHooked; }catch(e){}
@@ -822,7 +838,7 @@ final class DYWorksCapture: NSObject {
     /// aweme/post 与 mix/aweme 响应在 JS 端预解析精简（每条只取 id/desc/cover/直链/duration/统计，体积 300KB+→~10KB）。
     private static let hookJS = """
     (function(){
-      if(window.__dyHooked) return; window.__dyHooked=true; window.__dyCap=[];
+      if(window.__dyHooked) return; window.__dyHooked=true; window.__dyCap=[]; window.__dySeenUrls=[];
       function grab(u,b){ try{
         if(!u||!b) return;
         var s=String(u);
@@ -855,14 +871,24 @@ final class DYWorksCapture: NSObject {
                 st:st.join(','),imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
             }
             var mn=''; if(j.mix_info&&j.mix_info.mix_name)mn=j.mix_info.mix_name;
-            window.__dyCap.push({u:us,b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),cursor:(j.cursor||0),mixName:mn})});
+            // v181：need_time_list=1 的首屏响应可能带按年月分组的 time_list
+            // （抖音作者页"按时间筛选"）；若存在，可用 time_list_query=1 按月取数据绕过翻页墙。
+            var tl=''; try{ if(j.time_list) tl=JSON.stringify(j.time_list).slice(0,1500); }catch(e){}
+            window.__dyCap.push({u:us,b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),cursor:(j.cursor||0),mixName:mn,tl:tl})});
             return;
           }
         }
         window.__dyCap.push({u:us,b:body.slice(0,300000)});
       }catch(e){} }
       var xo=XMLHttpRequest.prototype.open, xs=XMLHttpRequest.prototype.send;
-      XMLHttpRequest.prototype.open=function(m,u){ this.__u=u; return xo.apply(this,arguments); };
+      // v181 全端点透视：记录页面（含我们自己的 XHR）发出的所有 /aweme/v1/web/ URL，
+      // 用于确认作者页滚动到底走的是哪个端点（可能根本不是 aweme/post）。去重、限 60 条/tick。
+      XMLHttpRequest.prototype.open=function(m,u){
+        try{ var su=String(u); if(su.indexOf('/aweme/v1/web/')>=0){
+          window.__dySeenUrls=window.__dySeenUrls||[];
+          if(window.__dySeenUrls.length<60) window.__dySeenUrls.push(su.slice(0,220));
+        } }catch(e){}
+        this.__u=u; return xo.apply(this,arguments); };
       XMLHttpRequest.prototype.send=function(){ var x=this; this.__u=String(this.__u||'');
         this.addEventListener('readystatechange',function(){ if(x.readyState===4){ try{ var t=x.responseType; if(!t||t==='text'||t==='json'){ grab(x.__u,(t==='json')?x.response:x.responseText); } }catch(e){} } });
         return xs.apply(this,arguments); };

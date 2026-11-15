@@ -3,8 +3,8 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v179**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品首页+合集=WebView 页面上下文请求真机全通**（v163-v175）；点播/焦点/滑动/右轨统计/合集屏/点播段语义全修通（v169-v175）；**作者作品翻页仍未通**（v175-v177 连续 3 版 `{"status_code":0}` 验签软拒，v178 换路线待验收）。
+> **当前版本 v180**。稳定回退点：**v122**（git checkout 三文件）。
+> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品首页+合集=WebView 页面上下文请求真机全通**（v163-v175）；点播/焦点/滑动/右轨统计/合集屏/点播段语义全修通（v169-v175）；**作者作品翻页=服务端信任墙**（v175-v179 连败，v179 真机判死参数路线；v180 改走页面作者页真实渲染+页面自己无限滚动，待验收）。
 
 ---
 
@@ -86,7 +86,8 @@
 | v176 | **作品翻页修复**：真机复现第一页 20-23 条 `hasMore=1` → 第二页恒 17 字节空列表；翻 myDV `u11.F0` 实锤**按端点设 `referer`**（post→`https://www.douyin.com/user/`，mix→`/collection/`，detail→`/video/`），页面上下文 fetch 不能自定义 Referer 头 → 用 `history.replaceState` 把 document URL 切到对应路径（零加载，浏览器自动带正确 Referer）。附加：翻页 ≥3s 节流、空响应打 body + 退避重试 2 次、同作者重开只补缓存不重复请求（防限流）、`postMaxPages` 8→20、网格触底 `requestMoreWorks` 主动补页 | ⚠️ 真机空响应原文 `{"status_code":0}`=验签软拒；referer 非根因（v177） |
 | v177 | ①**翻页验签修复**（v176 日志 `body={"status_code":0}` 实锤）：`_dytag` 是塞进 query 的服务端不认识参数 → a_bogus 基于完整 query 计算、页面签名包装只签白名单参数 → 参数集不一致 → 第一页宽松过、翻页严格拒。**标记全改 URL fragment**（`#postcap/#profcap/#mixcap/#detailcap`：浏览器不发 fragment、不参与签名，请求参数逐字节对齐 myDV），hook `u` 单独保留 `#tag` 供分发；**页面 jsvmp 包装后重发的带签名请求响应也纳入解析**（双通道按 id 去重累积）；②快捷栏焦点选中**只留液态玻璃描边**（白渐变+微光），去掉选中背景（tvOS 26 glass tint 填充 / 低版本 ultraThinMaterial 填充） | ⚠️ 真机 19:42-19:48 三个作者第一页 21-23 条后仍恒 `{"status_code":0}`；fragment 假设判死 |
 | v178 | **翻页整体换路线**（v175 参数对齐 myDV / v176 referer / v177 fragment 连续 3 版均软拒 → 按铁律判死"自拼翻页 URL"）：①**请求 URL 彻底净化**——标记不再进 query 也不进 fragment（fragment 仍会被页面签名包装当 URL 字符串算进签名），改存 JS 本地 `window.__dyTagMap`，回推时本地拼 `#tag` 仅供 Swift 分发；②**XHR 优先**发请求（抖音 jsvmp 签名包装多挂 XHR，此前一律 `fetch()` 可能压根没签名：首页接口宽松放过、翻页严格验签必挂），空响应自动用 fetch 通道补一枪；③**离屏 WebView 1x1→1920x1080 真实 viewport + 首次会话真导航到作者页 + 2.5s 页面内滚动泵**——让页面自己发懒加载翻页（参数与 a_bogus 全由页面生成；v163 起 1x1 滚动永不触发="分页从未成功"的遗留真根因）；④ hook 保留**完整原生 aweme/post URL** 分片打日志（`NATIVE POST URL[n]`），翻页参数 `nativePagedPostURL` 1:1 照抄该模板、只删动态签名字段交页面重算；⑤软拒**不再判死** `hasMore`（v174-v177 的 give-up 会把 UI 停住），交给页面原生通道继续 | ✅ CI 过；⚠️ 真机首屏可用但翻页仍 `{"status_code":0}`，且真导航引入竞态（第三个作者 128 作品一条都没截到） |
-| v179 | **修 v178 首屏回归 + 翻页参数对齐 myDV**：①**撤销真导航**——20:14:20 日志实锤导航同秒 `SESSION ready rs=complete`（旧 document 的 hooked=1）并 fire，20:14:21 新页面才 `hooked=0 → 补装 hook`，响应全丢；回到 v177 验证过的**单一持久首页会话**，换作者只重置 Swift 状态；②v178 真机 `NATIVE POST URL[n]` 打全了页面 jsvmp 加的 `verifyFp/fp/msToken/a_bogus/uifid`，证明 **XHR 签名通道有效**（首屏 n=14/20 正常）；③翻页模板从首页复制时**漏改 `need_time_list`**——myDV `u11:3680` 权威 `j==0?"1":"0"`，翻页必须 0；④`nativePagedPostURL` 改**字符串级替换**（URLComponents 会 percent 重编码、改写空值，破坏与原生请求字节一致），删全部会话绑定参数交页面包装器重签，**绝对 URL 还原成相对路径**与首屏同构；⑤软拒按 3 变体重试（标准 / 换 `max_cursor` 为响应 maxCursor / 换 `cursor` 参数键），全拒停发自拼请求但不判死 hasMore | ✅ CI 过，待真机验收（关键日志：`CAP post ok ... maxCursor=`、`CAP post page (NATIVE template vN)`、`CAP works accumulated +N → M`） |
+| v179 | **修 v178 首屏回归 + 翻页参数对齐 myDV**：①**撤销真导航**——20:14:20 日志实锤导航同秒 `SESSION ready rs=complete`（旧 document 的 hooked=1）并 fire，20:14:21 新页面才 `hooked=0 → 补装 hook`，响应全丢；回到 v177 验证过的**单一持久首页会话**，换作者只重置 Swift 状态；②v178 真机 `NATIVE POST URL[n]` 打全了页面 jsvmp 加的 `verifyFp/fp/msToken/a_bogus/uifid`，证明 **XHR 签名通道有效**（首屏 n=14/20 正常）；③翻页模板从首页复制时**漏改 `need_time_list`**——myDV `u11:3680` 权威 `j==0?"1":"0"`，翻页必须 0；④`nativePagedPostURL` 改**字符串级替换**（URLComponents 会 percent 重编码、改写空值，破坏与原生请求字节一致），删全部会话绑定参数交页面包装器重签，**绝对 URL 还原成相对路径**与首屏同构；⑤软拒按 3 变体重试（标准 / 换 `max_cursor` 为响应 maxCursor / 换 `cursor` 参数键），全拒停发自拼请求但不判死 hasMore | ⚠️ 真机 20:28/20:29：三变体全 `{"status_code":0}`，翻页墙实锤 |
+| v180 | **翻页墙判死后换路线**：v179 真机铁证 `max_cursor=0` → 完整 20 条 2.7MB；任何 `max_cursor!=0`（换游标值 / 换 `cursor` 键 / `need_time_list=0` 三变体）→ 恒 17 字节 `{"status_code":0}`，与 §5.3③★ a_bogus 验签软拒同源 → **彻底停止自拼翻页请求**（不再发任何 `max_cursor!=0`，避免风控），作品累积改由**页面作者页自己的无限滚动**提供（page-req 通道按 id 去重）；②**真导航修好 v178 竞态**：导航时清队列/记时刻/重置 hook 稳定计数，drain 必须「距导航 ≥2.5s + 新 document 连续 2 次 `hooked=1`」才 fire；③离屏 WebView **加入 window 最底层**（alpha 0.01 / `isUserInteractionEnabled=false`，仍属数据泵非 UI）让作者页列表真实布局渲染，IntersectionObserver 与 2.5s 滚动泵才可能触发页面原生翻页；④首屏 `count` 20→50（myDV `u11` 的 count 由调用方传入，绕过翻页墙一次多拿）；⑤空响应不再 fetch 补枪（双通道重复消耗变体 + 加速风控）；⑥新增 `SESSION PAGE-NATIVE PAGING` 验收日志 | ✅ CI 过，待真机验收（关键：首屏 n 是否 >20、是否出现 `SESSION PAGE-NATIVE PAGING`、作品数是否随页面滚动增长） |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -103,7 +104,7 @@
 
 ### 5.3 作者作品与合集内容（❌ 未解决——攻坚全记录，接手必读）
 
-**当前状态一句话（v170 更新）**：**作品列表已破局**——WebView 截获路线真机全通（页面自己算 168 签名，我们拦响应体；资料+首批作品真机成立）；Swift 侧签名链全部打通但 aweme/post 直连仍 200 空（保留以下攻坚记录供参考，勿再走直连老路）。资料屏/作品网格/自动加载在 v169-v170 打磨中。
+**当前状态一句话（v180 更新）**：资料/作品首屏/合集=WebView 页面上下文请求真机全通；**作者作品翻页=服务端信任墙，参数路线已判死**——v179 真机铁证：`max_cursor=0` → 完整 20 条 + 2.7MB；任何 `max_cursor!=0`（换游标值 / 换 `cursor` 键 / `need_time_list=0` 三变体全试）→ 恒 17 字节 `{"status_code":0}`。与本节 ③★ 的「a_bogus 版本不匹配 → 200 空软拒」同源：**页面 jsvmp 只能对自己构造的首屏 URL 生成服务端认可的签名，我们自拼翻页 URL 即使被包装器重签也过不了验签**。v180 起停止自拼翻页，改走「页面作者页真实渲染 + 页面自己无限滚动」（唯一未验证形态）。
 
 #### ① 已实装且真机可用的
 - **user/profile/other**（作者资料）：匿名全通。配方=v153 最小头（假 msToken + 最小头 + UIFID_TEMP 罐 + uifid 参数/头 + x-secsdk 签名），真机多次 fans/works 真实数据。**⚠️ v157 教训：给这条链加浏览器一致性头（sec-ch-ua 等）会把它也搞挂——头声称"我是浏览器"但 URLSession 指纹不是 = 自相矛盾触发风控。这条链永远用最小头。**

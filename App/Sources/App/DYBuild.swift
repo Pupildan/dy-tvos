@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v180"
-    static let changes = "v180: 翻页墙实锤后换路线(v179真机:max_cursor=0→完整20条2.7MB,任何max_cursor!=0含换游标值/换cursor键/need_time_list=0三变体→一律17字节status_code:0;与HANDOVER§5.3的aweme/post签名/会话信任墙同源,继续调参数是死路): ①彻底停止自拼翻页请求(不再发max_cursor!=0,避免风控),更多作品完全交给页面作者页自己的无限滚动(hook的page-req通道按id去重累积) ②真导航到作者页但修好v178竞态(导航时清队列/记时刻/重置hook稳定计数,drain必须距导航>=2.5s且新document连续2次hooked=1才fire) ③离屏WebView加入window最底层(alpha0.01/不可交互,仍属数据泵)让作者页列表真实渲染,IntersectionObserver与滚动泵才可能触发页面原生翻页 ④首屏count20→50(照myDV u11可变count,绕开翻页墙一次多拿) ⑤空响应不再fetch补枪(双通道重复消耗变体+加速风控) ⑥新增SESSION PAGE-NATIVE PAGING验收日志"
+    static let version = "v181"
+    static let changes = "v181: v180真机首屏count=50→n=43/41(40多条✓)但SESSION PAGE-NATIVE PAGING零次,滚动泵触发6次页面自己始终不发翻页请求→「页面原生翻页」路线也判死; ①count 50→100探服务端上限(唯一还能多拿的匿名手段,myDV u11的count由调用方传入) ②新增全端点透视:hook在XHR.open记录所有/aweme/v1/web/ URL(去重+限60/tick),drain打SESSION page-url日志,查页面作者页滚动到底走哪个端点(可能不是aweme/post);同时探测need_time_list=1响应的time_list按年月分组(CAP post TIME LIST),若存在可走time_list_query=1按月取数据绕过翻页墙 ③作品屏文案改「服务端仅开放首批」,去掉误导性的继续下滑自动加载更多"
 }

@@ -598,7 +598,9 @@ struct DYProfileScreen: View {
 
     private var worksNote: String {
         if !works.isEmpty {
-            return "作品 \(works.count) 件\(worksHasMore ? "（继续下滑自动加载更多）" : "")"
+            // v181：翻页墙实锤（任何 max_cursor!=0 恒 {"status_code":0}），页面作者页自身
+            // 也不发懒加载请求 → 「继续下滑自动加载更多」是误导，改如实说明。
+            return "作品 \(works.count) 件\(worksHasMore ? "（服务端仅开放首批）" : "")"
         }
         switch worksCount {
         case -2: return "作品列表：截获中…"
