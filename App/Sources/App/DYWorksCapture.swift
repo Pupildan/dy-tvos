@@ -93,7 +93,7 @@ final class DYWorksCapture: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self, self.capturedHasMore, !self.currentAuthorSec.isEmpty,
                   self.postPagesFetched < self.postMaxPages,
-                  !self.pendingQueue.contains(where: { $0.contains("_dytag=postcap") }) else { return }
+                  !self.pendingQueue.contains(where: { $0.contains("#postcap") }) else { return }
             self.lastActivityAt = Date()
             self.ensureSession()
             self.pendingQueue.append(Self.postFetchURL(secUid: self.currentAuthorSec, maxCursor: max(0, self.lastMaxCursor)))
@@ -176,8 +176,13 @@ final class DYWorksCapture: NSObject {
 
     // MARK: - 请求 URL（页面上下文 fetch，页面包装自动补 webCommon/msToken/a_bogus）
 
+    /// ⚠️ v177 关键修复（v176 真机 `CAP post EMPTY body={"status_code":0}` 实锤）：
+    /// 标记从 query 参数（`&_dytag=xxx`）改成 **URL fragment（#xxx）**。fragment 不会发给服务端、
+    /// 不参与 a_bogus 计算；之前 `_dytag` 是服务端不认识的多余 query 参数，页面签名包装只签
+    /// 它认识的参数 → 参数集与验签不一致 → 第一页宽松放过、翻页严格校验软拒 200 空。
+    /// hook 的 `u` 是我们传入 fetch 的完整字符串（含 fragment），分发标记照常可用。
     private static func profileFetchURL(secUid: String) -> String {
-        "/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&publish_video_strategy_type=2&source=channel_page&_dytag=profcap"
+        "/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&publish_video_strategy_type=2&source=channel_page#profcap"
     }
 
     /// v175 逐参数照抄 myDV UserWorksResponse 方法（u11.java 3678-3703，反编译实锤）：
@@ -187,16 +192,16 @@ final class DYWorksCapture: NSObject {
     /// v174 缺 6 参数且 need_time_list 恒 1 → 第二页 200 空（真机 len=17 实锤）。
     private static func postFetchURL(secUid: String, maxCursor: Int) -> String {
         let needTimeList = maxCursor == 0 ? "1" : "0"
-        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0&_dytag=postcap"
+        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0#postcap"
     }
 
     private static func mixFetchURL(mixId: String) -> String {
-        "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page&_dytag=mixcap"
+        "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page#mixcap"
     }
 
     /// v175 myDV u11:3992 同款 aweme/detail（§7.2 探针全通）——权威取 mix_info.mix_id
     private static func detailFetchURL(awemeId: String) -> String {
-        "/aweme/v1/web/aweme/detail/?aweme_id=\(awemeId)&request_source=600&origin_type=quick_player&device_platform=webapp&aid=6383&channel=channel_pc_web&_dytag=detailcap"
+        "/aweme/v1/web/aweme/detail/?aweme_id=\(awemeId)&request_source=600&origin_type=quick_player&device_platform=webapp&aid=6383&channel=channel_pc_web#detailcap"
     }
 
     /// 页面上下文 fetch（hook 已在 doc-start 注入，响应自动进 __dyCap）
@@ -304,7 +309,7 @@ final class DYWorksCapture: NSObject {
                         DYLog.shared.log("SESSION page URL → https://www.douyin.com\(path) (referer 对齐 myDV u11.F0)")
                         continue
                     }
-                    if item.contains("_dytag=postcap") {
+                    if item.contains("#postcap") {
                         let now = Date()
                         if now < self.postEarliestFireAt || now.timeIntervalSince(self.lastPostFireAt) < 3 {
                             break   // 翻页 ≥3s 节流（myDV 用户滚动翻页天然有间隔）
@@ -315,9 +320,9 @@ final class DYWorksCapture: NSObject {
                     self.pendingQueue.removeFirst()
                     self.lastActivityAt = Date()
                     self.totalCap += 1
-                    let tagWord = item.contains("_dytag=profcap") ? "profcap"
-                        : item.contains("_dytag=postcap") ? "postcap"
-                        : item.contains("_dytag=detailcap") ? "detailcap" : "mixcap"
+                    let tagWord = item.contains("#profcap") ? "profcap"
+                        : item.contains("#postcap") ? "postcap"
+                        : item.contains("#detailcap") ? "detailcap" : "mixcap"
                     DYLog.shared.log("SESSION fire \(tagWord) → \(item.prefix(100))")
                     self.evalJS(Self.fetchJS(url: item), tag: tagWord)
                     fired += 1
@@ -327,24 +332,31 @@ final class DYWorksCapture: NSObject {
             for item in cap {
                 let u = item["u"] as? String ?? "?"
                 let b = item["b"] as? String ?? ""
-                guard u.contains("_dytag=") else {
-                    // 页面自身请求（不再加载作者页后几乎不会有；照旧打日志备查）
-                    if u.contains("aweme/post") || u.contains("user/profile") || u.contains("mix/") {
-                        DYLog.shared.log("SESSION page-req len=\(b.count) u=\(u.prefix(80))")
+                let tagged = u.contains("#")
+                if !tagged {
+                    // v177：页面 jsvmp 包装后重发的带签名请求（URL 无 fragment）——
+                    // 它的响应参数是页面原生的，一样纳入累积（按 id 去重），并用完整 URL 备查。
+                    DYLog.shared.log("SESSION page-req len=\(b.count) u=\(u.prefix(300))")
+                    if u.contains("aweme/post") {
+                        self.lastActivityAt = Date()
+                        self.handleWorks(b, allowPaging: false)
+                    } else if u.contains("user/profile") {
+                        self.lastActivityAt = Date()
+                        self.handleProfile(b)
                     }
                     continue
                 }
                 self.lastActivityAt = Date()
-                if u.contains("_dytag=profcap") {
+                if u.contains("#profcap") {
                     DYLog.shared.event("CAP profcap len=\(b.count)")
                     self.handleProfile(b)
-                } else if u.contains("_dytag=postcap") {
+                } else if u.contains("#postcap") {
                     DYLog.shared.event("CAP postcap len=\(b.count)")
-                    self.handleWorks(b)
-                } else if u.contains("_dytag=detailcap") {
+                    self.handleWorks(b, allowPaging: true)
+                } else if u.contains("#detailcap") {
                     DYLog.shared.event("CAP detailcap len=\(b.count)")
                     self.handleDetail(b)
-                } else if u.contains("_dytag=mixcap") {
+                } else if u.contains("#mixcap") {
                     DYLog.shared.event("CAP mixcap len=\(b.count)")
                     self.handleMix(b)
                 }
@@ -385,7 +397,7 @@ final class DYWorksCapture: NSObject {
     }
 
     /// 解析 aweme/post 响应（grab slim 或裸 JSON 兜底）→ 累积 → delegate → hasMore 自动翻页
-    private func handleWorks(_ body: String) {
+    private func handleWorks(_ body: String, allowPaging: Bool = true) {
         if body.hasPrefix("FETCHERR") || body.hasPrefix("SYNERR") {
             DYLog.shared.event("CAP post fetch error: \(body.prefix(120))")
             return
@@ -418,6 +430,7 @@ final class DYWorksCapture: NSObject {
             // v176 真机实锤：第二页常返回 17 字节空列表（{"aweme_list":[]}）。
             // 打 body 看清是风控空列表还是错误码，再退避重试（≤2 次），仍空才收摊。
             DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120))")
+            guard allowPaging else { return }   // v177 页面包装通道的空响应不触发重试/收摊
             if self.postEmptyRetries < 2, !self.currentAuthorSec.isEmpty {
                 self.postEmptyRetries += 1
                 let delay = Double(self.postEmptyRetries) * 3.0
@@ -450,7 +463,7 @@ final class DYWorksCapture: NSObject {
             }
         }
         // v175 分页引擎：myDV 完整参数 + 响应 cursor 翻页（v174 用 max_cursor + 缺 6 参数 → 第二页空）
-        if hasMore, nextCursor != lastMaxCursor, postPagesFetched < postMaxPages, !currentAuthorSec.isEmpty {
+        if allowPaging, hasMore, nextCursor != lastMaxCursor, postPagesFetched < postMaxPages, !currentAuthorSec.isEmpty {
             postPagesFetched += 1
             lastMaxCursor = nextCursor
             let url = Self.postFetchURL(secUid: currentAuthorSec, maxCursor: nextCursor)
@@ -633,6 +646,8 @@ final class DYWorksCapture: NSObject {
         var s=String(u);
         if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0&&s.indexOf('aweme/detail')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
+        // v177：fragment 标记在 URL 末尾，slice(0,120) 会砍掉 → 单独保留 #tag 供 drain 分发
+        var hi=s.indexOf('#'), tag=(hi>=0)?s.slice(hi):'', us=s.slice(0,120)+tag;
         if(s.indexOf('aweme/post')>=0||s.indexOf('mix/aweme')>=0){
           var j=null; try{ j=JSON.parse(body); }catch(e){}
           if(j&&(j.aweme_list)){
@@ -655,11 +670,11 @@ final class DYWorksCapture: NSObject {
                 st:st.join(','),imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
             }
             var mn=''; if(j.mix_info&&j.mix_info.mix_name)mn=j.mix_info.mix_name;
-            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),cursor:(j.cursor||0),mixName:mn})});
+            window.__dyCap.push({u:us,b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),cursor:(j.cursor||0),mixName:mn})});
             return;
           }
         }
-        window.__dyCap.push({u:s.slice(0,120),b:body.slice(0,300000)});
+        window.__dyCap.push({u:us,b:body.slice(0,300000)});
       }catch(e){} }
       var xo=XMLHttpRequest.prototype.open, xs=XMLHttpRequest.prototype.send;
       XMLHttpRequest.prototype.open=function(m,u){ this.__u=u; return xo.apply(this,arguments); };

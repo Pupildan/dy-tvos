@@ -259,18 +259,19 @@ struct DYQuickPanelView: View {
                     .foregroundColor(.white)
             }
             .frame(width: 210, height: 150)
-            .background {
+            // v177 用户要求：焦点选中只保留液态玻璃描边，不要任何选中背景
+            //（tvOS 26: 去掉 .glassEffect(.regular.tint(...)) 填充；低版本: 去掉 ultraThinMaterial 填充）
+            .overlay {
                 if focused {
-                    if #available(tvOS 26.0, *) {
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(Color.clear)
-                            .glassEffect(.regular.tint(.white.opacity(0.10)), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
-                    } else {
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(.ultraThinMaterial)
-                            .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(Color.white, lineWidth: 4))
-                    }
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .strokeBorder(
+                            LinearGradient(
+                                colors: [Color.white.opacity(0.95), Color.white.opacity(0.55)],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                        .shadow(color: Color.white.opacity(0.35), radius: 6)
                 }
             }
             .scaleEffect(focused ? 1.05 : 1.0)
