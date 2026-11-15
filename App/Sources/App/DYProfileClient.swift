@@ -102,21 +102,32 @@ final class DYProfileClient {
     // MARK: - 对外
 
     /// 取作者资料 + 试探作品列表。onDone 主队列；nil=失败。
+    /// 链路：隐形 WebView 引导（jsvmp 挑战信任 cookie）→ 首页 5 跳引导 → UIFID_TEMP → 资料/作品。
     func profile(for secUid: String, onDone: @escaping (DYProfileUser?, Int) -> Void) {
         guard !secUid.isEmpty else { onDone(nil, 0); return }
         queue.async { [weak self] in
             guard let self else { return }
-            self.bootstrapHome { [weak self] in
+            DYWebViewBootstrap.shared.run { [weak self] in
                 guard let self else { return }
-                self.ensureUIFID { [weak self] in
+                self.bootstrapHome { [weak self] in
                     guard let self else { return }
-                    self.fetchProfile(secUid: secUid) { user in
-                        self.fetchWorks(secUid: secUid) { count in
-                            DispatchQueue.main.async { onDone(user, count) }
+                    self.ensureUIFID { [weak self] in
+                        guard let self else { return }
+                        self.fetchProfile(secUid: secUid) { user in
+                            self.fetchWorks(secUid: secUid) { count in
+                                DispatchQueue.main.async { onDone(user, count) }
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    /// 外部（WebView 引导）向罐注入 cookie
+    func absorbCookie(name: String, value: String) {
+        queue.async { [weak self] in
+            self?.jar[name] = value
         }
     }
 
