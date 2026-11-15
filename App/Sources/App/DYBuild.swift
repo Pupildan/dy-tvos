@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v157"
-    static let changes = "v157: 主页作品接口继续深挖——①补齐myDV每请求静态头n(u11:80:sec-ch-ua/sec-fetch-*/priority/cache-control全套浏览器一致性头,探针发现此前缺失);②真msToken(mssdk/web/r/token u11:729常量程序化提取照抄DYMsSdk.swift);③aweme/detail接口探针已通(视频详情真实数据)后续合集可用;作品列表真机试探带全链(真msToken+全套头+uifid),日志WORKS行定论"
+    static let version = "v158"
+    static let changes = "v158: ①资料接口回归修复:v157新增的浏览器一致性头(sec-ch-ua等)与URLSession指纹自相矛盾触发风控致资料屏200空——回退v153验证过的最小头配方,mssdk真msToken撤出主流程(真机MISS且无益);②触摸倍速按用户提供的方案实现:LongPress挂collectionView容器,minimumPressDuration=0.8+allowableMovement=10紧容差(超10px=滑动意图长按立即失败交还滑动,天然互斥)+cancelsTouchesInView=false+shouldRequireFailureOf失败排序;③确认键长按0.6s两倍速保留(双通道并存);④长按倍速中漂移不切视频"
 }

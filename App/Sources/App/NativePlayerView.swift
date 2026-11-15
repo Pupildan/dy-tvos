@@ -598,21 +598,31 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
-    /// 手势（触摸板/触摸面）：上/下滑切换视频。
-    /// v154：两倍速定版=**长按确认键**（pressesBegan 计时/pressesEnded 判定）；触摸悬停全部逻辑
-    /// 已删干净（v146-v153 触摸通道在真机始终不可靠，用户拍板弃用），滑动不再有任何互斥牵连。
+    /// 手势（v158 按用户提供的官方方案实现触摸倍速）：
+    /// ①LongPress 直接挂在播放器容器（collectionView）上，minimumPressDuration=0.8、
+    ///   allowableMovement=10——紧容差：手抖超 10px 长按立即失败、滑动事件交还，与滑动天然互斥；
+    /// ②cancelsTouchesInView=false 不吃滑动事件；
+    /// ③滑动仍走 view 级 pan（collection 原生 pan 保持关闭）。
+    /// 另保留确认键长按 0.6s=两倍速（双通道并存，输入源不同互不干扰）。
     private func setupGestures() {
         // 关闭 collection 原生滚动（触摸板滑动交给手势，避免原生滚动与翻页打架）
         collectionView.panGestureRecognizer.isEnabled = false
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.cancelsTouchesInView = false
         view.addGestureRecognizer(pan)
+        let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
+        hold.minimumPressDuration = 0.8
+        hold.allowableMovement = 10.0   // 紧容差（图上方案）：超 10px=滑动意图，长按立即失败
+        hold.cancelsTouchesInView = false
+        hold.delegate = self
+        collectionView.addGestureRecognizer(hold)
     }
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
         let t = g.translation(in: view)
         guard abs(t.y) > 100 else { return }   // 滑动阈值
+        if isHolding2x { return }   // 长按倍速中的漂移不切视频（抬手恢复 1x）
         g.setTranslation(.zero, in: view)
         if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
         DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
@@ -1060,6 +1070,16 @@ final class DYPlayerViewController: UIViewController {
             if isHolding2x { stopHold2x() }
         }
         super.pressesCancelled(presses, with: event)
+    }
+}
+
+/// 手势委托（v158 图上方案②失败排序）：长按优先级低于 collection 的 pan——collection 原生 pan
+/// 已被禁用（禁用的识别器立即失败），此处合规声明后长按在 0.8s 静置即可触发；
+/// 滑动场景（位移超 10px）长按自身立即失败、事件交还 pan，天然互斥。
+extension DYPlayerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        otherGestureRecognizer === collectionView.panGestureRecognizer
     }
 }
 

@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v156**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v158**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -65,7 +65,9 @@
 | v153 | **悬停纯计时触发**（手势共存委托：v149-v152 的 LongPress 被 pan 默认互斥规则在手指移动 10px 时强杀，纯静止触摸到不了 0.6s）；撤销模糊背景；**作者主页实装**（DYProfileClient：UIFID_TEMP cookie 罐 + uifid 参数/头 + x-secsdk-web-signature MD5 照抄 u11.i()；user/profile/other 匿名全通；aweme/post 真机试探埋日志） | ✅ **主页真机通**（PROFILE ok fans=86512 works=721）；作品列表真机也 200 空（TLS 理论证伪）；悬停触摸仍不可靠 |
 | v154 | 两倍速改长按确认键 0.6s + 触摸悬停逻辑全部删除 | ⚠️ 用户短暂反悔改 v155，未装机 |
 | v155 | 撤销 v154 恢复触摸悬停 | ⚠️ 用户多次实测触发仍不稳定，已作废不装 |
-| v156 | **最终定版=长按确认键 0.6s 触发两倍速、松开恢复、短按呼出快捷面板**（=v154 代码，NativePlayerView 从 3bb022d 恢复）；触摸悬停逻辑删干净避免与滑动冲突 | ✅ CI 过，待验收 |
+| v156 | **最终定版=长按确认键 0.6s 触发两倍速、松开恢复、短按呼出快捷面板**（=v154 代码，NativePlayerView 从 3bb022d 恢复）；触摸悬停逻辑删干净避免与滑动冲突 | ✅ 真机可用 |
+| v157 | 主页深挖：补齐 myDV 静态浏览器头 n（u11:80）+ mssdk 真 msToken（DYMsSdk.swift 程序化照抄 u11:729）+ aweme/detail 探针全通 | ❌ **浏览器一致性头与 URLSession 指纹自相矛盾触发风控，资料接口 200 空**（v153 最小头才是可用态）；真机 mssdk MISS |
+| v158 | ①资料接口回退 v153 最小头配方（mssdk 撤出主流程，DYMsSdk.swift 保留备查）；②**触摸倍速按用户提供的官方方案实现**：LongPress 挂 collectionView 容器 + minimumPressDuration=0.8 + **allowableMovement=10 紧容差**（超 10px=滑动意图，长按立即失败交还滑动，天然互斥）+ cancelsTouchesInView=false + shouldRequireFailureOf 失败排序；③确认键长按两倍速保留（双通道并存）；④长按倍速中漂移不切视频 | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -86,9 +88,9 @@
   - **x-secsdk-web-signature**：`MD5(uifid_timestamp_A96D855A08C0A9707F8BEF0D9A527E4E_全参数k=v&拼接)`（u11.i() 原样，参数含 a_bogus+uifid+timestamp）。签名错 → 403 "Sign Invalid"；对 → 过签名关。
   - **user/profile/other 匿名全通**（sc=0：昵称/粉丝/获赞/作品数/简介）→ v153 主页屏已实装。
 - **仍卡的两点（v153-v157 探针+真机日志）**：
-  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝**。已排除：TLS 指纹（真机 URLSession 也是空）、真 msToken（mssdk 照抄 u11:729 可换，带上也空）、全套浏览器一致性头（u11:80 静态头 n：sec-ch-ua/sec-fetch-*/priority/cache-control——v157 已补齐进 DYProfileClient）、webid、参数矩阵。剩余差异未知，待 v157 真机全链（真msToken+全套头+uifid）定论。
+  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝**。已排除：TLS 指纹（真机 URLSession 也是空）、真 msToken（mssdk 照抄可换，带上也空）、**全套浏览器一致性头（⚠️v157 真机实锤：这些头配 URLSession 指纹=自相矛盾，反而把原本能过的 profile 接口也搞挂了——v158 已回退最小头）**、webid、参数矩阵。剩余差异=服务端设备/会话信任级，待另挖。
   - `mix/aweme`（合集内容）：sc=4 参数错误；`mix/detail` sc=0 但 mix_info 空。**aweme/detail 已探针全通**（视频详情真实数据，u11 l0 参数：aweme_id/request_source=600/origin_type=quick_player）——合集内容可绕道 detail 家族。myDV 源码里没有 mix/aweme 的实际调用（只有 Referer 映射），其 mix/listcollection 也标 blocked——myDV 合集实际走 mix/detail 或 aweme/detail。
-  - **主页资料真机已通**：PROFILE ok fans=86512 works=721（资料屏真实数据）。
+  - **主页资料**：v153 配方（假 msToken+最小头+UIFID_TEMP 罐）真机已通（fans=86512 works=721）；v157 头配方会打挂——**别再给这套链加浏览器头**。
 - **myDV 参照**：u11.java G0/withUserCenterSignChain（UIFID 缺失时仍发请求但不带 x-secsdk 头）；rz0（uifid 头注入）；sl4（cookie 罐）；mix/listcollection 与 favorite 在 myDV 源码里也标 blocked——myDV 的合集走的是 mix/aweme/detail 家族。
 - **探针**：`_tmp/round3_probe.js`（mssdk 照抄验证）、`_tmp/post_matrix_probe.js`（签名矩阵）、`_tmp/uifid_probe.js`（cookie 罐链）。
 
