@@ -72,6 +72,7 @@
 | v160 | 隐形 WebView 引导第一版（公开 WebKit 模块） | ❌ CI 实锤 **tvOS 无公开 WebKit**（unable to resolve WebKit） |
 | v161 | **改回 v2-v8 真机验证过的私有方案**：DYWebViewShim.m 回归（dlopen 私有 WebKit.framework + objc_msgSend 建 WKWebView，桥接头 DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER）+ 引导改 isLoading 轮询 + evaluateJavaScript 收 document.cookie（挑战页 JS 种的 s_v_web_id/__ac_signature/uifid）+ 失败 2s 重试 6 轮 + 20s 兜底 | ✅ **真机引导成功**（WEBBOOT 收到 __ac_signature+s_v_web_id）；资料时好时坏=连发限流 |
 | v162 | **资料获取稳定化**：按作者缓存 10 分钟 + 请求节流 ≥1.5s + 空响应自动重试一次 + 作品探测每会话每作者一次 + 资料屏失败态提示（连发限流是"时好时坏"根因：快速切作者时第一发过、第二发被静默拒） | ✅ CI 过，待验收 |
+| v163 | **作品列表转 WebView 截获路线（用户拍板降维打击）**：本地算 a_bogus 判死（见 §5.3③★）→ 放弃 Swift 侧签名，新增 `DYWorksCapture`：离屏 WebView 加载作者主页 + XHR/fetch 覆写把页面自算的真 168 签名 aweme/post 响应体塞 `window.__dyCap` + 轮询 evaluateJavaScript 抽回 + 全量日志（WORKS CAP）。铁律边界=离屏数据泵非 UI，复用 v161 已验证 evaluateJavaScript 通道零新 ObjC。RootView onChange(isProfileOpen) 触发 | ✅ CI 过，**待真机验证截获成立** |
 
 ## 5. 未解决问题清单（按优先级）
 
