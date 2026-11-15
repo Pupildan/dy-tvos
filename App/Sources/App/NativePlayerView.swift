@@ -588,10 +588,27 @@ final class DYPlayerViewController: UIViewController {
         // 否则下一按按键的 reconcile 循环把 index 退回旧视觉位置，点播被吃掉）
         NotificationCenter.default.addObserver(forName: Notification.Name("DYWorksJump"), object: nil, queue: .main) { [weak self] note in
             guard let self, let idx = note.object as? Int else { return }
-            DYLog.shared.log("FEEDCOLL works jump -> idx=\(idx)")
-            self.scrollTo(index: idx, animated: true)
+            DYLog.shared.log("FEEDCOLL works jump -> idx=\(idx) (wait items)")
+            self.jumpToWorksIndex(idx, attempt: 0)
         }
         startWatchdog()
+    }
+
+    /// v171：等 merge 的新 item 真正插入 collection 再滚（v170 真机实锤：通知同步触发时 insertItems
+    /// 还没跑，contentSize 还是旧批次 → scrollTo 的 targetY 被 maxOffset 钳到旧底部 → 播的不是选中作品）。
+    private func jumpToWorksIndex(_ idx: Int, attempt: Int) {
+        let n = collectionView.numberOfItems(inSection: 0)
+        if idx < n {
+            scrollTo(index: idx, animated: true)
+            return
+        }
+        if attempt >= 20 {
+            DYLog.shared.log("FEEDCOLL works jump give-up idx=\(idx) items=\(n)")
+            return
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            self?.jumpToWorksIndex(idx, attempt: attempt + 1)
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -623,7 +640,10 @@ final class DYPlayerViewController: UIViewController {
     }
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
-        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        // v171：作者主页/评论屏打开时滑动必须交给焦点引擎移动焦点，播放层不抢
+        //（v170 真机实锤：作者页滑动穿透到本 pan → 切视频）
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
+              DYQuickPanelModel.shared.isProfileOpen == false, DYQuickPanelModel.shared.isCommentOpen == false else { return }
         let t = g.translation(in: view)
         guard abs(t.y) > 100 else { return }   // 滑动阈值
         g.setTranslation(.zero, in: view)
@@ -1007,6 +1027,12 @@ final class DYPlayerViewController: UIViewController {
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        // v171 焦点屏护栏：作者主页/评论屏打开时按键全交 SwiftUI 焦点引擎（上下移动网格焦点、OK 点作品），
+        // 播放层不抢（advance/rewind/seek/呼面板在焦点屏都不该发生）
+        if DYQuickPanelModel.shared.isProfileOpen || DYQuickPanelModel.shared.isCommentOpen {
+            super.pressesBegan(presses, with: event)
+            return
+        }
         // 手动按键：复位自动跳护栏（连续跳停手后按任意键恢复）
         autoSkipStreak = 0
         autoSkipDisabled = false

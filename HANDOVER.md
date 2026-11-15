@@ -3,8 +3,8 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v162**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152，20s 窗口+发射器门控）；两倍速=确认键长按 0.6s（v156 定版，触摸悬停试 11 版终删）；评论死锁修复（v149）；**作者主页资料屏真机通**（v161-162 隐形 WebView 引导成功）；**作品列表与合集内容=未解决**（详见 §5.3 攻坚全记录）。
+> **当前版本 v170**。稳定回退点：**v122**（git checkout 三文件）。
+> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品列表=WebView 截获路线真机全通**（v163-v168：离屏 WebView 让页面自己算 168 签名，我们只拦响应体；资料 100% 通、作品截获成立）；v169 点播/焦点/加载三坑已修（v170，待验收）。
 
 ---
 
@@ -73,6 +73,11 @@
 | v161 | **改回 v2-v8 真机验证过的私有方案**：DYWebViewShim.m 回归（dlopen 私有 WebKit.framework + objc_msgSend 建 WKWebView，桥接头 DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER）+ 引导改 isLoading 轮询 + evaluateJavaScript 收 document.cookie（挑战页 JS 种的 s_v_web_id/__ac_signature/uifid）+ 失败 2s 重试 6 轮 + 20s 兜底 | ✅ **真机引导成功**（WEBBOOT 收到 __ac_signature+s_v_web_id）；资料时好时坏=连发限流 |
 | v162 | **资料获取稳定化**：按作者缓存 10 分钟 + 请求节流 ≥1.5s + 空响应自动重试一次 + 作品探测每会话每作者一次 + 资料屏失败态提示（连发限流是"时好时坏"根因：快速切作者时第一发过、第二发被静默拒） | ✅ CI 过，待验收 |
 | v163 | **作品列表转 WebView 截获路线（用户拍板降维打击）**：本地算 a_bogus 判死（见 §5.3③★）→ 放弃 Swift 侧签名，新增 `DYWorksCapture`：离屏 WebView 加载作者主页 + XHR/fetch 覆写把页面自算的真 168 签名 aweme/post 响应体塞 `window.__dyCap` + 轮询 evaluateJavaScript 抽回 + 全量日志（WORKS CAP）。铁律边界=离屏数据泵非 UI，复用 v161 已验证 evaluateJavaScript 通道零新 ObjC。RootView onChange(isProfileOpen) 触发 | ✅ CI 过，**待真机验证截获成立** |
+| v164/v165 | 零截获修复：hook 改 WKUserContentController **document-start 注入**（v165：先配 controller 再 initWithFrame + evaluateJavaScript 补装兜底） | ✅ 真机 hooked=1，截获成立 |
+| v166/v167 | 资料接 UI：截获 profile/other → DYProfileUser → DYProfileScreen；v167 CI 修 Delegate 协议去 AnyObject（DYProfileScreen 是 struct，strong delegate） | ✅ **真机资料 100% 通**（136 万粉大 V 也通） |
+| v168 | 作品网格+点播：aweme/post 改 **JS 端预解析精简**（300KB 截断根因，体积→~10KB）+ `DYCapturedWork` 模型 + 网格 UI + tap 经 engine merge 播放 | ✅ CI 过；真机截获 n=18/21 通，但点播/焦点翻车（v169/v170 修） |
+| v169 | 网格 `.focused` 绑定（tvOS 焦点引擎要求）+ 播放器/网格合集角标 + JS 提取 mix_info | ⚠️ 真机：点播被吃/无焦点视觉/自动加载不生效（日志实锤三根因，v170 修） |
+| v170 | **三连修复**：①点播不生效真根因=playWork 只改 engine.index 没通知 collection，下一按 reconcile 循环把 index 退回旧视觉位置（ENGINE prev 连环实锤）→ 发 `DYWorksJump` 通知让播放层 scrollTo；②聚焦视觉（白描边+放大+首批到达自动聚焦第一个作品）；③自动加载=首批即 teardown 真凶 → 累积去重+持续滚动截获（停滞 15s/60s 收摊） | ✅ CI 过，待真机验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -89,7 +94,7 @@
 
 ### 5.3 作者作品与合集内容（❌ 未解决——攻坚全记录，接手必读）
 
-**当前状态一句话**：作者资料屏已真机稳定（昵称/粉丝/获赞/作品数/简介）；**作品列表（aweme/post）始终 200 空响应、合集内容（mix/aweme sc=4 / series/aweme sc=5）被服务端拒绝**——身份签名链全部打通并被验证，拒绝发生在签名之后的**设备/会话信任层**。
+**当前状态一句话（v170 更新）**：**作品列表已破局**——WebView 截获路线真机全通（页面自己算 168 签名，我们拦响应体；资料+首批作品真机成立）；Swift 侧签名链全部打通但 aweme/post 直连仍 200 空（保留以下攻坚记录供参考，勿再走直连老路）。资料屏/作品网格/自动加载在 v169-v170 打磨中。
 
 #### ① 已实装且真机可用的
 - **user/profile/other**（作者资料）：匿名全通。配方=v153 最小头（假 msToken + 最小头 + UIFID_TEMP 罐 + uifid 参数/头 + x-secsdk 签名），真机多次 fans/works 真实数据。**⚠️ v157 教训：给这条链加浏览器一致性头（sec-ch-ua 等）会把它也搞挂——头声称"我是浏览器"但 URLSession 指纹不是 = 自相矛盾触发风控。这条链永远用最小头。**
