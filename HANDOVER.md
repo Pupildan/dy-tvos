@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v155**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v156**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -63,8 +63,9 @@
 | v151 | **弹幕空窗真根因**=服务端单请求最多回 ~30s 数据、60s 窗口永久丢后半段（1199 vs 1981 探针对比）→窗口 20s 重叠覆盖；标题重复=desc 内联话题词法剔除；非全屏黑边取色高斯模糊背景；悬停倍速 pan 小位移兜底双通道 | ✅ 弹幕真机验证全量（29632 条/stall=0）；悬停暴露滑动互斥问题；模糊层空白 |
 | v152 | 悬停/滑动互斥判定（一次触摸二选一，悬停阈值放宽 100px，2x 中漂移不再切视频）；loadCover 无条件调用修氛围层空白（只对未就绪视频加载导致预载就绪视频永无封面）；ambient_ok/fail 计数 | ⚠️ 悬停仍要位移才触发（pan 抢杀 LongPress）；模糊效果用户不满意 |
 | v153 | **悬停纯计时触发**（手势共存委托：v149-v152 的 LongPress 被 pan 默认互斥规则在手指移动 10px 时强杀，纯静止触摸到不了 0.6s）；撤销模糊背景；**作者主页实装**（DYProfileClient：UIFID_TEMP cookie 罐 + uifid 参数/头 + x-secsdk-web-signature MD5 照抄 u11.i()；user/profile/other 匿名全通；aweme/post 真机试探埋日志） | ✅ **主页真机通**（PROFILE ok fans=86512 works=721）；作品列表真机也 200 空（TLS 理论证伪）；悬停触摸仍不可靠 |
-| v154 | 两倍速改长按确认键 0.6s + 触摸悬停逻辑全部删除 | ⚠️ 已作废——用户实测 v153 悬停可触发，要求保留触摸方案，未装机 |
-| v155 | 撤销 v154：NativePlayerView 恢复 v153 悬停状态（LongPress+pan 小位移+共存委托+互斥判定），保留触摸悬停两倍速 | ✅ CI 过，待验收 |
+| v154 | 两倍速改长按确认键 0.6s + 触摸悬停逻辑全部删除 | ⚠️ 用户短暂反悔改 v155，未装机 |
+| v155 | 撤销 v154 恢复触摸悬停 | ⚠️ 用户多次实测触发仍不稳定，已作废不装 |
+| v156 | **最终定版=长按确认键 0.6s 触发两倍速、松开恢复、短按呼出快捷面板**（=v154 代码，NativePlayerView 从 3bb022d 恢复）；触摸悬停逻辑删干净避免与滑动冲突 | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -84,9 +85,9 @@
   - **UIFID_TEMP 来源**：`tab/feed` 响应 `Set-Cookie` 自动下发（160 hex 字符）——不需要专门申请端点，cookie 罐收走即可（myDV sl4 同构）。之前的 403 "Uifid Not Found" 就是缺这个 cookie + `uifid` 参数/头。
   - **x-secsdk-web-signature**：`MD5(uifid_timestamp_A96D855A08C0A9707F8BEF0D9A527E4E_全参数k=v&拼接)`（u11.i() 原样，参数含 a_bogus+uifid+timestamp）。签名错 → 403 "Sign Invalid"；对 → 过签名关。
   - **user/profile/other 匿名全通**（sc=0：昵称/粉丝/获赞/作品数/简介）→ v153 主页屏已实装。
-- **仍卡的两点（v153 真机日志定论）**：
-  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝——真机 URLSession 也一样**（WORKS probe empty http=200 len=0；TLS 指纹理论已证伪）。服务端拒绝更深（疑似设备/会话信任级），待另挖路径。
-  - `mix/aweme`（合集内容）：sc=4 参数错误；`mix/detail` sc=0 但内容空。待真机同链试探。
+- **仍卡的两点（v153-v157 探针+真机日志）**：
+  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝**。已排除：TLS 指纹（真机 URLSession 也是空）、真 msToken（mssdk 照抄 u11:729 可换，带上也空）、全套浏览器一致性头（u11:80 静态头 n：sec-ch-ua/sec-fetch-*/priority/cache-control——v157 已补齐进 DYProfileClient）、webid、参数矩阵。剩余差异未知，待 v157 真机全链（真msToken+全套头+uifid）定论。
+  - `mix/aweme`（合集内容）：sc=4 参数错误；`mix/detail` sc=0 但 mix_info 空。**aweme/detail 已探针全通**（视频详情真实数据，u11 l0 参数：aweme_id/request_source=600/origin_type=quick_player）——合集内容可绕道 detail 家族。myDV 源码里没有 mix/aweme 的实际调用（只有 Referer 映射），其 mix/listcollection 也标 blocked——myDV 合集实际走 mix/detail 或 aweme/detail。
   - **主页资料真机已通**：PROFILE ok fans=86512 works=721（资料屏真实数据）。
 - **myDV 参照**：u11.java G0/withUserCenterSignChain（UIFID 缺失时仍发请求但不带 x-secsdk 头）；rz0（uifid 头注入）；sl4（cookie 罐）；mix/listcollection 与 favorite 在 myDV 源码里也标 blocked——myDV 的合集走的是 mix/aweme/detail 家族。
 - **探针**：`_tmp/round3_probe.js`（mssdk 照抄验证）、`_tmp/post_matrix_probe.js`（签名矩阵）、`_tmp/uifid_probe.js`（cookie 罐链）。
@@ -148,7 +149,7 @@
 4. tvOS 焦点链：面板/列表打开时按键走 SwiftUI（onExitCommand/按钮），VC.pressesBegan 收不到——两套面板的按键处理必须各自实现，且互不干扰（焦点链隔离是特性不是 bug）。
 5. 大响应/多连接的日志重复问题——分析前按行去重。
 6. **串行队列内联回调 + 同队列 queue.sync = 自等待死锁（v147/v148 评论「闪退」真根因，v148 焦点理论被真机证伪）**：ttwid 已缓存时 ensureTTWID 的 done() 在 danmaku 队列内联执行，DYCommentClient.fetchPages 在同队列调 ttwidValue（queue.sync）→ 队列永久卡死 → 主线程的 ttwidValue（DYFeedClient 翻页/PlayerManager 播放头）跟着卡死 → 应用冻结被杀。日志特征：CMT 请求一行都没出现 + 操作后不久 ROOT auto-start。修复=跨模块回调永远先 DispatchQueue.main.async 跳出工作队列。焦点兜底（可聚焦元素/Button）仍是有益实践，但不是本例根因。
-7. **两倍速触发方式定版（v155）=触摸悬停（v153 共存委托版）保留**。历程：v146 触摸长按 1.5s → v148 确认键长按 → v149-v152 触摸多通道反复调（LongPress 被默认互斥规则强杀是真凶之一）→ v153 共存委托（shouldRecognizeSimultaneouslyWith）后**用户实测可触发** → v154 曾改确认键、用户旋即要求撤销回触摸（v154 已作废未装机）。要点：触摸悬停必须配手势共存委托，否则 LongPress 永远被 pan 强杀。
+7. **两倍速触发方式最终定版（v156，用户多次实测触摸悬停不稳定后拍板）=长按确认键 0.6s 触发、松开恢复、短按呼出快捷面板**（pressesBegan 起 Timer / pressesEnded 判定短按或恢复 / pressesCancelled 兜底）。历程：v146 触摸长按 1.5s → v148 确认键 → v149-v155 触摸多通道反复调（LongPress 被默认互斥规则强杀是真凶之一；共存委托后偶发可触发但**始终不稳定**）→ v156 正式弃用触摸悬停，逻辑删干净避免与滑动冲突。**教训：触摸悬停方案在 Siri Remote 上试了 10 个版本始终不稳定，按钮方案才是可靠解**。
 
 ## 7. 数据字段权威表（全部 wire/探针实测，禁止猜测）
 

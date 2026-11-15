@@ -31,6 +31,20 @@ final class DYProfileClient {
     /// x-secsdk-web-signature 密钥（myDV u11.i() 硬编码常量，探针实测有效）
     private static let secKey = "A96D855A08C0A9707F8BEF0D9A527E4E"
     static let webUA = DYDanmakuClient.webUA
+    /// myDV u11:80 静态头 n（每个请求 F0 注入）——浏览器一致性指纹头，Argus 对敏感接口校验
+    private static let browserHeaders: [(String, String)] = [
+        ("accept", "application/json, text/plain, */*"),
+        ("accept-language", "zh-CN,zh;q=0.9,en;q=0.8"),
+        ("cache-control", "no-cache"),
+        ("pragma", "no-cache"),
+        ("priority", "u=1, i"),
+        ("sec-ch-ua", "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"147\", \"Google Chrome\";v=\"147\""),
+        ("sec-ch-ua-mobile", "?0"),
+        ("sec-ch-ua-platform", "\"Windows\""),
+        ("sec-fetch-dest", "empty"),
+        ("sec-fetch-mode", "cors"),
+        ("sec-fetch-site", "same-origin"),
+    ]
     private static let webCommon: [(String, String)] = [
         ("device_platform", "webapp"),
         ("aid", "6383"),
@@ -47,6 +61,27 @@ final class DYProfileClient {
         cfg.httpShouldSetCookies = false
         cfg.httpAdditionalHeaders = ["User-Agent": DYProfileClient.webUA, "Accept-Language": "zh-CN,zh;q=0.9"]
         session = URLSession(configuration: cfg)
+    }
+
+    /// 真 msToken（mssdk，myDV u11:729 照抄；缓存复用）
+    private var realMsToken: String?
+
+    private func msToken() -> String {
+        if let realMsToken { return realMsToken }
+        return Self.randomMsToken()
+    }
+
+    private func ensureRealMsToken(_ done: @escaping () -> Void) {
+        if realMsToken != nil { done(); return }
+        DYMsSdk.fetchRealMsToken(session: session) { [weak self] token in
+            if let token {
+                self?.realMsToken = token
+                DYLog.shared.log("PROFILE mssdk msToken len=\(token.count)")
+            } else {
+                DYLog.shared.log("PROFILE mssdk msToken MISS (退回随机)")
+            }
+            done()
+        }
     }
 
     // MARK: - cookie 罐
@@ -86,12 +121,15 @@ final class DYProfileClient {
         guard !secUid.isEmpty else { onDone(nil, 0); return }
         queue.async { [weak self] in
             guard let self else { return }
-            self.ensureUIFID { [weak self] in
+            self.ensureRealMsToken { [weak self] in
                 guard let self else { return }
-                self.fetchProfile(secUid: secUid) { user in
-                    // 作品接口真机试探（Node 探针 200 空=TLS 指纹疑点；URLSession 指纹不同，真机日志定论）
-                    self.fetchWorks(secUid: secUid) { count in
-                        DispatchQueue.main.async { onDone(user, count) }
+                self.ensureUIFID { [weak self] in
+                    guard let self else { return }
+                    self.fetchProfile(secUid: secUid) { user in
+                        // 作品接口真机试探：真 msToken + 全套浏览器头 + uifid 全链（Node 侧全败，URLSession 是最后待验组合）
+                        self.fetchWorks(secUid: secUid) { count in
+                            DispatchQueue.main.async { onDone(user, count) }
+                        }
                     }
                 }
             }
@@ -121,7 +159,7 @@ final class DYProfileClient {
             let url = "\(self.host)\(path)?\(base)&a_bogus=\(sr.value)"
             var req = URLRequest(url: URL(string: url)!)
             req.timeoutInterval = 12
-            req.setValue(DYProfileClient.webUA, forHTTPHeaderField: "User-Agent")
+            for (k, v) in Self.browserHeaders { req.setValue(v, forHTTPHeaderField: k) }
             req.setValue("https://www.douyin.com/?recommend=1", forHTTPHeaderField: "Referer")
             req.setValue(self.cookieHeader(), forHTTPHeaderField: "Cookie")
             DYLog.shared.log("PROFILE seed tab/feed (取 UIFID_TEMP)")
@@ -144,7 +182,7 @@ final class DYProfileClient {
             ("publish_video_strategy_type", "2"),
             ("source", "channel_pc_web"),
             ("version_code", "290100"), ("version_name", "29.1.0"),
-            ("msToken", Self.randomMsToken()),
+            ("msToken", self.msToken()),
             ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
         ]
         self.signedGET("/aweme/v1/web/user/profile/other/", params: params,
@@ -184,7 +222,7 @@ final class DYProfileClient {
             ("show_live_replay_strategy", "1"), ("need_time_list", "1"), ("time_list_query", "0"), ("whale_cut_token", ""),
             ("cut_version", "1"), ("publish_video_strategy_type", "2"), ("from_user_page", "1"),
             ("version_code", "290100"), ("version_name", "29.1.0"),
-            ("msToken", Self.randomMsToken()),
+            ("msToken", self.msToken()),
             ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
         ]
         self.signedGET("/aweme/v1/web/aweme/post/", params: params,
@@ -225,12 +263,11 @@ final class DYProfileClient {
         guard let url = URL(string: "\(host)\(path)?\(query)") else { onDone(nil, nil); return }
         var req = URLRequest(url: url)
         req.timeoutInterval = 12
-        req.setValue(DYProfileClient.webUA, forHTTPHeaderField: "User-Agent")
-        req.setValue("*/*", forHTTPHeaderField: "Accept")
+        for (k, v) in Self.browserHeaders { req.setValue(v, forHTTPHeaderField: k) }
         req.setValue(referer, forHTTPHeaderField: "Referer")
         req.setValue(cookieHeader(), forHTTPHeaderField: "Cookie")
         if !uifid.isEmpty { req.setValue(uifid, forHTTPHeaderField: "uifid") }
-        DYLog.shared.log("PROFILE GET \(path) uifid=\(uifid.isEmpty ? 0 : uifid.count)")
+        DYLog.shared.log("PROFILE GET \(path) uifid=\(uifid.isEmpty ? 0 : uifid.count) msToken=\(realMsToken != nil ? "real" : "fake")")
         session.dataTask(with: req) { data, resp, err in
             if let err { DYLog.shared.log("PROFILE GET err: \(err.localizedDescription)") }
             onDone(data, resp)
