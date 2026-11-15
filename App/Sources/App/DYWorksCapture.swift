@@ -101,6 +101,10 @@ final class DYWorksCapture: NSObject {
     private var lastVariantAt = Date.distantPast
     /// v181 全端点透视去重（同一 URL 只打一次日志）
     private var seenURLLogged: Set<String> = []
+    /// v182 **页面自己发的**原生 aweme/post URL（参数集与我们拼的 myDV 版不同）→ 翻页模板
+    private var nativePagePostURL = ""
+    private var nativePageLogged = false
+    private var pageTemplateTried = false
 
     // MARK: - 对外入口
 
@@ -138,6 +142,10 @@ final class DYWorksCapture: NSObject {
                 self.nativeURLLogged = false
                 self.altCursor = 0
                 self.pagingVariant = 0
+                self.nativePagePostURL = ""
+                self.nativePageLogged = false
+                self.pageTemplateTried = false
+                self.seenURLLogged = []
             }
             self.lastActivityAt = Date()
             // 主页屏实例可能是新的（state 空）：已累积作品/资料立即补发，不用等网络
@@ -272,6 +280,38 @@ final class DYWorksCapture: NSObject {
         return result
     }
 
+    /// v182 用**页面自己发出的原生 URL** 做翻页模板：只改 `max_cursor` / `need_time_list`，
+    /// 其余参数（update_version_code / pc_client_type / pc_libra_divert …）逐字节保留。
+    /// 与 myDV 旧版 `version_code=290100` 参数集不同 —— 混用「页面新签名 + 旧参数」是翻页验签疑点。
+    private static func pageTemplatePagedURL(template: String, secUid: String, cursor: Int) -> String? {
+        guard let qm = template.firstIndex(of: "?") else { return nil }
+        let head = String(template[...qm])
+        let query = String(template[template.index(after: qm)...])
+        let drop: Set<String> = ["a_bogus", "msToken", "verifyFp", "verify_fp", "fp",
+                                 "uifid", "webid", "_signature", "X-Bogus"]
+        var out: [String] = []
+        var hasCursor = false
+        for part in query.split(separator: "&", omittingEmptySubsequences: false) {
+            let kv = String(part).split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
+            let key = String(kv[0])
+            if drop.contains(key) { continue }
+            var val = kv.count > 1 ? String(kv[1]) : ""
+            switch key {
+            case "max_cursor": val = String(cursor); hasCursor = true
+            case "need_time_list": val = "0"
+            case "sec_user_id", "secUid": val = secUid
+            default: break
+            }
+            out.append(key + "=" + val)
+        }
+        if !hasCursor { out.append("max_cursor=" + String(cursor)) }
+        var result = head + out.joined(separator: "&")
+        if let r = result.range(of: "https://www.douyin.com/") {
+            result = "/" + String(result[r.upperBound...])
+        }
+        return result
+    }
+
     private static func mixFetchURL(mixId: String) -> String {
         "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page"
     }
@@ -312,6 +352,8 @@ final class DYWorksCapture: NSObject {
 
     /// v178 页面滚动泵：真实 viewport 下把页面滚到底并派发 scroll，触发作者页自己的懒加载翻页
     /// （页面自己构造的请求，参数集与 a_bogus 全部由 jsvmp 生成，不可能验签失败）。
+    /// v182：抖音 PC 作者页用**内部 overflow 容器**滚动，只滚 window 永远不触发无限滚动
+    /// （v163 起「滚动不触发懒加载」的真正根因）。遍历所有可滚动容器逐个滚到底 + 派发 scroll。
     private static let scrollJS = """
     (function(){try{
       var h=Math.max((document.body&&document.body.scrollHeight)||0,
@@ -319,7 +361,15 @@ final class DYWorksCapture: NSObject {
       window.scrollTo(0,h);
       try{ window.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
       try{ document.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
-      return String(h);
+      var n=0, els=document.querySelectorAll('div,ul,section,main,aside,article');
+      for(var i=0;i<els.length;i++){
+        var e=els[i];
+        try{ if(e.scrollHeight>e.clientHeight+80 && e.clientHeight>150){
+          e.scrollTop=e.scrollHeight; n++;
+          try{ e.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(x){}
+        } }catch(x){}
+      }
+      return 'h='+h+' containers='+n;
     }catch(e){return 'ERR';}})();
     """
 
@@ -416,6 +466,9 @@ final class DYWorksCapture: NSObject {
         webView = nil
         loadedAuthorSec = ""
         seenURLLogged = []
+        nativePagePostURL = ""
+        nativePageLogged = false
+        pageTemplateTried = false
         sessionReady = false
         pendingQueue = []
     }
@@ -441,6 +494,23 @@ final class DYWorksCapture: NSObject {
                 let key = String(s.prefix(120))
                 if self.seenURLLogged.insert(key).inserted {
                     DYLog.shared.log("SESSION page-url \(s.prefix(220))")
+                }
+                // v182：捕获**页面自己发的**原生 aweme/post 首屏 URL（不含我们拼的 count=100）
+                // 它的参数集（update_version_code / pc_client_type / pc_libra_divert 等）与
+                // myDV 旧版参数不同 —— 混用「页面新签名 + myDV 旧参数」很可能就是翻页被验签拒的真因。
+                if s.contains("aweme/post"), s.contains("max_cursor=0"),
+                   !s.contains("count=100"), !s.contains("#"), self.nativePagePostURL.isEmpty {
+                    self.nativePagePostURL = s
+                    if !self.nativePageLogged {
+                        self.nativePageLogged = true
+                        let chars = Array(s.prefix(1200))
+                        var i = 0, part = 0
+                        while i < chars.count {
+                            let end = min(i + 100, chars.count)
+                            DYLog.shared.log("PAGE POST URL[\(part)]=\(String(chars[i..<end]))")
+                            i = end; part += 1
+                        }
+                    }
                 }
             }
             if !hooked, !self.rehooked {
@@ -660,11 +730,19 @@ final class DYWorksCapture: NSObject {
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
         }
-        // v180：**不再自拼下一页**（翻页墙 100% 软拒，实锤三变体全灭）。
-        // 更多作品完全由页面作者页自己的无限滚动请求提供 —— 那些请求由页面 jsvmp
-        // 自己拼参数、自己签名，是唯一可能穿过信任墙的形态；hook 会经 page-req 通道累积。
+        // v182：主通道=正确滚动页面内部 overflow 容器（页面自己发翻页请求）；
+        // 并行兜底=用**页面自己发出的原生参数集**发一次翻页（只试一次，不刷屏）。
         if allowPaging, hasMore, !fresh.isEmpty {
-            DYLog.shared.log("CAP post hasMore=1 → wait for page-native paging (no self-issued page)")
+            if !nativePagePostURL.isEmpty, !pageTemplateTried,
+               let paged = Self.pageTemplatePagedURL(template: nativePagePostURL,
+                                                     secUid: currentAuthorSec,
+                                                     cursor: max(0, lastMaxCursor)) {
+                pageTemplateTried = true
+                pendingQueue.append(paged)
+                DYLog.shared.log("CAP post page (PAGE-native template) queued cursor=\(lastMaxCursor)")
+            } else {
+                DYLog.shared.log("CAP post hasMore=1 → wait for page-native scroll")
+            }
         }
         _ = mixName
     }
@@ -886,7 +964,9 @@ final class DYWorksCapture: NSObject {
       XMLHttpRequest.prototype.open=function(m,u){
         try{ var su=String(u); if(su.indexOf('/aweme/v1/web/')>=0){
           window.__dySeenUrls=window.__dySeenUrls||[];
-          if(window.__dySeenUrls.length<60) window.__dySeenUrls.push(su.slice(0,220));
+          // v182：页面原生 aweme/post URL 要留全（1200 字符）才能逐字节照抄参数集
+          var lim=(su.indexOf('aweme/post')>=0)?1200:220;
+          if(window.__dySeenUrls.length<120) window.__dySeenUrls.push(su.slice(0,lim));
         } }catch(e){}
         this.__u=u; return xo.apply(this,arguments); };
       XMLHttpRequest.prototype.send=function(){ var x=this; this.__u=String(this.__u||'');
@@ -895,8 +975,9 @@ final class DYWorksCapture: NSObject {
       var of=window.fetch;
       if(of){ window.fetch=function(){ var a=arguments,u=(a[0]&&a[0].url)||a[0]; u=String(u);
         return of.apply(this,arguments).then(function(r){ try{ var c=r.clone(); c.text().then(function(t){ grab(u,t); }).catch(function(){}); }catch(e){} return r; }); }; }
-      // v178 页面内滚动泵：作者页路径下每 2.5s 滚到底 + 派发 scroll（1x1 viewport 时代永不触发，
-      // 现为 1920x1080 真实 viewport）。页面自己的懒加载翻页请求由自身 jsvmp 签名，最可靠。
+      // v182 页面内滚动泵：作者页路径下每 2.5s 把 **window + 所有内部 overflow 容器** 都滚到底
+      // 并派发 scroll（v163-v181 只滚 window，抖音 PC 作者页的内部容器从未被滚 → 懒加载永不触发）。
+      // 页面自己的翻页请求由自身 jsvmp 拼参数 + 签名，是唯一不撞信任墙的形态。
       try{ setInterval(function(){ try{
         if(String(location.pathname).indexOf('/user/')!==0) return;
         var h=Math.max((document.body&&document.body.scrollHeight)||0,
@@ -904,6 +985,14 @@ final class DYWorksCapture: NSObject {
         window.scrollTo(0,h);
         try{ window.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
         try{ document.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
+        var els=document.querySelectorAll('div,ul,section,main,aside,article');
+        for(var i=0;i<els.length;i++){
+          var e=els[i];
+          try{ if(e.scrollHeight>e.clientHeight+80 && e.clientHeight>150){
+            e.scrollTop=e.scrollHeight;
+            try{ e.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(x){}
+          } }catch(x){}
+        }
       }catch(e){} },2500); }catch(e){}
     })();
     """
