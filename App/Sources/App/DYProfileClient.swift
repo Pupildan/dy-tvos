@@ -174,7 +174,7 @@ final class DYProfileClient {
 
     private func fetchProfileOnce(secUid: String, onDone: @escaping (DYProfileUser?) -> Void) {
         lastFetchEnd = Date()
-        let params: [(String, String)] = Self.webCommon + [
+        var params: [(String, String)] = Self.webCommon + [
             ("sec_user_id", secUid),
             ("publish_video_strategy_type", "2"),
             ("source", "channel_pc_web"),
