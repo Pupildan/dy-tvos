@@ -93,21 +93,23 @@ final class DYWorksCapture: NSObject {
     private var altCursor = 0
     /// v179 翻页参数变体推进（0→换游标值→换游标键，共 3 种，全拒则停发自拼请求）
     private var pagingVariant = 0
+    /// v180 真导航竞态护栏：导航时刻 + 新 document hook 稳定计数
+    private var navigationPendingAt = Date.distantPast
+    private var hookedStableCount = 0
+    private var loadedAuthorSec = ""
+    /// v180 变体推进节流（XHR/fetch 双通道会同时回两条空响应，避免一次连跳两级）
+    private var lastVariantAt = Date.distantPast
 
     // MARK: - 对外入口
 
-    /// v176 网格触底主动补页（自动分页之外，用户滑到底立刻排队下一页）
+    /// v180 网格触底：不再自拼翻页 URL（翻页墙实锤），只推页面作者页滚动，
+    /// 让页面自己发懒加载请求；响应经 page-req 通道按 id 去重累积。
     func requestMoreWorks() {
         DispatchQueue.main.async { [weak self] in
-            guard let self, self.capturedHasMore, !self.currentAuthorSec.isEmpty,
-                  self.postPagesFetched < self.postMaxPages,
-                  !self.pendingQueue.contains(where: { $0.contains("aweme/post") }) else { return }
+            guard let self, self.capturedHasMore, !self.currentAuthorSec.isEmpty else { return }
             self.lastActivityAt = Date()
-            self.ensureSession()
-            self.enqueueNextPage()
-            // v178 主动滚动一次（页面自己的懒加载 = 参数与签名都正确的翻页主通道）
             self.evalJS(Self.scrollJS, tag: "scroll-more")
-            DYLog.shared.event("CAP post scroll-more → page native paging cursor=\(self.lastMaxCursor)")
+            DYLog.shared.event("CAP post scroll-more → page-native lazy paging (no self-issued URL)")
         }
     }
 
@@ -147,13 +149,14 @@ final class DYWorksCapture: NSObject {
                 }
                 // v176 同作者重开：有缓存就不再重复打第一页（19:21:24 真机实锤重复请求后连第一页都变空）
                 if sameAuthor, !self.capturedWorks.isEmpty {
-                    if self.capturedHasMore, self.postPagesFetched < self.postMaxPages, self.pendingQueue.isEmpty {
-                        self.enqueueNextPage()
+                    // v180 同作者重开：只补缓存 + 推页面滚动，不再自拼翻页 URL（翻页墙）
+                    if self.capturedHasMore, self.pendingQueue.isEmpty {
+                        self.evalJS(Self.scrollJS, tag: "reopen-scroll")
                     }
                     return
                 }
             }
-            self.ensureSession()
+            self.ensureSession(secUid: secUid)
             // 资料每次刷新（屏实例新，user 空），但 3s 内同作者只排一次队（双 fire 去重）
             let now = Date()
             guard now.timeIntervalSince(self.lastAuthorQueueAt) > 3 else { return }
@@ -212,9 +215,9 @@ final class DYWorksCapture: NSObject {
     /// need_time_list(首页1 翻页0)/time_list_query/whale_cut_token/cut_version/
     /// publish_video_strategy_type/from_user_page/version_code=290100/version_name=29.1.0
     /// v174 缺 6 参数且 need_time_list 恒 1 → 第二页 200 空（真机 len=17 实锤）。
-    private static func postFetchURL(secUid: String, maxCursor: Int) -> String {
+    private static func postFetchURL(secUid: String, maxCursor: Int, count: Int = 50) -> String {
         let needTimeList = maxCursor == 0 ? "1" : "0"
-        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0"
+        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=\(count)&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0"
     }
 
     /// v179 权威翻页 URL：以页面 jsvmp 包装后**真实发出的原生 aweme/post URL** 为模板
@@ -294,8 +297,9 @@ final class DYWorksCapture: NSObject {
             var x=new XMLHttpRequest();
             x.open('GET',u,true); x.withCredentials=true;
             x.onreadystatechange=function(){ if(x.readyState!==4) return;
-              var body=x.responseText||''; push(body);
-              if(body.length<300){ viaFetch(); }   // 软拒/空 → 换 fetch 签名通道补一枪
+              // v180：空响应不再用 fetch 补枪（双通道会同时回两条空响应、变体被重复消耗，
+              // 且对翻页墙多发一次请求只会加速风控）。XHR 通道已验证有效。
+              push(x.responseText||'');
             };
             x.onerror=function(){ viaFetch(); };
             x.send();
@@ -335,25 +339,55 @@ final class DYWorksCapture: NSObject {
 
     // MARK: - 会话管理
 
-    /// v179：**撤销 v178 的"真导航到作者页"**（20:14:20 真机实锤竞态——导航同秒用旧页面
-    /// hooked=1 判 ready 并 fire，新页面 20:14:21 才补装 hook → 128 作品作者一条都没截到）。
-    /// 回到 v177 验证过的**单一持久首页会话**：不中途导航、不重建 document，
-    /// 只靠 document-start hook + XHR 签名通道；换作者仅重置 Swift 侧状态。
-    private func ensureSession() {
-        guard webView == nil else { return }
+    /// v180：真导航到作者页，但**修好 v178 的竞态**——导航时清空队列/记时刻/重置 hook 稳定计数，
+    /// drain 必须等「距导航 ≥2.5s + 新 document 连续两次 hooked=1」才发请求（v178 同秒用旧页面
+    /// hooked=1 提前 fire → 128 作品作者一条都没截到）。
+    /// 另：把离屏视图**加入 window 最底层**（alpha 0.01、不可交互，仍属数据泵非 UI），
+    /// 让作者页列表真实布局渲染，IntersectionObserver/无限滚动才会触发页面自己的翻页请求。
+    private func ensureSession(secUid: String = "") {
+        if webView != nil {
+            if !secUid.isEmpty, loadedAuthorSec != secUid {
+                loadedAuthorSec = secUid
+                nativePostURL = ""
+                nativeURLLogged = false
+                sessionReady = false
+                readySeenAt = .distantPast
+                rehooked = false
+                hookedStableCount = 0
+                navigationPendingAt = Date()
+                pendingQueue = []          // 旧作者请求全丢；fetch() 重新排首屏
+                let js = "(function(){try{location.replace('https://www.douyin.com/user/\(secUid)');}catch(e){}return 'ok';})();"
+                evalJS(js, tag: "nav-author")
+                DYLog.shared.event("SESSION nav author (guarded) sec=\(secUid.prefix(16))... — 等新 document hook 稳定")
+            }
+            return
+        }
         guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1920, height: 1080), DYProfileClient.webUA, Self.hookJS) as? UIView else {
             DYLog.shared.event("SESSION FAIL: 注入式 WKWebView 创建失败")
             return
         }
         webView = wv
+        if let win = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) ?? UIApplication.shared.windows.first {
+            wv.frame = CGRect(x: 0, y: 0, width: 1920, height: 1080)
+            wv.alpha = 0.01
+            wv.isUserInteractionEnabled = false
+            win.insertSubview(wv, at: 0)
+            DYLog.shared.log("SESSION webview attached (hidden, non-interactive) for real layout")
+        }
+        loadedAuthorSec = secUid
+        navigationPendingAt = Date()
+        hookedStableCount = 0
         sessionReady = false
         readySeenAt = .distantPast
         rehooked = false
         pollCount = 0
         totalCap = 0
         lastActivityAt = Date()
-        DYLog.shared.log("SESSION boot douyin home (doc-start inject, persistent) — 无中途导航")
-        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.douyin.com/?recommend=1")!))
+        let startURL = secUid.isEmpty
+            ? "https://www.douyin.com/?recommend=1"
+            : "https://www.douyin.com/user/\(secUid)"
+        DYLog.shared.log("SESSION boot → \(startURL.prefix(64))")
+        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: startURL)!))
         startPolling()
         deadlineTimer?.invalidate()
         deadlineTimer = Timer.scheduledTimer(withTimeInterval: 180, repeats: false) { [weak self] _ in
@@ -375,7 +409,10 @@ final class DYWorksCapture: NSObject {
     private func teardown() {
         pollTimer?.invalidate(); pollTimer = nil
         deadlineTimer?.invalidate(); deadlineTimer = nil
+        // v180：加入过 window 的隐形视图必须移除，否则被 window retain 成常驻幽灵层
+        if let wv = webView, wv.superview != nil { wv.removeFromSuperview() }
         webView = nil
+        loadedAuthorSec = ""
         sessionReady = false
         pendingQueue = []
     }
@@ -401,19 +438,17 @@ final class DYWorksCapture: NSObject {
                 DYLog.shared.log("SESSION[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
                 self.evalJS(Self.hookJS, tag: "rehook")
             }
-            // 会话就绪判定（v173 验证：interactive+1.5s 即视为就绪，不等 complete）
+            // 会话就绪判定（v180 竞态护栏）：导航/首次加载后必须等 ≥2.5s 且
+            // **新 document 连续两次 hooked=1** 才放行 —— 否则会像 v178 那样用旧页面状态提前 fire。
             if !self.sessionReady, hooked {
-                let rs = diag["rs"] as? String ?? ""
-                let ready = (rs == "complete")
-                    || (rs == "interactive" && self.readySeenAt != .distantPast
-                        && Date().timeIntervalSince(self.readySeenAt) > 1.5)
-                if rs == "interactive", self.readySeenAt == .distantPast {
-                    self.readySeenAt = Date()
-                }
-                if ready {
+                let sinceNav = Date().timeIntervalSince(self.navigationPendingAt)
+                self.hookedStableCount += 1
+                if sinceNav >= 2.5, self.hookedStableCount >= 2 {
                     self.sessionReady = true
-                    DYLog.shared.event("SESSION ready rs=\(rs) → 队列 \(self.pendingQueue.count) 条待发")
+                    DYLog.shared.event("SESSION ready (stable hook #\(self.hookedStableCount), +\(String(format: "%.1f", sinceNav))s) → 队列 \(self.pendingQueue.count) 条待发")
                 }
+            } else if !hooked {
+                self.hookedStableCount = 0
             }
             // 发队列（v175 提速：每 tick 连发 2 条；v176：_push 指令 + postcap 节流）
             if self.sessionReady, !self.pendingQueue.isEmpty {
@@ -449,7 +484,14 @@ final class DYWorksCapture: NSObject {
                 let u = item["u"] as? String ?? "?"
                 let b = item["b"] as? String ?? ""
                 let tag = Self.tagFrom(u)
-                if u.contains("aweme/post") { self.noteNativePostURL(u) }
+                if u.contains("aweme/post") {
+                    self.noteNativePostURL(u)
+                    // v180 验收关键证据：无 tag = 页面自己发的请求；非零游标 = 页面原生翻页
+                    if tag.isEmpty, u.contains("max_cursor="), !u.contains("max_cursor=0&"),
+                       !u.contains("max_cursor=0#") {
+                        DYLog.shared.event("SESSION PAGE-NATIVE PAGING u=\(u.prefix(180))")
+                    }
+                }
                 if tag.isEmpty {
                     DYLog.shared.log("SESSION page-req len=\(b.count) u=\(u.prefix(300))")
                     if u.contains("aweme/post") {
@@ -577,20 +619,17 @@ final class DYWorksCapture: NSObject {
         }
         DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor) maxCursor=\(altCursor)")
         guard !works.isEmpty else {
-            DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120))")
+            // v180 真机实锤「翻页墙」：max_cursor=0 → 完整 20 条 / 2.7MB；
+            // 任何 max_cursor!=0（含换游标值、换 cursor 键、need_time_list=0 三变体）→ 17 字节
+            // {"status_code":0}。与 HANDOVER §5.3 的 aweme/post「200 空=签名/会话信任墙」同源。
+            // → 彻底停止自拼翻页请求（继续发只会被风控），把翻页交给页面自己的懒加载。
+            DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120)) — paging wall")
             guard allowPaging else { return }
-            // v179 软拒 → 按 myDV 参数语义换变体重试（最多 3 种，间隔 4s 防风控），
-            // 全拒则彻底停发自拼翻页但**不判死 hasMore**（页面原生通道仍可能给数据）。
-            if self.pagingVariant < 2, !self.currentAuthorSec.isEmpty,
-               self.postPagesFetched < self.postMaxPages {
-                self.pagingVariant += 1
-                self.postEarliestFireAt = Date().addingTimeInterval(4)
-                self.enqueueNextPage(variant: self.pagingVariant)
-                self.evalJS(Self.scrollJS, tag: "variant-scroll")
-                DYLog.shared.log("CAP post soft-reject → variant \(self.pagingVariant) (need_time_list=0) retry in 4s")
-                return
+            if Date().timeIntervalSince(lastVariantAt) > 8 {
+                lastVariantAt = Date()
+                self.evalJS(Self.scrollJS, tag: "wall-scroll")
+                DYLog.shared.event("CAP post → hand over to page-native scroll; keep hasMore total=\(self.capturedWorks.count)")
             }
-            DYLog.shared.event("CAP post all variants rejected; stop self paging, wait page-native total=\(self.capturedWorks.count)")
             return
         }
         self.postEmptyRetries = 0
@@ -607,12 +646,11 @@ final class DYWorksCapture: NSObject {
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
         }
-        // v179 分页：沿用当前已验证的变体（不重置），只在拿到新作品且队列无待发时排一页。
-        if allowPaging, hasMore, !fresh.isEmpty, postPagesFetched < postMaxPages,
-           !currentAuthorSec.isEmpty, pagingVariant <= 2,
-           !pendingQueue.contains(where: { $0.contains("aweme/post") }) {
-            lastMaxCursor = max(lastMaxCursor, nextCursor)
-            enqueueNextPage(variant: pagingVariant)
+        // v180：**不再自拼下一页**（翻页墙 100% 软拒，实锤三变体全灭）。
+        // 更多作品完全由页面作者页自己的无限滚动请求提供 —— 那些请求由页面 jsvmp
+        // 自己拼参数、自己签名，是唯一可能穿过信任墙的形态；hook 会经 page-req 通道累积。
+        if allowPaging, hasMore, !fresh.isEmpty {
+            DYLog.shared.log("CAP post hasMore=1 → wait for page-native paging (no self-issued page)")
         }
         _ = mixName
     }
