@@ -597,7 +597,7 @@ struct DYProfileScreen: View {
 
     private var worksNote: String {
         if !works.isEmpty {
-            return "作品 \(works.count) 件\(worksHasMore ? "（更多自动截获中…）" : "")"
+            return "作品 \(works.count) 件\(worksHasMore ? "（继续下滑自动加载更多）" : "")"
         }
         switch worksCount {
         case -2: return "作品列表：截获中…"
@@ -676,6 +676,10 @@ struct DYProfileScreen: View {
         }
         .scaleEffect(focused == w.id ? 1.05 : 1.0)
         .animation(.easeOut(duration: 0.15), value: focused)
+        // v176 触底补页：滚到最后一个作品时主动排队下一页（自动分页之外）
+        .onAppear {
+            if w.id == works.last?.id { DYWorksCapture.shared.requestMoreWorks() }
+        }
     }
 
     /// v168 点击作品 → 播放 + 关主页屏回播放（v174 段插入语义）

@@ -69,13 +69,37 @@ final class DYWorksCapture: NSObject {
     private var capturedHasMore = false
     private var lastMaxCursor = -1
     private var postPagesFetched = 0
-    private let postMaxPages = 8
+    private let postMaxPages = 20
     /// v175 去重：RootView.onChange 与屏 onAppear 曾双发 profcap/postcap（真机日志实锤，白等 2s）
     private var lastAuthorQueueAt = Date.distantPast
     /// v175 aweme/detail 拿到的权威合集名（mix/aweme 响应里 mixName 常空）
     private var pendingMixName = ""
+    /// v176 反编译实锤：myDV u11.F0 按端点设 referer（post → https://www.douyin.com/user/）。
+    /// 页面上下文 fetch 不能自定义 Referer 头（forbidden header）→ 用 history.replaceState 切 document URL，
+    /// 零加载让浏览器自动带上正确 Referer。首屏翻页被软拒（len=17 空列表）就是 referer 不匹配。
+    private var desiredPagePath = ""
+    /// v176 翻页节流：连发两页间隔 <1s 触发风控（真机实锤），改为 ≥3s
+    private var lastPostFireAt = Date.distantPast
+    private var postEarliestFireAt = Date.distantPast
+    /// v176 空响应退避重试（最多 2 次）
+    private var postEmptyRetries = 0
+    /// v176 缓存资料（同作者重开只补发缓存，不再重复请求触发风控）
+    private var cachedProfile: DYProfileUser?
 
     // MARK: - 对外入口
+
+    /// v176 网格触底主动补页（自动分页之外，用户滑到底立刻排队下一页）
+    func requestMoreWorks() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, self.capturedHasMore, !self.currentAuthorSec.isEmpty,
+                  self.postPagesFetched < self.postMaxPages,
+                  !self.pendingQueue.contains(where: { $0.contains("_dytag=postcap") }) else { return }
+            self.lastActivityAt = Date()
+            self.ensureSession()
+            self.pendingQueue.append(Self.postFetchURL(secUid: self.currentAuthorSec, maxCursor: max(0, self.lastMaxCursor)))
+            DYLog.shared.event("CAP post scroll-more queued cursor=\(self.lastMaxCursor)")
+        }
+    }
 
     /// 拉取作者资料+作品（会话就绪即发 profcap+postcap；hasMore 自动翻页）
     func fetch(secUid: String) {
@@ -89,14 +113,29 @@ final class DYWorksCapture: NSObject {
                 self.capturedHasMore = false
                 self.lastMaxCursor = -1
                 self.postPagesFetched = 0
+                self.postEmptyRetries = 0
+                self.cachedProfile = nil
+                self.lastPostFireAt = .distantPast
+                self.postEarliestFireAt = .distantPast
+                self.pendingQueue = []
+                self.lastAuthorQueueAt = .distantPast   // 换作者立即放行，不能被 3s 去重误挡
             }
             self.lastActivityAt = Date()
-            // 主页屏实例可能是新的（state 空）：已累积作品立即补发，不用等网络
-            if !self.capturedWorks.isEmpty {
+            // 主页屏实例可能是新的（state 空）：已累积作品/资料立即补发，不用等网络
+            if !self.capturedWorks.isEmpty || self.cachedProfile != nil {
                 let works = self.capturedWorks
                 let more = self.capturedHasMore
+                let prof = self.cachedProfile
                 DispatchQueue.main.async { [weak self] in
-                    self?.delegate?.worksCaptureDidCapture(works: works, hasMore: more)
+                    if let prof { self?.delegate?.worksCaptureDidCapture(profile: prof) }
+                    if !works.isEmpty { self?.delegate?.worksCaptureDidCapture(works: works, hasMore: more) }
+                }
+                // v176 同作者重开：有缓存就不再重复打第一页（19:21:24 真机实锤重复请求后连第一页都变空）
+                if sameAuthor, !self.capturedWorks.isEmpty {
+                    if self.capturedHasMore, self.postPagesFetched < self.postMaxPages, self.pendingQueue.isEmpty {
+                        self.pendingQueue.append(Self.postFetchURL(secUid: secUid, maxCursor: max(0, self.lastMaxCursor)))
+                    }
+                    return
                 }
             }
             self.ensureSession()
@@ -104,14 +143,13 @@ final class DYWorksCapture: NSObject {
             let now = Date()
             guard now.timeIntervalSince(self.lastAuthorQueueAt) > 3 else { return }
             self.lastAuthorQueueAt = now
+            self.postEmptyRetries = 0
+            self.postPagesFetched = 0
+            // v176 document URL 对齐端点 referer（队列首项特殊指令，sessionReady 后执行）
+            self.desiredPagePath = "/user/\(secUid)"
+            self.pendingQueue.append("_push:/user/\(secUid)")
             self.pendingQueue.append(Self.profileFetchURL(secUid: secUid))
-            if sameAuthor {
-                if self.capturedHasMore, self.postPagesFetched < self.postMaxPages {
-                    self.pendingQueue.append(Self.postFetchURL(secUid: secUid, maxCursor: max(0, self.lastMaxCursor)))
-                }
-            } else {
-                self.pendingQueue.append(Self.postFetchURL(secUid: secUid, maxCursor: 0))
-            }
+            self.pendingQueue.append(Self.postFetchURL(secUid: secUid, maxCursor: 0))
         }
     }
 
@@ -125,8 +163,12 @@ final class DYWorksCapture: NSObject {
             self.lastActivityAt = Date()
             self.ensureSession()
             if !mixId.isEmpty {
+                // u11.o: mix/aweme → https://www.douyin.com/collection/
+                self.pendingQueue.append("_push:/collection/\(mixId)")
                 self.pendingQueue.append(Self.mixFetchURL(mixId: mixId))
             } else if !awemeId.isEmpty {
+                // u11.o: aweme/detail → https://www.douyin.com/video/
+                self.pendingQueue.append("_push:/video/\(awemeId)")
                 self.pendingQueue.append(Self.detailFetchURL(awemeId: awemeId))
             }
         }
@@ -250,17 +292,35 @@ final class DYWorksCapture: NSObject {
                     DYLog.shared.event("SESSION ready rs=\(rs) → 队列 \(self.pendingQueue.count) 条待发")
                 }
             }
-            // 发队列（v175 提速：每 tick 连发 2 条，profile+post 不再串行等 2s）
+            // 发队列（v175 提速：每 tick 连发 2 条；v176：_push 指令 + postcap 节流）
             if self.sessionReady, !self.pendingQueue.isEmpty {
-                for _ in 0..<min(2, self.pendingQueue.count) {
-                    let url = self.pendingQueue.removeFirst()
+                var fired = 0
+                while fired < 2, let item = self.pendingQueue.first {
+                    if item.hasPrefix("_push:") {
+                        self.pendingQueue.removeFirst()
+                        let path = String(item.dropFirst(6))
+                        let js = "(function(){try{history.replaceState(null,'','https://www.douyin.com\(path)');}catch(e){}return String(location.href);})();"
+                        self.evalJS(js, tag: "push:\(path)")
+                        DYLog.shared.log("SESSION page URL → https://www.douyin.com\(path) (referer 对齐 myDV u11.F0)")
+                        continue
+                    }
+                    if item.contains("_dytag=postcap") {
+                        let now = Date()
+                        if now < self.postEarliestFireAt || now.timeIntervalSince(self.lastPostFireAt) < 3 {
+                            break   // 翻页 ≥3s 节流（myDV 用户滚动翻页天然有间隔）
+                        }
+                        self.lastPostFireAt = now
+                        self.postEarliestFireAt = .distantPast
+                    }
+                    self.pendingQueue.removeFirst()
                     self.lastActivityAt = Date()
                     self.totalCap += 1
-                    let tagWord = url.contains("_dytag=profcap") ? "profcap"
-                        : url.contains("_dytag=postcap") ? "postcap"
-                        : url.contains("_dytag=detailcap") ? "detailcap" : "mixcap"
-                    DYLog.shared.log("SESSION fire \(tagWord) → \(url.prefix(100))")
-                    self.evalJS(Self.fetchJS(url: url), tag: tagWord)
+                    let tagWord = item.contains("_dytag=profcap") ? "profcap"
+                        : item.contains("_dytag=postcap") ? "postcap"
+                        : item.contains("_dytag=detailcap") ? "detailcap" : "mixcap"
+                    DYLog.shared.log("SESSION fire \(tagWord) → \(item.prefix(100))")
+                    self.evalJS(Self.fetchJS(url: item), tag: tagWord)
+                    fired += 1
                 }
             }
             // 分发响应
@@ -318,6 +378,7 @@ final class DYWorksCapture: NSObject {
             totalFavorited: (user["total_favorited"] as? NSNumber)?.intValue ?? 0
         )
         DYLog.shared.event("CAP profile ok nick=\(u.nickname) fans=\(u.followerCount) works=\(u.awemeCount)")
+        self.cachedProfile = u
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.worksCaptureDidCapture(profile: u)
         }
@@ -353,7 +414,29 @@ final class DYWorksCapture: NSObject {
             }
         }
         DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor)")
-        guard !works.isEmpty else { return }
+        guard !works.isEmpty else {
+            // v176 真机实锤：第二页常返回 17 字节空列表（{"aweme_list":[]}）。
+            // 打 body 看清是风控空列表还是错误码，再退避重试（≤2 次），仍空才收摊。
+            DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120))")
+            if self.postEmptyRetries < 2, !self.currentAuthorSec.isEmpty {
+                self.postEmptyRetries += 1
+                let delay = Double(self.postEmptyRetries) * 3.0
+                self.postEarliestFireAt = Date().addingTimeInterval(delay)
+                let url = Self.postFetchURL(secUid: self.currentAuthorSec, maxCursor: max(0, self.lastMaxCursor))
+                self.pendingQueue.append(url)
+                DYLog.shared.log("CAP post empty retry \(self.postEmptyRetries) in \(Int(delay))s")
+                return
+            }
+            self.capturedHasMore = false
+            let total = self.capturedWorks.count
+            DYLog.shared.event("CAP post give-up (empty x\(self.postEmptyRetries)) total=\(total)")
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: false)
+            }
+            return
+        }
+        self.postEmptyRetries = 0
         let known = Set(capturedWorks.map { $0.id })
         let fresh = works.filter { !known.contains($0.id) }
         capturedHasMore = hasMore
@@ -397,7 +480,9 @@ final class DYWorksCapture: NSObject {
         DYLog.shared.event("CAP detail mixId=\(mid) name=\(name)")
         guard !mid.isEmpty else { return }
         pendingMixName = name
-        pendingQueue.insert(Self.mixFetchURL(mixId: mid), at: 0)
+        // 切到合集页再打 mix/aweme，referer 对齐 myDV u11.o
+        pendingQueue.insert("_push:/collection/\(mid)", at: 0)
+        pendingQueue.insert(Self.mixFetchURL(mixId: mid), at: 1)
     }
 
     /// 解析 mix/aweme 响应 → delegate（grab slim 或裸 JSON 兜底）
