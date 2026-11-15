@@ -514,7 +514,7 @@ struct DYProfileScreen: View {
 
     private var worksNote: String {
         if !works.isEmpty {
-            return "作品 \(works.count) 件\(worksHasMore ? "（首页，滚动作者页加载更多）" : "")"
+            return "作品 \(works.count) 件\(worksHasMore ? "（更多自动截获中…）" : "")"
         }
         switch worksCount {
         case -2: return "作品列表：截获中…"
@@ -583,6 +583,16 @@ struct DYProfileScreen: View {
         }
         .buttonStyle(PanelRowButtonStyle())
         .focused($focused, equals: w.id)
+        // v170 聚焦视觉（v169 只绑了 FocusState 没画效果=用户看不到焦点在哪）：白描边+微放大
+        .background {
+            if focused == w.id {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color.white, lineWidth: 4)
+                    .padding(-7)
+            }
+        }
+        .scaleEffect(focused == w.id ? 1.05 : 1.0)
+        .animation(.easeOut(duration: 0.15), value: focused)
     }
 
     /// v168 点击作品 → merge 进 PlaybackEngine + 跳到该作品 + 关主页屏回播放
@@ -621,6 +631,10 @@ struct DYProfileScreen: View {
                                      allDurations: durs, allInfos: infos)
         if let pos = PlaybackEngine.shared.urls.firstIndex(of: url) {
             PlaybackEngine.shared.index = pos
+            // v170 真根因修复（v169 真机日志实锤）：playWork 只改 engine.index，collection 视图没人通知
+            // → 画面停在旧位置，下一按按键时 scrollTo 对账循环把 index 一步步退回去（ENGINE prev 连环），
+            // 点播被"吃"掉。显式发跳转通知让播放层 scrollTo 到目标格。
+            NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
         }
         DYLog.shared.event("WORKS play aweme=\(w.id) pos=\(PlaybackEngine.shared.index)")
         model.isProfileOpen = false
@@ -650,8 +664,13 @@ extension DYProfileScreen: DYWorksCapture.Delegate {
     }
 
     func worksCaptureDidCapture(works: [DYCapturedWork], hasMore: Bool) {
+        // v170：DYWorksCapture 已累积去重，直接整体替换
         self.works = works
         self.worksHasMore = hasMore
         if worksCount < 0 { worksCount = works.count }
+        // v170：作品首批到达时自动聚焦第一个作品（焦点默认在"返回"按钮，用户按 OK 直接播）
+        if focused == nil || focused == "close" {
+            focused = works.first?.id
+        }
     }
 }

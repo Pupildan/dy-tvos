@@ -47,6 +47,12 @@ final class DYWorksCapture: NSObject {
     private var totalCap = 0
     private var rehooked = false
     private var currentSecUid = ""
+    /// v170 累积作品（v169 真机实锤：首批到手就 teardown → 只有一页，"自动加载剩余作品"从未生效）。
+    /// 多批 aweme/post 按 id 去重合并，持续喂 delegate；增长停滞 15s 或 60s deadline 才收摊。
+    private var capturedWorks: [DYCapturedWork] = []
+    private var capturedHasMore = false
+    private var firstBatchFed = false
+    private var lastGrowthAt = Date()
 
     /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap。
     /// aweme/post 响应在 JS 端预解析精简（每条只取 id/desc/cover/直链/duration/图集位）。
@@ -111,7 +117,18 @@ final class DYWorksCapture: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if self.webView != nil {
-                if self.currentSecUid == secUid { return }   // 同作者重复触发（onChange 双 fire），静默去重
+                if self.currentSecUid == secUid {
+                    // 同作者重复触发（onChange 双 fire / 主页屏重开）：静默去重，
+                    // 但把已累积的作品补发给新注册的 delegate（重开屏实例是新的，state 是空的）
+                    let works = self.capturedWorks
+                    let more = self.capturedHasMore
+                    if !works.isEmpty {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.delegate?.worksCaptureDidCapture(works: works, hasMore: more)
+                        }
+                    }
+                    return
+                }
                 DYLog.shared.log("WORKSCAP switch author, restart capture")
                 self.teardown()                                // 换作者：停旧会话重开
             }
@@ -125,11 +142,15 @@ final class DYWorksCapture: NSObject {
             self.totalCap = 0
             self.rehooked = false
             self.currentSecUid = secUid
+            self.capturedWorks = []
+            self.capturedHasMore = false
+            self.firstBatchFed = false
+            self.lastGrowthAt = Date()
             DYLog.shared.log("WORKSCAP load user page secUid=\(secUid.prefix(16))... (doc-start inject)")
             let url = "https://www.douyin.com/user/\(secUid)"
             wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: url)!))
             self.startPolling()
-            self.deadlineTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: false) { [weak self] _ in
+            self.deadlineTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: false) { [weak self] _ in
                 DYLog.shared.log("WORKSCAP deadline")
                 self?.drain(tag: "deadline")
                 self?.teardown()
@@ -153,7 +174,14 @@ final class DYWorksCapture: NSObject {
 
     private func drain(tag: String) {
         guard webView != nil else { return }
-        if gotWorks && gotProfile { teardown(); return }
+        // v170：不再"首批即收摊"——持续滚动作者页加载更多作品；
+        // 退出条件=增长停滞（已有作品 15s / 首批未到 25s）或 60s deadline。
+        let settleGap: TimeInterval = gotWorks ? 15 : 25
+        if gotProfile, Date().timeIntervalSince(lastGrowthAt) > settleGap {
+            DYLog.shared.event("WORKSCAP settle (no growth \(Int(settleGap))s) total=\(self.capturedWorks.count)")
+            self.teardown()
+            return
+        }
         evalJS(Self.drainJS, tag: tag) { [weak self] result in
             guard let self else { return }
             guard let json = result as? String, let data = json.data(using: .utf8),
@@ -180,9 +208,9 @@ final class DYWorksCapture: NSObject {
                     DYLog.shared.event("WORKS CAP SERIES/MIX len=\(b.count)")
                 }
             }
-            if self.gotWorks && self.gotProfile {
-                DYLog.shared.event("WORKS CAP OK total=\(self.totalCap)——资料+作品截获成立,喂UI")
-                self.teardown()
+            if self.gotWorks && self.gotProfile && !self.firstBatchFed {
+                self.firstBatchFed = true
+                DYLog.shared.event("WORKS CAP OK total=\(self.totalCap)——资料+首批作品截获成立,继续滚动加载更多")
             }
         }
     }
@@ -245,8 +273,19 @@ final class DYWorksCapture: NSObject {
         DYLog.shared.event("WORKSCAP works ok n=\(works.count) hasMore=\(hasMore ? 1 : 0)")
         guard !works.isEmpty else { return }
         gotWorks = true
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.worksCaptureDidCapture(works: works, hasMore: hasMore)
+        // v170 累积合并（按 id 去重保序）+ 持续喂 delegate（自动加载剩余作品）
+        let known = Set(capturedWorks.map { $0.id })
+        let fresh = works.filter { !known.contains($0.id) }
+        capturedHasMore = hasMore
+        if !fresh.isEmpty {
+            capturedWorks.append(contentsOf: fresh)
+            lastGrowthAt = Date()
+            let total = capturedWorks.count
+            DYLog.shared.event("WORKSCAP works accumulated +\(fresh.count) → \(total) hasMore=\(hasMore ? 1 : 0)")
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
+            }
         }
     }
 

@@ -584,6 +584,13 @@ final class DYPlayerViewController: UIViewController {
         PlayerManager.shared.onNoVideoTrack = { [weak self] idx in
             self?.skipIfCentered(idx, reason: "novideo")
         }
+        // v170 作品网格点播跳转（playWork 只改 engine.index，必须显式 scrollTo 才动画面——
+        // 否则下一按按键的 reconcile 循环把 index 退回旧视觉位置，点播被吃掉）
+        NotificationCenter.default.addObserver(forName: Notification.Name("DYWorksJump"), object: nil, queue: .main) { [weak self] note in
+            guard let self, let idx = note.object as? Int else { return }
+            DYLog.shared.log("FEEDCOLL works jump -> idx=\(idx)")
+            self.scrollTo(index: idx, animated: true)
+        }
         startWatchdog()
     }
 
