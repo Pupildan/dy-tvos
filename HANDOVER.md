@@ -1,10 +1,10 @@
-# DYTV 交接文档（v147 · 2026-11-15 全面重构版）
+# DYTV 交接文档（v162 · 2026-11-15 全面重构版）
 
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > **当前版本 v162**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
+> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152，20s 窗口+发射器门控）；两倍速=确认键长按 0.6s（v156 定版，触摸悬停试 11 版终删）；评论死锁修复（v149）；**作者主页资料屏真机通**（v161-162 隐形 WebView 引导成功）；**作品列表与合集内容=未解决**（详见 §5.3 攻坚全记录）。
 
 ---
 
@@ -34,7 +34,7 @@
   - 源切换：`DYFeedSource` 枚举 + `setSource()`（持久化 UserDefaults dy_feed_source）+ `PlaybackEngine.reset()`。
 - **播放层** `NativePlayerView`：UICollectionView 垂直分页 + PlayerManager 池（±2 窗口驱逐）+ 三层看门狗 + 冷启动收敛 + 源感知请求头 + PC 版 UI（右轨/左下信息区/进度条）。
 - **弹幕**（v149-v150 按用户规格重造）：DYDanmakuClient（web get_v2 分段）+ DanmakuKit vendor + DYDanmakuOverlay（shotIds 发射器）。数据链全通（取数 1-7s 全量、0 重试）。显示端：**顶部 6 行（轨道高 50）/ 禁止重叠 / 280px/s**；发射器 v150 canShoot 门控（被轨道拒不标记，腾出即补射）+ 轨道卡死 10s 自愈（DMJANITOR 强制清轨）+ DMSYNC 每 4s 诊断日志。
-- **快捷悬浮窗**（DYQuickPanel）：确认键短按呼出，**屏幕底部居中横向卡片**（v149 修复：RootView ZStack 是 alignment:.leading，外层 VStack 必须 frame(maxWidth:.infinity) 才不被钉在左侧）；标准液态玻璃无 tint 透出视频；主页/评论/合集(条件)/不感兴趣。**两倍速=触摸板悬停 1s**（手指放触摸区不动，与滑动同区域；v149 定版，v146 长按 1.5s/v148 确认键长按都是弯路）。
+- **快捷悬浮窗**（DYQuickPanel）：确认键短按呼出，**屏幕底部居中横向卡片**（RootView ZStack 是 alignment:.leading，外层 VStack 必须 frame(maxWidth:.infinity) 才不被钉在左侧）；标准液态玻璃无 tint 透出视频；主页/评论/合集(条件)/不感兴趣。**两倍速=长按确认键 0.6s 松开恢复**（v156-v158 反复后定版+图上方案 0.8s/10px 紧容差实测仍不稳，**触摸悬停共试 11 版全部失败已终删**——Siri Remote 触摸悬停永不再试）。
 - **评论**（DYCommentClient + DYCommentScreen）：web comment/list，3 页 60 条，玻璃列表屏。
 - **设置面板**（DYSettingsModel + SettingsPanelView）：Menu 呼出，左侧液态玻璃，源切换/弹幕开关/占位项，3s 自动隐藏。
 
@@ -86,17 +86,51 @@
 - **V150 已修并保留的**：发射器 canShoot 门控（被轨道拒不标记、腾出即补射）；DMJANITOR 轨道卡死 10s 自愈；DMSYNC 每 4s 诊断日志；顶部 6 行/不重叠/280px/s/轨道高 50。
 - **验收点**：长视频弹幕应全程连续无 30s 级空窗；日志 DMSYNC stall 应持续 ≤2（不再出现 stall=100+）；DMJANITOR 不应触发。
 
-### 5.3 作者主页与合集（v153 身份链已打通，作品列表差最后一口气）
-- **已探明并实装（DYProfileClient.swift，全部探针实测）**：
-  - **UIFID_TEMP 来源**：`tab/feed` 响应 `Set-Cookie` 自动下发（160 hex 字符）——不需要专门申请端点，cookie 罐收走即可（myDV sl4 同构）。之前的 403 "Uifid Not Found" 就是缺这个 cookie + `uifid` 参数/头。
-  - **x-secsdk-web-signature**：`MD5(uifid_timestamp_A96D855A08C0A9707F8BEF0D9A527E4E_全参数k=v&拼接)`（u11.i() 原样，参数含 a_bogus+uifid+timestamp）。签名错 → 403 "Sign Invalid"；对 → 过签名关。
-  - **user/profile/other 匿名全通**（sc=0：昵称/粉丝/获赞/作品数/简介）→ v153 主页屏已实装。
-- **仍卡的两点（v153-v157 探针+真机日志）**：
-  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝**。已排除：TLS 指纹（真机 URLSession 也是空）、真 msToken（mssdk 照抄可换，带上也空）、**全套浏览器一致性头（⚠️v157 真机实锤：这些头配 URLSession 指纹=自相矛盾，反而把原本能过的 profile 接口也搞挂了——v158 已回退最小头）**、webid、参数矩阵。剩余差异=服务端设备/会话信任级，待另挖。
-  - `mix/aweme`（合集内容）：sc=4 参数错误；`mix/detail` sc=0 但 mix_info 空。**aweme/detail 已探针全通**（视频详情真实数据，u11 l0 参数：aweme_id/request_source=600/origin_type=quick_player）——合集内容可绕道 detail 家族。myDV 源码里没有 mix/aweme 的实际调用（只有 Referer 映射），其 mix/listcollection 也标 blocked——myDV 合集实际走 mix/detail 或 aweme/detail。
-  - **主页资料**：v153 配方（假 msToken+最小头+UIFID_TEMP 罐）真机已通（fans=86512 works=721）；v157 头配方会打挂——**别再给这套链加浏览器头**。
-- **myDV 参照**：u11.java G0/withUserCenterSignChain（UIFID 缺失时仍发请求但不带 x-secsdk 头）；rz0（uifid 头注入）；sl4（cookie 罐）；mix/listcollection 与 favorite 在 myDV 源码里也标 blocked——myDV 的合集走的是 mix/aweme/detail 家族。
-- **探针**：`_tmp/round3_probe.js`（mssdk 照抄验证）、`_tmp/post_matrix_probe.js`（签名矩阵）、`_tmp/uifid_probe.js`（cookie 罐链）。
+### 5.3 作者作品与合集内容（❌ 未解决——攻坚全记录，接手必读）
+
+**当前状态一句话**：作者资料屏已真机稳定（昵称/粉丝/获赞/作品数/简介）；**作品列表（aweme/post）始终 200 空响应、合集内容（mix/aweme sc=4 / series/aweme sc=5）被服务端拒绝**——身份签名链全部打通并被验证，拒绝发生在签名之后的**设备/会话信任层**。
+
+#### ① 已实装且真机可用的
+- **user/profile/other**（作者资料）：匿名全通。配方=v153 最小头（假 msToken + 最小头 + UIFID_TEMP 罐 + uifid 参数/头 + x-secsdk 签名），真机多次 fans/works 真实数据。**⚠️ v157 教训：给这条链加浏览器一致性头（sec-ch-ua 等）会把它也搞挂——头声称"我是浏览器"但 URLSession 指纹不是 = 自相矛盾触发风控。这条链永远用最小头。**
+- **资料稳定化**（v162）：按作者缓存 10 分钟 + 请求节流 ≥1.5s + 空响应自动重试一次 + 作品探测每会话每作者一次 + 资料屏失败态。根因=连发限流（日志实锤：快速切作者时第一发过、第二发 200 空）。
+
+#### ② 身份链组件全部打通并被验证（可直接复用）
+- **UIFID_TEMP**：`tab/feed` 响应 `Set-Cookie` 自动下发（160 hex）——不需要申请端点，cookie 罐收走即可。之前的 403 "Uifid Not Found" 就是缺它 + `uifid` 参数/头。
+- **x-secsdk-web-signature**：`MD5(uifid_timestamp_A96D855A08C0A9707F8BEF0D9A527E4E_全参数k=v&拼接)`（u11.i() 原样，参数含 a_bogus+uifid+timestamp）。签名错=403 "Sign Invalid"；对=过签名关。
+- **隐形 WebView 引导**（v161 真机成功）：tvOS 无公开 WebKit → dlopen 私有框架三件套（DYWebViewShim.h/.m + DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER，均在 v8 commit 77447bc）。离屏 1x1 WebView 加载抖音首页 → jsvmp 挑战 JS 自动种下 **__ac_signature + s_v_web_id**（document.cookie 收割成功，日志 WEBBOOT 行）。
+- **aweme/detail** 探针全通（视频详情真实数据，参数 aweme_id/request_source=600/origin_type=quick_player）。
+- **series/list** 探针全通（sc=0，作者合集列表，字段 series_infos——但样本作者恰无短剧，series_infos=null；**未验证：有合集的作者返回什么、series_id 与 feed f14 的 mix_id 是否同一 id 空间**）。
+
+#### ③ 未解决的两点
+- **aweme/post（作品列表）**：签名通过但 **200 + content-length:0 静默拒绝**。已排除（全部探针/真机双重验证）：TLS 指纹（真机 URLSession 也空）、真 msToken（mssdk 照抄 u11:729 可换，带上也空）、全套浏览器一致性头（反而打挂 profile，见 ①）、webid、verifyFp/fp、参数矩阵（最小/完整/无 locate/from_user_page 开关）、预热会话、多作者。**剩余假设：服务端设备/会话信任级判定（jsvmp 挑战通过后的"完整浏览器 cookie 状态"——odin_tt 等 HttpOnly cookie document.cookie 不可见，无法收割）**。
+- **合集内容**：`mix/aweme` sc=4（参数错）；`series/aweme` 用 mix_id 传 → sc=5（不认）；`mix/detail` sc=0 但 mix_info 空；`series/list` 通但样本作者无数据。**未验证：有短剧/合集作者的 series/list 返回内容 + series/aweme 用其真实 series_id**。
+
+#### ③★ 2026-11-15 真机抓包突破（推翻③的 odin_tt 假设——接手必读）
+KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacerts）抓 myDV(安卓 v2.3.45)真机流量，**首次拿到 aweme/post = 200 + 212KB 真实作品数据**。四轮 Node 重放对照探针（`C:\Nbeetok\_tmp\mitm\aweme_post_{replay,var,mstoken}_probe.js`）钉死因果：
+- **✅ 命门 = 真 msToken**：aweme/post 出数据 ⇔「URL参数位 msToken」或「Cookie位 msToken」**至少一处真值**。两处都随机/缺=**403明确拒**。参数真→cookie无也过(G/H)；cookie真→参数随机也过(B)。
+- **❌ 全都无关（推翻旧方向）**：odin_tt、web_sign_token、浏览器一致性头 sec-ch-ua/sec-fetch——去掉照样 200。③押注的"收 HttpOnly odin_tt"方向**多走了一步，别再走**。
+- **✅ 不用登录**：myDV 拿作品无 sessionid/sessionid_ss，纯匿名态，风控≈刷电脑版流（用户最怕登录风控，此路解之）。
+- **⚠️ 真根因已锁定（2026-11-15 自签探针，接手必读）**：用**我们自己签名器**（`App/Resources/Signer/abogus_dy.js` 链：dy_browser_shim→abogus→sign→abogus_dy→getABogus，Node vm 1:1 复刻 DYSigner.swift）自签 a_bogus 打 aweme/post = **200 空**——开发机 Node 就复现了 tvOS bug，**证明与真机 TLS 指纹无关**。全套 myDV 参数+自签仍 200 空 → 排除参数缺失。**铁证 = 签名长度不对：我们 a_bogus len=180，myDV len=168**。而 myDV 原样 URL + 活 cookie = 200 带 3 条作品（cookie 仍活）。→ **tvOS「200 空」真因 = 我们捆绑的签名器生成的 a_bogus 是错误/版本不匹配算法**（服务端验签不过 → 200 空软拒），与 msToken/odin_tt/参数/TLS **全无关**（本会话前面 msToken 假设是用 myDV 活签名重放误入的歧途，已废弃，别再走）。**修复路线 = 从 myDV APK assets 提取网页端正确的 a_bogus 生成器（168 长度版）替换 abogus_dy.js**，或让 tvOS 改走 myDV 网页端实际用的签名路径。抓包链/探针（`_tmp/mitm/*_probe.js`）/防火墙坑见记忆 `dytv-aweme-post-capture-breakthrough`。
+
+#### ④ 排错过程时间线（每步都是实测，接手者别重复）
+1. v147：web aweme/post → 403 `ArgusSecurityPlugin Uifid Not Found`（当时只知道缺 UIFID）。
+2. 探针矩阵试 mobile `/aweme/v1|v2/aweme/post/`（sec_user_id/user_id 两种形态 × 3 作者）→ status_code=0 但**匿名一律空列表**——mobile 路径是登录态墙。
+3. 反编译 UI 层前先找到 **UIFID_TEMP 真来源**：`tab/feed` 响应 Set-Cookie 下发（对照实验：60s 窗口取 1199 vs 30s 窗口 1981 是弹幕的事，别混淆）。
+4. 找到 myDV 签名链：u11.i()（x-secsdk MD5，密钥 A96D855A08C0A9707F8BEF0D9A527E4E）+ G0/withUserCenterSignChain（uifid 参数+timestamp+x-secsdk）+ rz0（uifid 头）。探针验证：签名错=403 "Sign Invalid"，对=过签名关——**公式正确**。
+5. 5 轮探针把参数/头/cookie 全复刻后 post 仍 200 空；真 msToken（mssdk u11:729 strData 9.5KB 程序化提取 DYMsSdk.swift）带上也空；浏览器一致性头加上反而打挂 profile（v157 回归，v158 回退）。
+6. 反编译 **classes2/3.dex**（之前只反编译了 classes.dex！UI 层 146 类）→ ProfileViewModel(ux3/nx3) 实锤：作品=aweme/post(k0)、作者合集列表=series/list(h0)、合集内容=series/aweme(T，mix_id 当 series_id 传)——端点全对，但行为层面仍被拒。
+7. 发现 **z() 引导**（u11:5400）：首页 GET 手动跟随重定向 ≤5 跳吸 Set-Cookie + y() 解析 HTML 内嵌 msToken/odin_tt/user_unique_id(=webid)。Node 探针复刻 → **100% 被 jsvmp 挑战页拦**（72914 字节空 body JS VM 页，`_$jsvmprt` 特征）。
+8. v159 真机验证：**URLSession 也被挑战页拦**（challenge=1）——TLS 指纹理论彻底死。
+9. 用户拍板**隐形 WebView 引导**（v160 公开 WebKit 模块编译失败——tvOS 无公开 WebKit；v161 改回 v2-v8 私有 shim 方案）→ **真机收割 __ac_signature+s_v_web_id 成功**。
+10. v162 稳定化资料（缓存/节流/重试）——但 **post 仍然 200 空**：挑战页 JS 种的 cookie 里 odin_tt 等 HttpOnly 项 document.cookie 不可见，或信任判定在更深层。
+
+#### ⑤ 未来解决方向（按性价比排序）
+- **A. 补收 HttpOnly cookie**：挑战通过后的完整 cookie 状态里 odin_tt（可能还有别的）是 HttpOnly，document.cookie 不可见。下一步=用 **WKHTTPCookieStore 私有 API**（tvOS 上同样走 shim：NSClassFromString("WKWebsiteDataStore") → default → httpCookieStore → getAllCookies，全部经 objc_msgSend）收割 HttpOnly 全量，再测 post/mix。成本低、逻辑顺（就差最后一块 cookie）。⚠️ odin_tt 若仍不可见，把 WebView 里的请求代理出去（evaluateJavaScript fetch 同源 API）——WebView 内直接打 aweme/post 也是一条未经测试的路！
+- **B. myDV 安卓真机抓包对照**：拿一台真机跑 myDV 抓 aweme/post 的完整请求（cookie/头/参数逐字节对比），终结"还有什么差异"的猜测。成本中等，信息量最大。
+- **C. myDV 版本时效验证**：myDV v2.3.45 是旧版——抖音风控规则随时会变，先用最新 myDV 安卓包确认它的作品/合集**今天**还能不能用（用户口述为几个月前的体验）。
+- **D. 扫码登录**（已批准路线 v2-v8）：登录 cookie 直接越过整堵墙，顺带解锁高清/收藏/关注流。工作量最大但一步到位。
+- **E. series 短剧路线**：series/list 全通——若作者有短剧（series_infos 非空），短剧内容走 series/aweme（series_id 真值待测）。合集（mix）与短剧（series）是两套 id，别混。
+- **探针资产**（全部可复跑）：`_tmp/round3_probe.js`（mssdk）/`round5/6/7/8_probe.js`（头/引导/矩阵）/`post_matrix_probe.js`（签名矩阵）/`uifid_probe.js`（cookie 罐）/`offset_type_probe.js`/`gen_mssdk_swift.js`（常量提取器）。
 
 ### 5.4 评论功能增强（次要）
 - 当前固定取 3 页 60 条；滚动到底自动加载更多（cursor 分页已支持，加个触底加载即可）。
@@ -144,9 +178,12 @@
 2. field 21（video）= URL 生成时间戳 varint，非 bit_rate（epoch 解码实锤）。
 3. f22（video）= 标志位非时长（曾污染 dur 取值链）；时长 = f13（实证 ms）→ f12 → f32。
 4. awemeType 在 mobile proto 探 {43,55,61} 但对图集返回 0/缺失——**awemeType 过滤实际无效**，dur=0 才是可用的无轨信号。
-5. desc=f2（含内联话题）、纯话题行=f459、省=f279、author f4（f3=昵称、f191=sec_uid、f2=uid 数字）、statistics=f10（f3赞 f2评 f6享 f11藏 f5播）、mix 候选=f14（内含合集名 f5）——**全部 wire 实测**。
+5. desc=f2（含内联话题）、纯话题行=f459、省=f279、author f4（f3=昵称、f191=sec_uid、f2=uid 数字）、statistics=f10（f3赞 f2评 f6享 f11藏 f5播）、mix 候选=f14（f5=合集名、**f6=mix_id**）——**全部 wire 实测**。
 6. `authentication_token` mobile proto 无此字段且**传空能通**（弹幕/评论均验证）。
 7. **danmaku get_v2 服务端单请求最多回 ~25-30s 数据**（start_time 起算，end_time 超出被忽略）——分段窗口必须 ≤20s，60s 窗口会静默丢后半段（v151 实锤）。验收接口完整性必须对比小窗口全量条数，不能只看"比上一版多"。
+8. **web 接口风控分层（v153-v162 实锤）**：tab-feed/comment/profile 宽松（假 msToken+最小头即可）；aweme/post、mix/aweme 严格（信任 cookie 也不够，见 §5.3）。**⚠️ 绝对不要给这条链加 sec-ch-ua/sec-fetch-* 等浏览器一致性头——头声称"我是浏览器"但 URLSession 指纹不是浏览器=自相矛盾，会把原本能过的接口也打挂（v157 真机回归实锤）。myDV 用 OkHttp 发这些头能过，平台不同结论不同。**
+9. **jsvmp 反爬挑战页**：纯 HTTP 栈（Node/iOS URLSession）拉抖音首页 100% 被拦（72914 字节空 body JS VM 页，特征 `_$jsvmprt`/`__ac_signature`）——信任 cookie（s_v_web_id 等）只能由挑战页 JS 种下。绕过=隐形 WebView 引导（v161）。
+10. **tvOS 无公开 WebKit 模块**（CI 实锤 `unable to resolve WebKit`）——用 WebView 只能走私有 shim：dlopen("/System/Library/Frameworks/WebKit.framework/WebKit") + NSClassFromString("WKWebView") + objc_msgSend（CGRect 必须 .m 桥），三件套在 v8 commit 77447bc 可恢复（Shim.h/.m + 桥接头 + project.yml SWIFT_OBJC_BRIDGING_HEADER）。
 
 ### 6.5 架构/流程坑
 1. 同一路线连败 3+ 版 → 果断回退稳定底座，别让用户连续当测试员。
@@ -185,15 +222,23 @@
 | video | f21 | URL 生成时间戳 varint（非码率！） |
 | play_addr | f2 | url_list（s13.a：f2→递归→f1） |
 
-### 7.2 web 端点（JSON，全部已验证/可验证）
+### 7.2 web 端点（全部探针/真机实测；"严格链"=需要 uifid+x-secsdk 签名+信任 cookie 的端点，配方见 §5.3②）
 | 端点 | 关键参数 | 状态 |
 |---|---|---|
-| `/aweme/v1/web/tab/feed/` | b0 配方（aweme_pc_rec_raw_data/filterGids/refresh_index/pull_type/video_type_select...）+ webCommon | ✅ 双源已用 |
-| `/aweme/v1/web/danmaku/get_v2/` | u11.K 参数 + webCommon；**60s 分段**（单响应 ~460 上限）；offset_time/text | ✅ 已用 |
-| `/aweme/v1/web/comment/list/` | aweme_id/cursor/count=20；{comments[{cid,user.nickname,avatar_thumb,text,digg_count,create_time}],has_more,cursor} | ✅ v147 已用 |
-| `/aweme/v1/web/aweme/post/` | sec_user_id/max_cursor/need_time_list 等（u11:3683 原样） | ❌ 403 UIFID 墙（待 uz0 链） |
-| `/aweme/v1/web/mix/listcollection/` | cursor/count | ❌ 同 UIFID 墙（myDV 也 blocked） |
+| `/aweme/v1/web/tab/feed/` | b0 配方 + webCommon；**响应 Set-Cookie 下发 UIFID_TEMP**（严格链的钥匙） | ✅ 双源已用 |
+| `/aweme/v1/web/danmaku/get_v2/` | u11.K 参数 + webCommon；**20s 分段**（服务端单响应上限 ~30s 数据）；offset_time(ms)/text | ✅ 已用 |
+| `/aweme/v1/web/comment/list/` | aweme_id/cursor/count=20；假 msToken 可用 | ✅ v147 已用 |
+| `/aweme/v1/web/user/profile/other/` | sec_user_id/publish_video_strategy_type/source（严格链签名） | ✅ 匿名全通（v153 起真机） |
+| `/aweme/v1/web/aweme/post/` | sec_user_id/count/max_cursor/need_time_list/from_user_page + version 290100（u11:3683 原样） | ❌ **签名过但 200 空静默拒绝**（详见 §5.3） |
+| `/aweme/v1/web/series/list/` | sec_user_id/count/cursor（作者合集列表，字段 series_infos） | ✅ 探针全通（样本作者无数据） |
+| `/aweme/v1/web/series/aweme/` | series_id/pull_type=2/source/count/cursor | ❌ mix_id 传入 sc=5（真 series_id 未测） |
+| `/aweme/v1/web/aweme/detail/` | aweme_id/request_source=600/origin_type=quick_player | ✅ 探针全通 |
+| `/aweme/v1/web/mix/aweme/` | mix_id/cursor/count | ❌ sc=4 参数错（myDV 也没实际调用它） |
+| `/aweme/v1/web/mix/detail/` | mix_id | ⚠️ sc=0 但 mix_info 空 |
+| `/aweme/v1/web/mix/listcollection/` | cursor/count | ❌ UIFID 墙（myDV 源码同标 blocked） |
 | ttwid 注册 | POST ttwid.bytedance.com/ttwid/union/register/（body/headers u11.A 原文） | ✅ 匿名可用 |
+| 首页引导 | GET www.douyin.com/?recommend=1 **5 跳重定向**（⚠️jsvmp 挑战页拦纯 HTTP 栈，需 WebView 引导 v161） | ⚠️ WebView 收割成功 |
+| mssdk | POST mssdk.bytedance.com/web/r/token（u11:729 strData 常量，DYMsSdk.swift） | ⚠️ 换到真 msToken 但对 post 无帮助；真机 MISS |
 | webCommon（必需） | device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_* | 缺则 "AppId不合法" |
 | 签名 | getABogus(query,data,path,webUA) + timestamp 参数；a_bogus 后置 | ✅ 评论/弹幕/tab feed 全验证 |
 
@@ -206,11 +251,11 @@
 4. **悬浮窗补暂停/播放项**（OK 键被占用后暂停功能缺口）。
 
 ### 8.2 中期（功能扩展）
-1. **作者主页**：挖通 UIFID 申请链（uz0 调用方）→ works API → 作品列表屏（封面网格+点击播放，复用 merge 管道）。
-2. **合集浏览**：mix/listcollection（同 UIFID 墙，一起解决）。
+1. **作者作品列表**：按 §5.3⑤ 方向 A（WKHTTPCookieStore 私有收割 HttpOnly cookie）或 B（myDV 真机抓包对照）先解锁数据，再上作品屏（封面网格+点击播放，复用 merge 管道）。**⚠️ 禁止再给这条链加浏览器一致性头（v157 回归教训）**。
+2. **合集/短剧浏览**：series/list 已通（作者合集列表）→ 有数据的作者直接接 UI；合集内容等 §5.3 数据解锁（或短剧 series_id 路线）。
 3. **搜索**：顶部搜索条 UI + web 搜索端点（myDV 有 search/single 端点参照）。
-4. **扫码登录**：解锁登录态（更全数据/收藏/关注流）；网页套壳路线 v2-v8 已验证可行（铁律允许仅登录用 WebView）。
-5. **直播**：myDV LiveWebSocket（kq2.java）参照。
+4. **扫码登录**：解锁登录态（作品/合集/高清/收藏/关注流一步到位）——§5.3 若走到方向 D 就是它；网页套壳路线 v2-v8 已验证可行（铁律允许仅登录用 WebView）。
+5. **直播**：myDV LiveWebSocket（kq2.java webRid 弹幕）参照，需直播间入口数据。
 
 ### 8.3 长期（打磨）
 1. UI 美化统一轮：启动 spinner（v76 曾有）、弹幕样式设置、主题。
@@ -220,23 +265,30 @@
 
 ## 9. 关键文件
 - `NativePlayerView.swift`：播放层全部（池/看门狗/手势/进度条/PC UI/PlayerCell）。
-- `DYFeedClient.swift`：双源数据 + 解析（Proto 解码/选链/过滤/信息提取）。
-- `PlaybackEngine.swift`：引擎状态（urls/infos/durations/rawVideos/redirectUrls + reset/merge）。
-- `DYDanmakuClient.swift` / `DYDanmakuOverlay.swift`：弹幕（⏸️暂停）。
+- `DYFeedClient.swift`：双源数据 + 解析（Proto 解码/选链/过滤/信息提取/stripInlineTopics）。
+- `PlaybackEngine.swift`：引擎状态（urls/infos/durations/rawVideos/redirectUrls + reset/merge；DYVideoInfo 含 secUid）。
+- `DYDanmakuClient.swift`（20s 窗口分段）/ `DYDanmakuOverlay.swift`（canShoot 门控发射器+自愈）/ DanmakuKit vendor。
 - `DYCommentClient.swift`：评论数据。
-- `DYQuickPanel.swift`：快捷悬浮窗 + 评论屏（SwiftUI）。
+- `DYProfileClient.swift`：**作者资料 + 作品/合集身份链**（cookie 罐/UIFID_TEMP/x-secsdk MD5/缓存节流重试）——§5.3 的主战场。
+- `DYWebViewBootstrap.swift`：隐形 WebView 引导（shim 版，document.cookie 收割）。
+- `DYWebViewShim.h/.m` + `DYTV-Bridging-Header.h`：私有 WebKit 桥（dlopen + objc_msgSend，v8 原件恢复）。
+- `DYMsSdk.swift`：mssdk 真 msToken（strData 常量程序化提取自 u11:729，当前撤出主流程备查）。
+- `DYQuickPanel.swift`：快捷悬浮窗 + 评论屏 + 作者主页屏（SwiftUI）。
 - `DYSettingsModel.swift`：设置面板 + 快捷面板模型（SwiftUI）。
 - `DYSigner.swift`：4 参 a_bogus 签名（JavaScriptCore + Signer JS 资产）。
 - `DYLog.swift`：日志 + LAN 服务器（/log /stat /ping /clear）+ count()/event()。
 - `HANDOVER.md`（本文档）、`MYDV_FEED_BLUEPRINT.md`（数据蓝图）、记忆文件 `dytv-*-*.md`。
-- 探针：`_tmp/danmaku_probe.js`、`webfeed_probe.js`、`danmaku_hist_probe.js`、`comment_works_probe.js`、`aweme_fields_probe.js`。
-- 反编译：`_apk_work/jadx_out_classes/sources/defpackage/u11.java`（API 总集）+ `com/github/mytv/dv/model/`（JSON 模型）+ `s13`（jadx_out，protobuf 解析权威）。
+- 探针（作品/合集攻坚线）：`_tmp/round3_probe.js`（mssdk）、`round5_probe.js`（全套头）、`round6_probe.js`（series/aweme）、`round7_probe.js`（series/list）、`round8_probe.js`（z() 引导）、`post_matrix_probe.js`（签名矩阵）、`uifid_probe.js`（cookie 罐）、`mobile_post_probe.js`（mobile 作品端点）、`offset_type_probe.js`（offset_time 类型）、`gen_mssdk_swift.js`（DYMsSdk 常量提取器）。
+- 探针（弹幕/通用）：`_tmp/danmaku_probe.js`、`webfeed_probe.js`、`danmaku_hist_probe.js`、`danmaku_segment_probe.js`、`comment_works_probe.js`、`aweme_fields_probe.js`。
+- 反编译：`_apk_work/jadx_out_classes/sources/defpackage/u11.java`（API 总集+签名链 i()/G0/rz0）+ `sl4.java`（cookie 罐）+ `jadx_ui_out/sources/defpackage/`（**UI 层，classes2/3.dex，146 类**：ProfileViewModel=ux3/nx3、WidgetRefresher）+ `com/github/mytv/dv/model/`（JSON 模型）+ `s13`（jadx_out，protobuf 解析权威）。
+- **⚠️ 反编译注意：APK 有 3 个 dex，`jadx_out_classes` 只含 classes.dex——UI 层在 `jadx_ui_out`（classes2/3.dex，本会话才补齐）。**
 
 ## 10. 给下一个 AI 的明确指令
-1. **先读本文档 §7 权威表 + 实际代码 + 反编译**，禁止凭记忆/猜测。
+1. **先读本文档 §7 权威表 + §5.3 攻坚记录 + 实际代码 + 反编译**，禁止凭记忆/猜测。
 2. **数据获取类改动：先开发机 Node 探针验证**（`_tmp/*probe.js` 复用），数据说话再进真机。
-3. **治播放/数据 bug 先问 myDV 原项目**（u11.java = DouyinDirectApi 全集；缺失类如 s13/dp5 记录在案，改用 wire 实测）。
-4. **同一路线连败 3+ 版 → 回退稳定底座**（当前 v122/v147），别让用户连续当测试员。
+3. **治播放/数据 bug 先问 myDV 原项目**（u11.java = DouyinDirectApi 全集；UI 层在 jadx_ui_out——**APK 有 3 个 dex，别只反编译一个**）。
+4. **同一路线连败 3+ 版 → 回退稳定底座**（当前 v122/v156），别让用户连续当测试员。
 5. **大段重写后必须 diff 检查历史修复点**（v143/v144 两次返工教训）。
 6. **CI/日志/编译的坑先查 §6**，已知问题别再踩一遍。
 7. 每版交付后更新本文档 + 记忆文件；版本号 +1 禁止重复。
+8. **作品/合集攻坚（§5.3）接手须知**：签名链/引导/WebView 已全部就位，别重造；下一步=方向 A（私有收割 HttpOnly）或 B（myDV 真机抓包）；**这条链永远用最小头，禁加浏览器一致性头**；触摸悬停已判死别再碰。
