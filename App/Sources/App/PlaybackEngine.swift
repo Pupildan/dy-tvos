@@ -206,79 +206,49 @@ final class PlaybackEngine: ObservableObject {
         DYLog.shared.log("ENGINE setURLs count=\(new.count) index=\(index) refresh=\(isRefresh)")
     }
 
-    /// v172 作者作品/合集作品的插入式重建（v171 真机实锤：append 到尾部=作品段横在 feed 后面，
-    /// 上下爬不回推荐流）。新结构 = feed[0...当前index]（已看+当前）+ 作品段（去重）+ feed[当前+1...]：
-    /// down 刷完作者作品自动滑回推荐流；up 回到已看 feed。返回选中作品的最终位置。
-    /// allDurations/allInfos 与 ids 同下标对位。
+    /// v173 单条插入（v172 真机反馈：插整个作品段=必须刷完所有作者作品才回推荐流，被否）。
+    /// 只把点播的那一条插到当前播放位置之后：看完这条 down 一下就回 feed 剩余、up 回已看 feed，
+    /// 随时退出。返回该作品最终位置（已在 feed 里则直接跳过去）。
     @discardableResult
-    func insertWorks(ids: [String], urls newUrls: [URL], allDurations: [Int]?, allInfos: [DYVideoInfo]?, selectedId: String) -> Int {
+    func insertSingleWork(id: String, url: URL, durationMs: Int, info: DYVideoInfo) -> Int {
         let cur = index
-        let existing = Set(awemeOrder)
-        var wIds: [String] = [], wUrls: [URL] = [], wDurs: [Int] = [], wInfos: [DYVideoInfo] = []
-        for (i, id) in ids.enumerated() where !existing.contains(id) {
-            wIds.append(id)
-            wUrls.append(newUrls[i])
-            wDurs.append(allDurations?[i] ?? 0)
-            wInfos.append(allInfos?[i] ?? DYVideoInfo())
+        if let p = awemeOrder.firstIndex(of: id) {
+            index = p
+            currentAwemeId = id
+            DYLog.shared.log("ENGINE insertOne skip (already in feed) pos=\(p)")
+            return p
         }
-        // 选中作品若已在 feed 里（当前作者=正在看的作者），直接跳到它的 feed 位置
-        if wIds.isEmpty || (!wIds.contains(selectedId) && existing.contains(selectedId)) {
-            let pos = awemeOrder.firstIndex(of: selectedId) ?? cur
-            index = pos
-            DYLog.shared.log("ENGINE insertWorks skip (selected already in feed) pos=\(pos)")
-            return pos
-        }
-        guard !wIds.isEmpty else { return cur }
         let insertAt = cur + 1
-        let oldCount = awemeOrder.count
-        let newCount = oldCount + wIds.count
-        // 位置映射：p <= cur → p；p > cur → p + wIds.count；works 占 insertAt..insertAt+wIds.count-1
-        func newPos(_ p: Int) -> Int { p <= cur ? p : p + wIds.count }
-        var newRaw: [Int: [UInt8]] = [:]
-        var newRedir: [Int: URL] = [:]
-        var newMinted: [Int: Date] = [:]
-        var newDur: [Int: Int] = [:]
-        var newInfo: [Int: DYVideoInfo] = [:]
-        for (p, v) in rawVideos { newRaw[newPos(p)] = v }
-        for (p, v) in redirectUrls { newRedir[newPos(p)] = v }
-        for (p, v) in mintedAt { newMinted[newPos(p)] = v }
-        for (p, v) in durations { newDur[newPos(p)] = v }
-        for (p, v) in infos { newInfo[newPos(p)] = v }
+        func newPos(_ p: Int) -> Int { p <= cur ? p : p + 1 }
+        rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.map { (newPos($0.key), $0.value) })
+        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.map { (newPos($0.key), $0.value) })
+        mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.map { (newPos($0.key), $0.value) })
+        durations = Dictionary(uniqueKeysWithValues: durations.map { (newPos($0.key), $0.value) })
+        infos = Dictionary(uniqueKeysWithValues: infos.map { (newPos($0.key), $0.value) })
         let now = Date()
-        for (i, _) in wIds.enumerated() {
-            let p = insertAt + i
-            newMinted[p] = now   // works 无 raw bytes（web JSON 直链），不进 rawVideos
-            newDur[p] = wDurs[i]
-            newInfo[p] = wInfos[i]
-        }
-        // urls/awemeOrder 重排
+        mintedAt[insertAt] = now
+        durations[insertAt] = durationMs
+        infos[insertAt] = info
         var newIds: [String] = []
-        var newUrls2: [URL] = []
+        var newUrls: [URL] = []
+        let newCount = awemeOrder.count + 1
         for i in 0..<newCount {
             if i < insertAt {
-                newIds.append(awemeOrder[i]); newUrls2.append(urls[i])
-            } else if i < insertAt + wIds.count {
-                let wi = i - insertAt
-                newIds.append(wIds[wi]); newUrls2.append(wUrls[wi])
+                newIds.append(awemeOrder[i]); newUrls.append(urls[i])
+            } else if i == insertAt {
+                newIds.append(id); newUrls.append(url)
             } else {
-                let oi = i - wIds.count
-                newIds.append(awemeOrder[oi]); newUrls2.append(urls[oi])
+                newIds.append(awemeOrder[i - 1]); newUrls.append(urls[i - 1])
             }
         }
         awemeOrder = newIds
-        self.urls = newUrls2
-        rawVideos = newRaw
-        redirectUrls = newRedir
-        mintedAt = newMinted
-        durations = newDur
-        infos = newInfo
+        self.urls = newUrls
         fetchedAt = Date()
         consecutiveFailures = 0
-        let pos = wIds.firstIndex(of: selectedId).map { insertAt + $0 } ?? cur
-        index = pos
-        currentAwemeId = awemeOrder.indices.contains(pos) ? awemeOrder[pos] : ""
-        DYLog.shared.log("ENGINE insertWorks total=\(newCount) works=\(wIds.count) insertAt=\(insertAt) pos=\(pos)")
-        return pos
+        index = insertAt
+        currentAwemeId = id
+        DYLog.shared.log("ENGINE insertOne total=\(newCount) insertAt=\(insertAt)")
+        return insertAt
     }
 
     func next() {

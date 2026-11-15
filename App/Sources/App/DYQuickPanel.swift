@@ -1,49 +1,36 @@
 import SwiftUI
 
-/// v172 作者作品/合集作品共用点播：插入式 rebuild（engine.insertWorks）+ DYWorksJump 跳转通知。
-/// 作品段插在当前播放位置之后：down 刷完作品自动滑回推荐流；up 回到已看 feed。
-/// 右轨统计 v172 起从截获数据提取（statistics.digg/comment/collect/share）。
+/// v172/v173 作者作品/合集作品共用点播：单条插入（engine.insertSingleWork）+ DYWorksJump 跳转通知。
+/// v173 语义（用户拍板）：只插入选中的这一条——看完 down 一下就回推荐流、up 回已看 feed，随时退出。
+/// 右轨统计自截获数据提取（statistics.digg/comment/collect/share）。
 enum DYWorksPlayback {
-    static func play(_ w: DYCapturedWork, works: [DYCapturedWork],
+    static func play(_ w: DYCapturedWork,
                      nickname: String, avatarUrl: String, secUid: String, sourceName: String) {
         let model = DYQuickPanelModel.shared
         if w.isImages {
             model.showToast("图集作品暂不支持播放")
             return
         }
-        guard DYFeedClient.selectBestPlayUrl(w.playUrls) != nil else {
+        guard let best = DYFeedClient.selectBestPlayUrl(w.playUrls), let url = URL(string: best) else {
             model.showToast("作品无可用播放地址")
             return
         }
-        var ids: [String] = []
-        var urls: [URL] = []
-        var durs: [Int] = []
-        var infos: [DYVideoInfo] = []
-        for item in works where !item.isImages {
-            guard let b = DYFeedClient.selectBestPlayUrl(item.playUrls), let u = URL(string: b) else { continue }
-            ids.append(item.id)
-            urls.append(u)
-            durs.append(item.durationMs)
-            var info = DYVideoInfo()
-            info.desc = item.desc
-            info.hashtags = item.desc
-            info.nickname = nickname
-            info.avatarUrl = avatarUrl
-            info.secUid = secUid
-            info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
-            info.isMix = !item.mixName.isEmpty
-            info.mixName = item.mixName
-            info.mixId = item.mixId
-            info.digg = item.digg
-            info.comment = item.comment
-            info.collect = item.collect
-            info.share = item.share
-            infos.append(info)
-        }
-        guard !ids.isEmpty else { return }
-        let pos = PlaybackEngine.shared.insertWorks(ids: ids, urls: urls,
-                                                    allDurations: durs, allInfos: infos,
-                                                    selectedId: w.id)
+        var info = DYVideoInfo()
+        info.desc = w.desc
+        info.hashtags = w.desc
+        info.nickname = nickname
+        info.avatarUrl = avatarUrl
+        info.secUid = secUid
+        info.createTimeText = DYFeedClient.formatCreateTime(UInt64(w.createTime))
+        info.isMix = !w.mixName.isEmpty
+        info.mixName = w.mixName
+        info.mixId = w.mixId
+        info.digg = w.digg
+        info.comment = w.comment
+        info.collect = w.collect
+        info.share = w.share
+        let pos = PlaybackEngine.shared.insertSingleWork(id: w.id, url: url,
+                                                         durationMs: w.durationMs, info: info)
         DYLog.shared.event("\(sourceName) play aweme=\(w.id) pos=\(pos)")
         NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
     }
@@ -659,9 +646,9 @@ struct DYProfileScreen: View {
         .animation(.easeOut(duration: 0.15), value: focused)
     }
 
-    /// v168 点击作品 → 播放 + 关主页屏回播放（v172 逻辑抽到 DYWorksPlayback 共用）
+    /// v168 点击作品 → 播放 + 关主页屏回播放（v173 单条插入语义）
     private func playWork(_ w: DYCapturedWork) {
-        DYWorksPlayback.play(w, works: works,
+        DYWorksPlayback.play(w,
                              nickname: user?.nickname ?? "", avatarUrl: user?.avatarUrl ?? "",
                              secUid: user?.secUid ?? "", sourceName: "WORKS")
         model.isProfileOpen = false
@@ -796,7 +783,7 @@ struct DYMixScreen: View {
     /// 复用作者主页网格单元样式（封面 9:16 + 标题 + 合集角标 + 聚焦白描边）
     private func workCell(_ w: DYCapturedWork) -> some View {
         Button {
-            DYWorksPlayback.play(w, works: works,
+            DYWorksPlayback.play(w,
                                  nickname: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.nickname ?? "",
                                  avatarUrl: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.avatarUrl ?? "",
                                  secUid: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.secUid ?? "",

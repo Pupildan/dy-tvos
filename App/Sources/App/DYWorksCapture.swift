@@ -67,6 +67,7 @@ final class DYWorksCapture: NSObject {
     private var mode: CapMode = .profile
     private var pendingMixId = ""
     private var mixRequested = false
+    private var mixReadySeenAt = Date.distantPast
 
     /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap。
     /// aweme/post 响应在 JS 端预解析精简（每条只取 id/desc/cover/直链/duration/图集位）。
@@ -196,7 +197,7 @@ final class DYWorksCapture: NSObject {
         // v170：不再"首批即收摊"——持续滚动作者页加载更多作品；
         // 退出条件=增长停滞（已有作品 15s / 首批未到 25s）或 60s deadline。
         if mode == .profile {
-            let settleGap: TimeInterval = gotWorks ? 15 : 25
+            let settleGap: TimeInterval = gotWorks ? 25 : 30
             if gotProfile, Date().timeIntervalSince(lastGrowthAt) > settleGap {
                 DYLog.shared.event("WORKSCAP settle (no growth \(Int(settleGap))s) total=\(self.capturedWorks.count)")
                 self.teardown()
@@ -218,13 +219,22 @@ final class DYWorksCapture: NSObject {
                 DYLog.shared.log("WORKSCAP[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
                 self.evalJS(Self.hookJS, tag: "rehook")
             }
-            // v172 mix 模式：页面加载完成 + hook 就位 → 页面上下文发 mix/aweme fetch（吃页面自己的签名包装）
-            if self.mode == .mix, !self.mixRequested, hooked, (diag["rs"] as? String) == "complete" {
-                self.mixRequested = true
-                self.lastGrowthAt = Date()
-                DYLog.shared.log("MIXCAP page ready → fetch mix/aweme mixId=\(self.pendingMixId)")
-                let js = Self.mixFetchJS(mixId: self.pendingMixId)
-                self.evalJS(js, tag: "mixfetch")
+            // v172 mix 模式：页面就位 → 页面上下文发 mix/aweme fetch（吃页面自己的签名包装）
+            // v173 提速：interactive + 1.5s 即发（不等 complete；签名包装挂载通常早于 complete）
+            if self.mode == .mix, !self.mixRequested, hooked {
+                let rs = diag["rs"] as? String ?? ""
+                let pageReady = (rs == "complete")
+                    || (rs == "interactive" && self.mixReadySeenAt != .distantPast
+                        && Date().timeIntervalSince(self.mixReadySeenAt) > 1.5)
+                if pageReady {
+                    self.mixRequested = true
+                    self.lastGrowthAt = Date()
+                    DYLog.shared.log("MIXCAP page rs=\(rs) → fetch mix/aweme mixId=\(self.pendingMixId)")
+                    let js = Self.mixFetchJS(mixId: self.pendingMixId)
+                    self.evalJS(js, tag: "mixfetch")
+                } else if rs == "interactive", self.mixReadySeenAt == .distantPast {
+                    self.mixReadySeenAt = Date()
+                }
             }
             for item in cap {
                 let u = item["u"] as? String ?? "?"
@@ -337,11 +347,28 @@ final class DYWorksCapture: NSObject {
 
     /// v172 合集内容：页面上下文 fetch mix/aweme（§5.3⑤A"WebView 内直接打 API"路线首次实装——
     /// 页面自己的 fetch 包装带签名/cookie；hook 已匹配 mix/ URL 会拦到响应）。
-    /// 流程：新建 WebView 会话 load 抖音首页（挑战自动跑）→ complete+hooked → fetch → hook 拦截 → drain 解析。
+    /// v173 提速（真机反馈"等很久"）：
+    /// ① 复用活的作者页会话（页面签名包装已就位）——零加载直取，几乎瞬时；
+    /// ② 新建会话等 interactive+1.5s 就 fetch（不再等首页 challenge complete，省 3-8s）。
     func fetchMix(mixId: String) {
         guard !mixId.isEmpty else { return }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            if self.webView != nil, self.mode == .profile {
+                // ① 复用活的作者页会话（作者页已加载、hooked=1、抖音 fetch 包装已挂）
+                DYLog.shared.log("MIXCAP reuse live profile session mixId=\(mixId)")
+                self.mode = .mix
+                self.pendingMixId = mixId
+                self.mixRequested = true
+                self.lastGrowthAt = Date()
+                self.evalJS(Self.mixFetchJS(mixId: mixId), tag: "mixfetch")
+                self.deadlineTimer?.invalidate()
+                self.deadlineTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: false) { [weak self] _ in
+                    DYLog.shared.log("MIXCAP deadline (reused session)")
+                    self?.teardown()
+                }
+                return
+            }
             if self.webView != nil { self.teardown() }
             guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1, height: 1), DYProfileClient.webUA, Self.hookJS) as? UIView else {
                 DYLog.shared.event("MIXCAP FAIL: 注入式 WKWebView 创建失败")
@@ -351,6 +378,7 @@ final class DYWorksCapture: NSObject {
             self.mode = .mix
             self.pendingMixId = mixId
             self.mixRequested = false
+            self.mixReadySeenAt = .distantPast
             self.gotWorks = false
             self.gotProfile = false
             self.totalCap = 0
