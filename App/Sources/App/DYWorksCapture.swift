@@ -89,8 +89,10 @@ final class DYWorksCapture: NSObject {
     /// v178 页面包装后真实发出的原生 aweme/post URL（hook 保留完整串）→ 翻页参数模板
     private var nativePostURL = ""
     private var nativeURLLogged = false
-    /// v178 会话当前加载的作者页 secUid（真导航复用判定）
-    private var loadedAuthorSec = ""
+    /// v179 响应的 max_cursor（与 cursor 分开保存，软拒时换游标值重试）
+    private var altCursor = 0
+    /// v179 翻页参数变体推进（0→换游标值→换游标键，共 3 种，全拒则停发自拼请求）
+    private var pagingVariant = 0
 
     // MARK: - 对外入口
 
@@ -101,7 +103,7 @@ final class DYWorksCapture: NSObject {
                   self.postPagesFetched < self.postMaxPages,
                   !self.pendingQueue.contains(where: { $0.contains("aweme/post") }) else { return }
             self.lastActivityAt = Date()
-            self.ensureSession(secUid: self.currentAuthorSec)
+            self.ensureSession()
             self.enqueueNextPage()
             // v178 主动滚动一次（页面自己的懒加载 = 参数与签名都正确的翻页主通道）
             self.evalJS(Self.scrollJS, tag: "scroll-more")
@@ -127,6 +129,11 @@ final class DYWorksCapture: NSObject {
                 self.postEarliestFireAt = .distantPast
                 self.pendingQueue = []
                 self.lastAuthorQueueAt = .distantPast   // 换作者立即放行，不能被 3s 去重误挡
+                // v179 换作者必须清掉旧作者的原生 URL 模板/变体状态（否则翻页会用旧作者签名参数）
+                self.nativePostURL = ""
+                self.nativeURLLogged = false
+                self.altCursor = 0
+                self.pagingVariant = 0
             }
             self.lastActivityAt = Date()
             // 主页屏实例可能是新的（state 空）：已累积作品/资料立即补发，不用等网络
@@ -146,7 +153,7 @@ final class DYWorksCapture: NSObject {
                     return
                 }
             }
-            self.ensureSession(secUid: secUid)
+            self.ensureSession()
             // 资料每次刷新（屏实例新，user 空），但 3s 内同作者只排一次队（双 fire 去重）
             let now = Date()
             guard now.timeIntervalSince(self.lastAuthorQueueAt) > 3 else { return }
@@ -210,29 +217,54 @@ final class DYWorksCapture: NSObject {
         return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0"
     }
 
-    /// v178 权威翻页 URL：以页面包装后**真实发出的原生 aweme/post URL** 为模板，
-    /// 只替换游标与 sec_user_id，删除动态签名字段（交给页面 jsvmp 包装重新计算）。
-    /// 参数集与页面自己逐字节一致——不再用我们猜的 myDV 参数拼翻页。
-    private static func nativePagedPostURL(template: String, secUid: String, cursor: Int) -> String? {
-        guard var comps = URLComponents(string: template), let items = comps.queryItems else { return nil }
-        let dropKeys: Set<String> = ["a_bogus", "msToken", "verifyFp", "fp", "_signature", "X-Bogus", "_dytag"]
-        var out: [URLQueryItem] = []
-        var hasCursor = false
-        for q in items where !dropKeys.contains(q.name) {
-            var v = q.value ?? ""
-            switch q.name {
-            case "max_cursor", "cursor":
-                v = String(cursor); hasCursor = true
+    /// v179 权威翻页 URL：以页面 jsvmp 包装后**真实发出的原生 aweme/post URL** 为模板
+    /// （v178 真机 `NATIVE POST URL[n]` 打全：verifyFp/fp/msToken/a_bogus/uifid 都是页面加的）。
+    /// **字符串级替换**，不做 percent 解码/重编码——URLComponents 会改写空值与 %2F，破坏与页面
+    /// 原生请求的字节一致性。删除所有会话绑定参数，交给页面包装器按新 URL 重签全套。
+    /// myDV u11:3680 权威：`need_time_list = (j==0 ? "1" : "0")`，翻页 j!=0 必须是 0（v178 模板复制时漏改）。
+    /// variant：0=标准(max_cursor=cursor)；1=换游标值(max_cursor=响应 max_cursor)；
+    ///          2=换游标键(cursor=<游标> + max_cursor=0)。
+    private static func nativePagedPostURL(template: String, secUid: String,
+                                           cursor: Int, altCursor: Int, variant: Int) -> String? {
+        guard let qm = template.firstIndex(of: "?") else { return nil }
+        let head = String(template[...qm])          // 含 '?'
+        let query = String(template[template.index(after: qm)...])
+        let dropKeys: Set<String> = ["a_bogus", "msToken", "verifyFp", "verify_fp", "fp",
+                                     "uifid", "webid", "_signature", "X-Bogus", "_dytag"]
+        var out: [String] = []
+        var hasCursorKey = false
+        var hasCursorParam = false
+        for part in query.split(separator: "&", omittingEmptySubsequences: false) {
+            let kv = String(part).split(separator: "=", maxSplits: 1, omittingEmptySubsequences: false)
+            let key = String(kv[0])
+            if dropKeys.contains(key) { continue }
+            var val = kv.count > 1 ? String(kv[1]) : ""
+            switch key {
+            case "max_cursor":
+                hasCursorKey = true
+                val = (variant == 2) ? "0" : String(variant == 1 && altCursor > 0 ? altCursor : cursor)
+            case "cursor":
+                hasCursorParam = true
+                val = String(variant == 1 && altCursor > 0 ? altCursor : cursor)
+            case "need_time_list":
+                val = "0"                       // myDV：翻页恒 0
             case "sec_user_id", "secUid":
-                v = secUid
+                val = secUid
             default: break
             }
-            out.append(URLQueryItem(name: q.name, value: v))
+            out.append(key + "=" + val)
         }
-        guard hasCursor else { return nil }
-        comps.queryItems = out
-        comps.fragment = nil
-        return comps.string
+        if variant == 2, !hasCursorParam {
+            out.append("cursor=" + String(cursor))
+        }
+        guard hasCursorKey || hasCursorParam else { return nil }
+        // v179：模板是页面包装后的绝对 URL，而首屏请求是相对路径——签名包装对两种形态
+        // 算出的 a_bogus 可能不同。统一还原成相对路径，与已通过验签的首屏请求逐字节同构。
+        var result = head + out.joined(separator: "&")
+        if let r = result.range(of: "https://www.douyin.com/") {
+            result = "/" + String(result[r.upperBound...])
+        }
+        return result
     }
 
     private static func mixFetchURL(mixId: String) -> String {
@@ -286,57 +318,42 @@ final class DYWorksCapture: NSObject {
     """
 
     /// v178 翻页请求排队：优先用页面原生 URL 模板（参数集 1:1），无模板才退回 myDV 参数。
-    private func enqueueNextPage() {
+    private func enqueueNextPage(variant: Int = 0) {
         let cursor = max(0, lastMaxCursor)
         if !nativePostURL.isEmpty,
-           let paged = Self.nativePagedPostURL(template: nativePostURL, secUid: currentAuthorSec, cursor: cursor) {
+           let paged = Self.nativePagedPostURL(template: nativePostURL, secUid: currentAuthorSec,
+                                               cursor: cursor, altCursor: altCursor, variant: variant) {
             pendingQueue.append(paged)
-            DYLog.shared.log("CAP post page (NATIVE template) queued cursor=\(cursor)")
+            DYLog.shared.log("CAP post page (NATIVE template v\(variant)) queued cursor=\(cursor) alt=\(altCursor)")
         } else {
-            pendingQueue.append(Self.postFetchURL(secUid: currentAuthorSec, maxCursor: cursor))
-            DYLog.shared.log("CAP post page (fallback myDV params) queued cursor=\(cursor)")
+            let useCursor = (variant == 1 && altCursor > 0) ? altCursor : cursor
+            pendingQueue.append(Self.postFetchURL(secUid: currentAuthorSec, maxCursor: useCursor))
+            DYLog.shared.log("CAP post page (fallback myDV params v\(variant)) queued cursor=\(useCursor)")
         }
         postPagesFetched += 1
     }
 
     // MARK: - 会话管理
 
-    /// v178：离屏视图改 1920x1080 真实 viewport（v163 起 1x1 导致页面懒加载永不触发，
-    /// 是"作品分页从未成功"的遗留真根因）；首次会话**直接加载作者页**，让页面自己发
-    /// 带完整签名的 profile/post 请求，并可用滚动泵触发它自己的翻页。
-    private func ensureSession(secUid: String = "") {
-        if let _ = webView {
-            // 换作者：真导航到新作者页（cookie/挑战已过，无需新建视图）
-            if !secUid.isEmpty, loadedAuthorSec != secUid {
-                loadedAuthorSec = secUid
-                nativePostURL = ""
-                nativeURLLogged = false
-                sessionReady = false
-                readySeenAt = .distantPast
-                rehooked = false
-                let js = "(function(){try{location.replace('https://www.douyin.com/user/\(secUid)');}catch(e){}return 'ok';})();"
-                evalJS(js, tag: "nav-author")
-                DYLog.shared.event("SESSION nav author page (real navigation) sec=\(secUid.prefix(16))...")
-            }
-            return
-        }
+    /// v179：**撤销 v178 的"真导航到作者页"**（20:14:20 真机实锤竞态——导航同秒用旧页面
+    /// hooked=1 判 ready 并 fire，新页面 20:14:21 才补装 hook → 128 作品作者一条都没截到）。
+    /// 回到 v177 验证过的**单一持久首页会话**：不中途导航、不重建 document，
+    /// 只靠 document-start hook + XHR 签名通道；换作者仅重置 Swift 侧状态。
+    private func ensureSession() {
+        guard webView == nil else { return }
         guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1920, height: 1080), DYProfileClient.webUA, Self.hookJS) as? UIView else {
             DYLog.shared.event("SESSION FAIL: 注入式 WKWebView 创建失败")
             return
         }
         webView = wv
-        loadedAuthorSec = secUid
         sessionReady = false
         readySeenAt = .distantPast
         rehooked = false
         pollCount = 0
         totalCap = 0
         lastActivityAt = Date()
-        let startURL = secUid.isEmpty
-            ? "https://www.douyin.com/?recommend=1"
-            : "https://www.douyin.com/user/\(secUid)"
-        DYLog.shared.log("SESSION boot (doc-start inject, 1920x1080) → \(startURL.prefix(60))")
-        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: startURL)!))
+        DYLog.shared.log("SESSION boot douyin home (doc-start inject, persistent) — 无中途导航")
+        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.douyin.com/?recommend=1")!))
         startPolling()
         deadlineTimer?.invalidate()
         deadlineTimer = Timer.scheduledTimer(withTimeInterval: 180, repeats: false) { [weak self] _ in
@@ -545,34 +562,35 @@ final class DYWorksCapture: NSObject {
                 hasMore = (obj["hasMore"] as? Int ?? 0) != 0
                 // v175 myDV 权威：翻页游标 = 响应 cursor（UserWorksResponse.getCursor()），非 max_cursor
                 if let c = obj["cursor"] as? Int, c > 0 { nextCursor = c }
-                else if let mc = obj["maxCursor"] as? Int { nextCursor = mc }
+                else if let mc = obj["maxCursor"] as? Int, mc > 0 { nextCursor = mc; altCursor = mc }
+                if let mc = obj["maxCursor"] as? Int, mc > 0 { altCursor = mc }
                 mixName = obj["mixName"] as? String ?? ""
             } else if let list = obj["aweme_list"] as? [[String: Any]] {
                 // 裸 JSON 兜底（grab 端 JSON.parse 失败/超长响应）
                 works = Self.parseFull(list)
                 hasMore = (obj["has_more"] as? Int ?? 0) != 0
                 if let c = obj["cursor"] as? Int, c > 0 { nextCursor = c }
-                else if let mc = obj["max_cursor"] as? Int { nextCursor = mc }
+                else if let mc = obj["max_cursor"] as? Int, mc > 0 { nextCursor = mc; altCursor = mc }
+                if let mc = obj["max_cursor"] as? Int, mc > 0 { altCursor = mc }
                 if let mi = obj["mix_info"] as? [String: Any] { mixName = mi["mix_name"] as? String ?? "" }
             }
         }
-        DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor)")
+        DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor) maxCursor=\(altCursor)")
         guard !works.isEmpty else {
-            // v178：自拼翻页请求被软拒（`{"status_code":0}`）**不再判死**——页面原生滚动通道
-            // 仍在跑，把 hasMore 置 false 会让 UI 停止显示"加载中"并误导用户。
-            // 改为：只重试 1 次（改用原生 URL 模板），之后交给页面自己的翻页。
             DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120))")
             guard allowPaging else { return }
-            if self.postEmptyRetries < 1, !self.currentAuthorSec.isEmpty {
-                self.postEmptyRetries += 1
-                self.postEarliestFireAt = Date().addingTimeInterval(3.0)
-                self.enqueueNextPage()
-                // 同时主动滚一次，触发页面自己的懒加载翻页（参数+签名均由页面生成）
-                self.evalJS(Self.scrollJS, tag: "empty-scroll")
-                DYLog.shared.log("CAP post empty retry (native template + page scroll) in 3s")
+            // v179 软拒 → 按 myDV 参数语义换变体重试（最多 3 种，间隔 4s 防风控），
+            // 全拒则彻底停发自拼翻页但**不判死 hasMore**（页面原生通道仍可能给数据）。
+            if self.pagingVariant < 2, !self.currentAuthorSec.isEmpty,
+               self.postPagesFetched < self.postMaxPages {
+                self.pagingVariant += 1
+                self.postEarliestFireAt = Date().addingTimeInterval(4)
+                self.enqueueNextPage(variant: self.pagingVariant)
+                self.evalJS(Self.scrollJS, tag: "variant-scroll")
+                DYLog.shared.log("CAP post soft-reject → variant \(self.pagingVariant) (need_time_list=0) retry in 4s")
                 return
             }
-            DYLog.shared.event("CAP post soft-reject; keep hasMore, wait for page-native paging total=\(self.capturedWorks.count)")
+            DYLog.shared.event("CAP post all variants rejected; stop self paging, wait page-native total=\(self.capturedWorks.count)")
             return
         }
         self.postEmptyRetries = 0
@@ -589,13 +607,12 @@ final class DYWorksCapture: NSObject {
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
         }
-        // v178 分页：页面原生滚动通道为主；自拼请求只作为并行兜底（原生 URL 模板优先）。
-        // 只在拿到新作品、队列里没有待发 postcap 时排一页，避免重复响应刷屏触发风控。
+        // v179 分页：沿用当前已验证的变体（不重置），只在拿到新作品且队列无待发时排一页。
         if allowPaging, hasMore, !fresh.isEmpty, postPagesFetched < postMaxPages,
-           !currentAuthorSec.isEmpty,
+           !currentAuthorSec.isEmpty, pagingVariant <= 2,
            !pendingQueue.contains(where: { $0.contains("aweme/post") }) {
             lastMaxCursor = max(lastMaxCursor, nextCursor)
-            enqueueNextPage()
+            enqueueNextPage(variant: pagingVariant)
         }
         _ = mixName
     }

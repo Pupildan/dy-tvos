@@ -3,8 +3,8 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v172**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品列表=WebView 截获路线真机全通**（v163-v168）；点播/焦点/滑动/自动加载全修通（v169-v171）；v172=右轨统计+insertWorks 回推荐流+合集屏（mix/aweme 页面上下文 fetch，待验收）。
+> **当前版本 v179**。稳定回退点：**v122**（git checkout 三文件）。
+> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品首页+合集=WebView 页面上下文请求真机全通**（v163-v175）；点播/焦点/滑动/右轨统计/合集屏/点播段语义全修通（v169-v175）；**作者作品翻页仍未通**（v175-v177 连续 3 版 `{"status_code":0}` 验签软拒，v178 换路线待验收）。
 
 ---
 
@@ -84,7 +84,8 @@
 | v174 | ①**DYWorksCapture 重构=持久会话+全页面上下文 fetch 泵**：一次会话（首页过挑战），profile/aweme-post/mix 全用 `_dytag` 标记 fetch（v172 真机已验证页面 fetch 包装带签名），hasMore 自动排队下一页 max_cursor（不再依赖网页滚动），空闲 30s/180s 收摊，裸 JSON 兜底解析（1.2MB 大响应 grab parse fail 实锤）；②**点播语义定版**：段插入回归（未操作自动刷作者作品段/合集段，刷完自动回 feed）+ 快捷面板新增「回到推荐」（段激活时显示，`removeWorksSegment` 立即推回正常流） | ⚠️ 真机：回到推荐闪退 / 第二页空 / 合集错位 / 双发慢（v175 修） |
 | v175 | ①**闪退**=`removeWorksSegment` 段内 key 重映射撞 key/负数→`Dictionary(uniqueKeysWithValues:)` fatal（v174 真机 18:24:36 实锤）→ 先剔除段区间再重映射；②**aweme/post 逐参数照抄 myDV**（反编译 u11.java 3678-3703：14 参数含 `need_time_list` 首页1/翻页0、`version_code=290100` 等；v174 缺 6 参数→第二页 200 空 len=17）；③**翻页游标改响应 `cursor`**（myDV `UserWorksResponse.getCursor()`，nx3 实锤），非 max_cursor；④**合集权威化**：myDV 手机端 s13 **从不填 MixInfo**（恒 null）→ f14/f6 无权威依据且真机合集错位 → 改走 `aweme/detail → mix_info.mix_id`（myDV u11:3992 同款）再打 mix/aweme；集数用 `mix_info.statis.current_episode`（nx3 同款）；⑤提速=双发去重（删 RootView.onChange 重复 fetch + 3s 节流）+ 就绪后每 tick 连发 2 条 | ⚠️ 真机：参数全对齐后第二页仍 len=17 空（v176 找到 referer 根因） |
 | v176 | **作品翻页修复**：真机复现第一页 20-23 条 `hasMore=1` → 第二页恒 17 字节空列表；翻 myDV `u11.F0` 实锤**按端点设 `referer`**（post→`https://www.douyin.com/user/`，mix→`/collection/`，detail→`/video/`），页面上下文 fetch 不能自定义 Referer 头 → 用 `history.replaceState` 把 document URL 切到对应路径（零加载，浏览器自动带正确 Referer）。附加：翻页 ≥3s 节流、空响应打 body + 退避重试 2 次、同作者重开只补缓存不重复请求（防限流）、`postMaxPages` 8→20、网格触底 `requestMoreWorks` 主动补页 | ⚠️ 真机空响应原文 `{"status_code":0}`=验签软拒；referer 非根因（v177） |
-| v177 | ①**翻页验签修复**（v176 日志 `body={"status_code":0}` 实锤）：`_dytag` 是塞进 query 的服务端不认识参数 → a_bogus 基于完整 query 计算、页面签名包装只签白名单参数 → 参数集不一致 → 第一页宽松过、翻页严格拒。**标记全改 URL fragment**（`#postcap/#profcap/#mixcap/#detailcap`：浏览器不发 fragment、不参与签名，请求参数逐字节对齐 myDV），hook `u` 单独保留 `#tag` 供分发；**页面 jsvmp 包装后重发的带签名请求响应也纳入解析**（双通道按 id 去重累积）；②快捷栏焦点选中**只留液态玻璃描边**（白渐变+微光），去掉选中背景（tvOS 26 glass tint 填充 / 低版本 ultraThinMaterial 填充） | ✅ CI 过，待真机验收 |
+| v177 | ①**翻页验签修复**（v176 日志 `body={"status_code":0}` 实锤）：`_dytag` 是塞进 query 的服务端不认识参数 → a_bogus 基于完整 query 计算、页面签名包装只签白名单参数 → 参数集不一致 → 第一页宽松过、翻页严格拒。**标记全改 URL fragment**（`#postcap/#profcap/#mixcap/#detailcap`：浏览器不发 fragment、不参与签名，请求参数逐字节对齐 myDV），hook `u` 单独保留 `#tag` 供分发；**页面 jsvmp 包装后重发的带签名请求响应也纳入解析**（双通道按 id 去重累积）；②快捷栏焦点选中**只留液态玻璃描边**（白渐变+微光），去掉选中背景（tvOS 26 glass tint 填充 / 低版本 ultraThinMaterial 填充） | ⚠️ 真机 19:42-19:48 三个作者第一页 21-23 条后仍恒 `{"status_code":0}`；fragment 假设判死 |
+| v178 | **翻页整体换路线**（v175 参数对齐 myDV / v176 referer / v177 fragment 连续 3 版均软拒 → 按铁律判死"自拼翻页 URL"）：①**请求 URL 彻底净化**——标记不再进 query 也不进 fragment（fragment 仍会被页面签名包装当 URL 字符串算进签名），改存 JS 本地 `window.__dyTagMap`，回推时本地拼 `#tag` 仅供 Swift 分发；②**XHR 优先**发请求（抖音 jsvmp 签名包装多挂 XHR，此前一律 `fetch()` 可能压根没签名：首页接口宽松放过、翻页严格验签必挂），空响应自动用 fetch 通道补一枪；③**离屏 WebView 1x1→1920x1080 真实 viewport + 首次会话真导航到作者页 + 2.5s 页面内滚动泵**——让页面自己发懒加载翻页（参数与 a_bogus 全由页面生成；v163 起 1x1 滚动永不触发="分页从未成功"的遗留真根因）；④ hook 保留**完整原生 aweme/post URL** 分片打日志（`NATIVE POST URL[n]`），翻页参数 `nativePagedPostURL` 1:1 照抄该模板、只删动态签名字段交页面重算；⑤软拒**不再判死** `hasMore`（v174-v177 的 give-up 会把 UI 停住），交给页面原生通道继续 | ✅ CI 过，待真机验收（关键日志：`NATIVE POST URL` 参数集、`SESSION page-req` 出现新游标页、`CAP works accumulated +N → M` 连续增长） |
 
 ## 5. 未解决问题清单（按优先级）
 
