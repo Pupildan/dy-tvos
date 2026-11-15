@@ -598,50 +598,83 @@ final class DYPlayerViewController: UIViewController {
         }
     }
 
-    /// 手势（触摸板/触摸面）：上/下滑切换视频。
-    /// v154：两倍速定版=**长按确认键**（pressesBegan 计时/pressesEnded 判定）；触摸悬停全部逻辑
-    /// 已删干净（v146-v153 触摸通道在真机始终不可靠，用户拍板弃用），滑动不再有任何互斥牵连。
+    /// 手势（触摸板/触摸面）：上/下滑切换视频 + 手指悬停不动 1s 两倍速播放松开恢复（v149 用户规格）。
+    /// 前提：面板关闭态才响应（焦点链隔离；设置面板/快捷面板打开时不抢）。
     private func setupGestures() {
         // 关闭 collection 原生滚动（触摸板滑动交给手势，避免原生滚动与翻页打架）
         collectionView.panGestureRecognizer.isEnabled = false
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.cancelsTouchesInView = false
+        pan.delegate = self
         view.addGestureRecognizer(pan)
+        let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
+        hold.minimumPressDuration = 0.6
+        hold.allowableMovement = 140   // 容忍悬停漂移
+        hold.cancelsTouchesInView = false
+        hold.delegate = self
+        view.addGestureRecognizer(hold)
     }
+
+    /// pan 悬停两倍速状态（v151 双通道兜底：真机实锤部分静置触摸不触发 UILongPress，
+    /// 但 pan 必触发——pan 开始后位移持续 <60px 达 0.6s 也判定为悬停）
+    private var panBeganAt: Date?
+    private var pan2xFired = false
+    /// 本次触摸已判定为滑动（与悬停互斥；滑动后禁用悬停防误触）
+    private var panSwiped = false
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
         let t = g.translation(in: view)
-        guard abs(t.y) > 100 else { return }   // 滑动阈值
-        g.setTranslation(.zero, in: view)
-        if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
-        DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
+        switch g.state {
+        case .began:
+            panBeganAt = Date()
+            pan2xFired = false
+            panSwiped = false
+        case .changed:
+        // 悬停判定（v152 放宽）：pan 开始 ≥0.6s 且总位移从未越过滑动阈值(<100px) → 两倍速。
+        // v153 主通道=LongPress（共存委托后静置触摸也能到 0.6s）；pan 悬停保留兜底。
+        if !pan2xFired, !panSwiped, abs(t.y) < 100, abs(t.x) < 100,
+           let began = panBeganAt, Date().timeIntervalSince(began) >= 0.6 {
+            pan2xFired = true
+            startHold2x()
+        }
+            guard abs(t.y) > 100 else { return }
+            if pan2xFired {
+                // 2x 悬停中的漂移不再当滑动（v151 实锤：2x 点亮后被漂移切视频=秒灭）
+                return
+            }
+            panSwiped = true   // 本次触摸已判定为滑动，禁用悬停（滑动与悬停互斥）
+            g.setTranslation(.zero, in: view)
+            if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
+            DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
+        case .ended, .cancelled, .failed:
+            if pan2xFired { stopHold2x() }
+            pan2xFired = false
+            panSwiped = false
+            panBeganAt = nil
+        default: break
+        }
     }
 
-    // MARK: - 确认键长按两倍速（v154 用户定版：按住确认键 0.6s=两倍速，松开恢复；短按=呼出快捷面板）
-    /// 是否处于长按倍速中（角标显示用）
+    // MARK: - 触摸板悬停两倍速（用户规格：手指放到触摸区域不动=倍速，与滑动同区域）
+    /// 是否处于悬停倍速中（角标显示用）
     private var isHolding2x = false
-    /// 确认键按下状态（pressesBegan 置位；计时器触发或松开时清掉）
-    private var selectPressed = false
-    private var selectHoldTimer: Timer?
 
     private func startHold2x() {
-        guard !isHolding2x, DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
-              let p = PlayerManager.shared.player(at: currentIndex) else { return }
+        guard !isHolding2x else { return }
+        guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
         holdWasPlaying = (p.timeControlStatus == .playing)
         if holdWasPlaying {
             p.rate = 2.0
             isHolding2x = true
             updateProgress()   // 立即刷新 ▶▶2x 角标
-            DYLog.shared.event("PLAYBACK 2x on (select hold)")
+            DYLog.shared.event("PLAYBACK 2x on (hold)")
         } else {
             DYLog.shared.event("PLAYBACK hold skip (paused)")
         }
     }
 
     private func stopHold2x() {
-        selectHoldTimer?.invalidate()
-        selectHoldTimer = nil
         guard isHolding2x else { return }
         isHolding2x = false
         if let p = PlayerManager.shared.player(at: currentIndex) {
@@ -649,6 +682,16 @@ final class DYPlayerViewController: UIViewController {
         }
         updateProgress()
         DYLog.shared.event("PLAYBACK 2x off (release)")
+    }
+
+    /// UILongPressGestureRecognizer 通道（静置不动手指；与 pan 悬停通道共用 start/stop，isHolding2x 互斥）
+    @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
+        switch g.state {
+        case .began: startHold2x()
+        case .ended, .cancelled, .failed: stopHold2x()
+        default: break
+        }
     }
 
     /// 进度条刷新（0.5s）：当前居中 player 的 currentTime/duration + 时长文本（悬停倍速时加 ▶▶2x 角标）
@@ -1004,13 +1047,13 @@ final class DYPlayerViewController: UIViewController {
             case .leftArrow: seek(by: -10); return
             case .rightArrow: seek(by: 10); return
             case .select:
-                // 确认键（v154）：按下开始计时——按住 ≥0.6s=两倍速；松开时若计时未触发（短按）=呼出快捷悬浮窗
-                selectPressed = true
-                selectHoldTimer?.invalidate()
-                selectHoldTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { [weak self] _ in
-                    guard let self, self.selectPressed else { return }
-                    self.selectPressed = false
-                    self.startHold2x()
+                // 确认键（点击板中心按下=.select，与播放/暂停键 .playPause 是两个键）：呼出/关闭快捷悬浮窗
+                // （v149：两倍速归还触摸板悬停手势，确认键恢复 v147 即按即呼出）
+                if DYQuickPanelModel.shared.isOpen {
+                    DYQuickPanelModel.shared.close()
+                } else {
+                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex),
+                                                  awemeId: PlaybackEngine.shared.awemeId(at: currentIndex) ?? "")
                 }
                 return
             case .playPause:
@@ -1028,38 +1071,15 @@ final class DYPlayerViewController: UIViewController {
         }
         super.pressesBegan(presses, with: event)
     }
+}
 
-    override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses where press.type == .select {
-            if selectPressed {
-                // 短按（计时器未触发）：呼出/关闭快捷悬浮窗
-                selectPressed = false
-                selectHoldTimer?.invalidate()
-                selectHoldTimer = nil
-                if DYQuickPanelModel.shared.isOpen {
-                    DYQuickPanelModel.shared.close()
-                } else {
-                    DYQuickPanelModel.shared.open(info: PlaybackEngine.shared.videoInfo(at: currentIndex),
-                                                  awemeId: PlaybackEngine.shared.awemeId(at: currentIndex) ?? "")
-                }
-                return
-            }
-            if isHolding2x {
-                stopHold2x()
-                return
-            }
-        }
-        super.pressesEnded(presses, with: event)
-    }
-
-    override func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses where press.type == .select {
-            selectPressed = false
-            selectHoldTimer?.invalidate()
-            selectHoldTimer = nil
-            if isHolding2x { stopHold2x() }
-        }
-        super.pressesCancelled(presses, with: event)
+/// 手势共存委托（v153 关键修复）：默认互斥规则下，pan 在手指移动 ~10px 时转入 .began 会
+/// 强杀还在计时的 UILongPress——纯静止触摸永远到不了 0.6s=「要有位移才触发」的根源。
+/// 允许共存后：静置触摸走 LongPress 纯计时触发；pan 通道继续兜底微漂移场景。
+extension DYPlayerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+        true
     }
 }
 
