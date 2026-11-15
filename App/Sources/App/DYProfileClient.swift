@@ -52,9 +52,9 @@ final class DYProfileClient {
     // MARK: - cookie 罐
 
     /// 吸收响应 Set-Cookie（allHeaderFields 多条 Set-Cookie 会逗号合并；目标 cookie 值均不含逗号，按名定向提取）
-    private func absorb(_ resp: HTTPURLResponse?) {
-        guard let resp else { return }
-        let merged = resp.allHeaderFields["Set-Cookie"] as? String ?? ""
+    private func absorb(_ resp: URLResponse?) {
+        guard let http = resp as? HTTPURLResponse else { return }
+        let merged = http.allHeaderFields["Set-Cookie"] as? String ?? ""
         guard !merged.isEmpty else { return }
         queue.async {
             for name in ["UIFID_TEMP", "UIFID", "ttwid", "msToken", "__ac_nonce"] {
