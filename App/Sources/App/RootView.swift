@@ -46,6 +46,13 @@ struct RootView: View {
                     .zIndex(12)
             }
 
+            // v172 合集屏（快捷面板「合集」打开；mix/aweme 页面上下文截获）
+            if quick.isMixOpen {
+                DYMixScreen()
+                    .ignoresSafeArea()
+                    .zIndex(12)
+            }
+
             // 轻提示（v150：主页/合集等占位动作反馈，2.5s 自动消失）
             if let toast = quick.toast {
                 Text(toast)

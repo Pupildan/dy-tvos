@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v171"
-    static let changes = "v171: 修v170真机两连——①点作品播的是别的视频(真根因=DYWorksJump同步触发时merge的insertItems还没跑,contentSize旧,scrollTo的targetY被maxOffset钳到旧底部;改jumpToWorksIndex轮询等item就绪再滚) ②作者页滑动穿透切视频(handlePan没护栏isProfileOpen/isCommentOpen;滑动改交焦点引擎移动网格焦点,pressesBegan焦点屏打开时也全放行焦点引擎)"
+    static let version = "v172"
+    static let changes = "v172: ①右轨4按钮数据(playWork没填statistics;JS提取statistics赞/评/藏/享→DYCapturedWork→DYVideoInfo) ②回不到推荐流(作品段append尾部横在feed后面;改insertWorks插入式重建=已看feed前缀+作品段+feed剩余,down刷完作品自动滑回推荐流) ③合集实装(DYVideoInfo补mixId mobile=f14f6/web=mix_info;快捷面板合集项→DYMixScreen;DYWorksCapture.fetchMix页面上下文fetch mix/aweme吃页面签名包装,hook拦响应→网格点播,§5.3⑤A路线首次实装)"
 }

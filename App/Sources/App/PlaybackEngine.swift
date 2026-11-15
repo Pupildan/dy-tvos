@@ -24,6 +24,8 @@ struct DYVideoInfo {
     /// 合集识别（v145：mobile=aweme f14 子消息存在（wire 观测：内含合集名 f5）；web=mix_info）
     var isMix: Bool = false
     var mixName: String = ""
+    /// v172 合集 id（mobile=f14 f6 wire 实测；web=mix_info.mix_id）——快捷面板"合集"实装的数据钥匙
+    var mixId: String = ""
     /// 作者 sec_uid（v153 主页用；mobile=author f191，web=author.sec_uid）
     var secUid: String = ""
 }
@@ -202,6 +204,81 @@ final class PlaybackEngine: ObservableObject {
             index = 0   // 首批/翻页：自动播第一条（解"要手动按"）
         }
         DYLog.shared.log("ENGINE setURLs count=\(new.count) index=\(index) refresh=\(isRefresh)")
+    }
+
+    /// v172 作者作品/合集作品的插入式重建（v171 真机实锤：append 到尾部=作品段横在 feed 后面，
+    /// 上下爬不回推荐流）。新结构 = feed[0...当前index]（已看+当前）+ 作品段（去重）+ feed[当前+1...]：
+    /// down 刷完作者作品自动滑回推荐流；up 回到已看 feed。返回选中作品的最终位置。
+    /// allDurations/allInfos 与 ids 同下标对位。
+    @discardableResult
+    func insertWorks(ids: [String], urls newUrls: [URL], allDurations: [Int]?, allInfos: [DYVideoInfo]?, selectedId: String) -> Int {
+        let cur = index
+        let existing = Set(awemeOrder)
+        var wIds: [String] = [], wUrls: [URL] = [], wDurs: [Int] = [], wInfos: [DYVideoInfo] = []
+        for (i, id) in ids.enumerated() where !existing.contains(id) {
+            wIds.append(id)
+            wUrls.append(newUrls[i])
+            wDurs.append(allDurations?[i] ?? 0)
+            wInfos.append(allInfos?[i] ?? DYVideoInfo())
+        }
+        // 选中作品若已在 feed 里（当前作者=正在看的作者），直接跳到它的 feed 位置
+        if wIds.isEmpty || (!wIds.contains(selectedId) && existing.contains(selectedId)) {
+            let pos = awemeOrder.firstIndex(of: selectedId) ?? cur
+            index = pos
+            DYLog.shared.log("ENGINE insertWorks skip (selected already in feed) pos=\(pos)")
+            return pos
+        }
+        guard !wIds.isEmpty else { return cur }
+        let insertAt = cur + 1
+        let oldCount = awemeOrder.count
+        let newCount = oldCount + wIds.count
+        // 位置映射：p <= cur → p；p > cur → p + wIds.count；works 占 insertAt..insertAt+wIds.count-1
+        func newPos(_ p: Int) -> Int { p <= cur ? p : p + wIds.count }
+        var newRaw: [Int: [UInt8]] = [:]
+        var newRedir: [Int: URL] = [:]
+        var newMinted: [Int: Date] = [:]
+        var newDur: [Int: Int] = [:]
+        var newInfo: [Int: DYVideoInfo] = [:]
+        for (p, v) in rawVideos { newRaw[newPos(p)] = v }
+        for (p, v) in redirectUrls { newRedir[newPos(p)] = v }
+        for (p, v) in mintedAt { newMinted[newPos(p)] = v }
+        for (p, v) in durations { newDur[newPos(p)] = v }
+        for (p, v) in infos { newInfo[newPos(p)] = v }
+        let now = Date()
+        for (i, _) in wIds.enumerated() {
+            let p = insertAt + i
+            newMinted[p] = now   // works 无 raw bytes（web JSON 直链），不进 rawVideos
+            newDur[p] = wDurs[i]
+            newInfo[p] = wInfos[i]
+        }
+        // urls/awemeOrder 重排
+        var newIds: [String] = []
+        var newUrls2: [URL] = []
+        for i in 0..<newCount {
+            if i < insertAt {
+                newIds.append(awemeOrder[i]); newUrls2.append(urls[i])
+            } else if i < insertAt + wIds.count {
+                let wi = i - insertAt
+                newIds.append(wIds[wi]); newUrls2.append(wUrls[wi])
+            } else {
+                let oi = i - wIds.count
+                newIds.append(awemeOrder[oi]); newUrls2.append(urls[oi])
+            }
+        }
+        awemeOrder = newIds
+        self.urls = newUrls2
+        rawVideos = newRaw
+        redirectUrls = newRedir
+        mintedAt = newMinted
+        durations = newDur
+        infos = newInfo
+        fetchedAt = Date()
+        consecutiveFailures = 0
+        let pos = wIds.firstIndex(of: selectedId).map { insertAt + $0 } ?? cur
+        index = pos
+        currentAwemeId = awemeOrder.indices.contains(pos) ? awemeOrder[pos] : ""
+        DYLog.shared.log("ENGINE insertWorks total=\(newCount) works=\(wIds.count) insertAt=\(insertAt) pos=\(pos)")
+        return pos
     }
 
     func next() {

@@ -14,6 +14,13 @@ struct DYCapturedWork {
     let createTime: Int
     /// 合集名（aweme/post 的 mix_info.mix_name；空=非合集）
     let mixName: String
+    /// v172 合集 id（mix_info.mix_id）——合集屏数据钥匙
+    let mixId: String
+    /// v172 右轨统计（赞/评/藏/享）——v171 真机实锤作品播放右轨全是 0
+    let digg: Int
+    let comment: Int
+    let collect: Int
+    let share: Int
 }
 
 /// v166+ 作品/合集 WebView 截获（用户拍板降维打击路线）——已接 UI。
@@ -34,6 +41,8 @@ final class DYWorksCapture: NSObject {
     protocol Delegate {
         func worksCaptureDidCapture(profile: DYProfileUser)
         func worksCaptureDidCapture(works: [DYCapturedWork], hasMore: Bool)
+        /// v172 合集内容截获完成（mix/aweme 页面上下文 fetch → hook 拦截 → 精简解析）
+        func worksCaptureDidCapture(mixWorks: [DYCapturedWork], mixId: String, mixName: String)
     }
     var delegate: Delegate?
 
@@ -53,6 +62,11 @@ final class DYWorksCapture: NSObject {
     private var capturedHasMore = false
     private var firstBatchFed = false
     private var lastGrowthAt = Date()
+    /// v172 会话模式：profile=作者资料+作品；mix=合集内容（页面上下文 fetch mix/aweme）
+    private enum CapMode { case profile, mix }
+    private var mode: CapMode = .profile
+    private var pendingMixId = ""
+    private var mixRequested = false
 
     /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap。
     /// aweme/post 响应在 JS 端预解析精简（每条只取 id/desc/cover/直链/duration/图集位）。
@@ -64,9 +78,9 @@ final class DYWorksCapture: NSObject {
         var s=String(u);
         if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
-        if(s.indexOf('aweme/post')>=0){
+        if(s.indexOf('aweme/post')>=0||s.indexOf('mix/aweme')>=0){
           var j=null; try{ j=JSON.parse(body); }catch(e){}
-          if(j&&j.aweme_list){
+          if(j&&(j.aweme_list)){
             var slim=[];
             for(var i=0;i<j.aweme_list.length;i++){
               var a=j.aweme_list[i]||{}; var v=a.video||{};
@@ -78,10 +92,14 @@ final class DYWorksCapture: NSObject {
               if(v.cover&&v.cover.url_list&&v.cover.url_list[0])cov=v.cover.url_list[0];
               else if(v.origin_cover&&v.origin_cover.url_list&&v.origin_cover.url_list[0])cov=v.origin_cover.url_list[0];
               var mx=''; if(a.mix_info&&a.mix_info.mix_name)mx=a.mix_info.mix_name;
-              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,mix:mx,
-                imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
+              var mxid=''; if(a.mix_info&&a.mix_info.mix_id)mxid=String(a.mix_info.mix_id);
+              var st=[0,0,0,0];
+              if(a.statistics){st=[a.statistics.digg_count||0,a.statistics.comment_count||0,a.statistics.collect_count||0,a.statistics.share_count||0];}
+              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,mx:mx,mxid:mxid,
+                st:st.join(','),imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
             }
-            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0)})});
+            var mn=''; if(j.mix_info&&j.mix_info.mix_name)mn=j.mix_info.mix_name;
+            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),mixName:mn})});
             return;
           }
         }
@@ -117,7 +135,7 @@ final class DYWorksCapture: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if self.webView != nil {
-                if self.currentSecUid == secUid {
+                if self.mode == .profile, self.currentSecUid == secUid {
                     // 同作者重复触发（onChange 双 fire / 主页屏重开）：静默去重，
                     // 但把已累积的作品补发给新注册的 delegate（重开屏实例是新的，state 是空的）
                     let works = self.capturedWorks
@@ -137,6 +155,7 @@ final class DYWorksCapture: NSObject {
                 return
             }
             self.webView = wv
+            self.mode = .profile
             self.gotWorks = false
             self.gotProfile = false
             self.totalCap = 0
@@ -176,9 +195,15 @@ final class DYWorksCapture: NSObject {
         guard webView != nil else { return }
         // v170：不再"首批即收摊"——持续滚动作者页加载更多作品；
         // 退出条件=增长停滞（已有作品 15s / 首批未到 25s）或 60s deadline。
-        let settleGap: TimeInterval = gotWorks ? 15 : 25
-        if gotProfile, Date().timeIntervalSince(lastGrowthAt) > settleGap {
-            DYLog.shared.event("WORKSCAP settle (no growth \(Int(settleGap))s) total=\(self.capturedWorks.count)")
+        if mode == .profile {
+            let settleGap: TimeInterval = gotWorks ? 15 : 25
+            if gotProfile, Date().timeIntervalSince(lastGrowthAt) > settleGap {
+                DYLog.shared.event("WORKSCAP settle (no growth \(Int(settleGap))s) total=\(self.capturedWorks.count)")
+                self.teardown()
+                return
+            }
+        } else if mixRequested, Date().timeIntervalSince(lastGrowthAt) > 15 {
+            DYLog.shared.event("MIXCAP settle no-response mixId=\(pendingMixId)")
             self.teardown()
             return
         }
@@ -193,10 +218,25 @@ final class DYWorksCapture: NSObject {
                 DYLog.shared.log("WORKSCAP[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
                 self.evalJS(Self.hookJS, tag: "rehook")
             }
+            // v172 mix 模式：页面加载完成 + hook 就位 → 页面上下文发 mix/aweme fetch（吃页面自己的签名包装）
+            if self.mode == .mix, !self.mixRequested, hooked, (diag["rs"] as? String) == "complete" {
+                self.mixRequested = true
+                self.lastGrowthAt = Date()
+                DYLog.shared.log("MIXCAP page ready → fetch mix/aweme mixId=\(self.pendingMixId)")
+                let js = Self.mixFetchJS(mixId: self.pendingMixId)
+                self.evalJS(js, tag: "mixfetch")
+            }
             for item in cap {
                 let u = item["u"] as? String ?? "?"
                 let b = item["b"] as? String ?? ""
                 self.totalCap += 1
+                if self.mode == .mix {
+                    if u.contains("mix/aweme") {
+                        DYLog.shared.event("MIXCAP response len=\(b.count) u=\(u.prefix(80))")
+                        self.handleMix(b)
+                    }
+                    continue
+                }
                 if u.contains("user/profile"), !self.gotProfile {
                     self.gotProfile = true
                     DYLog.shared.event("WORKS CAP PROFILE len=\(b.count)")
@@ -208,7 +248,7 @@ final class DYWorksCapture: NSObject {
                     DYLog.shared.event("WORKS CAP SERIES/MIX len=\(b.count)")
                 }
             }
-            if self.gotWorks && self.gotProfile && !self.firstBatchFed {
+            if self.mode == .profile, self.gotWorks && self.gotProfile && !self.firstBatchFed {
                 self.firstBatchFed = true
                 DYLog.shared.event("WORKS CAP OK total=\(self.totalCap)——资料+首批作品截获成立,继续滚动加载更多")
             }
@@ -259,6 +299,7 @@ final class DYWorksCapture: NSObject {
             let urls = ((w["u"] as? String) ?? "").split(separator: "|").map(String.init)
                 .filter { $0.hasPrefix("http") }
             guard !urls.isEmpty else { continue }
+            let st = ((w["st"] as? String) ?? "").split(separator: ",").map { (Int($0) ?? 0) }
             works.append(DYCapturedWork(
                 id: id,
                 desc: w["desc"] as? String ?? "",
@@ -267,7 +308,12 @@ final class DYWorksCapture: NSObject {
                 durationMs: (w["dur"] as? NSNumber)?.intValue ?? 0,
                 isImages: (w["imgs"] as? NSNumber)?.intValue == 1,
                 createTime: (w["ct"] as? NSNumber)?.intValue ?? 0,
-                mixName: w["mix"] as? String ?? ""
+                mixName: w["mx"] as? String ?? "",
+                mixId: w["mxid"] as? String ?? "",
+                digg: st.indices.contains(0) ? st[0] : 0,
+                comment: st.indices.contains(1) ? st[1] : 0,
+                collect: st.indices.contains(2) ? st[2] : 0,
+                share: st.indices.contains(3) ? st[3] : 0
             ))
         }
         DYLog.shared.event("WORKSCAP works ok n=\(works.count) hasMore=\(hasMore ? 1 : 0)")
@@ -286,6 +332,99 @@ final class DYWorksCapture: NSObject {
                 guard let self else { return }
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
+        }
+    }
+
+    /// v172 合集内容：页面上下文 fetch mix/aweme（§5.3⑤A"WebView 内直接打 API"路线首次实装——
+    /// 页面自己的 fetch 包装带签名/cookie；hook 已匹配 mix/ URL 会拦到响应）。
+    /// 流程：新建 WebView 会话 load 抖音首页（挑战自动跑）→ complete+hooked → fetch → hook 拦截 → drain 解析。
+    func fetchMix(mixId: String) {
+        guard !mixId.isEmpty else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if self.webView != nil { self.teardown() }
+            guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1, height: 1), DYProfileClient.webUA, Self.hookJS) as? UIView else {
+                DYLog.shared.event("MIXCAP FAIL: 注入式 WKWebView 创建失败")
+                return
+            }
+            self.webView = wv
+            self.mode = .mix
+            self.pendingMixId = mixId
+            self.mixRequested = false
+            self.gotWorks = false
+            self.gotProfile = false
+            self.totalCap = 0
+            self.rehooked = false
+            self.currentSecUid = ""
+            self.capturedWorks = []
+            self.capturedHasMore = false
+            self.firstBatchFed = false
+            self.lastGrowthAt = Date()
+            DYLog.shared.log("MIXCAP load douyin home (doc-start inject) mixId=\(mixId)")
+            wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.douyin.com/?recommend=1")!))
+            self.startPolling()
+            self.deadlineTimer = Timer.scheduledTimer(withTimeInterval: 40, repeats: false) { [weak self] _ in
+                DYLog.shared.log("MIXCAP deadline")
+                self?.teardown()
+            }
+        }
+    }
+
+    /// mix/aweme 页面上下文 fetch（_dytag=mixcap 标记便于日志识别；页面 fetch 包装自动补签名）
+    private static func mixFetchJS(mixId: String) -> String {
+        """
+        (function(){
+          try{
+            var u='/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page&device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_language=zh-CN&browser_platform=Win32&browser_name=Chrome&browser_version=126.0.0.0&_dytag=mixcap';
+            fetch(u,{credentials:'include'}).then(function(r){return r.text()}).then(function(t){
+              try{ window.__dyCap.push({u:u,b:t}); }catch(e){}
+            }).catch(function(e){
+              try{ window.__dyCap.push({u:u,b:'FETCHERR:'+String(e)}); }catch(e2){}
+            });
+          }catch(e){ try{ window.__dyCap.push({u:'mixfetch-synerr',b:String(e)}); }catch(e2){} }
+        })();
+        """
+    }
+
+    /// v172 解析 mix/aweme 响应（grab 已 slim 成 works 数组）→ delegate
+    private func handleMix(_ body: String) {
+        guard let d = body.data(using: .utf8),
+              let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
+              let slim = obj["works"] as? [[String: Any]] else {
+            DYLog.shared.log("MIXCAP parse fail (slim) body=\(body.prefix(80))")
+            if body.hasPrefix("FETCHERR") { DYLog.shared.event("MIXCAP fetch error: \(body.prefix(120))") }
+            return
+        }
+        let mixName = obj["mixName"] as? String ?? ""
+        var works: [DYCapturedWork] = []
+        for w in slim {
+            guard let id = w["id"] as? String, !id.isEmpty else { continue }
+            let urls = ((w["u"] as? String) ?? "").split(separator: "|").map(String.init)
+                .filter { $0.hasPrefix("http") }
+            guard !urls.isEmpty else { continue }
+            let st = ((w["st"] as? String) ?? "").split(separator: ",").map { (Int($0) ?? 0) }
+            works.append(DYCapturedWork(
+                id: id,
+                desc: w["desc"] as? String ?? "",
+                coverUrl: w["cov"] as? String ?? "",
+                playUrls: urls,
+                durationMs: (w["dur"] as? NSNumber)?.intValue ?? 0,
+                isImages: (w["imgs"] as? NSNumber)?.intValue == 1,
+                createTime: (w["ct"] as? NSNumber)?.intValue ?? 0,
+                mixName: w["mx"] as? String ?? mixName,
+                mixId: pendingMixId,
+                digg: st.indices.contains(0) ? st[0] : 0,
+                comment: st.indices.contains(1) ? st[1] : 0,
+                collect: st.indices.contains(2) ? st[2] : 0,
+                share: st.indices.contains(3) ? st[3] : 0
+            ))
+        }
+        DYLog.shared.event("MIXCAP ok n=\(works.count) mixName=\(mixName)")
+        guard !works.isEmpty else { return }
+        let wid = pendingMixId
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.worksCaptureDidCapture(mixWorks: works, mixId: wid, mixName: mixName)
+            self?.teardown()
         }
     }
 

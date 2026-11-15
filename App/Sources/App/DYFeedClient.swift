@@ -307,10 +307,12 @@ final class DYFeedClient {
                 }
             }
             info.desc = Self.stripInlineTopics(info.desc)
-            // 合集识别（v145：web mix_info）
+            // 合集识别（v145：web mix_info；v172 补 mix_id 供快捷面板合集屏用）
             if let mix = a["mix_info"] as? [String: Any] {
                 info.isMix = true
                 info.mixName = mix["mix_name"] as? String ?? ""
+                if let mid = mix["mix_id"] as? String { info.mixId = mid }
+                else if let midn = mix["mix_id"] as? NSNumber { info.mixId = midn.stringValue }
             }
             if let author = a["author"] as? [String: Any] {
                 info.nickname = author["nickname"] as? String ?? ""
@@ -503,11 +505,12 @@ final class DYFeedClient {
             // 去重（v151）：话题已在独立行显示，desc 内联话题一律剥掉——v144 只删「完整等于 f459 整串」
             // 的形态，文案中夹话题（与 f459 部分重合）会漏 → 话题行与文案重复。按 #/＃ 词法逐个剥。
             info.desc = Self.stripInlineTopics(info.desc)
-            // 合集识别（v145：aweme f14 子消息——wire 观测内含合集名；存在即合集帖）
+            // 合集识别（v145：aweme f14 子消息——wire 观测内含合集名；存在即合集帖；v172 补 f6=mix_id）
             if let mb = aweme.bytesFields(14).first, let mf = Proto.parse(mb) {
                 info.isMix = true
                 info.mixName = mf.string(5) ?? ""
-                DYLog.shared.log("FEED mix a[\(ei)] name=\(info.mixName)")
+                info.mixId = mf.string(6) ?? (mf.varint(6).map { String($0) } ?? "")
+                DYLog.shared.log("FEED mix a[\(ei)] name=\(info.mixName) id=\(info.mixId)")
             }
             if let ab = aweme.bytesFields(4).first, let af = Proto.parse(ab) {
                 info.nickname = af.string(3) ?? af.string(2) ?? ""

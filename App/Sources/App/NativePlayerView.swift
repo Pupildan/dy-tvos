@@ -643,7 +643,8 @@ final class DYPlayerViewController: UIViewController {
         // v171：作者主页/评论屏打开时滑动必须交给焦点引擎移动焦点，播放层不抢
         //（v170 真机实锤：作者页滑动穿透到本 pan → 切视频）
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
-              DYQuickPanelModel.shared.isProfileOpen == false, DYQuickPanelModel.shared.isCommentOpen == false else { return }
+              DYQuickPanelModel.shared.isProfileOpen == false, DYQuickPanelModel.shared.isCommentOpen == false,
+              DYQuickPanelModel.shared.isMixOpen == false else { return }
         let t = g.translation(in: view)
         guard abs(t.y) > 100 else { return }   // 滑动阈值
         g.setTranslation(.zero, in: view)
@@ -1029,7 +1030,7 @@ final class DYPlayerViewController: UIViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         // v171 焦点屏护栏：作者主页/评论屏打开时按键全交 SwiftUI 焦点引擎（上下移动网格焦点、OK 点作品），
         // 播放层不抢（advance/rewind/seek/呼面板在焦点屏都不该发生）
-        if DYQuickPanelModel.shared.isProfileOpen || DYQuickPanelModel.shared.isCommentOpen {
+        if DYQuickPanelModel.shared.isProfileOpen || DYQuickPanelModel.shared.isCommentOpen || DYQuickPanelModel.shared.isMixOpen {
             super.pressesBegan(presses, with: event)
             return
         }

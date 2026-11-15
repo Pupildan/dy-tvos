@@ -1,5 +1,54 @@
 import SwiftUI
 
+/// v172 作者作品/合集作品共用点播：插入式 rebuild（engine.insertWorks）+ DYWorksJump 跳转通知。
+/// 作品段插在当前播放位置之后：down 刷完作品自动滑回推荐流；up 回到已看 feed。
+/// 右轨统计 v172 起从截获数据提取（statistics.digg/comment/collect/share）。
+enum DYWorksPlayback {
+    static func play(_ w: DYCapturedWork, works: [DYCapturedWork],
+                     nickname: String, avatarUrl: String, secUid: String, sourceName: String) {
+        let model = DYQuickPanelModel.shared
+        if w.isImages {
+            model.showToast("图集作品暂不支持播放")
+            return
+        }
+        guard DYFeedClient.selectBestPlayUrl(w.playUrls) != nil else {
+            model.showToast("作品无可用播放地址")
+            return
+        }
+        var ids: [String] = []
+        var urls: [URL] = []
+        var durs: [Int] = []
+        var infos: [DYVideoInfo] = []
+        for item in works where !item.isImages {
+            guard let b = DYFeedClient.selectBestPlayUrl(item.playUrls), let u = URL(string: b) else { continue }
+            ids.append(item.id)
+            urls.append(u)
+            durs.append(item.durationMs)
+            var info = DYVideoInfo()
+            info.desc = item.desc
+            info.hashtags = item.desc
+            info.nickname = nickname
+            info.avatarUrl = avatarUrl
+            info.secUid = secUid
+            info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
+            info.isMix = !item.mixName.isEmpty
+            info.mixName = item.mixName
+            info.mixId = item.mixId
+            info.digg = item.digg
+            info.comment = item.comment
+            info.collect = item.collect
+            info.share = item.share
+            infos.append(info)
+        }
+        guard !ids.isEmpty else { return }
+        let pos = PlaybackEngine.shared.insertWorks(ids: ids, urls: urls,
+                                                    allDurations: durs, allInfos: infos,
+                                                    selectedId: w.id)
+        DYLog.shared.event("\(sourceName) play aweme=\(w.id) pos=\(pos)")
+        NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
+    }
+}
+
 /// 快捷悬浮窗状态（v145：播放中按确认键呼出，屏幕中下；OK 再按=关闭；面板内 Menu=关闭回播放）。
 final class DYQuickPanelModel: ObservableObject {
     static let shared = DYQuickPanelModel()
@@ -11,6 +60,11 @@ final class DYQuickPanelModel: ObservableObject {
     @Published var isProfileOpen = false
     /// 主页对应的作者 sec_uid
     @Published var profileSecUid = ""
+    /// v172 合集屏开关（快捷面板「合集」项实装：页面上下文 fetch mix/aweme）
+    @Published var isMixOpen = false
+    /// 合集屏数据钥匙
+    var mixId = ""
+    var mixTitle = ""
     /// 面板对应的视频 id（评论请求用）
     var awemeId = ""
     /// 当前视频信息（主页头像/合集条件显示）
@@ -76,8 +130,18 @@ final class DYQuickPanelModel: ObservableObject {
     }
 
     func selectMix() {
-        noteAndClose("mix")
-        showToast("合集浏览需登录支持，登录功能即将上线")
+        guard let mid = info?.mixId, !mid.isEmpty else {
+            noteAndClose("mix")
+            showToast("该视频缺少合集 id，暂不支持浏览")
+            return
+        }
+        DYLog.shared.event("QUICK select mix id=\(mid)")
+        isOpen = false
+        mixId = mid
+        mixTitle = info?.mixName ?? ""
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+            self?.isMixOpen = true
+        }
     }
 
     /// 不感兴趣：跳过当前视频（后续版本接反馈 API 不再推送同类）
@@ -595,48 +659,11 @@ struct DYProfileScreen: View {
         .animation(.easeOut(duration: 0.15), value: focused)
     }
 
-    /// v168 点击作品 → merge 进 PlaybackEngine + 跳到该作品 + 关主页屏回播放
+    /// v168 点击作品 → 播放 + 关主页屏回播放（v172 逻辑抽到 DYWorksPlayback 共用）
     private func playWork(_ w: DYCapturedWork) {
-        if w.isImages {
-            model.showToast("图集作品暂不支持播放")
-            return
-        }
-        guard let best = DYFeedClient.selectBestPlayUrl(w.playUrls), let url = URL(string: best) else {
-            model.showToast("作品无可用播放地址")
-            return
-        }
-        var ids: [String] = []
-        var urls: [URL] = []
-        var durs: [Int] = []
-        var infos: [DYVideoInfo] = []
-        for item in works where !item.isImages {
-            guard let b = DYFeedClient.selectBestPlayUrl(item.playUrls), let u = URL(string: b) else { continue }
-            ids.append(item.id)
-            urls.append(u)
-            durs.append(item.durationMs)
-            var info = DYVideoInfo()
-            info.desc = item.desc
-            info.hashtags = item.desc
-            info.nickname = user?.nickname ?? ""
-            info.avatarUrl = user?.avatarUrl ?? ""
-            info.secUid = user?.secUid ?? ""
-            info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
-            info.isMix = !item.mixName.isEmpty
-            info.mixName = item.mixName
-            infos.append(info)
-        }
-        guard !ids.isEmpty else { return }
-        PlaybackEngine.shared.merge(ids: ids, urls: urls, replaceExisting: false,
-                                     autoPlay: false, refresh: false,
-                                     allDurations: durs, allInfos: infos)
-        if let pos = PlaybackEngine.shared.urls.firstIndex(of: url) {
-            PlaybackEngine.shared.index = pos
-            // v170 真根因修复（v169 真机日志实锤）：playWork 只改 engine.index，collection 视图没人通知
-            // → 画面停在旧位置，下一按按键时 scrollTo 对账循环把 index 一步步退回去（ENGINE prev 连环），
-            // 点播被"吃"掉。显式发跳转通知让播放层 scrollTo 到目标格。
-            NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
-        }
-        DYLog.shared.event("WORKS play aweme=\(w.id) pos=\(PlaybackEngine.shared.index)")
+        DYWorksPlayback.play(w, works: works,
+                             nickname: user?.nickname ?? "", avatarUrl: user?.avatarUrl ?? "",
+                             secUid: user?.secUid ?? "", sourceName: "WORKS")
         model.isProfileOpen = false
     }
 
@@ -671,6 +698,174 @@ extension DYProfileScreen: DYWorksCapture.Delegate {
         // v170：作品首批到达时自动聚焦第一个作品（焦点默认在"返回"按钮，用户按 OK 直接播）
         if focused == nil || focused == "close" {
             focused = works.first?.id
+        }
+    }
+
+    /// v172 主页屏不消费合集回调（合集回调由 DYMixScreen 消费；delegate 单槽按当前屏注册）
+    func worksCaptureDidCapture(mixWorks: [DYCapturedWork], mixId: String, mixName: String) {}
+}
+
+/// v172 合集屏：快捷面板「合集」打开；DYWorksCapture 页面上下文 fetch mix/aweme → hook 拦截 → 网格点播。
+/// 播放路径与作者作品一致（DYWorksPlayback：插入式 rebuild + 跳转通知）。
+struct DYMixScreen: View {
+    @ObservedObject var model = DYQuickPanelModel.shared
+    @FocusState private var focused: String?
+    @State private var works: [DYCapturedWork] = []
+    @State private var mixName = ""
+    @State private var failed = false
+    @State private var loaded = false
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.55).ignoresSafeArea()
+            HStack {
+                Spacer(minLength: 0)
+                panel
+                    .frame(width: 640)
+                    .padding(.trailing, 32)
+                    .padding(.vertical, 40)
+            }
+        }
+        .onAppear {
+            guard !loaded else { return }
+            loaded = true
+            focused = "close"
+            mixName = model.mixTitle
+            DYWorksCapture.shared.delegate = self
+            DYWorksCapture.shared.fetchMix(mixId: model.mixId)
+        }
+        .onExitCommand { model.isMixOpen = false }   // Menu 关闭回播放
+        .transition(.opacity)
+    }
+
+    private var panel: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack {
+                Text("合集 · \(mixName.isEmpty ? "加载中" : mixName)")
+                    .font(.system(size: 34, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                Spacer(minLength: 0)
+                Button {
+                    model.isMixOpen = false
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                        Text("返回播放")
+                    }
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 10)
+                    .background {
+                        if focused == "close" {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .strokeBorder(Color.white, lineWidth: 4)
+                        }
+                    }
+                }
+                .buttonStyle(PanelRowButtonStyle())
+                .focused($focused, equals: "close")
+            }
+            if !works.isEmpty {
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 16) {
+                        ForEach(works, id: \.id) { w in
+                            workCell(w)
+                        }
+                    }
+                    .padding(.top, 4)
+                }
+            } else if failed {
+                Text("合集内容获取失败（日志 MIXCAP 行有详情），请稍后重试")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
+            } else {
+                Text("合集内容截获中…（页面上下文请求 mix/aweme）")
+                    .font(.system(size: 26))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(28)
+        .background(mixPanelBackground)
+    }
+
+    /// 复用作者主页网格单元样式（封面 9:16 + 标题 + 合集角标 + 聚焦白描边）
+    private func workCell(_ w: DYCapturedWork) -> some View {
+        Button {
+            DYWorksPlayback.play(w, works: works,
+                                 nickname: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.nickname ?? "",
+                                 avatarUrl: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.avatarUrl ?? "",
+                                 secUid: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.secUid ?? "",
+                                 sourceName: "MIX")
+            model.isMixOpen = false
+        } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                ZStack {
+                    if !w.coverUrl.isEmpty, let cu = URL(string: w.coverUrl) {
+                        AvatarImage(url: cu)
+                    } else {
+                        Color.white.opacity(0.1)
+                    }
+                    Text("第 \((works.firstIndex(where: { $0.id == w.id }).map { $0 + 1 } ?? 0)) 集")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Color.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 6))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .padding(6)
+                }
+                .frame(height: 190)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                Text(w.desc.isEmpty ? "（无文案）" : w.desc)
+                    .font(.system(size: 18))
+                    .foregroundColor(.white.opacity(0.85))
+                    .lineLimit(2)
+                    .frame(maxWidth: .infinity, minHeight: 46, alignment: .top)
+            }
+        }
+        .buttonStyle(PanelRowButtonStyle())
+        .focused($focused, equals: w.id)
+        .background {
+            if focused == w.id {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(Color.white, lineWidth: 4)
+                    .padding(-7)
+            }
+        }
+        .scaleEffect(focused == w.id ? 1.05 : 1.0)
+        .animation(.easeOut(duration: 0.15), value: focused)
+    }
+
+    private var mixPanelBackground: some View {
+        Group {
+            if #available(tvOS 26.0, *) {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(Color.clear)
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+            } else {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            }
+        }
+    }
+}
+
+extension DYMixScreen: DYWorksCapture.Delegate {
+    func worksCaptureDidCapture(profile: DYProfileUser) {}
+
+    func worksCaptureDidCapture(works: [DYCapturedWork], hasMore: Bool) {}
+
+    func worksCaptureDidCapture(mixWorks: [DYCapturedWork], mixId: String, mixName: String) {
+        self.works = mixWorks
+        if !mixName.isEmpty { self.mixName = mixName }
+        failed = mixWorks.isEmpty
+        if focused == nil || focused == "close" {
+            focused = mixWorks.first?.id
         }
     }
 }
