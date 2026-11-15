@@ -54246,3 +54246,496 @@
 10:15:14  [10:15:14] SETTINGS panel open (menu #1)
 10:15:16  [10:15:16] DMSYNC t=3s due=359 marked=23 items=889 stall=1
 10:15:17  [10:15:17] SETTINGS panel auto-hide (3s idle)
+11:12:29  [11:12:29] DYTV v153 launched
+11:12:29  [11:12:29] SIGNER init start
+11:12:29  [11:12:29] LOGSRV ready on port 8765
+11:12:29  [11:12:29] LOGSRV advertising as DYTV-876
+11:12:29  [11:12:29] SIGNER load shim ok
+11:12:29  [11:12:29] SIGNER load abogus ok
+11:12:29  [11:12:29] SIGNER load sign ok
+11:12:29  [11:12:29] SIGNER load abogus_dy ok
+11:12:29  [11:12:29] SIGNER extras sign=true dy=true
+11:12:29  [11:12:29] SIGNER bdms=yes
+11:12:29  [11:12:29] SIGNER initABogus=true
+11:12:29  [11:12:29] SIGNER fns=AB (期望 AB)
+11:12:29  [11:12:29] SIGNER smoke={"ok":true,"value":"EyRhBm0fDEdTffWg5XoLfY3qVW33YsUd0SVkMDhezVfPHg39HMO79exEVoTvhHmeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+11:12:29  [11:12:29] SIGNER READY a_bogus len=180
+11:12:29  [11:12:29] FEED native pipeline armed (source=web)
+11:12:29  [11:12:29] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+11:12:30  [11:12:30] FEEDCOLL viewDidLoad
+11:12:30  [11:12:30] ROOT auto-start v153
+11:12:30  [11:12:30] LOGSRV Bonjour published: DYTV-876
+11:12:31  [11:12:31] FEED web page refresh_index=1: awemes=6 usable=6 filtered=0 total_seen=6
+11:12:31  [11:12:31] ENGINE merge total=6 index=0 replace=false auto=true redirect=0
+11:12:31  [11:12:31] ENGINE needMore (index=0 count=6)
+11:12:31  [11:12:31] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+11:12:31  [11:12:31] MGR url idx=0 src=static age=0s
+11:12:31  [11:12:31] MGR acquire idx=0 total=1
+11:12:31  [11:12:31] MGR cold-start defer neighbors=[1, 2]
+11:12:31  [11:12:31] FEEDCOLL scrollTo idx=0 y=0.0 items=6
+11:12:32  [11:12:32] DMLOAD id=7692616208562092409 dur=7967
+11:12:32  [11:12:32] MGR ready idx=0
+11:12:32  [11:12:32] MGR url idx=1 src=static age=0s
+11:12:32  [11:12:32] DANM get id=7692616208562092409 [0-7s] ttwid=127
+11:12:32  [11:12:32] MGR acquire idx=1 total=2
+11:12:32  [11:12:32] MGR url idx=2 src=static age=0s
+11:12:32  [11:12:32] MGR acquire idx=2 total=3
+11:12:32  [11:12:32] MGR cold-start neighbors acquired=[1, 2]
+11:12:32  [11:12:32] MGR ready idx=2
+11:12:32  [11:12:32] DANM all-segments done id=7692616208562092409 total=776 retry=0
+11:12:32  [11:12:32] DMLOAD done id=7692616208562092409 total=776
+11:12:32  [11:12:32] FEED web page refresh_index=2: awemes=5 usable=5 filtered=0 total_seen=11
+11:12:32  [11:12:32] ENGINE merge total=11 index=0 replace=false auto=false redirect=0
+11:12:32  [11:12:32] MGR ready idx=1
+11:12:36  [11:12:36] DMSYNC t=4s due=439 marked=28 items=776 stall=1
+11:12:43  [11:12:43] ENGINE next -> index=1
+11:12:43  [11:12:43] MGR url idx=3 src=static age=11s
+11:12:43  [11:12:43] MGR acquire idx=3 total=4
+11:12:43  [11:12:43] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+11:12:43  [11:12:43] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+11:12:43  [11:12:43] DMLOAD id=7699454944490851625 dur=288034
+11:12:43  [11:12:43] MGR ready idx=3
+11:12:43  [11:12:43] DANM get id=7699454944490851625 [0-20s] ttwid=127
+11:12:43  [11:12:43] DANM get id=7699454944490851625 [20-40s] ttwid=127
+11:12:44  [11:12:44] DANM get id=7699454944490851625 [40-60s] ttwid=127
+11:12:44  [11:12:44] DANM get id=7699454944490851625 [60-80s] ttwid=127
+11:12:44  [11:12:44] DANM get id=7699454944490851625 [80-100s] ttwid=127
+11:12:45  [11:12:45] DANM get id=7699454944490851625 [100-120s] ttwid=127
+11:12:45  [11:12:45] DANM get id=7699454944490851625 [120-140s] ttwid=127
+11:12:45  [11:12:45] DANM get id=7699454944490851625 [140-160s] ttwid=127
+11:12:45  [11:12:45] ENGINE prev -> index=0
+11:12:45  [11:12:45] MGR evict idx=3
+11:12:45  [11:12:45] FEEDCOLL scrollTo idx=0 y=0.0 items=11
+11:12:45  [11:12:45] FEEDCOLL swipe down -> switch
+11:12:45  [11:12:45] DANM get id=7699454944490851625 [160-180s] ttwid=127
+11:12:46  [11:12:46] DANM get id=7699454944490851625 [180-200s] ttwid=127
+11:12:46  [11:12:46] DANM get id=7699454944490851625 [200-220s] ttwid=127
+11:12:46  [11:12:46] DANM get id=7699454944490851625 [220-240s] ttwid=127
+11:12:47  [11:12:46] ENGINE next -> index=1
+11:12:47  [11:12:46] MGR url idx=3 src=static age=15s
+11:12:47  [11:12:46] MGR acquire idx=3 total=4
+11:12:47  [11:12:46] FEEDCOLL scrollTo idx=1 y=1080.0 items=11
+11:12:47  [11:12:47] DANM get id=7699454944490851625 [240-260s] ttwid=127
+11:12:47  [11:12:47] MGR ready idx=3
+11:12:47  [11:12:47] DANM get id=7699454944490851625 [260-280s] ttwid=127
+11:12:47  [11:12:47] DANM get id=7699454944490851625 [280-288s] ttwid=127
+11:12:48  [11:12:48] DANM all-segments done id=7699454944490851625 total=379 retry=0
+11:12:48  [11:12:48] DMLOAD done id=7699454944490851625 total=379
+11:12:48  [11:12:48] DMSYNC t=3s due=0 marked=15 items=379 stall=2
+11:12:52  [11:12:52] DMSYNC t=7s due=0 marked=22 items=379 stall=2
+11:12:53  [11:12:53] ENGINE next -> index=2
+11:12:53  [11:12:53] MGR url idx=4 src=static age=21s
+11:12:53  [11:12:53] MGR acquire idx=4 total=5
+11:12:53  [11:12:53] FEEDCOLL scrollTo idx=2 y=2160.0 items=11
+11:12:53  [11:12:53] FEEDCOLL swipe up -> switch
+11:12:53  [11:12:53] DMLOAD id=7706891188129858515 dur=47767
+11:12:53  [11:12:53] DANM get id=7706891188129858515 [0-20s] ttwid=127
+11:12:53  [11:12:53] MGR ready idx=4
+11:12:53  [11:12:53] DANM cap-hit [0-20s] n=491 → split
+11:12:53  [11:12:53] DANM get id=7706891188129858515 [0-10s] ttwid=127
+11:12:53  [11:12:53] DANM get id=7706891188129858515 [10-20s] ttwid=127
+11:12:54  [11:12:54] ENGINE next -> index=3
+11:12:54  [11:12:54] MGR evict idx=0
+11:12:54  [11:12:54] MGR url idx=5 src=static age=23s
+11:12:54  [11:12:54] MGR acquire idx=5 total=5
+11:12:54  [11:12:54] FEEDCOLL scrollTo idx=3 y=3240.0 items=11
+11:12:54  [11:12:54] FEEDCOLL scrollTo idx=3 y=3240.0 items=11
+11:12:54  [11:12:54] DANM get id=7706891188129858515 [20-40s] ttwid=127
+11:12:54  [11:12:54] DANM cap-hit [20-40s] n=453 → split
+11:12:54  [11:12:54] DANM get id=7706891188129858515 [20-30s] ttwid=127
+11:12:54  [11:12:54] DMLOAD id=7707994966110526697 dur=8869
+11:12:54  [11:12:54] MGR ready idx=5
+11:12:54  [11:12:54] DANM get id=7707994966110526697 [0-8s] ttwid=127
+11:12:54  [11:12:54] DANM get id=7706891188129858515 [30-40s] ttwid=127
+11:12:55  [11:12:54] DANM all-segments done id=7707994966110526697 total=902 retry=0
+11:12:55  [11:12:54] DMLOAD done id=7707994966110526697 total=902
+11:12:55  [11:12:54] DMSYNC t=0s due=0 marked=6 items=902 stall=0
+11:12:55  [11:12:55] DANM get id=7706891188129858515 [40-47s] ttwid=127
+11:12:55  [11:12:55] DANM all-segments done id=7706891188129858515 total=697 retry=0
+11:12:55  [11:12:55] DMLOAD done id=7706891188129858515 total=697
+11:12:59  [11:12:59] DMSYNC t=4s due=284 marked=51 items=902 stall=0
+11:13:02  [11:13:02] ENGINE next -> index=4
+11:13:02  [11:13:02] ENGINE needMore (index=4 count=11)
+11:13:02  [11:13:02] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+11:13:02  [11:13:02] MGR evict idx=1
+11:13:02  [11:13:02] MGR url idx=6 src=static age=29s
+11:13:02  [11:13:02] MGR acquire idx=6 total=5
+11:13:02  [11:13:02] FEEDCOLL scrollTo idx=4 y=4320.0 items=11
+11:13:02  [11:13:02] FEEDCOLL swipe up -> switch
+11:13:02  [11:13:02] DMLOAD id=7706824353476737913 dur=15062
+11:13:02  [11:13:02] MGR ready idx=6
+11:13:02  [11:13:02] DANM get id=7706824353476737913 [0-15s] ttwid=127
+11:13:02  [11:13:02] DANM all-segments done id=7706824353476737913 total=150 retry=0
+11:13:02  [11:13:02] DMLOAD done id=7706824353476737913 total=150
+11:13:03  [11:13:03] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=17
+11:13:03  [11:13:03] ENGINE merge total=17 index=4 replace=false auto=false redirect=0
+11:13:03  [11:13:03] ENGINE next -> index=5
+11:13:03  [11:13:03] MGR evict idx=2
+11:13:03  [11:13:03] MGR url idx=7 src=static age=31s
+11:13:03  [11:13:03] MGR acquire idx=7 total=5
+11:13:03  [11:13:03] FEEDCOLL scrollTo idx=5 y=5400.0 items=17
+11:13:03  [11:13:03] FEEDCOLL swipe up -> switch
+11:13:03  [11:13:03] FEEDCOLL scrollTo idx=5 y=5400.0 items=17
+11:13:03  [11:13:03] FEEDCOLL swipe up -> switch
+11:13:04  [11:13:03] FEEDCOLL scrollTo idx=5 y=5400.0 items=17
+11:13:04  [11:13:03] FEEDCOLL swipe up -> switch
+11:13:04  [11:13:04] DMLOAD id=7707887799529840251 dur=20388
+11:13:04  [11:13:04] MGR ready idx=7
+11:13:04  [11:13:04] DANM get id=7707887799529840251 [0-20s] ttwid=127
+11:13:04  [11:13:04] DANM get id=7707887799529840251 [20-20s] ttwid=127
+11:13:04  [11:13:04] DANM all-segments done id=7707887799529840251 total=245 retry=0
+11:13:04  [11:13:04] DMLOAD done id=7707887799529840251 total=245
+11:13:05  [11:13:05] ENGINE next -> index=6
+11:13:05  [11:13:05] MGR evict idx=3
+11:13:05  [11:13:05] MGR url idx=8 src=static age=32s
+11:13:05  [11:13:05] MGR acquire idx=8 total=5
+11:13:05  [11:13:05] FEEDCOLL scrollTo idx=6 y=6480.0 items=17
+11:13:05  [11:13:05] FEEDCOLL swipe up -> switch
+11:13:05  [11:13:05] DMLOAD id=7698245169480889841 dur=8634
+11:13:05  [11:13:05] MGR ready idx=8
+11:13:05  [11:13:05] DANM get id=7698245169480889841 [0-8s] ttwid=127
+11:13:06  [11:13:06] DANM all-segments done id=7698245169480889841 total=342 retry=0
+11:13:06  [11:13:06] DMLOAD done id=7698245169480889841 total=342
+11:13:06  [11:13:06] DMSYNC t=0s due=5 marked=6 items=342 stall=1
+11:13:07  [11:13:07] ENGINE next -> index=7
+11:13:07  [11:13:07] MGR evict idx=4
+11:13:07  [11:13:07] MGR url idx=9 src=static age=35s
+11:13:07  [11:13:07] MGR acquire idx=9 total=5
+11:13:07  [11:13:07] FEEDCOLL scrollTo idx=7 y=7560.0 items=17
+11:13:07  [11:13:07] FEEDCOLL swipe up -> switch
+11:13:08  [11:13:08] DMLOAD id=7705253618429872625 dur=20100
+11:13:08  [11:13:08] DANM get id=7705253618429872625 [0-20s] ttwid=127
+11:13:08  [11:13:08] MGR ready idx=9
+11:13:08  [11:13:08] DANM get id=7705253618429872625 [20-20s] ttwid=127
+11:13:08  [11:13:08] DANM all-segments done id=7705253618429872625 total=103 retry=0
+11:13:08  [11:13:08] DMLOAD done id=7705253618429872625 total=103
+11:13:09  [11:13:09] ENGINE next -> index=8
+11:13:10  [11:13:09] MGR evict idx=5
+11:13:10  [11:13:09] MGR url idx=10 src=static age=37s
+11:13:10  [11:13:09] MGR acquire idx=10 total=5
+11:13:10  [11:13:09] FEEDCOLL scrollTo idx=8 y=8640.0 items=17
+11:13:10  [11:13:09] FEEDCOLL swipe up -> switch
+11:13:10  [11:13:10] DMLOAD id=7708091805979446591 dur=358308
+11:13:10  [11:13:10] MGR ready idx=10
+11:13:10  [11:13:10] DMSYNC t=1s due=8 marked=11 items=103 stall=0
+11:13:10  [11:13:10] DANM get id=7708091805979446591 [0-20s] ttwid=127
+11:13:10  [11:13:10] DANM get id=7708091805979446591 [20-40s] ttwid=127
+11:13:10  [11:13:10] DANM get id=7708091805979446591 [40-60s] ttwid=127
+11:13:11  [11:13:11] DANM get id=7708091805979446591 [60-80s] ttwid=127
+11:13:11  [11:13:11] DANM get id=7708091805979446591 [80-100s] ttwid=127
+11:13:11  [11:13:11] DMSYNC t=1s due=0 marked=0 items=35 stall=6
+11:13:11  [11:13:11] DANM get id=7708091805979446591 [100-120s] ttwid=127
+11:13:12  [11:13:12] DANM get id=7708091805979446591 [120-140s] ttwid=127
+11:13:12  [11:13:12] DANM get id=7708091805979446591 [140-160s] ttwid=127
+11:13:12  [11:13:12] DANM get id=7708091805979446591 [160-180s] ttwid=127
+11:13:13  [11:13:12] DANM get id=7708091805979446591 [180-200s] ttwid=127
+11:13:13  [11:13:13] DANM get id=7708091805979446591 [200-220s] ttwid=127
+11:13:13  [11:13:13] DANM get id=7708091805979446591 [220-240s] ttwid=127
+11:13:14  [11:13:13] DANM get id=7708091805979446591 [240-260s] ttwid=127
+11:13:14  [11:13:14] DANM get id=7708091805979446591 [260-280s] ttwid=127
+11:13:14  [11:13:14] DANM get id=7708091805979446591 [280-300s] ttwid=127
+11:13:14  [11:13:14] ENGINE next -> index=9
+11:13:14  [11:13:14] MGR evict idx=6
+11:13:14  [11:13:14] MGR url idx=11 src=static age=11s
+11:13:14  [11:13:14] MGR acquire idx=11 total=5
+11:13:14  [11:13:14] FEEDCOLL scrollTo idx=9 y=9720.0 items=17
+11:13:14  [11:13:14] FEEDCOLL swipe up -> switch
+11:13:14  [11:13:14] FEEDCOLL scrollTo idx=9 y=9720.0 items=17
+11:13:14  [11:13:14] FEEDCOLL swipe up -> switch
+11:13:14  [11:13:14] DANM get id=7708091805979446591 [300-320s] ttwid=127
+11:13:14  [11:13:14] FEEDCOLL scrollTo idx=9 y=9720.0 items=17
+11:13:14  [11:13:14] FEEDCOLL swipe up -> switch
+11:13:15  [11:13:15] DANM get id=7708091805979446591 [320-340s] ttwid=127
+11:13:15  [11:13:15] DMLOAD id=7706390743904117312 dur=9700
+11:13:15  [11:13:15] DANM get id=7706390743904117312 [0-9s] ttwid=127
+11:13:15  [11:13:15] MGR ready idx=11
+11:13:15  [11:13:15] DANM get id=7708091805979446591 [340-358s] ttwid=127
+11:13:15  [11:13:15] DANM all-segments done id=7706390743904117312 total=253 retry=0
+11:13:15  [11:13:15] DMLOAD done id=7706390743904117312 total=253
+11:13:15  [11:13:15] DANM all-segments done id=7708091805979446591 total=97 retry=0
+11:13:15  [11:13:15] DMLOAD done id=7708091805979446591 total=97
+11:13:16  [11:13:16] ENGINE next -> index=10
+11:13:16  [11:13:16] ENGINE needMore (index=10 count=17)
+11:13:16  [11:13:16] FEED web GET refresh_index=4 cold=0 bogus_len=180 ttwid=127
+11:13:16  [11:13:16] MGR evict idx=7
+11:13:16  [11:13:16] MGR url idx=12 src=static age=12s
+11:13:16  [11:13:16] MGR acquire idx=12 total=5
+11:13:16  [11:13:16] FEEDCOLL scrollTo idx=10 y=10800.0 items=17
+11:13:16  [11:13:16] FEEDCOLL swipe up -> switch
+11:13:16  [11:13:16] DMLOAD id=7707986921222078671 dur=9000
+11:13:16  [11:13:16] DANM get id=7707986921222078671 [0-9s] ttwid=127
+11:13:16  [11:13:16] MGR ready idx=12
+11:13:17  [11:13:16] DANM all-segments done id=7707986921222078671 total=7 retry=0
+11:13:17  [11:13:16] DMLOAD done id=7707986921222078671 total=7
+11:13:17  [11:13:17] FEED web page refresh_index=4: awemes=6 usable=6 filtered=0 total_seen=23
+11:13:17  [11:13:17] ENGINE merge total=23 index=10 replace=false auto=false redirect=0
+11:13:17  [11:13:17] ENGINE next -> index=11
+11:13:17  [11:13:17] MGR evict idx=8
+11:13:17  [11:13:17] MGR url idx=13 src=static age=14s
+11:13:17  [11:13:17] MGR acquire idx=13 total=5
+11:13:17  [11:13:17] FEEDCOLL scrollTo idx=11 y=11880.0 items=23
+11:13:17  [11:13:17] FEEDCOLL swipe up -> switch
+11:13:18  [11:13:18] DMLOAD id=7707508237452463370 dur=61014
+11:13:18  [11:13:18] DANM get id=7707508237452463370 [0-20s] ttwid=127
+11:13:18  [11:13:18] DANM get id=7707508237452463370 [20-40s] ttwid=127
+11:13:18  [11:13:18] MGR ready idx=13
+11:13:18  [11:13:18] DANM get id=7707508237452463370 [40-60s] ttwid=127
+11:13:18  [11:13:18] DMSYNC t=0s due=0 marked=1 items=53 stall=1
+11:13:19  [11:13:19] DANM get id=7707508237452463370 [60-61s] ttwid=127
+11:13:19  [11:13:19] DANM all-segments done id=7707508237452463370 total=53 retry=0
+11:13:19  [11:13:19] DMLOAD done id=7707508237452463370 total=53
+11:13:19  [11:13:19] ENGINE prev -> index=10
+11:13:20  [11:13:19] MGR evict idx=13
+11:13:20  [11:13:19] MGR url idx=8 src=static age=47s
+11:13:20  [11:13:19] MGR acquire idx=8 total=5
+11:13:20  [11:13:19] FEEDCOLL scrollTo idx=10 y=10800.0 items=23
+11:13:20  [11:13:19] FEEDCOLL swipe down -> switch
+11:13:20  [11:13:20] ENGINE next -> index=11
+11:13:20  [11:13:20] MGR evict idx=8
+11:13:20  [11:13:20] MGR url idx=13 src=static age=16s
+11:13:20  [11:13:20] MGR acquire idx=13 total=5
+11:13:20  [11:13:20] FEEDCOLL scrollTo idx=11 y=11880.0 items=23
+11:13:20  [11:13:20] MGR ready idx=13
+11:13:21  [11:13:21] ENGINE next -> index=12
+11:13:21  [11:13:21] MGR evict idx=9
+11:13:21  [11:13:21] MGR url idx=14 src=static age=17s
+11:13:21  [11:13:21] MGR acquire idx=14 total=5
+11:13:21  [11:13:21] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:21  [11:13:21] FEEDCOLL swipe up -> switch
+11:13:21  [11:13:21] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:21  [11:13:21] FEEDCOLL swipe up -> switch
+11:13:21  [11:13:21] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:21  [11:13:21] FEEDCOLL swipe up -> switch
+11:13:21  [11:13:21] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:21  [11:13:21] FEEDCOLL swipe up -> switch
+11:13:21  [11:13:21] DMLOAD id=7684191444287045065 dur=272767
+11:13:21  [11:13:21] DANM get id=7684191444287045065 [0-20s] ttwid=127
+11:13:21  [11:13:21] MGR ready idx=14
+11:13:21  [11:13:21] DANM cap-hit [0-20s] n=685 → split
+11:13:21  [11:13:21] DANM get id=7684191444287045065 [0-10s] ttwid=127
+11:13:22  [11:13:22] DANM get id=7684191444287045065 [10-20s] ttwid=127
+11:13:22  [11:13:22] DANM get id=7684191444287045065 [20-40s] ttwid=127
+11:13:22  [11:13:22] DANM cap-hit [20-40s] n=462 → split
+11:13:22  [11:13:22] DANM get id=7684191444287045065 [20-30s] ttwid=127
+11:13:23  [11:13:23] DMSYNC t=1s due=113 marked=11 items=820 stall=0
+11:13:23  [11:13:23] DANM get id=7684191444287045065 [30-40s] ttwid=127
+11:13:23  [11:13:23] DANM get id=7684191444287045065 [40-60s] ttwid=127
+11:13:24  [11:13:24] DANM cap-hit [40-60s] n=694 → split
+11:13:24  [11:13:24] DANM get id=7684191444287045065 [40-50s] ttwid=127
+11:13:24  [11:13:24] DANM get id=7684191444287045065 [50-60s] ttwid=127
+11:13:25  [11:13:24] DANM get id=7684191444287045065 [60-80s] ttwid=127
+11:13:25  [11:13:25] DANM cap-hit [60-80s] n=675 → split
+11:13:25  [11:13:25] DANM get id=7684191444287045065 [60-70s] ttwid=127
+11:13:25  [11:13:25] DANM get id=7684191444287045065 [70-80s] ttwid=127
+11:13:26  [11:13:26] DANM get id=7684191444287045065 [80-100s] ttwid=127
+11:13:26  [11:13:26] DANM cap-hit [80-100s] n=741 → split
+11:13:26  [11:13:26] DANM get id=7684191444287045065 [80-90s] ttwid=127
+11:13:26  [11:13:26] DANM get id=7684191444287045065 [90-100s] ttwid=127
+11:13:27  [11:13:27] DMSYNC t=5s due=272 marked=32 items=2681 stall=0
+11:13:27  [11:13:27] DANM get id=7684191444287045065 [100-120s] ttwid=127
+11:13:27  [11:13:27] DANM cap-hit [100-120s] n=855 → split
+11:13:27  [11:13:27] DANM get id=7684191444287045065 [100-110s] ttwid=127
+11:13:27  [11:13:27] DANM get id=7684191444287045065 [110-120s] ttwid=127
+11:13:28  [11:13:28] ENGINE next -> index=13
+11:13:28  [11:13:28] MGR evict idx=10
+11:13:28  [11:13:28] MGR url idx=15 src=static age=24s
+11:13:28  [11:13:28] MGR acquire idx=15 total=5
+11:13:28  [11:13:28] FEEDCOLL scrollTo idx=13 y=14040.0 items=23
+11:13:28  [11:13:28] FEEDCOLL swipe up -> switch
+11:13:28  [11:13:28] DMLOAD id=7705028571291567473 dur=8834
+11:13:28  [11:13:28] DANM get id=7705028571291567473 [0-8s] ttwid=127
+11:13:28  [11:13:28] DANM get id=7684191444287045065 [120-140s] ttwid=127
+11:13:28  [11:13:28] DANM cap-hit [120-140s] n=765 → split
+11:13:28  [11:13:28] DANM get id=7684191444287045065 [120-130s] ttwid=127
+11:13:28  [11:13:28] DANM all-segments done id=7705028571291567473 total=454 retry=0
+11:13:28  [11:13:28] DMLOAD done id=7705028571291567473 total=454
+11:13:29  [11:13:29] DANM get id=7684191444287045065 [130-140s] ttwid=127
+11:13:29  [11:13:29] MGR ready idx=15
+11:13:29  [11:13:29] DANM get id=7684191444287045065 [140-160s] ttwid=127
+11:13:29  [11:13:29] DANM cap-hit [140-160s] n=693 → split
+11:13:29  [11:13:29] DANM get id=7684191444287045065 [140-150s] ttwid=127
+11:13:30  [11:13:30] DANM get id=7684191444287045065 [150-160s] ttwid=127
+11:13:30  [11:13:30] DANM get id=7684191444287045065 [160-180s] ttwid=127
+11:13:31  [11:13:30] ENGINE prev -> index=12
+11:13:31  [11:13:30] MGR evict idx=15
+11:13:31  [11:13:30] MGR url idx=10 src=static age=58s
+11:13:31  [11:13:30] MGR acquire idx=10 total=5
+11:13:31  [11:13:30] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:31  [11:13:30] FEEDCOLL swipe down -> switch
+11:13:31  [11:13:30] FEEDCOLL scrollTo idx=12 y=12960.0 items=23
+11:13:31  [11:13:30] FEEDCOLL swipe down -> switch
+11:13:31  [11:13:30] DMSYNC t=2s due=71 marked=24 items=454 stall=0
+11:13:31  [11:13:31] DANM cap-hit [160-180s] n=1070 → split
+11:13:31  [11:13:31] DANM get id=7684191444287045065 [160-170s] ttwid=127
+11:13:31  [11:13:31] MGR ready idx=10
+11:13:31  [11:13:31] DANM get id=7684191444287045065 [170-180s] ttwid=127
+11:13:31  [11:13:31] ENGINE next -> index=13
+11:13:31  [11:13:31] MGR evict idx=10
+11:13:31  [11:13:31] MGR url idx=15 src=static age=28s
+11:13:31  [11:13:31] MGR acquire idx=15 total=5
+11:13:31  [11:13:31] FEEDCOLL scrollTo idx=13 y=14040.0 items=23
+11:13:31  [11:13:31] FEEDCOLL swipe up -> switch
+11:13:31  [11:13:31] FEEDCOLL scrollTo idx=13 y=14040.0 items=23
+11:13:31  [11:13:31] FEEDCOLL swipe up -> switch
+11:13:31  [11:13:31] FEEDCOLL scrollTo idx=13 y=14040.0 items=23
+11:13:31  [11:13:31] FEEDCOLL swipe up -> switch
+11:13:31  [11:13:31] FEEDCOLL scrollTo idx=13 y=14040.0 items=23
+11:13:31  [11:13:31] FEEDCOLL swipe up -> switch
+11:13:32  [11:13:32] DANM get id=7684191444287045065 [180-200s] ttwid=127
+11:13:32  [11:13:32] DANM cap-hit [180-200s] n=989 → split
+11:13:32  [11:13:32] DANM get id=7684191444287045065 [180-190s] ttwid=127
+11:13:32  [11:13:32] DANM get id=7684191444287045065 [190-200s] ttwid=127
+11:13:32  [11:13:32] MGR ready idx=15
+11:13:33  [11:13:33] DANM get id=7684191444287045065 [200-220s] ttwid=127
+11:13:33  [11:13:33] DANM cap-hit [200-220s] n=769 → split
+11:13:33  [11:13:33] DANM get id=7684191444287045065 [200-210s] ttwid=127
+11:13:33  [11:13:33] DANM get id=7684191444287045065 [210-220s] ttwid=127
+11:13:34  [11:13:34] DANM get id=7684191444287045065 [220-240s] ttwid=127
+11:13:34  [11:13:34] DANM cap-hit [220-240s] n=704 → split
+11:13:34  [11:13:34] DANM get id=7684191444287045065 [220-230s] ttwid=127
+11:13:35  [11:13:35] DANM get id=7684191444287045065 [230-240s] ttwid=127
+11:13:35  [11:13:35] DMSYNC t=6s due=274 marked=51 items=454 stall=0
+11:13:35  [11:13:35] DANM get id=7684191444287045065 [240-260s] ttwid=127
+11:13:36  [11:13:36] DANM cap-hit [240-260s] n=1132 → split
+11:13:36  [11:13:36] DANM get id=7684191444287045065 [240-250s] ttwid=127
+11:13:36  [11:13:36] DANM get id=7684191444287045065 [250-260s] ttwid=127
+11:13:37  [11:13:37] DANM get id=7684191444287045065 [260-272s] ttwid=127
+11:13:37  [11:13:37] DANM cap-hit [260-272s] n=592 → split
+11:13:37  [11:13:37] DANM get id=7684191444287045065 [260-266s] ttwid=127
+11:13:37  [11:13:37] DANM get id=7684191444287045065 [266-272s] ttwid=127
+11:13:38  [11:13:38] DANM all-segments done id=7684191444287045065 total=6924 retry=0
+11:13:38  [11:13:38] DMLOAD done id=7684191444287045065 total=6924
+11:13:38  [11:13:38] PLAYBACK hold skip (paused)
+11:13:39  [11:13:39] ENGINE next -> index=14
+11:13:40  [11:13:39] MGR evict idx=11
+11:13:40  [11:13:39] MGR url idx=16 src=static age=36s
+11:13:40  [11:13:39] MGR acquire idx=16 total=5
+11:13:40  [11:13:39] FEEDCOLL scrollTo idx=14 y=15120.0 items=23
+11:13:40  [11:13:39] FEEDCOLL swipe up -> switch
+11:13:40  [11:13:40] DMLOAD id=7707490686190834402 dur=13984
+11:13:40  [11:13:40] MGR ready idx=16
+11:13:40  [11:13:40] DANM get id=7707490686190834402 [0-13s] ttwid=127
+11:13:40  [11:13:40] DANM all-segments done id=7707490686190834402 total=4 retry=0
+11:13:40  [11:13:40] DMLOAD done id=7707490686190834402 total=4
+11:13:41  [11:13:41] ENGINE next -> index=15
+11:13:41  [11:13:41] MGR evict idx=12
+11:13:41  [11:13:41] MGR url idx=17 src=static age=23s
+11:13:41  [11:13:41] MGR acquire idx=17 total=5
+11:13:41  [11:13:41] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+11:13:41  [11:13:41] FEEDCOLL swipe up -> switch
+11:13:41  [11:13:41] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+11:13:41  [11:13:41] FEEDCOLL swipe up -> switch
+11:13:41  [11:13:41] FEEDCOLL scrollTo idx=15 y=16200.0 items=23
+11:13:41  [11:13:41] FEEDCOLL swipe up -> switch
+11:13:42  [11:13:41] DMLOAD id=7700190473712897318 dur=433146
+11:13:42  [11:13:42] DANM get id=7700190473712897318 [0-20s] ttwid=127
+11:13:42  [11:13:42] MGR ready idx=17
+11:13:42  [11:13:42] DANM get id=7700190473712897318 [20-40s] ttwid=127
+11:13:42  [11:13:42] DANM get id=7700190473712897318 [40-60s] ttwid=127
+11:13:42  [11:13:42] DANM get id=7700190473712897318 [60-80s] ttwid=127
+11:13:43  [11:13:43] DANM get id=7700190473712897318 [80-100s] ttwid=127
+11:13:43  [11:13:43] DANM get id=7700190473712897318 [100-120s] ttwid=127
+11:13:43  [11:13:43] DANM get id=7700190473712897318 [120-140s] ttwid=127
+11:13:44  [11:13:43] DMSYNC t=1s due=0 marked=2 items=88 stall=4
+11:13:44  [11:13:44] DANM get id=7700190473712897318 [140-160s] ttwid=127
+11:13:44  [11:13:44] DANM get id=7700190473712897318 [160-180s] ttwid=127
+11:13:44  [11:13:44] DANM get id=7700190473712897318 [180-200s] ttwid=127
+11:13:45  [11:13:45] DANM get id=7700190473712897318 [200-220s] ttwid=127
+11:13:45  [11:13:45] DANM get id=7700190473712897318 [220-240s] ttwid=127
+11:13:45  [11:13:45] DANM get id=7700190473712897318 [240-260s] ttwid=127
+11:13:46  [11:13:46] DANM get id=7700190473712897318 [260-280s] ttwid=127
+11:13:46  [11:13:46] DANM get id=7700190473712897318 [280-300s] ttwid=127
+11:13:46  [11:13:46] DANM get id=7700190473712897318 [300-320s] ttwid=127
+11:13:47  [11:13:46] DANM get id=7700190473712897318 [320-340s] ttwid=127
+11:13:47  [11:13:47] DANM get id=7700190473712897318 [340-360s] ttwid=127
+11:13:47  [11:13:47] DANM get id=7700190473712897318 [360-380s] ttwid=127
+11:13:47  [11:13:47] DANM get id=7700190473712897318 [380-400s] ttwid=127
+11:13:48  [11:13:47] DMSYNC t=5s due=0 marked=7 items=194 stall=6
+11:13:48  [11:13:48] DANM get id=7700190473712897318 [400-420s] ttwid=127
+11:13:48  [11:13:48] DANM get id=7700190473712897318 [420-433s] ttwid=127
+11:13:48  [11:13:48] DANM all-segments done id=7700190473712897318 total=201 retry=0
+11:13:48  [11:13:48] DMLOAD done id=7700190473712897318 total=201
+11:13:52  [11:13:51] DMSYNC t=9s due=0 marked=11 items=201 stall=0
+11:13:56  [11:13:55] DMSYNC t=13s due=0 marked=15 items=201 stall=5
+11:13:56  [11:13:56] QUICK panel open (ok) mix=0
+11:13:58  [11:13:58] QUICK select home sec=MS4wLjABAAAAdyIjtDdXh1DSkKs7BNnRtOAKTORAQwabu5I-yCO4hBAtz_lxVMe5Ybvc0bt_mZRZ
+11:13:58  [11:13:58] PROFILE seed tab/feed (取 UIFID_TEMP)
+11:14:00  [11:13:59] DMSYNC t=17s due=0 marked=19 items=201 stall=4
+11:14:00  [11:14:00] PROFILE seed done uifid=no
+11:14:00  [11:14:00] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+11:14:00  [11:14:00] PROFILE ok nick=星光漫剧 fans=86512 works=721
+11:14:00  [11:14:00] PROFILE GET /aweme/v1/web/aweme/post/ uifid=160
+11:14:00  [11:14:00] WORKS probe empty http=200 len=0 (TLS 疑点待真机)
+11:14:04  [11:14:03] DMSYNC t=21s due=0 marked=25 items=201 stall=0
+11:14:08  [11:14:07] DMSYNC t=25s due=0 marked=26 items=201 stall=1
+11:14:12  [11:14:11] DMSYNC t=29s due=0 marked=32 items=201 stall=2
+11:14:16  [11:14:15] DMSYNC t=33s due=0 marked=37 items=201 stall=2
+11:14:20  [11:14:19] DMSYNC t=37s due=0 marked=37 items=201 stall=18
+11:14:24  [11:14:23] DMSYNC t=41s due=0 marked=39 items=201 stall=4
+11:14:28  [11:14:27] DMSYNC t=45s due=0 marked=42 items=201 stall=2
+11:14:32  [11:14:31] DMSYNC t=49s due=0 marked=44 items=201 stall=2
+11:14:36  [11:14:35] DMSYNC t=53s due=0 marked=47 items=201 stall=3
+11:14:40  [11:14:39] DMSYNC t=57s due=0 marked=48 items=201 stall=1
+11:14:44  [11:14:43] DMSYNC t=61s due=0 marked=50 items=201 stall=2
+11:14:48  [11:14:47] DMSYNC t=65s due=0 marked=51 items=201 stall=10
+11:14:52  [11:14:51] DMSYNC t=69s due=0 marked=52 items=201 stall=1
+11:14:56  [11:14:55] DMSYNC t=73s due=0 marked=55 items=201 stall=8
+11:15:00  [11:14:59] DMSYNC t=77s due=0 marked=56 items=201 stall=3
+11:15:04  [11:15:03] DMSYNC t=81s due=0 marked=58 items=201 stall=7
+11:15:08  [11:15:07] DMSYNC t=85s due=0 marked=59 items=201 stall=8
+11:15:12  [11:15:11] DMSYNC t=89s due=0 marked=62 items=201 stall=4
+11:15:16  [11:15:15] DMSYNC t=93s due=0 marked=64 items=201 stall=2
+11:15:20  [11:15:19] DMSYNC t=97s due=0 marked=65 items=201 stall=12
+11:15:24  [11:15:23] DMSYNC t=101s due=0 marked=69 items=201 stall=1
+11:15:28  [11:15:27] DMSYNC t=105s due=0 marked=69 items=201 stall=17
+11:15:32  [11:15:31] DMSYNC t=109s due=0 marked=70 items=201 stall=0
+11:15:36  [11:15:35] DMSYNC t=113s due=0 marked=76 items=201 stall=6
+11:15:40  [11:15:39] DMSYNC t=117s due=0 marked=78 items=201 stall=6
+11:15:44  [11:15:43] DMSYNC t=121s due=0 marked=80 items=201 stall=1
+11:15:48  [11:15:47] DMSYNC t=125s due=0 marked=83 items=201 stall=0
+11:15:52  [11:15:51] DMSYNC t=129s due=0 marked=86 items=201 stall=3
+11:15:56  [11:15:55] DMSYNC t=133s due=0 marked=86 items=201 stall=19
+11:16:00  [11:15:59] DMSYNC t=137s due=0 marked=86 items=201 stall=35
+11:16:04  [11:16:03] DMSYNC t=141s due=0 marked=87 items=201 stall=6
+11:16:08  [11:16:07] DMSYNC t=145s due=0 marked=87 items=201 stall=22
+11:16:12  [11:16:11] DMSYNC t=149s due=0 marked=88 items=201 stall=15
+11:16:16  [11:16:15] DMSYNC t=153s due=0 marked=88 items=201 stall=31
+11:16:20  [11:16:19] DMSYNC t=157s due=0 marked=92 items=201 stall=3
+11:16:24  [11:16:23] DMSYNC t=161s due=0 marked=92 items=201 stall=19
+11:16:28  [11:16:27] DMSYNC t=165s due=0 marked=96 items=201 stall=0
+11:16:32  [11:16:31] DMSYNC t=169s due=0 marked=98 items=201 stall=1
+11:16:36  [11:16:35] DMSYNC t=173s due=0 marked=100 items=201 stall=11
+11:16:40  [11:16:39] DMSYNC t=177s due=0 marked=103 items=201 stall=0
+11:16:44  [11:16:43] DMSYNC t=181s due=0 marked=104 items=201 stall=6
+11:16:48  [11:16:47] DMSYNC t=185s due=0 marked=110 items=201 stall=4
+11:16:52  [11:16:51] DMSYNC t=189s due=0 marked=117 items=201 stall=0
+11:16:56  [11:16:55] DMSYNC t=193s due=0 marked=123 items=201 stall=2
+11:17:00  [11:16:59] DMSYNC t=197s due=0 marked=127 items=201 stall=6
+11:17:04  [11:17:03] DMSYNC t=201s due=0 marked=130 items=201 stall=2
+11:17:08  [11:17:07] DMSYNC t=205s due=0 marked=132 items=201 stall=7
+11:17:12  [11:17:11] DMSYNC t=209s due=0 marked=134 items=201 stall=11
+11:17:16  [11:17:15] DMSYNC t=213s due=0 marked=134 items=201 stall=27
+11:17:20  [11:17:19] DMSYNC t=217s due=0 marked=137 items=201 stall=6
+11:17:24  [11:17:23] DMSYNC t=221s due=0 marked=137 items=201 stall=22
+11:17:28  [11:17:27] DMSYNC t=225s due=0 marked=139 items=201 stall=0
+11:17:32  [11:17:31] DMSYNC t=229s due=0 marked=140 items=201 stall=4
+11:17:36  [11:17:35] DMSYNC t=233s due=0 marked=141 items=201 stall=13
+11:17:40  [11:17:39] DMSYNC t=237s due=0 marked=142 items=201 stall=15
+11:17:44  [11:17:43] DMSYNC t=241s due=0 marked=144 items=201 stall=8
+11:17:48  [11:17:47] DMSYNC t=245s due=0 marked=144 items=201 stall=24
+11:17:52  [11:17:51] DMSYNC t=249s due=0 marked=144 items=201 stall=40
+11:17:56  [11:17:55] DMSYNC t=253s due=0 marked=146 items=201 stall=8
+11:18:00  [11:17:59] DMSYNC t=257s due=0 marked=150 items=201 stall=0
+11:18:04  [11:18:03] DMSYNC t=261s due=0 marked=152 items=201 stall=0
+11:18:08  [11:18:07] DMSYNC t=265s due=0 marked=159 items=201 stall=1
+11:18:12  [11:18:11] DMSYNC t=269s due=0 marked=160 items=201 stall=11
+11:18:16  [11:18:15] DMSYNC t=273s due=0 marked=164 items=201 stall=0
+11:18:20  [11:18:19] DMSYNC t=277s due=0 marked=165 items=201 stall=2
+11:18:24  [11:18:23] DMSYNC t=281s due=0 marked=168 items=201 stall=8
+11:18:28  [11:18:27] DMSYNC t=285s due=0 marked=171 items=201 stall=1
+11:18:32  [11:18:31] DMSYNC t=289s due=0 marked=180 items=201 stall=5
+11:18:36  [11:18:35] DMSYNC t=293s due=0 marked=181 items=201 stall=11
+11:18:40  [11:18:39] DMSYNC t=297s due=0 marked=181 items=201 stall=27
+11:18:44  [11:18:43] DMSYNC t=301s due=0 marked=182 items=201 stall=9
+11:18:48  [11:18:47] DMSYNC t=305s due=0 marked=184 items=201 stall=6
+11:18:52  [11:18:51] DMSYNC t=309s due=0 marked=184 items=201 stall=22
