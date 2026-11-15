@@ -32,8 +32,9 @@ struct DYCapturedWork {
 ///
 /// 新架构：**一个持久会话（离屏 WebView 加载抖音首页过挑战）+ 全部数据走页面上下文 fetch**
 /// （v172 真机已验证：页面 fetch 包装自带签名/cookie，`MIXCAP ok n=15` 1 秒完成）。
-/// 请求带 _dytag 标记（profcap/postcap/mixcap），hook 拦响应，drain 按 tag 分发解析；
-/// 作品分页由本类驱动（hasMore=1 自动排队下一页 max_cursor），不再依赖网页行为。
+/// 请求标记只存 JS 本地映射（v178 起 URL 完全干净，见 tagFor），hook 拦响应，drain 按 tag 分发解析；
+/// 翻页以**页面自己的懒加载**为主通道（真实 viewport 滚动泵），自拼请求只作并行兜底
+/// 且参数集 1:1 照抄页面包装后真实发出的原生 URL（nativePostURL 模板）。
 /// 会话复用：作者页/合集屏切换零加载；空闲 30s 或 180s deadline 才收摊。
 final class DYWorksCapture: NSObject {
     static let shared = DYWorksCapture()
@@ -85,6 +86,11 @@ final class DYWorksCapture: NSObject {
     private var postEmptyRetries = 0
     /// v176 缓存资料（同作者重开只补发缓存，不再重复请求触发风控）
     private var cachedProfile: DYProfileUser?
+    /// v178 页面包装后真实发出的原生 aweme/post URL（hook 保留完整串）→ 翻页参数模板
+    private var nativePostURL = ""
+    private var nativeURLLogged = false
+    /// v178 会话当前加载的作者页 secUid（真导航复用判定）
+    private var loadedAuthorSec = ""
 
     // MARK: - 对外入口
 
@@ -93,11 +99,13 @@ final class DYWorksCapture: NSObject {
         DispatchQueue.main.async { [weak self] in
             guard let self, self.capturedHasMore, !self.currentAuthorSec.isEmpty,
                   self.postPagesFetched < self.postMaxPages,
-                  !self.pendingQueue.contains(where: { $0.contains("#postcap") }) else { return }
+                  !self.pendingQueue.contains(where: { $0.contains("aweme/post") }) else { return }
             self.lastActivityAt = Date()
-            self.ensureSession()
-            self.pendingQueue.append(Self.postFetchURL(secUid: self.currentAuthorSec, maxCursor: max(0, self.lastMaxCursor)))
-            DYLog.shared.event("CAP post scroll-more queued cursor=\(self.lastMaxCursor)")
+            self.ensureSession(secUid: self.currentAuthorSec)
+            self.enqueueNextPage()
+            // v178 主动滚动一次（页面自己的懒加载 = 参数与签名都正确的翻页主通道）
+            self.evalJS(Self.scrollJS, tag: "scroll-more")
+            DYLog.shared.event("CAP post scroll-more → page native paging cursor=\(self.lastMaxCursor)")
         }
     }
 
@@ -133,12 +141,12 @@ final class DYWorksCapture: NSObject {
                 // v176 同作者重开：有缓存就不再重复打第一页（19:21:24 真机实锤重复请求后连第一页都变空）
                 if sameAuthor, !self.capturedWorks.isEmpty {
                     if self.capturedHasMore, self.postPagesFetched < self.postMaxPages, self.pendingQueue.isEmpty {
-                        self.pendingQueue.append(Self.postFetchURL(secUid: secUid, maxCursor: max(0, self.lastMaxCursor)))
+                        self.enqueueNextPage()
                     }
                     return
                 }
             }
-            self.ensureSession()
+            self.ensureSession(secUid: secUid)
             // 资料每次刷新（屏实例新，user 空），但 3s 内同作者只排一次队（双 fire 去重）
             let now = Date()
             guard now.timeIntervalSince(self.lastAuthorQueueAt) > 3 else { return }
@@ -176,13 +184,20 @@ final class DYWorksCapture: NSObject {
 
     // MARK: - 请求 URL（页面上下文 fetch，页面包装自动补 webCommon/msToken/a_bogus）
 
-    /// ⚠️ v177 关键修复（v176 真机 `CAP post EMPTY body={"status_code":0}` 实锤）：
-    /// 标记从 query 参数（`&_dytag=xxx`）改成 **URL fragment（#xxx）**。fragment 不会发给服务端、
-    /// 不参与 a_bogus 计算；之前 `_dytag` 是服务端不认识的多余 query 参数，页面签名包装只签
-    /// 它认识的参数 → 参数集与验签不一致 → 第一页宽松放过、翻页严格校验软拒 200 空。
-    /// hook 的 `u` 是我们传入 fetch 的完整字符串（含 fragment），分发标记照常可用。
+    /// ⚠️ v178（v175/v176/v177 连续 3 版自拼翻页 URL 全部 `{"status_code":0}` 软拒，按铁律判死该路线）：
+    /// ① 标记**完全不进实际 URL**——query 不行（v176 实锤服务端不认识的参数破坏 a_bogus）、
+    ///    fragment 也不行（v177 实锤页面签名包装把 URL 字符串含 fragment 一起算签名，服务端却收不到 fragment）。
+    ///    改用 JS 本地 `window.__dyTagMap[u]=tag` 映射，fetchJS 回推时本地拼 `#tag` 仅供 Swift 分发。
+    /// ② 翻页参数集不再照抄 myDV，改为 1:1 照抄**页面包装后真实发出的原生 URL**（见 nativePostURL）。
+    private static func tagFor(_ url: String) -> String {
+        if url.contains("user/profile") { return "profcap" }
+        if url.contains("aweme/post") { return "postcap" }
+        if url.contains("aweme/detail") { return "detailcap" }
+        return "mixcap"
+    }
+
     private static func profileFetchURL(secUid: String) -> String {
-        "/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&publish_video_strategy_type=2&source=channel_page#profcap"
+        "/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&publish_video_strategy_type=2&source=channel_page"
     }
 
     /// v175 逐参数照抄 myDV UserWorksResponse 方法（u11.java 3678-3703，反编译实锤）：
@@ -192,50 +207,136 @@ final class DYWorksCapture: NSObject {
     /// v174 缺 6 参数且 need_time_list 恒 1 → 第二页 200 空（真机 len=17 实锤）。
     private static func postFetchURL(secUid: String, maxCursor: Int) -> String {
         let needTimeList = maxCursor == 0 ? "1" : "0"
-        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0#postcap"
+        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0"
+    }
+
+    /// v178 权威翻页 URL：以页面包装后**真实发出的原生 aweme/post URL** 为模板，
+    /// 只替换游标与 sec_user_id，删除动态签名字段（交给页面 jsvmp 包装重新计算）。
+    /// 参数集与页面自己逐字节一致——不再用我们猜的 myDV 参数拼翻页。
+    private static func nativePagedPostURL(template: String, secUid: String, cursor: Int) -> String? {
+        guard var comps = URLComponents(string: template), let items = comps.queryItems else { return nil }
+        let dropKeys: Set<String> = ["a_bogus", "msToken", "verifyFp", "fp", "_signature", "X-Bogus", "_dytag"]
+        var out: [URLQueryItem] = []
+        var hasCursor = false
+        for q in items where !dropKeys.contains(q.name) {
+            var v = q.value ?? ""
+            switch q.name {
+            case "max_cursor", "cursor":
+                v = String(cursor); hasCursor = true
+            case "sec_user_id", "secUid":
+                v = secUid
+            default: break
+            }
+            out.append(URLQueryItem(name: q.name, value: v))
+        }
+        guard hasCursor else { return nil }
+        comps.queryItems = out
+        comps.fragment = nil
+        return comps.string
     }
 
     private static func mixFetchURL(mixId: String) -> String {
-        "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page#mixcap"
+        "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page"
     }
 
     /// v175 myDV u11:3992 同款 aweme/detail（§7.2 探针全通）——权威取 mix_info.mix_id
     private static func detailFetchURL(awemeId: String) -> String {
-        "/aweme/v1/web/aweme/detail/?aweme_id=\(awemeId)&request_source=600&origin_type=quick_player&device_platform=webapp&aid=6383&channel=channel_pc_web#detailcap"
+        "/aweme/v1/web/aweme/detail/?aweme_id=\(awemeId)&request_source=600&origin_type=quick_player&device_platform=webapp&aid=6383&channel=channel_pc_web"
     }
 
-    /// 页面上下文 fetch（hook 已在 doc-start 注入，响应自动进 __dyCap）
+    /// 页面上下文请求：URL 完全干净（无任何自定义标记），标记只存 JS 本地映射。
+    /// v178 关键：抖音 jsvmp 签名包装多挂在 XMLHttpRequest 上，用 fetch 发的请求可能压根没签名
+    /// （首页接口宽松放过、翻页严格验签 → `{"status_code":0}`）。改为 **XHR 优先**让页面包装
+    /// 自动补 a_bogus/msToken；若返回空响应（软拒），再用 fetch 通道补发一次（两条签名路径全覆盖）。
     private static func fetchJS(url: String) -> String {
-        """
+        let tag = tagFor(url)
+        return """
         (function(){
+          var u='\(url)', t='\(tag)';
+          try{ window.__dyTagMap=window.__dyTagMap||{}; window.__dyTagMap[u]=t; }catch(e){}
+          function push(x){ try{ window.__dyCap.push({u:u+'#'+t,b:x}); }catch(e){} }
+          function viaFetch(){ try{
+            fetch(u,{credentials:'include'}).then(function(r){return r.text()}).then(push).catch(function(e){push('FETCHERR:'+String(e));});
+          }catch(e){ push('SYNERR:'+String(e)); } }
           try{
-            fetch('\(url)',{credentials:'include'}).then(function(r){return r.text()}).then(function(t){
-              try{ window.__dyCap.push({u:'\(url)',b:t}); }catch(e){}
-            }).catch(function(e){
-              try{ window.__dyCap.push({u:'\(url)',b:'FETCHERR:'+String(e)}); }catch(e2){}
-            });
-          }catch(e){ try{ window.__dyCap.push({u:'\(url.prefix(60))...',b:'SYNERR:'+String(e)}); }catch(e2){} }
+            var x=new XMLHttpRequest();
+            x.open('GET',u,true); x.withCredentials=true;
+            x.onreadystatechange=function(){ if(x.readyState!==4) return;
+              var body=x.responseText||''; push(body);
+              if(body.length<300){ viaFetch(); }   // 软拒/空 → 换 fetch 签名通道补一枪
+            };
+            x.onerror=function(){ viaFetch(); };
+            x.send();
+          }catch(e){ viaFetch(); }
         })();
         """
     }
 
+    /// v178 页面滚动泵：真实 viewport 下把页面滚到底并派发 scroll，触发作者页自己的懒加载翻页
+    /// （页面自己构造的请求，参数集与 a_bogus 全部由 jsvmp 生成，不可能验签失败）。
+    private static let scrollJS = """
+    (function(){try{
+      var h=Math.max((document.body&&document.body.scrollHeight)||0,
+                     (document.documentElement&&document.documentElement.scrollHeight)||0);
+      window.scrollTo(0,h);
+      try{ window.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
+      try{ document.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
+      return String(h);
+    }catch(e){return 'ERR';}})();
+    """
+
+    /// v178 翻页请求排队：优先用页面原生 URL 模板（参数集 1:1），无模板才退回 myDV 参数。
+    private func enqueueNextPage() {
+        let cursor = max(0, lastMaxCursor)
+        if !nativePostURL.isEmpty,
+           let paged = Self.nativePagedPostURL(template: nativePostURL, secUid: currentAuthorSec, cursor: cursor) {
+            pendingQueue.append(paged)
+            DYLog.shared.log("CAP post page (NATIVE template) queued cursor=\(cursor)")
+        } else {
+            pendingQueue.append(Self.postFetchURL(secUid: currentAuthorSec, maxCursor: cursor))
+            DYLog.shared.log("CAP post page (fallback myDV params) queued cursor=\(cursor)")
+        }
+        postPagesFetched += 1
+    }
+
     // MARK: - 会话管理
 
-    private func ensureSession() {
-        guard webView == nil else { return }
-        guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1, height: 1), DYProfileClient.webUA, Self.hookJS) as? UIView else {
+    /// v178：离屏视图改 1920x1080 真实 viewport（v163 起 1x1 导致页面懒加载永不触发，
+    /// 是"作品分页从未成功"的遗留真根因）；首次会话**直接加载作者页**，让页面自己发
+    /// 带完整签名的 profile/post 请求，并可用滚动泵触发它自己的翻页。
+    private func ensureSession(secUid: String = "") {
+        if let _ = webView {
+            // 换作者：真导航到新作者页（cookie/挑战已过，无需新建视图）
+            if !secUid.isEmpty, loadedAuthorSec != secUid {
+                loadedAuthorSec = secUid
+                nativePostURL = ""
+                nativeURLLogged = false
+                sessionReady = false
+                readySeenAt = .distantPast
+                rehooked = false
+                let js = "(function(){try{location.replace('https://www.douyin.com/user/\(secUid)');}catch(e){}return 'ok';})();"
+                evalJS(js, tag: "nav-author")
+                DYLog.shared.event("SESSION nav author page (real navigation) sec=\(secUid.prefix(16))...")
+            }
+            return
+        }
+        guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1920, height: 1080), DYProfileClient.webUA, Self.hookJS) as? UIView else {
             DYLog.shared.event("SESSION FAIL: 注入式 WKWebView 创建失败")
             return
         }
         webView = wv
+        loadedAuthorSec = secUid
         sessionReady = false
         readySeenAt = .distantPast
         rehooked = false
         pollCount = 0
         totalCap = 0
         lastActivityAt = Date()
-        DYLog.shared.log("SESSION boot douyin home (doc-start inject) — 持久会话")
-        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.douyin.com/?recommend=1")!))
+        let startURL = secUid.isEmpty
+            ? "https://www.douyin.com/?recommend=1"
+            : "https://www.douyin.com/user/\(secUid)"
+        DYLog.shared.log("SESSION boot (doc-start inject, 1920x1080) → \(startURL.prefix(60))")
+        wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: startURL)!))
         startPolling()
         deadlineTimer?.invalidate()
         deadlineTimer = Timer.scheduledTimer(withTimeInterval: 180, repeats: false) { [weak self] _ in
@@ -309,7 +410,7 @@ final class DYWorksCapture: NSObject {
                         DYLog.shared.log("SESSION page URL → https://www.douyin.com\(path) (referer 对齐 myDV u11.F0)")
                         continue
                     }
-                    if item.contains("#postcap") {
+                    if Self.tagFor(item) == "postcap" {
                         let now = Date()
                         if now < self.postEarliestFireAt || now.timeIntervalSince(self.lastPostFireAt) < 3 {
                             break   // 翻页 ≥3s 节流（myDV 用户滚动翻页天然有间隔）
@@ -320,22 +421,19 @@ final class DYWorksCapture: NSObject {
                     self.pendingQueue.removeFirst()
                     self.lastActivityAt = Date()
                     self.totalCap += 1
-                    let tagWord = item.contains("#profcap") ? "profcap"
-                        : item.contains("#postcap") ? "postcap"
-                        : item.contains("#detailcap") ? "detailcap" : "mixcap"
+                    let tagWord = Self.tagFor(item)
                     DYLog.shared.log("SESSION fire \(tagWord) → \(item.prefix(100))")
                     self.evalJS(Self.fetchJS(url: item), tag: tagWord)
                     fired += 1
                 }
             }
-            // 分发响应
+            // 分发响应（v178：标记只在 u 末尾的 #tag；页面原生请求无 tag，一律走 page-req 累积通道）
             for item in cap {
                 let u = item["u"] as? String ?? "?"
                 let b = item["b"] as? String ?? ""
-                let tagged = u.contains("#")
-                if !tagged {
-                    // v177：页面 jsvmp 包装后重发的带签名请求（URL 无 fragment）——
-                    // 它的响应参数是页面原生的，一样纳入累积（按 id 去重），并用完整 URL 备查。
+                let tag = Self.tagFrom(u)
+                if u.contains("aweme/post") { self.noteNativePostURL(u) }
+                if tag.isEmpty {
                     DYLog.shared.log("SESSION page-req len=\(b.count) u=\(u.prefix(300))")
                     if u.contains("aweme/post") {
                         self.lastActivityAt = Date()
@@ -347,18 +445,51 @@ final class DYWorksCapture: NSObject {
                     continue
                 }
                 self.lastActivityAt = Date()
-                if u.contains("#profcap") {
+                switch tag {
+                case "profcap":
                     DYLog.shared.event("CAP profcap len=\(b.count)")
                     self.handleProfile(b)
-                } else if u.contains("#postcap") {
+                case "postcap":
                     DYLog.shared.event("CAP postcap len=\(b.count)")
                     self.handleWorks(b, allowPaging: true)
-                } else if u.contains("#detailcap") {
+                case "detailcap":
                     DYLog.shared.event("CAP detailcap len=\(b.count)")
                     self.handleDetail(b)
-                } else if u.contains("#mixcap") {
+                default:
                     DYLog.shared.event("CAP mixcap len=\(b.count)")
                     self.handleMix(b)
+                }
+            }
+        }
+    }
+
+    private static func tagFrom(_ u: String) -> String {
+        for t in ["profcap", "postcap", "detailcap", "mixcap"] where u.hasSuffix("#" + t) { return t }
+        return ""
+    }
+
+    /// v178 记录页面包装后真实发出的原生 aweme/post URL（hook 不再 slice 截断），
+    /// 分片打日志备查，并作为翻页参数模板（nativePagedPostURL）。
+    private func noteNativePostURL(_ u: String) {
+        var clean = u
+        let t = Self.tagFrom(clean)
+        if !t.isEmpty { clean = String(clean.dropLast(t.count + 1)) }
+        guard clean.count > 120, clean.contains("aweme/post") else { return }
+        // 页面 jsvmp 包装后的 URL 带 a_bogus/msToken —— 优先作为模板；
+        // 我们自拼的干净 URL 只作兜底（否则又回到连败 3 版的老路）。
+        let signed = clean.contains("a_bogus") || clean.contains("msToken")
+        let isFirst = clean.contains("max_cursor=0")
+        let better = signed && !nativePostURL.contains("a_bogus")
+        if nativePostURL.isEmpty || better || (isFirst && signed && !nativePostURL.contains("max_cursor=0")) {
+            nativePostURL = clean
+            if !nativeURLLogged || better {
+                nativeURLLogged = true
+                let chars = Array(clean.prefix(1000))
+                var i = 0, part = 0
+                while i < chars.count {
+                    let end = min(i + 100, chars.count)
+                    DYLog.shared.log("NATIVE POST URL[\(part)]=\(String(chars[i..<end]))")
+                    i = end; part += 1
                 }
             }
         }
@@ -427,32 +558,28 @@ final class DYWorksCapture: NSObject {
         }
         DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor)")
         guard !works.isEmpty else {
-            // v176 真机实锤：第二页常返回 17 字节空列表（{"aweme_list":[]}）。
-            // 打 body 看清是风控空列表还是错误码，再退避重试（≤2 次），仍空才收摊。
+            // v178：自拼翻页请求被软拒（`{"status_code":0}`）**不再判死**——页面原生滚动通道
+            // 仍在跑，把 hasMore 置 false 会让 UI 停止显示"加载中"并误导用户。
+            // 改为：只重试 1 次（改用原生 URL 模板），之后交给页面自己的翻页。
             DYLog.shared.event("CAP post EMPTY body=\(body.prefix(120))")
-            guard allowPaging else { return }   // v177 页面包装通道的空响应不触发重试/收摊
-            if self.postEmptyRetries < 2, !self.currentAuthorSec.isEmpty {
+            guard allowPaging else { return }
+            if self.postEmptyRetries < 1, !self.currentAuthorSec.isEmpty {
                 self.postEmptyRetries += 1
-                let delay = Double(self.postEmptyRetries) * 3.0
-                self.postEarliestFireAt = Date().addingTimeInterval(delay)
-                let url = Self.postFetchURL(secUid: self.currentAuthorSec, maxCursor: max(0, self.lastMaxCursor))
-                self.pendingQueue.append(url)
-                DYLog.shared.log("CAP post empty retry \(self.postEmptyRetries) in \(Int(delay))s")
+                self.postEarliestFireAt = Date().addingTimeInterval(3.0)
+                self.enqueueNextPage()
+                // 同时主动滚一次，触发页面自己的懒加载翻页（参数+签名均由页面生成）
+                self.evalJS(Self.scrollJS, tag: "empty-scroll")
+                DYLog.shared.log("CAP post empty retry (native template + page scroll) in 3s")
                 return
             }
-            self.capturedHasMore = false
-            let total = self.capturedWorks.count
-            DYLog.shared.event("CAP post give-up (empty x\(self.postEmptyRetries)) total=\(total)")
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: false)
-            }
+            DYLog.shared.event("CAP post soft-reject; keep hasMore, wait for page-native paging total=\(self.capturedWorks.count)")
             return
         }
         self.postEmptyRetries = 0
         let known = Set(capturedWorks.map { $0.id })
         let fresh = works.filter { !known.contains($0.id) }
         capturedHasMore = hasMore
+        if nextCursor > lastMaxCursor { lastMaxCursor = nextCursor }
         if !fresh.isEmpty {
             capturedWorks.append(contentsOf: fresh)
             let total = capturedWorks.count
@@ -462,13 +589,13 @@ final class DYWorksCapture: NSObject {
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
         }
-        // v175 分页引擎：myDV 完整参数 + 响应 cursor 翻页（v174 用 max_cursor + 缺 6 参数 → 第二页空）
-        if allowPaging, hasMore, nextCursor != lastMaxCursor, postPagesFetched < postMaxPages, !currentAuthorSec.isEmpty {
-            postPagesFetched += 1
-            lastMaxCursor = nextCursor
-            let url = Self.postFetchURL(secUid: currentAuthorSec, maxCursor: nextCursor)
-            DYLog.shared.log("CAP post page \(postPagesFetched) queued cursor=\(nextCursor)")
-            pendingQueue.append(url)
+        // v178 分页：页面原生滚动通道为主；自拼请求只作为并行兜底（原生 URL 模板优先）。
+        // 只在拿到新作品、队列里没有待发 postcap 时排一页，避免重复响应刷屏触发风控。
+        if allowPaging, hasMore, !fresh.isEmpty, postPagesFetched < postMaxPages,
+           !currentAuthorSec.isEmpty,
+           !pendingQueue.contains(where: { $0.contains("aweme/post") }) {
+            lastMaxCursor = max(lastMaxCursor, nextCursor)
+            enqueueNextPage()
         }
         _ = mixName
     }
@@ -646,8 +773,11 @@ final class DYWorksCapture: NSObject {
         var s=String(u);
         if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0&&s.indexOf('aweme/detail')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
-        // v177：fragment 标记在 URL 末尾，slice(0,120) 会砍掉 → 单独保留 #tag 供 drain 分发
-        var hi=s.indexOf('#'), tag=(hi>=0)?s.slice(hi):'', us=s.slice(0,120)+tag;
+        // v178：标记不进实际 URL（query/fragment 都会破坏页面签名），从 JS 本地映射取；
+        // aweme/post 保留完整 URL（最多 1200 字符）→ Swift 侧作为翻页参数模板 1:1 照抄。
+        var hi=s.indexOf('#'), tag=(hi>=0)?s.slice(hi):'';
+        if(!tag&&window.__dyTagMap){ var mt=window.__dyTagMap[s]||window.__dyTagMap[s.split('#')[0]]; if(mt)tag='#'+mt; }
+        var us=(s.indexOf('aweme/post')>=0)?(s.slice(0,1200)+tag):(s.slice(0,120)+tag);
         if(s.indexOf('aweme/post')>=0||s.indexOf('mix/aweme')>=0){
           var j=null; try{ j=JSON.parse(body); }catch(e){}
           if(j&&(j.aweme_list)){
@@ -684,6 +814,16 @@ final class DYWorksCapture: NSObject {
       var of=window.fetch;
       if(of){ window.fetch=function(){ var a=arguments,u=(a[0]&&a[0].url)||a[0]; u=String(u);
         return of.apply(this,arguments).then(function(r){ try{ var c=r.clone(); c.text().then(function(t){ grab(u,t); }).catch(function(){}); }catch(e){} return r; }); }; }
+      // v178 页面内滚动泵：作者页路径下每 2.5s 滚到底 + 派发 scroll（1x1 viewport 时代永不触发，
+      // 现为 1920x1080 真实 viewport）。页面自己的懒加载翻页请求由自身 jsvmp 签名，最可靠。
+      try{ setInterval(function(){ try{
+        if(String(location.pathname).indexOf('/user/')!==0) return;
+        var h=Math.max((document.body&&document.body.scrollHeight)||0,
+                       (document.documentElement&&document.documentElement.scrollHeight)||0);
+        window.scrollTo(0,h);
+        try{ window.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
+        try{ document.dispatchEvent(new Event('scroll',{bubbles:true})); }catch(e){}
+      }catch(e){} },2500); }catch(e){}
     })();
     """
 }
