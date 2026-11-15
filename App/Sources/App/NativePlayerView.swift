@@ -17,16 +17,19 @@ final class PlayerLayerView: UIView {
 /// Feed Cell：不自己创建 Player。willDisplay 时向 PlayerManager 申请绑定对应的 Player 层。
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
 /// v143 PC 版 UI：左下作者/文案区 + 右侧动作轨（计数纯展示，随视频自动切换）。
+/// v151 氛围背景：非全屏视频的黑色边区用封面取色+高斯模糊铺满（抖音环境光效果）。
 final class PlayerCell: UICollectionViewCell {
+    /// 氛围背景（最底层）：封面缩略 + 高斯模糊 + 轻压暗，铺满 cell——视频层 resizeAspect 留出的黑边透出它
+    private let backdropView = UIImageView()
     let playerLayerView = PlayerLayerView()
     /// 弹幕覆盖层：真实视频层之上、封面之下（未 ready 时被封面盖住）；tvOS 焦点隔离（渲染纯展示层）
     let danmakuOverlay = DanmakuOverlay()
-    /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
+    /// 高清封面兜底：player 未 ready 时显示，绝不黑屏（背景透明让氛围层透出黑边区）
     let coverImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.backgroundColor = .black
+        iv.backgroundColor = .clear
         iv.isHidden = true
         return iv
     }()
@@ -48,9 +51,12 @@ final class PlayerCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .black
+        contentView.addSubview(backdropView)
         contentView.addSubview(playerLayerView)
         contentView.addSubview(danmakuOverlay)
         contentView.addSubview(coverImageView)
+        backdropView.contentMode = .scaleAspectFill
+        backdropView.clipsToBounds = true
         playerLayerView.playerLayer.videoGravity = .resizeAspect
         buildPCOverlay()
         // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
@@ -60,6 +66,7 @@ final class PlayerCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
+        backdropView.frame = contentView.bounds
         playerLayerView.frame = contentView.bounds
         danmakuOverlay.frame = contentView.bounds
         coverImageView.frame = contentView.bounds
@@ -189,13 +196,43 @@ final class PlayerCell: UICollectionViewCell {
         if n >= 10_000 { return String(format: "%.1f万", Double(n) / 10_000) }
         return String(n)
     }
-    /// 设置封面兜底图。
+    /// 设置封面兜底图（v151：同时生成氛围模糊背景铺黑边区）。
     func setCover(_ image: UIImage?) {
         coverImageView.image = image
+        if let image {
+            Self.makeAmbientBlur(image) { [weak self] blurred in
+                self?.backdropView.image = blurred
+            }
+        }
     }
     /// 封面显隐：player 未 ready 时显示封面，ready 后隐藏露出真实视频层。
     func setCoverVisible(_ visible: Bool) {
         coverImageView.isHidden = !visible
+    }
+
+    /// v151 氛围背景：封面缩小 20 倍面积 → 高斯模糊 → 轻压暗微增饱和（左下白字可读性）。
+    /// 小图大半径=等效全尺寸大模糊，单张毫秒级；cover 缓存命中后每视频只算一次。
+    private static let ambientContext = CIContext()
+
+    static func makeAmbientBlur(_ image: UIImage, done: @escaping (UIImage?) -> Void) {
+        DispatchQueue.global(qos: .utility).async {
+            let small = CGSize(width: 220, height: 390)
+            let smallImg = UIGraphicsImageRenderer(size: small).image { _ in image.draw(in: CGRect(origin: .zero, size: small)) }
+            guard let ci = CIImage(image: smallImg) else { DispatchQueue.main.async { done(nil) }; return }
+            guard let blur = CIFilter(name: "CIGaussianBlur") else { DispatchQueue.main.async { done(nil) }; return }
+            blur.setValue(ci.clampedToExtent(), forKey: kCIInputImageKey)
+            blur.setValue(20, forKey: kCIInputRadiusKey)
+            guard let blurred = blur.outputImage else { DispatchQueue.main.async { done(nil) }; return }
+            guard let adj = CIFilter(name: "CIColorControls") else { DispatchQueue.main.async { done(nil) }; return }
+            adj.setValue(blurred, forKey: kCIInputImageKey)
+            adj.setValue(-0.12, forKey: kCIInputBrightnessKey)
+            adj.setValue(1.1, forKey: kCIInputSaturationKey)
+            guard let out = adj.outputImage, let cg = ambientContext.createCGImage(out, from: ci.extent) else {
+                DispatchQueue.main.async { done(nil) }
+                return
+            }
+            DispatchQueue.main.async { done(UIImage(cgImage: cg)) }
+        }
     }
 }
 
@@ -613,41 +650,71 @@ final class DYPlayerViewController: UIViewController {
         view.addGestureRecognizer(hold)
     }
 
+    /// pan 悬停两倍速状态（v151 双通道兜底：真机实锤部分静置触摸不触发 UILongPress，
+    /// 但 pan 必触发——pan 开始后位移持续 <60px 达 0.6s 也判定为悬停）
+    private var panBeganAt: Date?
+    private var pan2xFired = false
+
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
         let t = g.translation(in: view)
-        guard abs(t.y) > 100 else { return }   // 滑动阈值
-        g.setTranslation(.zero, in: view)
-        if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
-        DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
+        switch g.state {
+        case .began:
+            panBeganAt = Date()
+            pan2xFired = false
+        case .changed:
+            // 悬停判定：位移一直 <60px 且 pan 已开始 ≥0.6s → 两倍速（正常滑动 0.2s 内就超 60px，不误触）
+            if !pan2xFired, abs(t.y) < 60, abs(t.x) < 60,
+               let began = panBeganAt, Date().timeIntervalSince(began) >= 0.6 {
+                pan2xFired = true
+                startHold2x()
+            }
+            guard abs(t.y) > 100 else { return }   // 滑动阈值
+            g.setTranslation(.zero, in: view)
+            if t.y < 0 { advance() } else { rewind() }   // 上滑=下一条，下滑=上一条
+            DYLog.shared.log("FEEDCOLL swipe \(t.y < 0 ? "up" : "down") -> switch")
+        case .ended, .cancelled, .failed:
+            if pan2xFired { stopHold2x() }
+            pan2xFired = false
+            panBeganAt = nil
+        default: break
+        }
     }
 
     // MARK: - 触摸板悬停两倍速（用户规格：手指放到触摸区域不动=倍速，与滑动同区域）
     /// 是否处于悬停倍速中（角标显示用）
     private var isHolding2x = false
 
+    private func startHold2x() {
+        guard !isHolding2x else { return }
+        guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
+        holdWasPlaying = (p.timeControlStatus == .playing)
+        if holdWasPlaying {
+            p.rate = 2.0
+            isHolding2x = true
+            updateProgress()   // 立即刷新 ▶▶2x 角标
+            DYLog.shared.event("PLAYBACK 2x on (hold)")
+        } else {
+            DYLog.shared.event("PLAYBACK hold skip (paused)")
+        }
+    }
+
+    private func stopHold2x() {
+        guard isHolding2x else { return }
+        isHolding2x = false
+        if let p = PlayerManager.shared.player(at: currentIndex) {
+            if holdWasPlaying { p.play() } else { p.pause() }
+        }
+        updateProgress()
+        DYLog.shared.event("PLAYBACK 2x off (release)")
+    }
+
+    /// UILongPressGestureRecognizer 通道（静置不动手指；与 pan 悬停通道共用 start/stop，isHolding2x 互斥）
     @objc private func handleHold(_ g: UILongPressGestureRecognizer) {
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false else { return }
         switch g.state {
-        case .began:
-            guard let p = PlayerManager.shared.player(at: currentIndex) else { return }
-            holdWasPlaying = (p.timeControlStatus == .playing)
-            if holdWasPlaying {
-                p.rate = 2.0
-                isHolding2x = true
-                updateProgress()   // 立即刷新 ▶▶2x 角标
-            }
-            // 必留日志：v149 真机零日志无法定位是没触发还是暂停态——began 无论是否生效都记录
-            DYLog.shared.event("PLAYBACK hold began playing=\(holdWasPlaying ? 1 : 0)")
-        case .ended, .cancelled, .failed:
-            if isHolding2x {
-                isHolding2x = false
-                if let p = PlayerManager.shared.player(at: currentIndex) {
-                    if holdWasPlaying { p.play() } else { p.pause() }
-                }
-                updateProgress()
-                DYLog.shared.event("PLAYBACK 2x off (release)")
-            }
+        case .began: startHold2x()
+        case .ended, .cancelled, .failed: stopHold2x()
         default: break
         }
     }

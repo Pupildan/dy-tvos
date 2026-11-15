@@ -34,8 +34,10 @@ final class DYDanmakuClient {
         ("browser_name", "Chrome"),
         ("browser_version", "147.0.0.0"),
     ]
-    /// 分段窗口（v138 探针实锤：单次响应 ~460 条上限，60s 窗口可取全量）
-    private static let segmentWindowMs: Int = 60_000
+    /// 分段窗口（v151 探针实锤：**服务端单次响应最多只回 ~25-30s 的数据**——end_time 超出部分被忽略。
+    /// v138-v150 用 60s 窗口=每个窗口后半段 30s 永久丢失（同视频 60s 窗口取 1199 条 vs 30s 窗口取 1981 条），
+    /// 即「播 ~30s 有弹幕→断 ~30s」循环的真凶。20s 窗口+seen 去重=重叠覆盖全量。）
+    private static let segmentWindowMs: Int = 20_000
     /// 响应上限阈值（v140：段返回 ≥450 条视为被截断，自动对半递归拆分）
     private static let capThreshold = 450
 

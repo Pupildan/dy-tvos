@@ -296,7 +296,7 @@ final class DYFeedClient {
             if let ct = (a["create_time"] as? NSNumber)?.uint64Value {
                 info.createTimeText = Self.formatCreateTime(ct)
             }
-            // web 话题：text_extra 的 hashtag_name → 独立行；从 desc 剔除防重复（v144 分行要求）
+            // web 话题：text_extra 的 hashtag_name → 独立行；desc 内联话题统一剥掉防重复（v151 同 mobile 词法剔除）
             if let tex = a["text_extra"] as? [[String: Any]] {
                 var tags: [String] = []
                 for e in tex {
@@ -304,10 +304,9 @@ final class DYFeedClient {
                 }
                 if !tags.isEmpty {
                     info.hashtags = tags.joined(separator: " ")
-                    for t in tags { info.desc = info.desc.replacingOccurrences(of: t, with: "") }
-                    info.desc = info.desc.trimmingCharacters(in: .whitespacesAndNewlines)
                 }
             }
+            info.desc = Self.stripInlineTopics(info.desc)
             // 合集识别（v145：web mix_info）
             if let mix = a["mix_info"] as? [String: Any] {
                 info.isMix = true
@@ -500,10 +499,9 @@ final class DYFeedClient {
             info.desc = aweme.string(2) ?? ""
             info.hashtags = aweme.string(459) ?? ""
             info.createTimeText = Self.formatCreateTime(aweme.varint(16))
-            // 去重：desc 尾部内联的话题串与 f459 重复 → 从 desc 里剔除，话题单独一行显示（v144 用户要求分行）
-            if !info.hashtags.isEmpty, info.desc.contains(info.hashtags) {
-                info.desc = info.desc.replacingOccurrences(of: info.hashtags, with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-            }
+            // 去重（v151）：话题已在独立行显示，desc 内联话题一律剥掉——v144 只删「完整等于 f459 整串」
+            // 的形态，文案中夹话题（与 f459 部分重合）会漏 → 话题行与文案重复。按 #/＃ 词法逐个剥。
+            info.desc = Self.stripInlineTopics(info.desc)
             // 合集识别（v145：aweme f14 子消息——wire 观测内含合集名；存在即合集帖）
             if let mb = aweme.bytesFields(14).first, let mf = Proto.parse(mb) {
                 info.isMix = true
@@ -697,6 +695,15 @@ final class DYFeedClient {
 
     private var deviceID: String { UserDefaults.standard.string(forKey: "dy_device_id") ?? "0" }
     private var installID: String { UserDefaults.standard.string(forKey: "dy_install_id") ?? "0" }
+
+    /// v151：剥掉文案里的内联话题（#/＃ 开头的连续词串）。话题已由 f459/text_extra 独立成行展示，
+    /// 文案里残留会与话题行重复；此前只删「完整等于 f459 整串」漏掉文案中夹话题的形态。
+    static func stripInlineTopics(_ text: String) -> String {
+        guard text.contains("#") || text.contains("＃") else { return text }
+        guard let re = try? NSRegularExpression(pattern: "[#＃]\\s*[^\\s#＃]+") else { return text }
+        let out = re.stringByReplacingMatches(in: text, range: NSRange(text.startIndex..., in: text), withTemplate: " ")
+        return out.replacingOccurrences(of: "  ", with: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 
     /// 发布时间格式化（秒→"MM月dd日"，PC 版风格）；无效输入返回空。
     static func formatCreateTime(_ seconds: UInt64?) -> String {

@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v150**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v151**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -59,7 +59,8 @@
 | v147 | 确认键修正（.select）+ 评论功能实装 + 播放/暂停键恢复 | ✅ CI 过，待验收 |
 | v148 | 评论屏闪退修复（tvOS 焦点环境无可聚焦元素，真机日志实锤）+ 两倍速改长按确认键 0.6s + 快捷面板底部居中横排 + 右轨图标加大 | ❌ 焦点理论证伪（v148 真机评论仍闪退），但焦点兜底保留 |
 | v149 | 评论闪退真根因=ensureTTWID 队列内联回调+同队列 queue.sync 自等待死锁；两倍速改触摸板悬停 1s；面板真·底部居中+无 tint 玻璃；弹幕顶部 6 行/不重叠/280px/s；右轨图标回落 | ✅ 评论死锁修复真机验收通过（v149 会话 3 次开评论屏 0 闪退，CMT 全通）；触摸悬停真机零触发（容限太紧） |
-| v150 | 弹幕 canShoot 门控+轨道卡死 10s 自愈+DMSYNC 诊断；行距加大（轨道高 50）；悬停倍速 0.6s/漂移容限 140/必留日志+▶▶2x 角标；主页合集 toast 反馈（探针实锤作品列表需登录态） | ✅ CI 过，待验收 |
+| v150 | 弹幕 canShoot 门控+轨道卡死 10s 自愈+DMSYNC 诊断；行距加大（轨道高 50）；悬停倍速 0.6s/漂移容限 140/必留日志+▶▶2x 角标；主页合集 toast 反馈（探针实锤作品列表需登录态） | ✅ DMSYNC 立功：发射层无恙，暴露取数缺口 |
+| v151 | **弹幕空窗真根因**=服务端单请求最多回 ~30s 数据、60s 窗口永久丢后半段（1199 vs 1981 探针对比）→窗口 20s 重叠覆盖；标题重复=desc 内联话题词法剔除；非全屏黑边取色高斯模糊背景；悬停倍速 pan 小位移兜底双通道 | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -68,13 +69,11 @@
 - **已分析根因**：①每视频不同 CDN 域名 → 每次 acquire 新 DNS+TLS；②驱逐半径 ±2 窄，回看必重取；③v136 idle=2s 有误杀风险（本会话未触发但存在）；④redirect 302 出的 CDN 不可控（16s 尾部）。
 - **候选方案（待拍板）**：A 驱逐半径对称 ±3（解码器 ≤7 仍限内）；B idle 2s→4s 回退；C redirect>5s fallback static 重试；D 预取窗口 [idx-1, idx+3] 前向偏移。建议组合 A+B+D。
 
-### 5.2 弹幕间歇空窗（v150 双候选根因同治 + 诊断就位，待验收）
-- **现象（用户澄清）**：明显的「获取→展示」循环——一段时间一条都没有，过一会儿扎堆出现，~40s 周期循环。
-- **已排除**：数据空窗（直方图探针：1212 条连续无零桶）；数据不全（自适应切分已取全量）；**v149 真机日志：数据侧全净**（1172 条 7s 取完/0 重试/0 失败段）——空窗铁定在发射/轨道层。
-- **v150 两个候选根因同治**：①发射器 canShoot 门控（此前被轨道拒的弹幕被 shotIds 永久标记=白白损失，密集段过后无弹可射）；②DanmakuKit 轨道释放疑点（track.pause 的 removeAllAnimations 触发 animationDidStop(flag=false) 不释放 cell；animationDidStop(flag=true) 是唯一释放路径，真机是否触发未证）→ DMJANITOR 兜底（due>0 且 10s 零发射=轨道卡死 → clean() 强制清轨）。
-- **裁决机制（下轮日志）**：DMSYNC 每 4s 一条（t/due/marked/items/stall）——若空窗期 due>0 且 DMJANITOR 频繁触发=轨道释放真凶（下一步换成主动巡检 realFrame 释放或换渲染方案）；若空窗期 due=0=数据/offset_time 问题（换 offset_time 语义探针）。
-- **已做保留**：数据链全通；样式=纯白字无底无描边；顶部 6 行/不重叠/280px/s；dm_drop/dm_shoot/dm_items/dm_janitor 计数器。
-- **重启入口**：DYDanmakuOverlay.tick + 探针 `_tmp/danmaku_hist_probe.js` / `danmaku_segment_probe.js`。
+### 5.2 弹幕间歇空窗（v151 真根因已修复：服务端 30s 响应上限，待验收）
+- **真根因（v150 DMSYNC 日志 + 探针对比实锤）**：danmaku get_v2 **服务端单次请求最多只回 ~25-30s 的数据**（start_time 起算，end_time 超出被忽略）。v138-v150 的 60s 窗口=每个窗口后半段永久丢失（同一 14min 视频：60s 窗口取 1199 条 vs 30s 窗口取 1981 条）→「播 ~30s 有弹幕→断 ~30s→下一窗口前半段又有」的完美循环。v138 当年的验收只对比了"比之前多"，没验证完整性，漏掉了这个坑。
+- **修复**：segmentWindowMs 60s→20s（服务端返回 [start-3s, start+25s] ⊇ 20s 请求窗，seen 去重重叠覆盖全量）；cap-hit 自适应拆分保留。
+- **V150 已修并保留的**：发射器 canShoot 门控（被轨道拒不标记、腾出即补射）；DMJANITOR 轨道卡死 10s 自愈；DMSYNC 每 4s 诊断日志；顶部 6 行/不重叠/280px/s/轨道高 50。
+- **验收点**：长视频弹幕应全程连续无 30s 级空窗；日志 DMSYNC stall 应持续 ≤2（不再出现 stall=100+）；DMJANITOR 不应触发。
 
 ### 5.3 作者主页作品列表（两道墙已探明，需登录态解锁）
 - **web 墙**：`/aweme/v1/web/aweme/post/` → 403 `ArgusSecurityPlugin Uifid Not Found`（myDV 同 blocked）。UIFID 链已挖到 uz0 协程 POST 申请（X-Secsdk-Csrf-Token: DOWNGRADE），调用方 URL 未挖到。
@@ -131,6 +130,7 @@
 4. awemeType 在 mobile proto 探 {43,55,61} 但对图集返回 0/缺失——**awemeType 过滤实际无效**，dur=0 才是可用的无轨信号。
 5. desc=f2（含内联话题）、纯话题行=f459、省=f279、author f4（f3=昵称、f191=sec_uid、f2=uid 数字）、statistics=f10（f3赞 f2评 f6享 f11藏 f5播）、mix 候选=f14（内含合集名 f5）——**全部 wire 实测**。
 6. `authentication_token` mobile proto 无此字段且**传空能通**（弹幕/评论均验证）。
+7. **danmaku get_v2 服务端单请求最多回 ~25-30s 数据**（start_time 起算，end_time 超出被忽略）——分段窗口必须 ≤20s，60s 窗口会静默丢后半段（v151 实锤）。验收接口完整性必须对比小窗口全量条数，不能只看"比上一版多"。
 
 ### 6.5 架构/流程坑
 1. 同一路线连败 3+ 版 → 果断回退稳定底座，别让用户连续当测试员。
@@ -139,7 +139,7 @@
 4. tvOS 焦点链：面板/列表打开时按键走 SwiftUI（onExitCommand/按钮），VC.pressesBegan 收不到——两套面板的按键处理必须各自实现，且互不干扰（焦点链隔离是特性不是 bug）。
 5. 大响应/多连接的日志重复问题——分析前按行去重。
 6. **串行队列内联回调 + 同队列 queue.sync = 自等待死锁（v147/v148 评论「闪退」真根因，v148 焦点理论被真机证伪）**：ttwid 已缓存时 ensureTTWID 的 done() 在 danmaku 队列内联执行，DYCommentClient.fetchPages 在同队列调 ttwidValue（queue.sync）→ 队列永久卡死 → 主线程的 ttwidValue（DYFeedClient 翻页/PlayerManager 播放头）跟着卡死 → 应用冻结被杀。日志特征：CMT 请求一行都没出现 + 操作后不久 ROOT auto-start。修复=跨模块回调永远先 DispatchQueue.main.async 跳出工作队列。焦点兜底（可聚焦元素/Button）仍是有益实践，但不是本例根因。
-7. 两倍速触发方式用户三次改口径后定版：**触摸板悬停不动**（与滑动同区域），v146 触摸板长按 1.5s / v148 确认键长按 0.6s 都是弯路；最终=UILongPressGestureRecognizer minimumPressDuration 1.0 + allowableMovement 60。
+7. 两倍速触发方式用户三次改口径后定版：**触摸板悬停不动**（与滑动同区域），v146 触摸板长按 1.5s / v148 确认键长按 0.6s 都是弯路。**v151 双通道定版**：UILongPress（0.6s/漂移 140px）+ pan 小位移兜底（pan 开始后位移持续 <60px 达 0.6s 也判悬停）——真机实锤部分静置触摸不触发 LongPress 但 pan 必触发；两通道共用 start/stop 以 isHolding2x 互斥，▶▶2x 角标随 ▶▶ 显示。
 
 ## 7. 数据字段权威表（全部 wire/探针实测，禁止猜测）
 
