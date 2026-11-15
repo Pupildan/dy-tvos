@@ -39,7 +39,7 @@ final class DYWebViewBootstrap: NSObject {
                 // 20s 兜底超时：收割现有 cookie 后放行（不阻塞资料链）
                 self.deadlineTimer = Timer.scheduledTimer(withTimeInterval: 20, repeats: false) { [weak self] _ in
                     DYLog.shared.log("WEBBOOT deadline 兜底收割")
-                    self?.harvestNow(tag: "deadline")
+                    self?.harvestViaJS(tag: "deadline")
                     self?.finish()
                 }
                 DYLog.shared.log("WEBBOOT load douyin home (invisible shim webview)")
