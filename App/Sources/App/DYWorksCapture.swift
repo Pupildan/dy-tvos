@@ -21,6 +21,8 @@ struct DYCapturedWork {
     let comment: Int
     let collect: Int
     let share: Int
+    /// v175 合集内集数（myDV nx3 同款：mix_info.statis.current_episode，0=无则按序号兜底）
+    let episode: Int
 }
 
 /// v174 数据泵全面重构（真机日志实锤的三大问题）：
@@ -68,6 +70,10 @@ final class DYWorksCapture: NSObject {
     private var lastMaxCursor = -1
     private var postPagesFetched = 0
     private let postMaxPages = 8
+    /// v175 去重：RootView.onChange 与屏 onAppear 曾双发 profcap/postcap（真机日志实锤，白等 2s）
+    private var lastAuthorQueueAt = Date.distantPast
+    /// v175 aweme/detail 拿到的权威合集名（mix/aweme 响应里 mixName 常空）
+    private var pendingMixName = ""
 
     // MARK: - 对外入口
 
@@ -94,7 +100,10 @@ final class DYWorksCapture: NSObject {
                 }
             }
             self.ensureSession()
-            // 资料每次刷新（屏实例新，user 空）；同作者续传未完分页，新作者从第 0 页开始
+            // 资料每次刷新（屏实例新，user 空），但 3s 内同作者只排一次队（双 fire 去重）
+            let now = Date()
+            guard now.timeIntervalSince(self.lastAuthorQueueAt) > 3 else { return }
+            self.lastAuthorQueueAt = now
             self.pendingQueue.append(Self.profileFetchURL(secUid: secUid))
             if sameAuthor {
                 if self.capturedHasMore, self.postPagesFetched < self.postMaxPages {
@@ -106,14 +115,20 @@ final class DYWorksCapture: NSObject {
         }
     }
 
-    /// 合集内容：页面上下文 fetch mix/aweme（§5.3⑤A 路线，v172 真机验证成立）
-    func fetchMix(mixId: String) {
-        guard !mixId.isEmpty else { return }
+    /// 合集内容：页面上下文 fetch mix/aweme（§5.3⑤A 路线，v172 真机验证成立）。
+    /// v175 权威化（myDV 反编译实锤）：手机端 proto 解析器 s13 **从不填 MixInfo**（恒 null），
+    /// f14/f6 无权威依据且真机合集错位 → mixId 为空时先打 aweme/detail（myDV u11:3992 同款端点）
+    /// 拿 aweme_detail.mix_info.mix_id，再发 mix/aweme。
+    func fetchMix(mixId: String, awemeId: String) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.lastActivityAt = Date()
             self.ensureSession()
-            self.pendingQueue.append(Self.mixFetchURL(mixId: mixId))
+            if !mixId.isEmpty {
+                self.pendingQueue.append(Self.mixFetchURL(mixId: mixId))
+            } else if !awemeId.isEmpty {
+                self.pendingQueue.append(Self.detailFetchURL(awemeId: awemeId))
+            }
         }
     }
 
@@ -123,12 +138,23 @@ final class DYWorksCapture: NSObject {
         "/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&publish_video_strategy_type=2&source=channel_page&_dytag=profcap"
     }
 
+    /// v175 逐参数照抄 myDV UserWorksResponse 方法（u11.java 3678-3703，反编译实锤）：
+    /// sec_user_id/count/max_cursor/locate_item_id/locate_query/show_live_replay_strategy/
+    /// need_time_list(首页1 翻页0)/time_list_query/whale_cut_token/cut_version/
+    /// publish_video_strategy_type/from_user_page/version_code=290100/version_name=29.1.0
+    /// v174 缺 6 参数且 need_time_list 恒 1 → 第二页 200 空（真机 len=17 实锤）。
     private static func postFetchURL(secUid: String, maxCursor: Int) -> String {
-        "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_query=false&need_time_list=1&from_user_page=1&publish_video_strategy_type=2&_dytag=postcap"
+        let needTimeList = maxCursor == 0 ? "1" : "0"
+        return "/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=\(secUid)&count=20&max_cursor=\(maxCursor)&locate_item_id=&locate_query=false&show_live_replay_strategy=1&need_time_list=\(needTimeList)&time_list_query=0&whale_cut_token=&cut_version=1&publish_video_strategy_type=2&from_user_page=1&version_code=290100&version_name=29.1.0&_dytag=postcap"
     }
 
     private static func mixFetchURL(mixId: String) -> String {
         "/aweme/v1/web/mix/aweme/?mix_id=\(mixId)&cursor=0&count=20&source=channel_page&_dytag=mixcap"
+    }
+
+    /// v175 myDV u11:3992 同款 aweme/detail（§7.2 探针全通）——权威取 mix_info.mix_id
+    private static func detailFetchURL(awemeId: String) -> String {
+        "/aweme/v1/web/aweme/detail/?aweme_id=\(awemeId)&request_source=600&origin_type=quick_player&device_platform=webapp&aid=6383&channel=channel_pc_web&_dytag=detailcap"
     }
 
     /// 页面上下文 fetch（hook 已在 doc-start 注入，响应自动进 __dyCap）
@@ -224,15 +250,18 @@ final class DYWorksCapture: NSObject {
                     DYLog.shared.event("SESSION ready rs=\(rs) → 队列 \(self.pendingQueue.count) 条待发")
                 }
             }
-            // 发队列（每 tick 一条，天然 1s 节流）
-            if self.sessionReady, let url = self.pendingQueue.first {
-                self.pendingQueue.removeFirst()
-                self.lastActivityAt = Date()
-                self.totalCap += 1
-                let tagWord = url.contains("_dytag=profcap") ? "profcap"
-                    : url.contains("_dytag=postcap") ? "postcap" : "mixcap"
-                DYLog.shared.log("SESSION fire \(tagWord) → \(url.prefix(100))")
-                self.evalJS(Self.fetchJS(url: url), tag: tagWord)
+            // 发队列（v175 提速：每 tick 连发 2 条，profile+post 不再串行等 2s）
+            if self.sessionReady, !self.pendingQueue.isEmpty {
+                for _ in 0..<min(2, self.pendingQueue.count) {
+                    let url = self.pendingQueue.removeFirst()
+                    self.lastActivityAt = Date()
+                    self.totalCap += 1
+                    let tagWord = url.contains("_dytag=profcap") ? "profcap"
+                        : url.contains("_dytag=postcap") ? "postcap"
+                        : url.contains("_dytag=detailcap") ? "detailcap" : "mixcap"
+                    DYLog.shared.log("SESSION fire \(tagWord) → \(url.prefix(100))")
+                    self.evalJS(Self.fetchJS(url: url), tag: tagWord)
+                }
             }
             // 分发响应
             for item in cap {
@@ -252,6 +281,9 @@ final class DYWorksCapture: NSObject {
                 } else if u.contains("_dytag=postcap") {
                     DYLog.shared.event("CAP postcap len=\(b.count)")
                     self.handleWorks(b)
+                } else if u.contains("_dytag=detailcap") {
+                    DYLog.shared.event("CAP detailcap len=\(b.count)")
+                    self.handleDetail(b)
                 } else if u.contains("_dytag=mixcap") {
                     DYLog.shared.event("CAP mixcap len=\(b.count)")
                     self.handleMix(b)
@@ -299,7 +331,7 @@ final class DYWorksCapture: NSObject {
         }
         var works: [DYCapturedWork] = []
         var hasMore = false
-        var maxCursor = lastMaxCursor
+        var nextCursor = lastMaxCursor
         var mixName = ""
         if let d = body.data(using: .utf8),
            let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any] {
@@ -307,17 +339,20 @@ final class DYWorksCapture: NSObject {
                 // grab 已精简的形态
                 works = Self.parseSlim(slim)
                 hasMore = (obj["hasMore"] as? Int ?? 0) != 0
-                if let mc = obj["maxCursor"] as? Int { maxCursor = mc }
+                // v175 myDV 权威：翻页游标 = 响应 cursor（UserWorksResponse.getCursor()），非 max_cursor
+                if let c = obj["cursor"] as? Int, c > 0 { nextCursor = c }
+                else if let mc = obj["maxCursor"] as? Int { nextCursor = mc }
                 mixName = obj["mixName"] as? String ?? ""
             } else if let list = obj["aweme_list"] as? [[String: Any]] {
                 // 裸 JSON 兜底（grab 端 JSON.parse 失败/超长响应）
                 works = Self.parseFull(list)
                 hasMore = (obj["has_more"] as? Int ?? 0) != 0
-                if let mc = obj["max_cursor"] as? Int { maxCursor = mc }
+                if let c = obj["cursor"] as? Int, c > 0 { nextCursor = c }
+                else if let mc = obj["max_cursor"] as? Int { nextCursor = mc }
                 if let mi = obj["mix_info"] as? [String: Any] { mixName = mi["mix_name"] as? String ?? "" }
             }
         }
-        DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) maxCursor=\(maxCursor)")
+        DYLog.shared.event("CAP post ok n=\(works.count) hasMore=\(hasMore ? 1 : 0) cursor=\(nextCursor)")
         guard !works.isEmpty else { return }
         let known = Set(capturedWorks.map { $0.id })
         let fresh = works.filter { !known.contains($0.id) }
@@ -331,15 +366,38 @@ final class DYWorksCapture: NSObject {
                 self.delegate?.worksCaptureDidCapture(works: self.capturedWorks, hasMore: self.capturedHasMore)
             }
         }
-        // v174 分页引擎（v174 前靠网页滚动从未成功）：hasMore 自动排队下一页
-        if hasMore, maxCursor != lastMaxCursor, postPagesFetched < postMaxPages, !currentAuthorSec.isEmpty {
+        // v175 分页引擎：myDV 完整参数 + 响应 cursor 翻页（v174 用 max_cursor + 缺 6 参数 → 第二页空）
+        if hasMore, nextCursor != lastMaxCursor, postPagesFetched < postMaxPages, !currentAuthorSec.isEmpty {
             postPagesFetched += 1
-            lastMaxCursor = maxCursor
-            let url = Self.postFetchURL(secUid: currentAuthorSec, maxCursor: maxCursor)
-            DYLog.shared.log("CAP post page \(postPagesFetched) queued maxCursor=\(maxCursor)")
+            lastMaxCursor = nextCursor
+            let url = Self.postFetchURL(secUid: currentAuthorSec, maxCursor: nextCursor)
+            DYLog.shared.log("CAP post page \(postPagesFetched) queued cursor=\(nextCursor)")
             pendingQueue.append(url)
         }
         _ = mixName
+    }
+
+    /// v175 权威合集 id：aweme/detail 响应 → aweme_detail.mix_info → mix/aweme
+    /// （myDV 手机端 s13 恒不填 MixInfo；f14/f6 无权威依据且真机合集错位，弃用）
+    private func handleDetail(_ body: String) {
+        guard let d = body.data(using: .utf8),
+              let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any] else {
+            DYLog.shared.log("CAP detail parse fail body=\(body.prefix(60))")
+            return
+        }
+        let detail = obj["aweme_detail"] as? [String: Any] ?? obj
+        guard let mi = detail["mix_info"] as? [String: Any] else {
+            DYLog.shared.event("CAP detail no mix_info keys=\(detail.keys.count)")
+            return
+        }
+        var mid = ""
+        if let s = mi["mix_id"] as? String { mid = s }
+        else if let n = mi["mix_id"] as? NSNumber { mid = n.stringValue }
+        let name = mi["mix_name"] as? String ?? ""
+        DYLog.shared.event("CAP detail mixId=\(mid) name=\(name)")
+        guard !mid.isEmpty else { return }
+        pendingMixName = name
+        pendingQueue.insert(Self.mixFetchURL(mixId: mid), at: 0)
     }
 
     /// 解析 mix/aweme 响应 → delegate（grab slim 或裸 JSON 兜底）
@@ -360,14 +418,15 @@ final class DYWorksCapture: NSObject {
                 if let mi = obj["mix_info"] as? [String: Any] { mixName = mi["mix_name"] as? String ?? "" }
             }
         }
-        DYLog.shared.event("CAP mix ok n=\(works.count) mixName=\(mixName)")
+        DYLog.shared.event("CAP mix ok n=\(works.count) mixName=\(mixName.isEmpty ? pendingMixName : mixName)")
         guard !works.isEmpty else {
             DYLog.shared.log("CAP mix empty body=\(body.prefix(60))")
             return
         }
         let mixIdOfFirst = works.first?.mixId ?? ""
+        let finalName = mixName.isEmpty ? pendingMixName : mixName
         DispatchQueue.main.async { [weak self] in
-            self?.delegate?.worksCaptureDidCapture(mixWorks: works, mixId: mixIdOfFirst, mixName: mixName)
+            self?.delegate?.worksCaptureDidCapture(mixWorks: works, mixId: mixIdOfFirst, mixName: finalName)
         }
     }
 
@@ -393,7 +452,8 @@ final class DYWorksCapture: NSObject {
                 digg: st.indices.contains(0) ? st[0] : 0,
                 comment: st.indices.contains(1) ? st[1] : 0,
                 collect: st.indices.contains(2) ? st[2] : 0,
-                share: st.indices.contains(3) ? st[3] : 0
+                share: st.indices.contains(3) ? st[3] : 0,
+                episode: (w["ep"] as? NSNumber)?.intValue ?? 0
             ))
         }
         return works
@@ -422,10 +482,15 @@ final class DYWorksCapture: NSObject {
             let st = a["statistics"] as? [String: Any] ?? [:]
             func n(_ key: String) -> Int { (st[key] as? NSNumber)?.intValue ?? 0 }
             var mixName = ""; var mixId = ""
+            var episode = 0
             if let mi = a["mix_info"] as? [String: Any] {
                 mixName = mi["mix_name"] as? String ?? ""
                 if let mid = mi["mix_id"] as? String { mixId = mid }
                 else if let midn = mi["mix_id"] as? NSNumber { mixId = midn.stringValue }
+                // myDV nx3: mixInfo.statis.currentEpisode
+                if let statis = mi["statis"] as? [String: Any], let ep = statis["current_episode"] as? NSNumber {
+                    episode = ep.intValue
+                }
             }
             works.append(DYCapturedWork(
                 id: id,
@@ -440,7 +505,8 @@ final class DYWorksCapture: NSObject {
                 digg: n("digg_count"),
                 comment: n("comment_count"),
                 collect: n("collect_count"),
-                share: n("share_count")
+                share: n("share_count"),
+                episode: episode
             ))
         }
         return works
@@ -480,7 +546,7 @@ final class DYWorksCapture: NSObject {
       function grab(u,b){ try{
         if(!u||!b) return;
         var s=String(u);
-        if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0) return;
+        if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0&&s.indexOf('aweme/detail')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
         if(s.indexOf('aweme/post')>=0||s.indexOf('mix/aweme')>=0){
           var j=null; try{ j=JSON.parse(body); }catch(e){}
@@ -497,13 +563,14 @@ final class DYWorksCapture: NSObject {
               else if(v.origin_cover&&v.origin_cover.url_list&&v.origin_cover.url_list[0])cov=v.origin_cover.url_list[0];
               var mx=''; if(a.mix_info&&a.mix_info.mix_name)mx=a.mix_info.mix_name;
               var mxid=''; if(a.mix_info&&a.mix_info.mix_id)mxid=String(a.mix_info.mix_id);
+              var ep=0; if(a.mix_info&&a.mix_info.statis&&a.mix_info.statis.current_episode)ep=a.mix_info.statis.current_episode;
               var st=[0,0,0,0];
               if(a.statistics){st=[a.statistics.digg_count||0,a.statistics.comment_count||0,a.statistics.collect_count||0,a.statistics.share_count||0];}
-              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,mx:mx,mxid:mxid,
+              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,mx:mx,mxid:mxid,ep:ep,
                 st:st.join(','),imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
             }
             var mn=''; if(j.mix_info&&j.mix_info.mix_name)mn=j.mix_info.mix_name;
-            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),mixName:mn})});
+            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0),cursor:(j.cursor||0),mixName:mn})});
             return;
           }
         }

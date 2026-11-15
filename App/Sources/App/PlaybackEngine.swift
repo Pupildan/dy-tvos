@@ -291,16 +291,31 @@ final class PlaybackEngine: ObservableObject {
 
     /// v174 用户操作「回到推荐」：移除作品/合集段，推回正常视频流（= 锚点视频的下一格）。
     /// 返回应跳转的 feed 位置。
+    /// ⚠️ v175 崩溃修复（v174 真机实锤「回到推荐」闪退）：段区间 key 必须先剔除再重映射，
+    /// 否则 oldPos 对段内 key 产生负数/重复 key → Dictionary(uniqueKeysWithValues:) fatal。
     @discardableResult
     func removeWorksSegment() -> Int {
         guard let seg = worksSegment else { return index }
         let (anchor, start, count) = (seg.anchor, seg.start, seg.count)
         func oldPos(_ p: Int) -> Int { p <= anchor ? p : p - count }
-        rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.map { (oldPos($0.key), $0.value) })
-        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.map { (oldPos($0.key), $0.value) })
-        mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.map { (oldPos($0.key), $0.value) })
-        durations = Dictionary(uniqueKeysWithValues: durations.map { (oldPos($0.key), $0.value) })
-        infos = Dictionary(uniqueKeysWithValues: infos.map { (oldPos($0.key), $0.value) })
+        func remap(_ dict: [Int: Int]) -> [Int: Int] {
+            Dictionary(uniqueKeysWithValues: dict.compactMap { (p, v) -> (Int, Int)? in
+                (p >= start && p < start + count) ? nil : (oldPos(p), v)
+            })
+        }
+        rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.compactMap { (p, v) -> (Int, [UInt8])? in
+            (p >= start && p < start + count) ? nil : (oldPos(p), v)
+        })
+        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.compactMap { (p, v) -> (Int, URL?)? in
+            (p >= start && p < start + count) ? nil : (oldPos(p), v)
+        })
+        mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.compactMap { (p, v) -> (Int, Date)? in
+            (p >= start && p < start + count) ? nil : (oldPos(p), v)
+        })
+        durations = remap(durations)
+        infos = Dictionary(uniqueKeysWithValues: infos.compactMap { (p, v) -> (Int, DYVideoInfo)? in
+            (p >= start && p < start + count) ? nil : (oldPos(p), v)
+        })
         var newIds: [String] = []
         var newUrls: [URL] = []
         for i in 0..<urls.count where !(i >= start && i < start + count) {

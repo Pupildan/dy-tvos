@@ -66,6 +66,8 @@ final class DYQuickPanelModel: ObservableObject {
     /// 合集屏数据钥匙
     var mixId = ""
     var mixTitle = ""
+    /// v175 权威路线备用：mobile 源无可靠 mixId 时，用 aweme/detail 按视频 id 取 mix_info.mix_id
+    var mixAwemeId = ""
     /// 面板对应的视频 id（评论请求用）
     var awemeId = ""
     /// 当前视频信息（主页头像/合集条件显示）
@@ -131,14 +133,16 @@ final class DYQuickPanelModel: ObservableObject {
     }
 
     func selectMix() {
-        guard let mid = info?.mixId, !mid.isEmpty else {
+        let mid = info?.mixId ?? ""
+        guard !mid.isEmpty || !awemeId.isEmpty else {
             noteAndClose("mix")
-            showToast("该视频缺少合集 id，暂不支持浏览")
+            showToast("该视频没有合集信息")
             return
         }
-        DYLog.shared.event("QUICK select mix id=\(mid)")
+        DYLog.shared.event("QUICK select mix id=\(mid) aweme=\(awemeId)")
         isOpen = false
         mixId = mid
+        mixAwemeId = awemeId
         mixTitle = info?.mixName ?? ""
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
             self?.isMixOpen = true
@@ -747,7 +751,7 @@ struct DYMixScreen: View {
             focused = "close"
             mixName = model.mixTitle
             DYWorksCapture.shared.delegate = self
-            DYWorksCapture.shared.fetchMix(mixId: model.mixId)
+            DYWorksCapture.shared.fetchMix(mixId: model.mixId, awemeId: model.mixAwemeId)
         }
         .onExitCommand { model.isMixOpen = false }   // Menu 关闭回播放
         .transition(.opacity)
@@ -825,7 +829,7 @@ struct DYMixScreen: View {
                     } else {
                         Color.white.opacity(0.1)
                     }
-                    Text("第 \((works.firstIndex(where: { $0.id == w.id }).map { $0 + 1 } ?? 0)) 集")
+                    Text("第 \(w.episode > 0 ? w.episode : (works.firstIndex(where: { $0.id == w.id }).map { $0 + 1 } ?? 0)) 集")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.white)
                         .padding(.horizontal, 8)

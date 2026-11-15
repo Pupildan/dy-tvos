@@ -80,7 +80,8 @@
 | v170 | **三连修复**：①点播不生效真根因=playWork 只改 engine.index 没通知 collection，下一按 reconcile 循环把 index 退回旧视觉位置（ENGINE prev 连环实锤）→ 发 `DYWorksJump` 通知让播放层 scrollTo；②聚焦视觉（白描边+放大+首批到达自动聚焦第一个作品）；③自动加载=首批即 teardown 真凶 → 累积去重+持续滚动截获（停滞 15s/60s 收摊） | ✅ CI 过；真机点播正确（works jump idx 精准），但暴露两新坑（v171 修） |
 | v171 | ①点作品播别的视频=jump 同步通知时 insertItems 未跑，targetY 被旧 contentSize 钳底 → jumpToWorksIndex 轮询等 item 就绪再滚；②作者页滑动穿透切视频=handlePan 没护栏 isProfileOpen/isCommentOpen → 焦点屏打开时 pan/pressesBegan 全放行焦点引擎 | ✅ 真机点播/滑动正确；暴露右轨无数据/回不到推荐流/合集占位（v172 修） |
 | v172 | ①右轨数据：JS 提取 statistics（赞/评/藏/享）→ DYCapturedWork → DYVideoInfo；②回推荐流：`insertWorks` 插入式重建（已看 feed 前缀+作品段+feed 剩余）替代尾部 append；③合集实装：DYVideoInfo 补 mixId（f14 f6/mix_info）→ 快捷面板合集项 → DYMixScreen → `fetchMix` 页面上下文 fetch mix/aweme（§5.3⑤A 路线首次实装）→ hook 拦截 → 网格点播 | ⚠️ 真机：插整段语义被用户否（必须刷完所有作品才回 feed）；合集获取太慢（等首页 challenge complete）→ v173 |
-| v173 | ①**单条插入**（用户拍板）：`insertSingleWork`=选中作品插当前播放位下一格，看完 down 一下就回 feed 剩余、up 回已看 feed，随时退出；②**合集提速**：复用活的作者页会话（零加载直取）+ 新会话 interactive+1.5s 即 fetch（不等 challenge complete）+ profile 收摊窗口 15/25s→25/30s 扩大复用面 | ✅ CI 过，待真机验收 |
+| v173 | ①**单条插入**（用户拍板）：`insertSingleWork`=选中作品插当前播放位下一格；②**合集提速**：复用活的作者页会话 + 新会话 interactive+1.5s 即 fetch | ⚠️ 真机：单条插入语义又被否（要自动刷段）；作品分页靠网页滚动实锤从未成功；作者页每次新建会话仍慢；二次合集测试卡死会话冷启动 → v174 |
+| v174 | ①**DYWorksCapture 重构=持久会话+全页面上下文 fetch 泵**：一次会话（首页过挑战），profile/aweme-post/mix 全用 `_dytag` 标记 fetch（v172 真机已验证页面 fetch 包装带签名），hasMore 自动排队下一页 max_cursor（不再依赖网页滚动），空闲 30s/180s 收摊，裸 JSON 兜底解析（1.2MB 大响应 grab parse fail 实锤）；②**点播语义定版**：段插入回归（未操作自动刷作者作品段/合集段，刷完自动回 feed）+ 快捷面板新增「回到推荐」（段激活时显示，`removeWorksSegment` 立即推回正常流） | ✅ CI 过，待真机验收 |
 
 ## 5. 未解决问题清单（按优先级）
 

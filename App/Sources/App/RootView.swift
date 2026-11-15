@@ -77,15 +77,11 @@ struct RootView: View {
             DanmakuOverlay.globalEnabled = settings.danmakuOn
             DYLog.shared.log("ROOT auto-start \(DYBuild.version)")
         }
-        // v163 作品列表 WebView 截获原型：作者主页一打开，离屏 WebView 加载作者页、
-        // 截获页面自己发出的 aweme/post 响应（真 168 签名）→ 全量日志。
-        // 原型验证用，独立于 DYProfileClient 数据流，零 UI 改动。
+        // v175：移除此处 v163 原型的重复 fetch（DYProfileScreen.onAppear 已发）；
+        // 真机日志实锤双发 profcap/postcap 白等 2s，且双发的队列会互相踩分页游标。
         .onChange(of: quick.isProfileOpen) { open in
             guard open else { return }
-            let sec = quick.profileSecUid
-            guard !sec.isEmpty else { return }
-            DYLog.shared.log("ROOT profile open → WORKSCAP secUid=\(sec.prefix(16))...")
-            DYWorksCapture.shared.fetch(secUid: sec)
+            DYLog.shared.log("ROOT profile open → \(quick.profileSecUid.prefix(16))... (数据由 DYProfileScreen.onAppear 发起)")
         }
     }
 }
