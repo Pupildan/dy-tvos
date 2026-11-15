@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v161**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v162**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -70,7 +70,8 @@
 | v158 | ①资料接口回退 v153 最小头配方；②触摸倍速按图上方案实现（0.8s/10px 紧容差/失败排序）；③确认键长按保留 | ❌ 触摸悬停真机仍不触发——**用户拍板最终删除** |
 | v159 | **触摸悬停最终删除**（恢复 v156 手势）；主页深挖：反编译 classes2/3.dex 得 myDV 完整 UI 层——作品=aweme/post、作者合集列表=**series/list（探针全通 sc=0，字段 series_infos）**、合集内容=series/aweme/aweme/detail；发现 **z() 引导**（u11:5400） | ✅ 真机定论：URLSession 也被 jsvmp 挑战页拦（challenge=1） |
 | v160 | 隐形 WebView 引导第一版（公开 WebKit 模块） | ❌ CI 实锤 **tvOS 无公开 WebKit**（unable to resolve WebKit） |
-| v161 | **改回 v2-v8 真机验证过的私有方案**：DYWebViewShim.m 回归（dlopen 私有 WebKit.framework + objc_msgSend 建 WKWebView，桥接头 DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER）+ 引导改 isLoading 轮询 + evaluateJavaScript 收 document.cookie（挑战页 JS 种的 s_v_web_id/__ac_signature/uifid）+ 失败 2s 重试 6 轮 + 20s 兜底 | ✅ CI 过，待真机定论（日志 WEBBOOT 行） |
+| v161 | **改回 v2-v8 真机验证过的私有方案**：DYWebViewShim.m 回归（dlopen 私有 WebKit.framework + objc_msgSend 建 WKWebView，桥接头 DYTV-Bridging-Header.h + project.yml SWIFT_OBJC_BRIDGING_HEADER）+ 引导改 isLoading 轮询 + evaluateJavaScript 收 document.cookie（挑战页 JS 种的 s_v_web_id/__ac_signature/uifid）+ 失败 2s 重试 6 轮 + 20s 兜底 | ✅ **真机引导成功**（WEBBOOT 收到 __ac_signature+s_v_web_id）；资料时好时坏=连发限流 |
+| v162 | **资料获取稳定化**：按作者缓存 10 分钟 + 请求节流 ≥1.5s + 空响应自动重试一次 + 作品探测每会话每作者一次 + 资料屏失败态提示（连发限流是"时好时坏"根因：快速切作者时第一发过、第二发被静默拒） | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 

@@ -23,10 +23,16 @@ final class DYProfileClient {
     static let shared = DYProfileClient()
     private let host = "https://www.douyin.com"
     private let session: URLSession
-    /// cookie 罐（myDV sl4 同构：收所有 Set-Cookie；关键键=UIFID_TEMP）
+    /// cookie 罐（myDV sl4 同构：收所有 Set-Cookie；关键键=UIFID_TEMP/s_v_web_id/__ac_signature）
     private var jar: [String: String] = [:]
     private var inflight = false
     private let queue = DispatchQueue(label: "dy.profile")
+    /// v162 稳定化：资料缓存（连发限流护栏——同作者 10 分钟内回缓存）
+    private var profileCache: [String: (user: DYProfileUser, worksCount: Int, at: Date)] = [:]
+    /// 作品探测结果缓存（每会话每作者只探一次）
+    private var worksProbeCache: [String: Int] = [:]
+    /// 上次资料/作品请求完成时刻（节流 ≥1.5s）
+    private var lastFetchEnd = Date.distantPast
 
     /// x-secsdk-web-signature 密钥（myDV u11.i() 硬编码常量，探针实测有效）
     private static let secKey = "A96D855A08C0A9707F8BEF0D9A527E4E"
@@ -102,25 +108,107 @@ final class DYProfileClient {
     // MARK: - 对外
 
     /// 取作者资料 + 试探作品列表。onDone 主队列；nil=失败。
-    /// 链路：隐形 WebView 引导（jsvmp 挑战信任 cookie）→ 首页 5 跳引导 → UIFID_TEMP → 资料/作品。
+    /// v162 稳定化：①按作者缓存 10 分钟（真机日志实锤连发限流——同一作者快速重复请求会被
+    /// 200 空静默拒绝）；②请求节流 ≥1.5s；③空响应自动重试一次；④WebView 引导一次性。
+    /// 链路：隐形 WebView 引导（jsvmp 挑战信任 cookie）→ UIFID_TEMP → 资料/作品。
     func profile(for secUid: String, onDone: @escaping (DYProfileUser?, Int) -> Void) {
         guard !secUid.isEmpty else { onDone(nil, 0); return }
         queue.async { [weak self] in
             guard let self else { return }
+            if let hit = self.profileCache[secUid], Date().timeIntervalSince(hit.at) < 600 {
+                DispatchQueue.main.async { onDone(hit.user, hit.worksCount) }
+                return
+            }
             DYWebViewBootstrap.shared.run { [weak self] in
                 guard let self else { return }
-                self.bootstrapHome { [weak self] in
+                self.ensureUIFID { [weak self] in
                     guard let self else { return }
-                    self.ensureUIFID { [weak self] in
-                        guard let self else { return }
-                        self.fetchProfile(secUid: secUid) { user in
+                    self.fetchProfileThrottled(secUid: secUid) { user in
+                        // 作品探测：本会话每个作者只探一次（空响应也缓存，避免连发限流）
+                        let probed = self.worksProbeCache[secUid]
+                        if let probed {
+                            self.finishProfile(secUid: secUid, user: user, worksCount: probed, onDone: onDone)
+                        } else {
                             self.fetchWorks(secUid: secUid) { count in
-                                DispatchQueue.main.async { onDone(user, count) }
+                                self.worksProbeCache[secUid] = count
+                                self.finishProfile(secUid: secUid, user: user, worksCount: count, onDone: onDone)
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private func finishProfile(secUid: String, user: DYProfileUser?, worksCount: Int,
+                               onDone: @escaping (DYProfileUser?, Int) -> Void) {
+        if let user {
+            profileCache[secUid] = (user, worksCount, Date())
+        }
+        DispatchQueue.main.async { onDone(user, worksCount) }
+    }
+
+    /// 节流版资料请求：距上次资料/作品请求 ≥1.5s（连发限流护栏），空响应自动重试一次
+    private func fetchProfileThrottled(secUid: String, onDone: @escaping (DYProfileUser?) -> Void) {
+        queue.async { [weak self] in
+            guard let self else { return }
+            let wait = max(0, self.lastFetchEnd.addingTimeInterval(1.5).timeIntervalSinceNow)
+            DispatchQueue.global().asyncAfter(deadline: .now() + wait) { [weak self] in
+                guard let self else { return }
+                self.fetchProfileOnce(secUid: secUid) { user in
+                    if let user {
+                        DispatchQueue.main.async { onDone(user) }
+                        return
+                    }
+                    // 空响应：1.2s 后重试一次（日志实锤：紧跟的第二发被拒，隔一会能过）
+                    DispatchQueue.global().asyncAfter(deadline: .now() + 1.2) { [weak self] in
+                        guard let self else { return }
+                        self.fetchProfileOnce(secUid: secUid) { user2 in
+                            DispatchQueue.main.async { onDone(user2) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func fetchProfileOnce(secUid: String, onDone: @escaping (DYProfileUser?) -> Void) {
+        lastFetchEnd = Date()
+        let params: [(String, String)] = Self.webCommon + [
+            ("sec_user_id", secUid),
+            ("publish_video_strategy_type", "2"),
+            ("source", "channel_pc_web"),
+            ("version_code", "290100"), ("version_name", "29.1.0"),
+            ("msToken", self.msToken()),
+            ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
+        ]
+        params.append(contentsOf: self.d0Extras())   // myDV D0: verifyFp/fp/webid（jar 有才加）
+        self.signedGET("/aweme/v1/web/user/profile/other/", params: params,
+                       referer: "https://www.douyin.com/user/" + secUid) { data, resp in
+            self.absorb(resp)
+            guard let data, !data.isEmpty,
+                  let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+                  (obj["status_code"] as? Int ?? -1) == 0,
+                  let user = obj["user"] as? [String: Any] else {
+                DYLog.shared.event("PROFILE fetch fail http=\((resp as? HTTPURLResponse)?.statusCode ?? -1) len=\(data?.count ?? 0)")
+                onDone(nil); return
+            }
+            var avatar = ""
+            if let at = user["avatar_thumb"] as? [String: Any], let ul = at["url_list"] as? [String] {
+                avatar = ul.first(where: { $0.hasPrefix("http") }) ?? ""
+            }
+            let u = DYProfileUser(
+                nickname: user["nickname"] as? String ?? "",
+                avatarUrl: avatar,
+                secUid: user["sec_uid"] as? String ?? secUid,
+                signature: user["signature"] as? String ?? "",
+                followerCount: (user["follower_count"] as? NSNumber)?.intValue ?? 0,
+                followingCount: (user["following_count"] as? NSNumber)?.intValue ?? 0,
+                awemeCount: (user["aweme_count"] as? NSNumber)?.intValue ?? 0,
+                totalFavorited: (user["total_favorited"] as? NSNumber)?.intValue ?? 0
+            )
+            DYLog.shared.event("PROFILE ok nick=\(u.nickname) fans=\(u.followerCount) works=\(u.awemeCount)")
+            onDone(u)
         }
     }
 
@@ -241,46 +329,7 @@ final class DYProfileClient {
         }
     }
 
-    // MARK: - 作者资料（user/profile/other，探针实测匿名 sc=0）
-
-    private func fetchProfile(secUid: String, onDone: @escaping (DYProfileUser?) -> Void) {
-        var params: [(String, String)] = Self.webCommon + [
-            ("sec_user_id", secUid),
-            ("publish_video_strategy_type", "2"),
-            ("source", "channel_pc_web"),
-            ("version_code", "290100"), ("version_name", "29.1.0"),
-            ("msToken", self.msToken()),
-            ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
-        ]
-        params.append(contentsOf: self.d0Extras())   // myDV D0: verifyFp/fp/webid（jar 有才加）
-        self.signedGET("/aweme/v1/web/user/profile/other/", params: params,
-                       referer: "https://www.douyin.com/user/" + secUid) { data, resp in
-            self.absorb(resp)
-            guard let data, !data.isEmpty,
-                  let obj = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
-                  (obj["status_code"] as? Int ?? -1) == 0,
-                  let user = obj["user"] as? [String: Any] else {
-                DYLog.shared.event("PROFILE fetch fail http=\((resp as? HTTPURLResponse)?.statusCode ?? -1) len=\(data?.count ?? 0)")
-                onDone(nil); return
-            }
-            var avatar = ""
-            if let at = user["avatar_thumb"] as? [String: Any], let ul = at["url_list"] as? [String] {
-                avatar = ul.first(where: { $0.hasPrefix("http") }) ?? ""
-            }
-            let u = DYProfileUser(
-                nickname: user["nickname"] as? String ?? "",
-                avatarUrl: avatar,
-                secUid: user["sec_uid"] as? String ?? secUid,
-                signature: user["signature"] as? String ?? "",
-                followerCount: (user["follower_count"] as? NSNumber)?.intValue ?? 0,
-                followingCount: (user["following_count"] as? NSNumber)?.intValue ?? 0,
-                awemeCount: (user["aweme_count"] as? NSNumber)?.intValue ?? 0,
-                totalFavorited: (user["total_favorited"] as? NSNumber)?.intValue ?? 0
-            )
-            DYLog.shared.event("PROFILE ok nick=\(u.nickname) fans=\(u.followerCount) works=\(u.awemeCount)")
-            onDone(u)
-        }
-    }
+    // MARK: - 作者资料（user/profile/other，探针实测匿名 sc=0；请求由 fetchProfileThrottled/Once 发起）
 
     // MARK: - 作品列表试探（aweme/post；探针 200 空——真机 URLSession TLS 指纹可能不同）
 

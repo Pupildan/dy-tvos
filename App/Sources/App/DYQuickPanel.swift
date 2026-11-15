@@ -386,6 +386,7 @@ struct DYProfileScreen: View {
     @FocusState private var focused: String?
     @State private var user: DYProfileUser?
     @State private var worksCount = -2   // -2=加载中 -1=空响应 0+=数据
+    @State private var failed = false
     @State private var loaded = false
 
     var body: some View {
@@ -407,6 +408,7 @@ struct DYProfileScreen: View {
             DYProfileClient.shared.profile(for: sec) { u, works in
                 user = u
                 worksCount = works
+                failed = (u == nil)
             }
         }
         .onExitCommand { model.isProfileOpen = false }   // Menu 关闭回播放
@@ -479,6 +481,11 @@ struct DYProfileScreen: View {
                 Text(worksNote)
                     .font(.system(size: 20))
                     .foregroundColor(.white.opacity(0.5))
+            } else if failed {
+                Text("获取失败（抖音连发限流），请稍后重试")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
             } else {
                 Text("加载中...")
                     .font(.system(size: 26))
