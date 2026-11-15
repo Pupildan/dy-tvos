@@ -405,11 +405,11 @@ struct DYProfileScreen: View {
             loaded = true
             focused = "close"
             let sec = model.profileSecUid
-            DYProfileClient.shared.profile(for: sec) { u, works in
-                user = u
-                worksCount = works
-                failed = (u == nil)
-            }
+            // v166：资料+作品改吃 WebView 截获（原生 fetch 链被服务端 200 空拒，v165 日志实锤）。
+            // 注册 delegate，DYWorksCapture 截到 profile/other 响应解析成 DYProfileUser 回调。
+            worksCount = -2
+            DYWorksCapture.shared.delegate = self
+            DYWorksCapture.shared.fetch(secUid: sec)
         }
         .onExitCommand { model.isProfileOpen = false }   // Menu 关闭回播放
         .transition(.opacity)
@@ -500,10 +500,10 @@ struct DYProfileScreen: View {
 
     private var worksNote: String {
         switch worksCount {
-        case -2: return "作品列表：加载中"
-        case -1: return "作品列表：接口静默拒绝（真机探测记录中，待后续版本解锁）"
+        case -2: return "作品列表：截获中…"
+        case -1: return "作品列表：截获失败，请稍后重试"
         case 0: return "作品列表：该作者暂无可见作品"
-        default: return "作品列表：接口已通（\(worksCount) 条，展示待下版本）"
+        default: return "作品列表：已截获 \(worksCount) 件作品（网格展示待下版本）"
         }
     }
 
@@ -530,5 +530,15 @@ struct DYProfileScreen: View {
                     .fill(.ultraThinMaterial)
             }
         }
+    }
+}
+
+// v166：DYProfileScreen 订阅 DYWorksCapture 截获结果（WebView 截获 profile/other → DYProfileUser）。
+// 回调已在主线程（DYWorksCapture.handleProfile 里 DispatchQueue.main.async）。
+extension DYProfileScreen: DYWorksCapture.Delegate {
+    func worksCaptureDidCapture(profile: DYProfileUser) {
+        user = profile
+        worksCount = profile.awemeCount
+        failed = false
     }
 }

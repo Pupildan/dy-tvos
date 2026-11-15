@@ -2002,3 +2002,424 @@
 15:19:37  [15:19:37] DMSYNC t=420s due=0 marked=410 items=410 stall=154
 15:19:41  [15:19:41] DMSYNC t=424s due=0 marked=410 items=410 stall=170
 15:19:45  [15:19:45] DMSYNC t=428s due=0 marked=410 items=410 stall=186
+15:30:39  [15:30:39] SETTINGS panel open (menu #1)
+15:30:40  [15:30:40] SETTINGS panel exit-app (menu #2)
+15:30:57  [15:30:56] DYTV v165 launched
+15:30:57  [15:30:56] SIGNER init start
+15:30:57  [15:30:56] LOGSRV ready on port 8765
+15:30:57  [15:30:56] LOGSRV advertising as DYTV-471
+15:30:57  [15:30:56] SIGNER load shim ok
+15:30:57  [15:30:56] SIGNER load abogus ok
+15:30:57  [15:30:57] SIGNER load sign ok
+15:30:57  [15:30:57] SIGNER load abogus_dy ok
+15:30:57  [15:30:57] SIGNER extras sign=true dy=true
+15:30:57  [15:30:57] SIGNER bdms=yes
+15:30:57  [15:30:57] SIGNER initABogus=true
+15:30:57  [15:30:57] SIGNER fns=AB (期望 AB)
+15:30:57  [15:30:57] SIGNER smoke={"ok":true,"value":"YvmZ/VzhDDgBfVWg5XOLfY3qVW33YsUK0SVkMDhezVfP/L39HMTr9exEV64vt4SeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+15:30:57  [15:30:57] SIGNER READY a_bogus len=180
+15:30:57  [15:30:57] FEEDCOLL viewDidLoad
+15:30:57  [15:30:57] ROOT auto-start v165
+15:30:57  [15:30:57] FEED native pipeline armed (source=web)
+15:30:57  [15:30:57] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+15:30:57  [15:30:57] LOGSRV Bonjour published: DYTV-471
+15:30:59  [15:30:58] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+15:30:59  [15:30:58] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+15:30:59  [15:30:58] ENGINE needMore (index=0 count=2)
+15:30:59  [15:30:58] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+15:30:59  [15:30:58] MGR url idx=0 src=static age=0s
+15:30:59  [15:30:59] MGR acquire idx=0 total=1
+15:30:59  [15:30:59] MGR cold-start defer neighbors=[1]
+15:30:59  [15:30:59] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+15:30:59  [15:30:59] DMLOAD id=7694583117449919922 dur=176967
+15:31:00  [15:30:59] MGR ready idx=0
+15:31:00  [15:30:59] MGR url idx=1 src=static age=0s
+15:31:00  [15:30:59] DANM get id=7694583117449919922 [0-20s] ttwid=127
+15:31:00  [15:30:59] MGR acquire idx=1 total=2
+15:31:00  [15:30:59] MGR cold-start neighbors acquired=[1]
+15:31:00  [15:31:00] DANM get id=7694583117449919922 [20-40s] ttwid=127
+15:31:00  [15:31:00] DANM get id=7694583117449919922 [40-60s] ttwid=127
+15:31:00  [15:31:00] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+15:31:00  [15:31:00] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+15:31:01  [15:31:00] DANM get id=7694583117449919922 [60-80s] ttwid=127
+15:31:01  [15:31:01] DANM get id=7694583117449919922 [80-100s] ttwid=127
+15:31:01  [15:31:01] MGR ready idx=1
+15:31:01  [15:31:01] DANM get id=7694583117449919922 [100-120s] ttwid=127
+15:31:02  [15:31:01] DANM get id=7694583117449919922 [120-140s] ttwid=127
+15:31:02  [15:31:02] DANM get id=7694583117449919922 [140-160s] ttwid=127
+15:31:02  [15:31:02] DANM get id=7694583117449919922 [160-176s] ttwid=127
+15:31:03  [15:31:02] ENGINE next -> index=1
+15:31:03  [15:31:02] MGR url idx=2 src=static age=2s
+15:31:03  [15:31:02] MGR acquire idx=2 total=3
+15:31:03  [15:31:02] MGR url idx=3 src=static age=2s
+15:31:03  [15:31:02] MGR acquire idx=3 total=4
+15:31:03  [15:31:02] FEEDCOLL scrollTo idx=1 y=1080.0 items=8
+15:31:03  [15:31:02] DANM all-segments done id=7694583117449919922 total=875 retry=0
+15:31:03  [15:31:02] DMLOAD done id=7694583117449919922 total=875
+15:31:03  [15:31:03] DMLOAD id=7695366003810684203 dur=994049
+15:31:03  [15:31:03] DANM get id=7695366003810684203 [0-20s] ttwid=127
+15:31:03  [15:31:03] MGR ready idx=3
+15:31:03  [15:31:03] DANM get id=7695366003810684203 [20-40s] ttwid=127
+15:31:03  [15:31:03] DANM get id=7695366003810684203 [40-60s] ttwid=127
+15:31:04  [15:31:03] MGR ready idx=2
+15:31:04  [15:31:04] DANM get id=7695366003810684203 [60-80s] ttwid=127
+15:31:04  [15:31:04] DANM get id=7695366003810684203 [80-100s] ttwid=127
+15:31:05  [15:31:04] DANM get id=7695366003810684203 [100-120s] ttwid=127
+15:31:05  [15:31:05] DANM get id=7695366003810684203 [120-140s] ttwid=127
+15:31:05  [15:31:05] DANM get id=7695366003810684203 [140-160s] ttwid=127
+15:31:05  [15:31:05] DANM get id=7695366003810684203 [160-180s] ttwid=127
+15:31:06  [15:31:05] DANM get id=7695366003810684203 [180-200s] ttwid=127
+15:31:06  [15:31:06] DANM get id=7695366003810684203 [200-220s] ttwid=127
+15:31:06  [15:31:06] DANM get id=7695366003810684203 [220-240s] ttwid=127
+15:31:07  [15:31:06] DANM get id=7695366003810684203 [240-260s] ttwid=127
+15:31:07  [15:31:07] DMSYNC t=3s due=0 marked=1 items=74 stall=10
+15:31:07  [15:31:07] DANM get id=7695366003810684203 [260-280s] ttwid=127
+15:31:07  [15:31:07] DANM get id=7695366003810684203 [280-300s] ttwid=127
+15:31:07  [15:31:07] QUICK panel open (ok) mix=1
+15:31:08  [15:31:07] DANM get id=7695366003810684203 [300-320s] ttwid=127
+15:31:08  [15:31:08] DANM get id=7695366003810684203 [320-340s] ttwid=127
+15:31:08  [15:31:08] DANM get id=7695366003810684203 [340-360s] ttwid=127
+15:31:09  [15:31:08] DANM get id=7695366003810684203 [360-380s] ttwid=127
+15:31:09  [15:31:09] DANM get id=7695366003810684203 [380-400s] ttwid=127
+15:31:09  [15:31:09] DANM get id=7695366003810684203 [400-420s] ttwid=127
+15:31:09  [15:31:09] DANM get id=7695366003810684203 [420-440s] ttwid=127
+15:31:10  [15:31:09] DANM get id=7695366003810684203 [440-460s] ttwid=127
+15:31:10  [15:31:10] DANM get id=7695366003810684203 [460-480s] ttwid=127
+15:31:10  [15:31:10] QUICK select home sec=MS4wLjABAAAAjJ76y3l6vTiwZPH1JsPDaoim9YyoZIvA1aM4q3OX2YrX4wFO_NOJyhS7h3sOdITV
+15:31:10  [15:31:10] DANM get id=7695366003810684203 [480-500s] ttwid=127
+15:31:11  [15:31:10] DANM get id=7695366003810684203 [500-520s] ttwid=127
+15:31:11  [15:31:10] ROOT profile open → WORKSCAP secUid=MS4wLjABAAAAjJ76...
+15:31:11  [15:31:10] WORKSCAP load user page secUid=MS4wLjABAAAAjJ76... (doc-start inject)
+15:31:11  [15:31:11] WEBBOOT load douyin home (invisible shim webview)
+15:31:11  [15:31:11] DMSYNC t=7s due=0 marked=1 items=92 stall=26
+15:31:11  [15:31:11] DANM get id=7695366003810684203 [520-540s] ttwid=127
+15:31:11  [15:31:11] DANM get id=7695366003810684203 [540-560s] ttwid=127
+15:31:11  [15:31:11] DANM get id=7695366003810684203 [560-580s] ttwid=127
+15:31:12  [15:31:12] DANM get id=7695366003810684203 [580-600s] ttwid=127
+15:31:12  [15:31:12] WORKSCAP[p1] hooked=0 → evaluateJavaScript 补装 hook
+15:31:12  [15:31:12] DANM get id=7695366003810684203 [600-620s] ttwid=127
+15:31:12  [15:31:12] DANM get id=7695366003810684203 [620-640s] ttwid=127
+15:31:13  [15:31:12] DANM get id=7695366003810684203 [640-660s] ttwid=127
+15:31:13  [15:31:13] DANM get id=7695366003810684203 [660-680s] ttwid=127
+15:31:13  [15:31:13] DANM get id=7695366003810684203 [680-700s] ttwid=127
+15:31:13  [15:31:13] DANM get id=7695366003810684203 [700-720s] ttwid=127
+15:31:14  [15:31:13] DANM get id=7695366003810684203 [720-740s] ttwid=127
+15:31:14  [15:31:14] DANM get id=7695366003810684203 [740-760s] ttwid=127
+15:31:14  [15:31:14] WORKSCAP[p3] page rs=complete hooked=1 xhrTotal=63 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAAjJ76y3l6vTiwZPH1JsPDaoim9YyoZIvA1aM4q3OX2YrX4wFO_N
+15:31:14  [15:31:14] DANM get id=7695366003810684203 [760-780s] ttwid=127
+15:31:15  [15:31:14] DANM get id=7695366003810684203 [780-800s] ttwid=127
+15:31:15  [15:31:15] DMSYNC t=11s due=0 marked=2 items=102 stall=10
+15:31:15  [15:31:15] DANM get id=7695366003810684203 [800-820s] ttwid=127
+15:31:15  [15:31:15] DANM get id=7695366003810684203 [820-840s] ttwid=127
+15:31:16  [15:31:15] DANM get id=7695366003810684203 [840-860s] ttwid=127
+15:31:16  [15:31:16] WORKS CAP[p5] PROFILE len=11755 u=https://www.douyin.com/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_v
+15:31:16  [15:31:16] DANM get id=7695366003810684203 [860-880s] ttwid=127
+15:31:16  [15:31:16] DANM get id=7695366003810684203 [880-900s] ttwid=127
+15:31:17  [15:31:16] DANM get id=7695366003810684203 [900-920s] ttwid=127
+15:31:17  [15:31:17] WORKSCAP[p6] page rs=complete hooked=1 xhrTotal=94 cap=1 href=https://www.douyin.com/user/MS4wLjABAAAAjJ76y3l6vTiwZPH1JsPDaoim9YyoZIvA1aM4q3OX2YrX4wFO_N
+15:31:17  [15:31:17] WORKS CAP[p6] POST len=60000 u=https://www.douyin.com/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=MS4wL
+15:31:17  [15:31:17] WORKS CAP BODY head: {"status_code":0,"min_cursor":0,"max_cursor":1792407359000,"has_more":1,"aweme_list":[{"aweme_id":"7598032803061615924","desc":"湾湾最新剧集《回魂计》 #电影解说 #回魂计 #新剧来袭","create_time":1769054885,"author":{"uid":"4022435547985815","offline_info_list":nu
+15:31:17  [15:31:17] WORKS CAP OK total=2 xhrTotal=94——WebView 截获成立
+15:31:17  [15:31:17] DANM get id=7695366003810684203 [920-940s] ttwid=127
+15:31:17  [15:31:17] DANM get id=7695366003810684203 [940-960s] ttwid=127
+15:31:17  [15:31:17] DANM get id=7695366003810684203 [960-980s] ttwid=127
+15:31:18  [15:31:17] DANM get id=7695366003810684203 [980-994s] ttwid=127
+15:31:18  [15:31:18] DANM all-segments done id=7695366003810684203 total=116 retry=0
+15:31:18  [15:31:18] DMLOAD done id=7695366003810684203 total=116
+15:31:19  [15:31:19] DMSYNC t=15s due=0 marked=3 items=116 stall=1
+15:31:20  [15:31:20] WEBBOOT[settled] document.cookie=__ac_nonce,__ac_signature,UIFID_TEMP,s_v_web_id,UIFID_TEMP
+15:31:20  [15:31:20] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:31:20  [15:31:20] PROFILE fetch fail http=200 len=0
+15:31:22  [15:31:22] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:31:22  [15:31:22] PROFILE fetch fail http=200 len=0
+15:31:22  [15:31:22] PROFILE GET /aweme/v1/web/aweme/post/ uifid=160
+15:31:22  [15:31:22] WORKS probe empty http=200 len=0 (TLS 疑点待真机)
+15:31:23  [15:31:23] DMSYNC t=19s due=0 marked=6 items=116 stall=1
+15:31:25  [15:31:25] ENGINE needMore (index=1 count=8)
+15:31:25  [15:31:25] FEED web GET refresh_index=3 cold=0 bogus_len=180 ttwid=127
+15:31:25  [15:31:25] ENGINE next -> index=2
+15:31:25  [15:31:25] MGR url idx=4 src=static age=24s
+15:31:25  [15:31:25] MGR acquire idx=4 total=5
+15:31:25  [15:31:25] FEEDCOLL scrollTo idx=2 y=2160.0 items=8
+15:31:25  [15:31:25] DMLOAD id=7706531557649026358 dur=1128534
+15:31:25  [15:31:25] DANM get id=7706531557649026358 [0-20s] ttwid=127
+15:31:25  [15:31:25] DANM get id=7706531557649026358 [20-40s] ttwid=127
+15:31:26  [15:31:25] DANM get id=7706531557649026358 [40-60s] ttwid=127
+15:31:26  [15:31:26] MGR ready idx=4
+15:31:26  [15:31:26] DANM get id=7706531557649026358 [60-80s] ttwid=127
+15:31:26  [15:31:26] DANM get id=7706531557649026358 [80-100s] ttwid=127
+15:31:26  [15:31:26] FEED web page refresh_index=3: awemes=6 usable=6 filtered=0 total_seen=14
+15:31:26  [15:31:26] ENGINE merge total=14 index=2 replace=false auto=false redirect=0
+15:31:27  [15:31:26] DANM get id=7706531557649026358 [100-120s] ttwid=127
+15:31:27  [15:31:26] QUICK panel open (ok) mix=0
+15:31:27  [15:31:27] DANM get id=7706531557649026358 [120-140s] ttwid=127
+15:31:27  [15:31:27] DANM get id=7706531557649026358 [140-160s] ttwid=127
+15:31:27  [15:31:27] DANM get id=7706531557649026358 [160-180s] ttwid=127
+15:31:28  [15:31:27] DANM get id=7706531557649026358 [180-200s] ttwid=127
+15:31:28  [15:31:28] QUICK select home sec=MS4wLjABAAAArf7RZ18KGPxNWLdVptdGI43hkAvIDItrzoZeh3ZBM3U
+15:31:28  [15:31:28] DANM get id=7706531557649026358 [200-220s] ttwid=127
+15:31:28  [15:31:28] DANM get id=7706531557649026358 [220-240s] ttwid=127
+15:31:28  [15:31:28] ROOT profile open → WORKSCAP secUid=MS4wLjABAAAArf7R...
+15:31:28  [15:31:28] WORKSCAP load user page secUid=MS4wLjABAAAArf7R... (doc-start inject)
+15:31:28  [15:31:28] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:31:28  [15:31:28] PROFILE fetch fail http=200 len=0
+15:31:29  [15:31:28] DANM get id=7706531557649026358 [240-260s] ttwid=127
+15:31:29  [15:31:29] DANM get id=7706531557649026358 [260-280s] ttwid=127
+15:31:29  [15:31:29] DMSYNC t=3s due=0 marked=3 items=157 stall=8
+15:31:29  [15:31:29] DANM get id=7706531557649026358 [280-300s] ttwid=127
+15:31:29  [15:31:29] DANM get id=7706531557649026358 [300-320s] ttwid=127
+15:31:30  [15:31:29] PROFILE GET /aweme/v1/web/user/profile/other/ uifid=160
+15:31:30  [15:31:29] DANM get id=7706531557649026358 [320-340s] ttwid=127
+15:31:30  [15:31:30] PROFILE fetch fail http=200 len=0
+15:31:30  [15:31:30] PROFILE GET /aweme/v1/web/aweme/post/ uifid=160
+15:31:30  [15:31:30] WORKS probe empty http=200 len=0 (TLS 疑点待真机)
+15:31:30  [15:31:30] DANM get id=7706531557649026358 [340-360s] ttwid=127
+15:31:30  [15:31:30] WORKSCAP[p1] hooked=0 → evaluateJavaScript 补装 hook
+15:31:30  [15:31:30] DANM get id=7706531557649026358 [360-380s] ttwid=127
+15:31:31  [15:31:30] DANM get id=7706531557649026358 [380-400s] ttwid=127
+15:31:31  [15:31:31] DANM get id=7706531557649026358 [400-420s] ttwid=127
+15:31:31  [15:31:31] DANM get id=7706531557649026358 [420-440s] ttwid=127
+15:31:31  [15:31:31] WORKSCAP[p3] page rs=complete hooked=1 xhrTotal=1 cap=0 href=https://www.douyin.com/user/MS4wLjABAAAArf7RZ18KGPxNWLdVptdGI43hkAvIDItrzoZeh3ZBM3U
+15:31:31  [15:31:31] DANM get id=7706531557649026358 [440-460s] ttwid=127
+15:31:32  [15:31:31] DANM get id=7706531557649026358 [460-480s] ttwid=127
+15:31:32  [15:31:32] DANM get id=7706531557649026358 [480-500s] ttwid=127
+15:31:32  [15:31:32] DANM get id=7706531557649026358 [500-520s] ttwid=127
+15:31:32  [15:31:32] WORKS CAP[p4] PROFILE len=11688 u=/aweme/v1/web/user/profile/other/?device_platform=webapp&aid=6383&channel=channel_pc_web&publish_video_strategy_type=2&s
+15:31:33  [15:31:32] DANM get id=7706531557649026358 [520-540s] ttwid=127
+15:31:33  [15:31:33] DANM get id=7706531557649026358 [540-560s] ttwid=127
+15:31:33  [15:31:33] DMSYNC t=7s due=0 marked=10 items=210 stall=0
+15:31:33  [15:31:33] DANM get id=7706531557649026358 [560-580s] ttwid=127
+15:31:33  [15:31:33] WORKS CAP[p5] POST len=60000 u=/aweme/v1/web/aweme/post/?device_platform=webapp&aid=6383&channel=channel_pc_web&sec_user_id=MS4wLjABAAAArf7RZ18KGPxNWLd
+15:31:33  [15:31:33] WORKS CAP BODY head: {"status_code":0,"min_cursor":0,"max_cursor":1773761593000,"has_more":1,"aweme_list":[{"aweme_id":"7598868258464222510","desc":"6分钟看懂《太平年》乱世顶级思维，藏在最贵的帝王培训班里！ #太平年 #历史剧 #历史 #五代十国","create_time":1769249428,"author":{"uid":"88675101498","user_
+15:31:33  [15:31:33] WORKS CAP OK total=2 xhrTotal=30——WebView 截获成立
+15:31:33  [15:31:33] DANM get id=7706531557649026358 [580-600s] ttwid=127
+15:31:34  [15:31:33] DANM get id=7706531557649026358 [600-620s] ttwid=127
+15:31:34  [15:31:34] DANM get id=7706531557649026358 [620-640s] ttwid=127
+15:31:34  [15:31:34] DANM get id=7706531557649026358 [640-660s] ttwid=127
+15:31:35  [15:31:34] DANM get id=7706531557649026358 [660-680s] ttwid=127
+15:31:35  [15:31:35] DANM get id=7706531557649026358 [680-700s] ttwid=127
+15:31:35  [15:31:35] DANM get id=7706531557649026358 [700-720s] ttwid=127
+15:31:35  [15:31:35] DANM get id=7706531557649026358 [720-740s] ttwid=127
+15:31:36  [15:31:35] DANM get id=7706531557649026358 [740-760s] ttwid=127
+15:31:36  [15:31:36] DANM get id=7706531557649026358 [760-780s] ttwid=127
+15:31:36  [15:31:36] DANM get id=7706531557649026358 [780-800s] ttwid=127
+15:31:37  [15:31:36] DANM get id=7706531557649026358 [800-820s] ttwid=127
+15:31:37  [15:31:37] DANM get id=7706531557649026358 [820-840s] ttwid=127
+15:31:37  [15:31:37] DMSYNC t=11s due=0 marked=25 items=248 stall=0
+15:31:37  [15:31:37] DANM get id=7706531557649026358 [840-860s] ttwid=127
+15:31:37  [15:31:37] DANM get id=7706531557649026358 [860-880s] ttwid=127
+15:31:38  [15:31:37] DANM get id=7706531557649026358 [880-900s] ttwid=127
+15:31:38  [15:31:38] DANM get id=7706531557649026358 [900-920s] ttwid=127
+15:31:38  [15:31:38] DANM get id=7706531557649026358 [920-940s] ttwid=127
+15:31:39  [15:31:38] DANM get id=7706531557649026358 [940-960s] ttwid=127
+15:31:39  [15:31:39] DANM get id=7706531557649026358 [960-980s] ttwid=127
+15:31:39  [15:31:39] DANM get id=7706531557649026358 [980-1000s] ttwid=127
+15:31:40  [15:31:39] DANM get id=7706531557649026358 [1000-1020s] ttwid=127
+15:31:40  [15:31:40] DANM get id=7706531557649026358 [1020-1040s] ttwid=127
+15:31:40  [15:31:40] DANM get id=7706531557649026358 [1040-1060s] ttwid=127
+15:31:40  [15:31:40] DANM get id=7706531557649026358 [1060-1080s] ttwid=127
+15:31:41  [15:31:40] DANM get id=7706531557649026358 [1080-1100s] ttwid=127
+15:31:41  [15:31:41] DANM get id=7706531557649026358 [1100-1120s] ttwid=127
+15:31:41  [15:31:41] DMSYNC t=15s due=3 marked=38 items=267 stall=0
+15:31:41  [15:31:41] DANM get id=7706531557649026358 [1120-1128s] ttwid=127
+15:31:42  [15:31:41] DANM all-segments done id=7706531557649026358 total=267 retry=0
+15:31:42  [15:31:41] DMLOAD done id=7706531557649026358 total=267
+15:31:45  [15:31:45] DMSYNC t=19s due=0 marked=56 items=267 stall=0
+15:31:49  [15:31:49] DMSYNC t=23s due=0 marked=59 items=267 stall=2
+15:31:53  [15:31:53] DMSYNC t=27s due=0 marked=66 items=267 stall=3
+15:31:57  [15:31:57] DMSYNC t=31s due=0 marked=72 items=267 stall=2
+15:32:01  [15:32:01] DMSYNC t=35s due=0 marked=80 items=267 stall=0
+15:32:05  [15:32:05] DMSYNC t=39s due=0 marked=86 items=267 stall=1
+15:32:09  [15:32:09] DMSYNC t=43s due=0 marked=88 items=267 stall=7
+15:32:13  [15:32:13] DMSYNC t=47s due=0 marked=90 items=267 stall=15
+15:32:17  [15:32:17] DMSYNC t=51s due=0 marked=92 items=267 stall=5
+15:32:21  [15:32:21] DMSYNC t=55s due=0 marked=95 items=267 stall=3
+15:32:25  [15:32:25] DMSYNC t=59s due=0 marked=95 items=267 stall=19
+15:32:29  [15:32:29] DMSYNC t=63s due=0 marked=99 items=267 stall=2
+15:32:33  [15:32:33] DMSYNC t=67s due=0 marked=103 items=267 stall=5
+15:32:37  [15:32:37] DMSYNC t=71s due=0 marked=105 items=267 stall=11
+15:32:41  [15:32:41] DMSYNC t=75s due=0 marked=105 items=267 stall=27
+15:32:45  [15:32:45] DMSYNC t=79s due=0 marked=107 items=267 stall=6
+15:32:49  [15:32:49] DMSYNC t=83s due=0 marked=111 items=267 stall=7
+15:32:53  [15:32:53] DMSYNC t=87s due=0 marked=112 items=267 stall=0
+15:32:57  [15:32:57] DMSYNC t=91s due=0 marked=113 items=267 stall=5
+15:33:01  [15:33:01] DMSYNC t=95s due=0 marked=116 items=267 stall=11
+15:33:05  [15:33:05] DMSYNC t=99s due=0 marked=118 items=267 stall=5
+15:33:09  [15:33:09] DMSYNC t=103s due=0 marked=120 items=267 stall=7
+15:33:13  [15:33:13] DMSYNC t=107s due=0 marked=121 items=267 stall=5
+15:33:17  [15:33:17] DMSYNC t=111s due=0 marked=123 items=267 stall=1
+15:33:21  [15:33:21] DMSYNC t=115s due=0 marked=123 items=267 stall=17
+15:33:25  [15:33:25] DMSYNC t=119s due=0 marked=123 items=267 stall=33
+15:33:29  [15:33:29] DMSYNC t=123s due=0 marked=127 items=267 stall=7
+15:33:33  [15:33:33] DMSYNC t=127s due=0 marked=129 items=267 stall=7
+15:33:37  [15:33:37] DMSYNC t=131s due=0 marked=129 items=267 stall=23
+15:33:41  [15:33:41] DMSYNC t=135s due=0 marked=130 items=267 stall=4
+15:33:45  [15:33:45] DMSYNC t=139s due=0 marked=130 items=267 stall=20
+15:33:49  [15:33:49] DMSYNC t=143s due=0 marked=131 items=267 stall=2
+15:33:53  [15:33:53] DMSYNC t=147s due=0 marked=131 items=267 stall=18
+15:33:57  [15:33:57] DMSYNC t=151s due=0 marked=131 items=267 stall=34
+15:34:01  [15:34:01] DMSYNC t=155s due=0 marked=131 items=267 stall=50
+15:34:05  [15:34:05] DMSYNC t=159s due=0 marked=131 items=267 stall=66
+15:34:09  [15:34:09] DMSYNC t=163s due=0 marked=131 items=267 stall=82
+15:34:13  [15:34:13] DMSYNC t=167s due=0 marked=132 items=267 stall=7
+15:34:17  [15:34:17] DMSYNC t=171s due=0 marked=134 items=267 stall=0
+15:34:21  [15:34:21] DMSYNC t=175s due=0 marked=134 items=267 stall=16
+15:34:25  [15:34:25] DMSYNC t=179s due=0 marked=134 items=267 stall=32
+15:34:29  [15:34:29] DMSYNC t=183s due=0 marked=134 items=267 stall=48
+15:34:33  [15:34:33] DMSYNC t=187s due=0 marked=134 items=267 stall=64
+15:34:37  [15:34:37] DMSYNC t=191s due=0 marked=134 items=267 stall=80
+15:34:41  [15:34:41] DMSYNC t=195s due=0 marked=134 items=267 stall=96
+15:34:45  [15:34:45] DMSYNC t=199s due=0 marked=134 items=267 stall=112
+15:34:49  [15:34:49] DMSYNC t=203s due=0 marked=135 items=267 stall=5
+15:34:53  [15:34:53] DMSYNC t=207s due=0 marked=137 items=267 stall=5
+15:34:57  [15:34:57] DMSYNC t=211s due=0 marked=137 items=267 stall=21
+15:35:01  [15:35:01] DMSYNC t=215s due=0 marked=137 items=267 stall=37
+15:35:05  [15:35:05] DMSYNC t=219s due=0 marked=137 items=267 stall=53
+15:35:09  [15:35:09] DMSYNC t=223s due=0 marked=137 items=267 stall=69
+15:35:13  [15:35:13] DMSYNC t=227s due=0 marked=137 items=267 stall=85
+15:35:17  [15:35:17] DMSYNC t=231s due=0 marked=137 items=267 stall=101
+15:35:21  [15:35:21] DMSYNC t=235s due=0 marked=137 items=267 stall=117
+15:35:25  [15:35:25] DMSYNC t=239s due=0 marked=137 items=267 stall=133
+15:35:29  [15:35:29] DMSYNC t=243s due=0 marked=137 items=267 stall=149
+15:35:33  [15:35:33] DMSYNC t=247s due=0 marked=137 items=267 stall=165
+15:35:37  [15:35:37] DMSYNC t=251s due=0 marked=137 items=267 stall=181
+15:35:41  [15:35:41] DMSYNC t=255s due=0 marked=140 items=267 stall=2
+15:35:45  [15:35:45] DMSYNC t=259s due=0 marked=141 items=267 stall=15
+15:35:49  [15:35:49] DMSYNC t=263s due=0 marked=143 items=267 stall=3
+15:35:53  [15:35:53] DMSYNC t=267s due=0 marked=148 items=267 stall=1
+15:35:57  [15:35:57] DMSYNC t=271s due=0 marked=150 items=267 stall=3
+15:36:01  [15:36:01] DMSYNC t=275s due=0 marked=153 items=267 stall=2
+15:36:05  [15:36:05] DMSYNC t=279s due=0 marked=154 items=267 stall=5
+15:36:09  [15:36:09] DMSYNC t=283s due=0 marked=156 items=267 stall=5
+15:36:13  [15:36:13] DMSYNC t=287s due=0 marked=157 items=267 stall=7
+15:36:17  [15:36:17] DMSYNC t=291s due=0 marked=157 items=267 stall=23
+15:36:21  [15:36:21] DMSYNC t=295s due=0 marked=162 items=267 stall=1
+15:36:25  [15:36:25] DMSYNC t=299s due=0 marked=166 items=267 stall=8
+15:36:29  [15:36:29] DMSYNC t=303s due=0 marked=166 items=267 stall=24
+15:36:33  [15:36:33] DMSYNC t=307s due=0 marked=167 items=267 stall=13
+15:36:37  [15:36:37] DMSYNC t=311s due=0 marked=168 items=267 stall=3
+15:36:41  [15:36:41] DMSYNC t=315s due=0 marked=170 items=267 stall=1
+15:36:45  [15:36:45] DMSYNC t=319s due=0 marked=170 items=267 stall=17
+15:36:49  [15:36:49] DMSYNC t=323s due=0 marked=170 items=267 stall=33
+15:36:53  [15:36:53] DMSYNC t=327s due=0 marked=170 items=267 stall=49
+15:36:57  [15:36:57] DMSYNC t=331s due=0 marked=172 items=267 stall=4
+15:37:01  [15:37:01] DMSYNC t=335s due=0 marked=177 items=267 stall=6
+15:37:05  [15:37:05] DMSYNC t=339s due=0 marked=181 items=267 stall=6
+15:37:09  [15:37:09] DMSYNC t=343s due=0 marked=181 items=267 stall=22
+15:37:13  [15:37:13] DMSYNC t=347s due=0 marked=181 items=267 stall=38
+15:37:17  [15:37:17] DMSYNC t=351s due=0 marked=181 items=267 stall=54
+15:37:21  [15:37:21] DMSYNC t=355s due=0 marked=183 items=267 stall=1
+15:37:25  [15:37:25] DMSYNC t=359s due=0 marked=183 items=267 stall=17
+15:37:29  [15:37:29] DMSYNC t=363s due=0 marked=185 items=267 stall=8
+15:37:33  [15:37:33] DMSYNC t=367s due=0 marked=185 items=267 stall=24
+15:37:37  [15:37:37] DMSYNC t=371s due=0 marked=186 items=267 stall=10
+15:37:41  [15:37:41] DMSYNC t=375s due=0 marked=187 items=267 stall=11
+15:37:45  [15:37:45] DMSYNC t=379s due=0 marked=187 items=267 stall=27
+15:37:49  [15:37:49] DMSYNC t=383s due=0 marked=187 items=267 stall=43
+15:37:53  [15:37:53] DMSYNC t=387s due=0 marked=187 items=267 stall=59
+15:37:57  [15:37:57] DMSYNC t=391s due=0 marked=187 items=267 stall=75
+15:38:01  [15:38:01] DMSYNC t=395s due=0 marked=187 items=267 stall=91
+15:38:05  [15:38:05] DMSYNC t=399s due=0 marked=187 items=267 stall=107
+15:38:09  [15:38:09] DMSYNC t=403s due=0 marked=191 items=267 stall=4
+15:38:13  [15:38:13] DMSYNC t=407s due=0 marked=195 items=267 stall=1
+15:38:17  [15:38:17] DMSYNC t=411s due=0 marked=198 items=267 stall=1
+15:38:21  [15:38:21] DMSYNC t=415s due=0 marked=200 items=267 stall=11
+15:38:25  [15:38:25] DMSYNC t=419s due=0 marked=202 items=267 stall=1
+15:38:29  [15:38:29] DMSYNC t=423s due=0 marked=204 items=267 stall=9
+15:38:33  [15:38:33] DMSYNC t=427s due=0 marked=205 items=267 stall=2
+15:38:37  [15:38:37] DMSYNC t=431s due=0 marked=205 items=267 stall=18
+15:38:41  [15:38:41] DMSYNC t=435s due=0 marked=205 items=267 stall=34
+15:38:45  [15:38:45] DMSYNC t=439s due=0 marked=205 items=267 stall=50
+15:38:49  [15:38:49] DMSYNC t=443s due=0 marked=205 items=267 stall=66
+15:38:53  [15:38:53] DMSYNC t=447s due=0 marked=206 items=267 stall=7
+15:38:57  [15:38:57] DMSYNC t=451s due=0 marked=206 items=267 stall=23
+15:39:01  [15:39:01] DMSYNC t=455s due=0 marked=206 items=267 stall=39
+15:39:05  [15:39:05] DMSYNC t=459s due=0 marked=206 items=267 stall=55
+15:39:09  [15:39:09] DMSYNC t=463s due=0 marked=206 items=267 stall=71
+15:39:13  [15:39:13] DMSYNC t=467s due=0 marked=206 items=267 stall=87
+15:39:17  [15:39:17] DMSYNC t=471s due=0 marked=206 items=267 stall=103
+15:39:21  [15:39:21] DMSYNC t=475s due=0 marked=206 items=267 stall=119
+15:39:25  [15:39:25] DMSYNC t=479s due=0 marked=206 items=267 stall=135
+15:39:29  [15:39:29] DMSYNC t=483s due=0 marked=206 items=267 stall=151
+15:39:33  [15:39:33] DMSYNC t=487s due=0 marked=206 items=267 stall=167
+15:39:37  [15:39:37] DMSYNC t=491s due=0 marked=206 items=267 stall=183
+15:39:41  [15:39:41] DMSYNC t=495s due=0 marked=206 items=267 stall=199
+15:39:45  [15:39:45] DMSYNC t=499s due=0 marked=206 items=267 stall=215
+15:39:49  [15:39:49] DMSYNC t=503s due=0 marked=206 items=267 stall=231
+15:39:53  [15:39:53] DMSYNC t=507s due=0 marked=206 items=267 stall=247
+15:39:57  [15:39:57] DMSYNC t=511s due=0 marked=206 items=267 stall=263
+15:40:01  [15:40:01] DMSYNC t=515s due=0 marked=206 items=267 stall=279
+15:40:05  [15:40:05] DMSYNC t=519s due=0 marked=206 items=267 stall=295
+15:40:09  [15:40:09] DMSYNC t=523s due=0 marked=206 items=267 stall=311
+15:40:13  [15:40:13] DMSYNC t=527s due=0 marked=206 items=267 stall=327
+15:40:17  [15:40:17] DMSYNC t=531s due=0 marked=207 items=267 stall=14
+15:40:21  [15:40:21] DMSYNC t=535s due=0 marked=207 items=267 stall=30
+15:40:25  [15:40:25] DMSYNC t=539s due=0 marked=207 items=267 stall=46
+15:40:29  [15:40:29] DMSYNC t=543s due=0 marked=208 items=267 stall=3
+15:40:33  [15:40:33] DMSYNC t=547s due=0 marked=208 items=267 stall=19
+15:40:37  [15:40:37] DMSYNC t=551s due=0 marked=208 items=267 stall=35
+15:40:41  [15:40:41] DMSYNC t=555s due=0 marked=208 items=267 stall=51
+15:40:45  [15:40:45] DMSYNC t=559s due=0 marked=208 items=267 stall=67
+15:40:49  [15:40:49] DMSYNC t=563s due=0 marked=209 items=267 stall=0
+15:40:53  [15:40:53] DMSYNC t=567s due=0 marked=210 items=267 stall=2
+15:40:57  [15:40:57] DMSYNC t=571s due=0 marked=210 items=267 stall=18
+15:41:01  [15:41:01] DMSYNC t=575s due=0 marked=210 items=267 stall=34
+15:41:05  [15:41:05] DMSYNC t=579s due=0 marked=210 items=267 stall=50
+15:41:09  [15:41:09] DMSYNC t=583s due=0 marked=210 items=267 stall=66
+15:41:13  [15:41:13] DMSYNC t=587s due=0 marked=210 items=267 stall=82
+15:41:17  [15:41:17] DMSYNC t=591s due=0 marked=210 items=267 stall=98
+15:41:21  [15:41:21] DMSYNC t=595s due=0 marked=210 items=267 stall=114
+15:41:25  [15:41:25] DMSYNC t=599s due=0 marked=210 items=267 stall=130
+15:41:29  [15:41:29] DMSYNC t=603s due=0 marked=211 items=267 stall=6
+15:41:33  [15:41:33] DMSYNC t=607s due=0 marked=212 items=267 stall=14
+15:41:37  [15:41:37] DMSYNC t=611s due=0 marked=214 items=267 stall=0
+15:41:41  [15:41:41] DMSYNC t=615s due=0 marked=215 items=267 stall=14
+15:41:45  [15:41:45] DMSYNC t=619s due=0 marked=216 items=267 stall=13
+15:41:49  [15:41:49] DMSYNC t=623s due=0 marked=217 items=267 stall=0
+15:41:53  [15:41:53] DMSYNC t=627s due=0 marked=217 items=267 stall=16
+15:41:57  [15:41:57] DMSYNC t=631s due=0 marked=219 items=267 stall=0
+15:42:01  [15:42:01] DMSYNC t=635s due=0 marked=221 items=267 stall=3
+15:42:05  [15:42:05] DMSYNC t=639s due=0 marked=224 items=267 stall=6
+15:42:09  [15:42:09] DMSYNC t=643s due=0 marked=226 items=267 stall=12
+15:42:13  [15:42:13] DMSYNC t=647s due=0 marked=226 items=267 stall=28
+15:42:17  [15:42:17] DMSYNC t=651s due=0 marked=227 items=267 stall=7
+15:42:21  [15:42:21] DMSYNC t=655s due=0 marked=227 items=267 stall=23
+15:42:25  [15:42:25] DMSYNC t=659s due=0 marked=227 items=267 stall=39
+15:42:29  [15:42:29] DMSYNC t=663s due=0 marked=228 items=267 stall=12
+15:42:33  [15:42:33] DMSYNC t=667s due=0 marked=231 items=267 stall=11
+15:42:37  [15:42:37] DMSYNC t=671s due=0 marked=231 items=267 stall=27
+15:42:41  [15:42:41] DMSYNC t=675s due=0 marked=232 items=267 stall=0
+15:42:45  [15:42:45] DMSYNC t=679s due=0 marked=233 items=267 stall=12
+15:42:49  [15:42:49] DMSYNC t=683s due=0 marked=233 items=267 stall=28
+15:42:53  [15:42:53] DMSYNC t=687s due=0 marked=233 items=267 stall=44
+15:42:57  [15:42:57] DMSYNC t=691s due=0 marked=233 items=267 stall=60
+15:43:01  [15:43:01] DMSYNC t=695s due=0 marked=233 items=267 stall=76
+15:43:05  [15:43:05] DMSYNC t=699s due=0 marked=233 items=267 stall=92
+15:43:09  [15:43:09] DMSYNC t=703s due=0 marked=234 items=267 stall=13
+15:43:13  [15:43:13] DMSYNC t=707s due=0 marked=234 items=267 stall=29
+15:43:17  [15:43:17] DMSYNC t=711s due=0 marked=234 items=267 stall=45
+15:43:21  [15:43:21] DMSYNC t=715s due=0 marked=234 items=267 stall=61
+15:43:25  [15:43:25] DMSYNC t=719s due=0 marked=234 items=267 stall=77
+15:43:29  [15:43:29] DMSYNC t=723s due=0 marked=234 items=267 stall=93
+15:43:33  [15:43:33] DMSYNC t=727s due=0 marked=235 items=267 stall=3
+15:43:37  [15:43:37] DMSYNC t=731s due=0 marked=235 items=267 stall=19
+15:43:41  [15:43:41] DMSYNC t=735s due=0 marked=235 items=267 stall=35
+15:43:45  [15:43:45] DMSYNC t=739s due=0 marked=235 items=267 stall=51
+15:43:49  [15:43:49] DMSYNC t=743s due=0 marked=235 items=267 stall=67
+15:43:53  [15:43:53] DMSYNC t=747s due=0 marked=235 items=267 stall=83
+15:43:57  [15:43:57] DMSYNC t=751s due=0 marked=236 items=267 stall=15
+15:44:01  [15:44:01] DMSYNC t=755s due=0 marked=236 items=267 stall=31
+15:44:05  [15:44:05] DMSYNC t=759s due=0 marked=238 items=267 stall=7
+15:44:09  [15:44:09] DMSYNC t=763s due=0 marked=238 items=267 stall=23
+15:44:13  [15:44:13] DMSYNC t=767s due=0 marked=239 items=267 stall=9
+15:44:17  [15:44:17] DMSYNC t=771s due=0 marked=240 items=267 stall=4
+15:44:21  [15:44:21] DMSYNC t=775s due=0 marked=241 items=267 stall=6
+15:44:25  [15:44:25] DMSYNC t=779s due=0 marked=241 items=267 stall=22
+15:44:29  [15:44:29] DMSYNC t=783s due=0 marked=243 items=267 stall=0
+15:44:33  [15:44:33] DMSYNC t=787s due=0 marked=244 items=267 stall=3
+15:44:37  [15:44:37] DMSYNC t=791s due=0 marked=246 items=267 stall=3
+15:44:41  [15:44:41] DMSYNC t=795s due=0 marked=246 items=267 stall=19
+15:44:45  [15:44:45] DMSYNC t=799s due=0 marked=246 items=267 stall=35
+15:44:49  [15:44:49] DMSYNC t=803s due=0 marked=246 items=267 stall=51
+15:44:53  [15:44:53] DMSYNC t=807s due=0 marked=246 items=267 stall=67
+15:44:57  [15:44:57] DMSYNC t=811s due=0 marked=246 items=267 stall=83

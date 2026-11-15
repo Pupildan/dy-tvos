@@ -1,25 +1,35 @@
 import Foundation
 import UIKit
 
-/// v164 作品/合集 WebView 截获（用户拍板降维打击路线）。
-/// 背景：本地算 a_bogus 死路（自签探针实锤 len=180 vs myDV 168，Node/QuickJS 同现 → JSCore 无解）。
+/// v166 作品/合集 WebView 截获（用户拍板降维打击路线）——**已接 UI**。
+/// 背景：本地算 a_bogus 死路（自签探针实锤 len=180 vs myDV 168，Node/QuickJS 同现 → JSCore 无解）；
+/// 原生 fetch 资料链也被服务端 200 空拒（v165 真机日志实锤 PROFILE fetch fail len=0）。
 /// 本类不算签名——离屏 WebView 以桌面 Chrome 身份加载作者主页，页面 JS 自己算 168 签名、自己发
-/// aweme/post / series / mix，我们只拦现成 response body。
-/// v164 关键修复（v163 零捕获根因）：改用 **WKUserContentController document-start 注入** hook
-/// （DYCreateWebViewWithInject），page JS 跑之前就装好拦截器——v163 用 evaluateJavaScript 事后注入漏了首屏 XHR。
+/// profile/aweme-post/series/mix，我们只拦现成 response body、解析成模型、经 delegate 喂 UI。
+/// v165 真机已验证截获成立（WORKS CAP POST len=60000 aweme_list has_more=1）。
+/// v166：body 上限 60000→300000（60KB 是日志截断，真作品 JSON 约 212KB，截断解析会失败）。
 /// 铁律边界：离屏数据泵非 UI，从不挂视图层级（同 v161 cookie 引导性质）。
 final class DYWorksCapture: NSObject {
     static let shared = DYWorksCapture()
+
+    /// UI 订阅截获结果（DYProfileScreen 注册；回调已在主线程）
+    protocol Delegate: AnyObject {
+        func worksCaptureDidCapture(profile: DYProfileUser)
+    }
+    weak var delegate: Delegate?
+
     private var webView: UIView?
     private var pollTimer: Timer?
     private var deadlineTimer: Timer?
     private var scrollTimer: Timer?
     private var gotWorks = false
+    private var gotProfile = false
     private var pollCount = 0
     private var totalCap = 0
     private var rehooked = false
+    private var currentSecUid = ""
 
-    /// document-start 注入的拦截器：命中作品/合集端点的响应体存 window.__dyCap
+    /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap
     private static let hookJS = """
     (function(){
       if(window.__dyHooked) return; window.__dyHooked=true; window.__dyCap=[]; window.__dyXHRTotal=0;
@@ -28,7 +38,7 @@ final class DYWorksCapture: NSObject {
         var s=String(u);
         if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
-        window.__dyCap.push({u:s.slice(0,120),b:body.slice(0,60000)});
+        window.__dyCap.push({u:s.slice(0,120),b:body.slice(0,300000)});
       }catch(e){} }
       var xo=XMLHttpRequest.prototype.open, xs=XMLHttpRequest.prototype.send;
       XMLHttpRequest.prototype.open=function(m,u){ this.__u=u; return xo.apply(this,arguments); };
@@ -41,7 +51,7 @@ final class DYWorksCapture: NSObject {
     })();
     """
 
-    /// 抽回 __dyCap + 诊断透视（page 加载状态/当前 URL/hook 状态/页面 XHR 总数）
+    /// 抽回 __dyCap + 诊断透视
     private static let drainJS = """
     (function(){
       var cap=[]; try{ cap=window.__dyCap.splice(0); }catch(e){}
@@ -54,21 +64,22 @@ final class DYWorksCapture: NSObject {
     })();
     """
 
-    /// 拉取作者作品+合集（原型：只截获+日志，不接 UI）。secUid 空→忽略。
+    /// 拉取作者资料+作品（截获→解析→delegate 喂 UI）。secUid 空→忽略。
     func fetch(secUid: String) {
         guard !secUid.isEmpty else { return }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if self.webView != nil { DYLog.shared.log("WORKSCAP busy,skip"); return }
-            // document-start 注入 hook（page JS 之前装好，零漏首屏）
             guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1, height: 1), DYProfileClient.webUA, Self.hookJS) as? UIView else {
                 DYLog.shared.event("WORKSCAP FAIL: 注入式 WKWebView 创建失败")
                 return
             }
             self.webView = wv
             self.gotWorks = false
+            self.gotProfile = false
             self.totalCap = 0
             self.rehooked = false
+            self.currentSecUid = secUid
             DYLog.shared.log("WORKSCAP load user page secUid=\(secUid.prefix(16))... (doc-start inject)")
             let url = "https://www.douyin.com/user/\(secUid)"
             wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: url)!))
@@ -78,7 +89,6 @@ final class DYWorksCapture: NSObject {
                 self?.drain(tag: "deadline")
                 self?.teardown()
             }
-            // 滚动触发懒加载（作品列表常滚动才发 aweme/post）
             self.scrollTimer = Timer.scheduledTimer(withTimeInterval: 4, repeats: true) { [weak self] _ in
                 self?.scrollPage()
             }
@@ -97,42 +107,83 @@ final class DYWorksCapture: NSObject {
     }
 
     private func drain(tag: String) {
-        guard let wv = webView, !gotWorks else { return }
+        guard let wv = webView else { return }
+        // 资料+作品都拿到即可收尾（不必等全部懒加载）
+        if gotWorks && gotProfile { teardown(); return }
         evalJS(Self.drainJS, tag: tag) { [weak self] result in
             guard let self else { return }
             guard let json = result as? String, let data = json.data(using: .utf8),
                   let diag = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return }
-            let rs = diag["rs"] as? String ?? "?"
-            let href = diag["href"] as? String ?? "?"
             let hooked = diag["hooked"] as? Bool ?? false
-            let xhr = diag["xhr"] as? Int ?? 0
             let cap = diag["cap"] as? [[String: Any]] ?? []
-            // 兜底：document-start 注入没生效(hooked=0)→ 用 evaluateJavaScript 补装 hook
             if !hooked, !self.rehooked {
                 self.rehooked = true
                 DYLog.shared.log("WORKSCAP[\(tag)] hooked=0 → evaluateJavaScript 补装 hook")
                 self.evalJS(Self.hookJS, tag: "rehook")
             }
-            // 诊断透视：每 3 次轮询打一条 page 状态
-            if self.pollCount % 3 == 0 {
-                DYLog.shared.log("WORKSCAP[\(tag)] page rs=\(rs) hooked=\(hooked ? 1 : 0) xhrTotal=\(xhr) cap=\(cap.count) href=\(href)")
-            }
             for item in cap {
                 let u = item["u"] as? String ?? "?"
                 let b = item["b"] as? String ?? ""
-                let kind = u.contains("aweme/post") ? "POST" : (u.contains("series/") ? "SERIES" : (u.contains("mix/") ? "MIX" : "PROFILE"))
                 self.totalCap += 1
-                DYLog.shared.event("WORKS CAP[\(tag)] \(kind) len=\(b.count) u=\(u)")
-                if (kind == "POST" || kind == "SERIES" || kind == "MIX"), !b.isEmpty {
-                    DYLog.shared.log("WORKS CAP BODY head: " + String(b.prefix(240)))
-                    self.gotWorks = true
+                if u.contains("user/profile"), !self.gotProfile {
+                    self.gotProfile = true
+                    DYLog.shared.event("WORKS CAP PROFILE len=\(b.count)")
+                    self.handleProfile(b)
+                } else if u.contains("aweme/post"), !b.isEmpty {
+                    DYLog.shared.event("WORKS CAP POST len=\(b.count)")
+                    self.handleWorks(b)
+                } else if u.contains("series/") || u.contains("mix/") {
+                    DYLog.shared.event("WORKS CAP SERIES/MIX len=\(b.count)")
                 }
             }
-            if self.gotWorks {
-                DYLog.shared.event("WORKS CAP OK total=\(self.totalCap) xhrTotal=\(xhr)——WebView 截获成立")
+            if self.gotWorks && self.gotProfile {
+                DYLog.shared.event("WORKS CAP OK total=\(self.totalCap)——资料+作品截获成立,喂UI")
                 self.teardown()
             }
         }
+    }
+
+    /// 解析 profile/other 响应 → DYProfileUser → delegate
+    private func handleProfile(_ body: String) {
+        guard let d = body.data(using: .utf8),
+              let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
+              (obj["status_code"] as? Int ?? -1) == 0,
+              let user = obj["user"] as? [String: Any] else {
+            DYLog.shared.log("WORKSCAP profile parse fail")
+            return
+        }
+        var avatar = ""
+        if let at = user["avatar_thumb"] as? [String: Any], let ul = at["url_list"] as? [String] {
+            avatar = ul.first(where: { $0.hasPrefix("http") }) ?? ""
+        }
+        let u = DYProfileUser(
+            nickname: user["nickname"] as? String ?? "",
+            avatarUrl: avatar,
+            secUid: user["sec_uid"] as? String ?? currentSecUid,
+            signature: user["signature"] as? String ?? "",
+            followerCount: (user["follower_count"] as? NSNumber)?.intValue ?? 0,
+            followingCount: (user["following_count"] as? NSNumber)?.intValue ?? 0,
+            awemeCount: (user["aweme_count"] as? NSNumber)?.intValue ?? 0,
+            totalFavorited: (user["total_favorited"] as? NSNumber)?.intValue ?? 0
+        )
+        DYLog.shared.event("WORKSCAP profile ok nick=\(u.nickname) fans=\(u.followerCount) works=\(u.awemeCount)")
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.worksCaptureDidCapture(profile: u)
+        }
+    }
+
+    /// 解析 aweme/post 响应 → 记录作品数（v166 先接资料+计数，作品网格待下版本）
+    private func handleWorks(_ body: String) {
+        guard let d = body.data(using: .utf8),
+              let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
+              (obj["status_code"] as? Int ?? -1) == 0 else {
+            DYLog.shared.log("WORKSCAP works parse fail")
+            return
+        }
+        let list = (obj["aweme_list"] as? [[String: Any]]) ?? []
+        let hasMore = (obj["has_more"] as? Int ?? 0)
+        DYLog.shared.event("WORKSCAP works ok n=\(list.count) hasMore=\(hasMore)")
+        gotWorks = true
     }
 
     private func scrollPage() {
