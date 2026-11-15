@@ -388,6 +388,9 @@ struct DYProfileScreen: View {
     @State private var worksCount = -2   // -2=加载中 -1=空响应 0+=数据
     @State private var failed = false
     @State private var loaded = false
+    /// v168 截获的作品列表（WebView 截获 aweme/post 精简数据）
+    @State private var works: [DYCapturedWork] = []
+    @State private var worksHasMore = false
 
     var body: some View {
         ZStack {
@@ -481,6 +484,17 @@ struct DYProfileScreen: View {
                 Text(worksNote)
                     .font(.system(size: 20))
                     .foregroundColor(.white.opacity(0.5))
+                // v168 作品网格（WebView 截获的作者作品；封面+标题，点击播放）
+                if !works.isEmpty {
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 16) {
+                            ForEach(works, id: \.id) { w in
+                                workCell(w)
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+                }
             } else if failed {
                 Text("获取失败（抖音连发限流），请稍后重试")
                     .font(.system(size: 24))
@@ -499,11 +513,14 @@ struct DYProfileScreen: View {
     }
 
     private var worksNote: String {
+        if !works.isEmpty {
+            return "作品 \(works.count) 件\(worksHasMore ? "（首页，滚动作者页加载更多）" : "")"
+        }
         switch worksCount {
         case -2: return "作品列表：截获中…"
         case -1: return "作品列表：截获失败，请稍后重试"
         case 0: return "作品列表：该作者暂无可见作品"
-        default: return "作品列表：已截获 \(worksCount) 件作品（网格展示待下版本）"
+        default: return "作品列表：截获中…（\(worksCount) 件）"
         }
     }
 
@@ -517,6 +534,80 @@ struct DYProfileScreen: View {
                 .foregroundColor(.white.opacity(0.6))
         }
         .frame(maxWidth: .infinity)
+    }
+
+    /// v168 作品网格单元：封面(9:16) + 标题两行；图集帖标「图集」
+    private func workCell(_ w: DYCapturedWork) -> some View {
+        Button {
+            playWork(w)
+        } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                ZStack {
+                    if !w.coverUrl.isEmpty, let cu = URL(string: w.coverUrl) {
+                        AvatarImage(url: cu)
+                    } else {
+                        Color.white.opacity(0.1)
+                    }
+                    if w.isImages {
+                        Text("图集")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 6))
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                            .padding(6)
+                    }
+                }
+                .frame(height: 190)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                Text(w.desc.isEmpty ? "（无文案）" : w.desc)
+                    .font(.system(size: 18))
+                    .foregroundColor(.white.opacity(0.85))
+                    .lineLimit(2)
+                    .frame(maxWidth: .infinity, minHeight: 46, alignment: .top)
+            }
+        }
+        .buttonStyle(PanelRowButtonStyle())
+    }
+
+    /// v168 点击作品 → merge 进 PlaybackEngine + 跳到该作品 + 关主页屏回播放
+    private func playWork(_ w: DYCapturedWork) {
+        if w.isImages {
+            model.showToast("图集作品暂不支持播放")
+            return
+        }
+        guard let best = DYFeedClient.selectBestPlayUrl(w.playUrls), let url = URL(string: best) else {
+            model.showToast("作品无可用播放地址")
+            return
+        }
+        var ids: [String] = []
+        var urls: [URL] = []
+        var durs: [Int] = []
+        var infos: [DYVideoInfo] = []
+        for item in works where !item.isImages {
+            guard let b = DYFeedClient.selectBestPlayUrl(item.playUrls), let u = URL(string: b) else { continue }
+            ids.append(item.id)
+            urls.append(u)
+            durs.append(item.durationMs)
+            var info = DYVideoInfo()
+            info.desc = item.desc
+            info.hashtags = item.desc
+            info.nickname = user?.nickname ?? ""
+            info.avatarUrl = user?.avatarUrl ?? ""
+            info.secUid = user?.secUid ?? ""
+            info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
+            infos.append(info)
+        }
+        guard !ids.isEmpty else { return }
+        PlaybackEngine.shared.merge(ids: ids, urls: urls, replaceExisting: false,
+                                     autoPlay: false, refresh: false,
+                                     allDurations: durs, allInfos: infos)
+        if let pos = PlaybackEngine.shared.urls.firstIndex(of: url) {
+            PlaybackEngine.shared.index = pos
+        }
+        DYLog.shared.event("WORKS play aweme=\(w.id) pos=\(PlaybackEngine.shared.index)")
+        model.isProfileOpen = false
     }
 
     private var panelBackground: some View {
@@ -533,12 +624,18 @@ struct DYProfileScreen: View {
     }
 }
 
-// v166：DYProfileScreen 订阅 DYWorksCapture 截获结果（WebView 截获 profile/other → DYProfileUser）。
-// 回调已在主线程（DYWorksCapture.handleProfile 里 DispatchQueue.main.async）。
+// v166/v168：DYProfileScreen 订阅 DYWorksCapture 截获结果（WebView 截获 → 模型 → UI）。
+// 回调已在主线程（DYWorksCapture 里 DispatchQueue.main.async）。
 extension DYProfileScreen: DYWorksCapture.Delegate {
     func worksCaptureDidCapture(profile: DYProfileUser) {
         user = profile
         worksCount = profile.awemeCount
         failed = false
+    }
+
+    func worksCaptureDidCapture(works: [DYCapturedWork], hasMore: Bool) {
+        self.works = works
+        self.worksHasMore = hasMore
+        if worksCount < 0 { worksCount = works.count }
     }
 }

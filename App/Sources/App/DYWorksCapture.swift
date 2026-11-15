@@ -1,13 +1,27 @@
 import Foundation
 import UIKit
 
-/// v166 作品/合集 WebView 截获（用户拍板降维打击路线）——**已接 UI**。
-/// 背景：本地算 a_bogus 死路（自签探针实锤 len=180 vs myDV 168，Node/QuickJS 同现 → JSCore 无解）；
+/// v168 截获的单条作品（JS 端预解析精简后传回——绕开大 JSON 截断）。
+/// 字段路径与 DYFeedClient.parseWeb 同构（aweme/post 响应=同款 web JSON）。
+struct DYCapturedWork {
+    let id: String
+    let desc: String
+    let coverUrl: String
+    /// 候选播放直链（play_addr→play_addr_265→download_addr 合并，'|' join；播放时 selectBestPlayUrl 选链）
+    let playUrls: [String]
+    let durationMs: Int
+    let isImages: Bool
+    let createTime: Int
+}
+
+/// v166+ 作品/合集 WebView 截获（用户拍板降维打击路线）——已接 UI。
+/// 背景：本地算 a_bogus 死路（自签探针实锤 len=180 vs myDV 168 → JSCore 无解）；
 /// 原生 fetch 资料链也被服务端 200 空拒（v165 真机日志实锤 PROFILE fetch fail len=0）。
 /// 本类不算签名——离屏 WebView 以桌面 Chrome 身份加载作者主页，页面 JS 自己算 168 签名、自己发
 /// profile/aweme-post/series/mix，我们只拦现成 response body、解析成模型、经 delegate 喂 UI。
-/// v165 真机已验证截获成立（WORKS CAP POST len=60000 aweme_list has_more=1）。
-/// v166：body 上限 60000→300000（60KB 是日志截断，真作品 JSON 约 212KB，截断解析会失败）。
+/// v167 真机验证：资料 100% 通（fans/works 真实数字，136 万粉大 V 也通）。
+/// v168：aweme/post 改 **JS 端预解析精简**（v167 的 300KB 截断 parse fail 根因——JS slice 上限
+/// 切残大 JSON；现在 JS 端直接 JSON.parse 只传 id/desc/cover/直链/duration，体积 300KB+→~10KB）。
 /// 铁律边界：离屏数据泵非 UI，从不挂视图层级（同 v161 cookie 引导性质）。
 final class DYWorksCapture: NSObject {
     static let shared = DYWorksCapture()
@@ -17,6 +31,7 @@ final class DYWorksCapture: NSObject {
     /// delegate 也用 strong（struct 非 weak 目标；DYWorksCapture 单例 + View 生命周期内注册，无循环引用）。
     protocol Delegate {
         func worksCaptureDidCapture(profile: DYProfileUser)
+        func worksCaptureDidCapture(works: [DYCapturedWork], hasMore: Bool)
     }
     var delegate: Delegate?
 
@@ -31,7 +46,8 @@ final class DYWorksCapture: NSObject {
     private var rehooked = false
     private var currentSecUid = ""
 
-    /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap
+    /// document-start 注入的拦截器：命中资料/作品/合集端点的响应体存 window.__dyCap。
+    /// aweme/post 响应在 JS 端预解析精简（每条只取 id/desc/cover/直链/duration/图集位）。
     private static let hookJS = """
     (function(){
       if(window.__dyHooked) return; window.__dyHooked=true; window.__dyCap=[]; window.__dyXHRTotal=0;
@@ -40,6 +56,26 @@ final class DYWorksCapture: NSObject {
         var s=String(u);
         if(s.indexOf('aweme/post')<0&&s.indexOf('series/')<0&&s.indexOf('mix/')<0&&s.indexOf('user/profile')<0) return;
         var body=(typeof b==='string')?b:JSON.stringify(b);
+        if(s.indexOf('aweme/post')>=0){
+          var j=null; try{ j=JSON.parse(body); }catch(e){}
+          if(j&&j.aweme_list){
+            var slim=[];
+            for(var i=0;i<j.aweme_list.length;i++){
+              var a=j.aweme_list[i]||{}; var v=a.video||{};
+              var cand=[];
+              if(v.play_addr&&v.play_addr.url_list)cand=cand.concat(v.play_addr.url_list);
+              if(v.play_addr_265&&v.play_addr_265.url_list)cand=cand.concat(v.play_addr_265.url_list);
+              if(v.download_addr&&v.download_addr.url_list)cand=cand.concat(v.download_addr.url_list);
+              var cov='';
+              if(v.cover&&v.cover.url_list&&v.cover.url_list[0])cov=v.cover.url_list[0];
+              else if(v.origin_cover&&v.origin_cover.url_list&&v.origin_cover.url_list[0])cov=v.origin_cover.url_list[0];
+              slim.push({id:a.aweme_id||'',desc:a.desc||'',cov:cov,dur:v.duration||0,ct:a.create_time||0,
+                imgs:(a.images&&a.images.length)?1:0,u:cand.join('|')});
+            }
+            window.__dyCap.push({u:s.slice(0,120),b:JSON.stringify({works:slim,hasMore:(j.has_more||0),maxCursor:(j.max_cursor||0)})});
+            return;
+          }
+        }
         window.__dyCap.push({u:s.slice(0,120),b:body.slice(0,300000)});
       }catch(e){} }
       var xo=XMLHttpRequest.prototype.open, xs=XMLHttpRequest.prototype.send;
@@ -71,7 +107,11 @@ final class DYWorksCapture: NSObject {
         guard !secUid.isEmpty else { return }
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            if self.webView != nil { DYLog.shared.log("WORKSCAP busy,skip"); return }
+            if self.webView != nil {
+                if self.currentSecUid == secUid { return }   // 同作者重复触发（onChange 双 fire），静默去重
+                DYLog.shared.log("WORKSCAP switch author, restart capture")
+                self.teardown()                                // 换作者：停旧会话重开
+            }
             guard let wv = DYCreateWebViewWithInject(CGRect(x: 0, y: 0, width: 1, height: 1), DYProfileClient.webUA, Self.hookJS) as? UIView else {
                 DYLog.shared.event("WORKSCAP FAIL: 注入式 WKWebView 创建失败")
                 return
@@ -109,8 +149,7 @@ final class DYWorksCapture: NSObject {
     }
 
     private func drain(tag: String) {
-        guard let wv = webView else { return }
-        // 资料+作品都拿到即可收尾（不必等全部懒加载）
+        guard webView != nil else { return }
         if gotWorks && gotProfile { teardown(); return }
         evalJS(Self.drainJS, tag: tag) { [weak self] result in
             guard let self else { return }
@@ -174,18 +213,37 @@ final class DYWorksCapture: NSObject {
         }
     }
 
-    /// 解析 aweme/post 响应 → 记录作品数（v166 先接资料+计数，作品网格待下版本）
+    /// 解析 JS 端精简后的 aweme/post 数据（{works:[{id,desc,cov,dur,imgs,u}],hasMore}）→ delegate
     private func handleWorks(_ body: String) {
         guard let d = body.data(using: .utf8),
               let obj = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any],
-              (obj["status_code"] as? Int ?? -1) == 0 else {
-            DYLog.shared.log("WORKSCAP works parse fail")
+              let slim = obj["works"] as? [[String: Any]] else {
+            DYLog.shared.log("WORKSCAP works parse fail (slim)")
             return
         }
-        let list = (obj["aweme_list"] as? [[String: Any]]) ?? []
-        let hasMore = (obj["has_more"] as? Int ?? 0)
-        DYLog.shared.event("WORKSCAP works ok n=\(list.count) hasMore=\(hasMore)")
+        let hasMore = (obj["hasMore"] as? Int ?? 0) != 0
+        var works: [DYCapturedWork] = []
+        for w in slim {
+            guard let id = w["id"] as? String, !id.isEmpty else { continue }
+            let urls = ((w["u"] as? String) ?? "").split(separator: "|").map(String.init)
+                .filter { $0.hasPrefix("http") }
+            guard !urls.isEmpty else { continue }
+            works.append(DYCapturedWork(
+                id: id,
+                desc: w["desc"] as? String ?? "",
+                coverUrl: w["cov"] as? String ?? "",
+                playUrls: urls,
+                durationMs: (w["dur"] as? NSNumber)?.intValue ?? 0,
+                isImages: (w["imgs"] as? NSNumber)?.intValue == 1,
+                createTime: (w["ct"] as? NSNumber)?.intValue ?? 0
+            ))
+        }
+        DYLog.shared.event("WORKSCAP works ok n=\(works.count) hasMore=\(hasMore ? 1 : 0)")
+        guard !works.isEmpty else { return }
         gotWorks = true
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.worksCaptureDidCapture(works: works, hasMore: hasMore)
+        }
     }
 
     private func scrollPage() {
