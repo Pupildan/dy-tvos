@@ -17,19 +17,16 @@ final class PlayerLayerView: UIView {
 /// Feed Cell：不自己创建 Player。willDisplay 时向 PlayerManager 申请绑定对应的 Player 层。
 /// 未就绪时显示高清封面 CoverImageView 兜底（绝不强行 play），避免黑屏。
 /// v143 PC 版 UI：左下作者/文案区 + 右侧动作轨（计数纯展示，随视频自动切换）。
-/// v151 氛围背景：非全屏视频的黑色边区用封面取色+高斯模糊铺满（抖音环境光效果）。
 final class PlayerCell: UICollectionViewCell {
-    /// 氛围背景（最底层）：封面缩略 + 高斯模糊 + 轻压暗，铺满 cell——视频层 resizeAspect 留出的黑边透出它
-    private let backdropView = UIImageView()
     let playerLayerView = PlayerLayerView()
     /// 弹幕覆盖层：真实视频层之上、封面之下（未 ready 时被封面盖住）；tvOS 焦点隔离（渲染纯展示层）
     let danmakuOverlay = DanmakuOverlay()
-    /// 高清封面兜底：player 未 ready 时显示，绝不黑屏（背景透明让氛围层透出黑边区）
+    /// 高清封面兜底：player 未 ready 时显示，绝不黑屏
     let coverImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
-        iv.backgroundColor = .clear
+        iv.backgroundColor = .black
         iv.isHidden = true
         return iv
     }()
@@ -51,12 +48,9 @@ final class PlayerCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .black
-        contentView.addSubview(backdropView)
         contentView.addSubview(playerLayerView)
         contentView.addSubview(danmakuOverlay)
         contentView.addSubview(coverImageView)
-        backdropView.contentMode = .scaleAspectFill
-        backdropView.clipsToBounds = true
         playerLayerView.playerLayer.videoGravity = .resizeAspect
         buildPCOverlay()
         // 焦点隔离实验：把 cell 彻底排除出 tvOS 焦点系统，验证跳多页是否焦点引擎作怪
@@ -66,7 +60,6 @@ final class PlayerCell: UICollectionViewCell {
     required init?(coder: NSCoder) { fatalError() }
     override func layoutSubviews() {
         super.layoutSubviews()
-        backdropView.frame = contentView.bounds
         playerLayerView.frame = contentView.bounds
         danmakuOverlay.frame = contentView.bounds
         coverImageView.frame = contentView.bounds
@@ -196,45 +189,13 @@ final class PlayerCell: UICollectionViewCell {
         if n >= 10_000 { return String(format: "%.1f万", Double(n) / 10_000) }
         return String(n)
     }
-    /// 设置封面兜底图（v151：同时生成氛围模糊背景铺黑边区）。
+    /// 设置封面兜底图。
     func setCover(_ image: UIImage?) {
         coverImageView.image = image
-        if let image {
-            Self.makeAmbientBlur(image) { [weak self] blurred in
-                self?.backdropView.image = blurred
-            }
-        }
     }
     /// 封面显隐：player 未 ready 时显示封面，ready 后隐藏露出真实视频层。
     func setCoverVisible(_ visible: Bool) {
         coverImageView.isHidden = !visible
-    }
-
-    /// v151 氛围背景：封面缩小 20 倍面积 → 高斯模糊 → 轻压暗微增饱和（左下白字可读性）。
-    /// 小图大半径=等效全尺寸大模糊，单张毫秒级；cover 缓存命中后每视频只算一次。
-    private static let ambientContext = CIContext()
-
-    static func makeAmbientBlur(_ image: UIImage, done: @escaping (UIImage?) -> Void) {
-        DispatchQueue.global(qos: .utility).async {
-            let small = CGSize(width: 220, height: 390)
-            let smallImg = UIGraphicsImageRenderer(size: small).image { _ in image.draw(in: CGRect(origin: .zero, size: small)) }
-            guard let ci = CIImage(image: smallImg) else { DispatchQueue.main.async { done(nil) }; return }
-            guard let blur = CIFilter(name: "CIGaussianBlur") else { DispatchQueue.main.async { done(nil) }; return }
-            blur.setValue(ci.clampedToExtent(), forKey: kCIInputImageKey)
-            blur.setValue(20, forKey: kCIInputRadiusKey)
-            guard let blurred = blur.outputImage else { DispatchQueue.main.async { done(nil) }; return }
-            guard let adj = CIFilter(name: "CIColorControls") else { DispatchQueue.main.async { done(nil) }; return }
-            adj.setValue(blurred, forKey: kCIInputImageKey)
-            adj.setValue(-0.12, forKey: kCIInputBrightnessKey)
-            adj.setValue(1.1, forKey: kCIInputSaturationKey)
-            guard let out = adj.outputImage, let cg = ambientContext.createCGImage(out, from: ci.extent) else {
-                DYLog.shared.count("ambient_fail")
-                DispatchQueue.main.async { done(nil) }
-                return
-            }
-            DYLog.shared.count("ambient_ok")
-            DispatchQueue.main.async { done(UIImage(cgImage: cg)) }
-        }
     }
 }
 
@@ -644,11 +605,13 @@ final class DYPlayerViewController: UIViewController {
         collectionView.panGestureRecognizer.isEnabled = false
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.cancelsTouchesInView = false
+        pan.delegate = self
         view.addGestureRecognizer(pan)
         let hold = UILongPressGestureRecognizer(target: self, action: #selector(handleHold(_:)))
         hold.minimumPressDuration = 0.6
-        hold.allowableMovement = 140   // 容忍悬停漂移（v149 的 60px 太紧+1s 太长，真机零触发）
+        hold.allowableMovement = 140   // 容忍悬停漂移
         hold.cancelsTouchesInView = false
+        hold.delegate = self
         view.addGestureRecognizer(hold)
     }
 
@@ -668,13 +631,13 @@ final class DYPlayerViewController: UIViewController {
             pan2xFired = false
             panSwiped = false
         case .changed:
-            // 悬停判定（v152 放宽）：pan 开始 ≥0.6s 且总位移从未越过滑动阈值(<100px) → 两倍速。
-            // v151 的 <60px 阈值敌不过悬停时的自然手抖（漂移 60-100px 之间两通道全灭=「不触发」）。
-            if !pan2xFired, !panSwiped, abs(t.y) < 100, abs(t.x) < 100,
-               let began = panBeganAt, Date().timeIntervalSince(began) >= 0.6 {
-                pan2xFired = true
-                startHold2x()
-            }
+        // 悬停判定（v152 放宽）：pan 开始 ≥0.6s 且总位移从未越过滑动阈值(<100px) → 两倍速。
+        // v153 主通道=LongPress（共存委托后静置触摸也能到 0.6s）；pan 悬停保留兜底。
+        if !pan2xFired, !panSwiped, abs(t.y) < 100, abs(t.x) < 100,
+           let began = panBeganAt, Date().timeIntervalSince(began) >= 0.6 {
+            pan2xFired = true
+            startHold2x()
+        }
             guard abs(t.y) > 100 else { return }
             if pan2xFired {
                 // 2x 悬停中的漂移不再当滑动（v151 实锤：2x 点亮后被漂移切视频=秒灭）
@@ -1107,6 +1070,16 @@ final class DYPlayerViewController: UIViewController {
             }
         }
         super.pressesBegan(presses, with: event)
+    }
+}
+
+/// 手势共存委托（v153 关键修复）：默认互斥规则下，pan 在手指移动 ~10px 时转入 .began 会
+/// 强杀还在计时的 UILongPress——纯静止触摸永远到不了 0.6s=「要有位移才触发」的根源。
+/// 允许共存后：静置触摸走 LongPress 纯计时触发；pan 通道继续兜底微漂移场景。
+extension DYPlayerViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+        true
     }
 }
 

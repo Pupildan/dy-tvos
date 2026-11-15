@@ -24,6 +24,8 @@ struct DYVideoInfo {
     /// 合集识别（v145：mobile=aweme f14 子消息存在（wire 观测：内含合集名 f5）；web=mix_info）
     var isMix: Bool = false
     var mixName: String = ""
+    /// 作者 sec_uid（v153 主页用；mobile=author f191，web=author.sec_uid）
+    var secUid: String = ""
 }
 
 /// 原生播放引擎：持有有序视频直链 + 当前索引，驱动 AVPlayer。

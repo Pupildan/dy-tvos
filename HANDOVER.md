@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v152**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v153**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 用户"趋近完美"）；双源架构全通（v135）；弹幕=⏸️暂停待重启（v142 反馈未达点子）；PC 版 UI v143-v145 已按反馈修正待验收；评论已实装、作者主页被 UIFID 风控墙挡住（v147）。
 
 ---
@@ -61,7 +61,8 @@
 | v149 | 评论闪退真根因=ensureTTWID 队列内联回调+同队列 queue.sync 自等待死锁；两倍速改触摸板悬停 1s；面板真·底部居中+无 tint 玻璃；弹幕顶部 6 行/不重叠/280px/s；右轨图标回落 | ✅ 评论死锁修复真机验收通过（v149 会话 3 次开评论屏 0 闪退，CMT 全通）；触摸悬停真机零触发（容限太紧） |
 | v150 | 弹幕 canShoot 门控+轨道卡死 10s 自愈+DMSYNC 诊断；行距加大（轨道高 50）；悬停倍速 0.6s/漂移容限 140/必留日志+▶▶2x 角标；主页合集 toast 反馈（探针实锤作品列表需登录态） | ✅ DMSYNC 立功：发射层无恙，暴露取数缺口 |
 | v151 | **弹幕空窗真根因**=服务端单请求最多回 ~30s 数据、60s 窗口永久丢后半段（1199 vs 1981 探针对比）→窗口 20s 重叠覆盖；标题重复=desc 内联话题词法剔除；非全屏黑边取色高斯模糊背景；悬停倍速 pan 小位移兜底双通道 | ✅ 弹幕真机验证全量（29632 条/stall=0）；悬停暴露滑动互斥问题；模糊层空白 |
-| v152 | 悬停/滑动互斥判定（一次触摸二选一，悬停阈值放宽 100px，2x 中漂移不再切视频）；loadCover 无条件调用修氛围层空白（只对未就绪视频加载导致预载就绪视频永无封面）；ambient_ok/fail 计数 | ✅ CI 过，待验收 |
+| v152 | 悬停/滑动互斥判定（一次触摸二选一，悬停阈值放宽 100px，2x 中漂移不再切视频）；loadCover 无条件调用修氛围层空白（只对未就绪视频加载导致预载就绪视频永无封面）；ambient_ok/fail 计数 | ⚠️ 悬停仍要位移才触发（pan 抢杀 LongPress）；模糊效果用户不满意 |
+| v153 | **悬停纯计时触发**（手势共存委托：v149-v152 的 LongPress 被 pan 默认互斥规则在手指移动 10px 时强杀，纯静止触摸到不了 0.6s）；撤销模糊背景；**作者主页实装**（DYProfileClient：UIFID_TEMP cookie 罐 + uifid 参数/头 + x-secsdk-web-signature MD5 照抄 u11.i()；user/profile/other 匿名全通；aweme/post 真机试探埋日志） | ✅ CI 过，待验收 |
 
 ## 5. 未解决问题清单（按优先级）
 
@@ -76,12 +77,16 @@
 - **V150 已修并保留的**：发射器 canShoot 门控（被轨道拒不标记、腾出即补射）；DMJANITOR 轨道卡死 10s 自愈；DMSYNC 每 4s 诊断日志；顶部 6 行/不重叠/280px/s/轨道高 50。
 - **验收点**：长视频弹幕应全程连续无 30s 级空窗；日志 DMSYNC stall 应持续 ≤2（不再出现 stall=100+）；DMJANITOR 不应触发。
 
-### 5.3 作者主页作品列表（两道墙已探明，需登录态解锁）
-- **web 墙**：`/aweme/v1/web/aweme/post/` → 403 `ArgusSecurityPlugin Uifid Not Found`（myDV 同 blocked）。UIFID 链已挖到 uz0 协程 POST 申请（X-Secsdk-Csrf-Token: DOWNGRADE），调用方 URL 未挖到。
-- **mobile 墙（v150 探针实锤，`_tmp/mobile_post_probe.js`）**：`aweme.snssdk.com/aweme/v1|v2/aweme/post/` **无风控墙**（http=200 status_code=0，a_bogus 签名即过），但匿名设备一律返回**空 aweme_list**（sec_user_id 与 user_id/max_time 两种参数形态、3 个作者全试过）——作品列表被登录态卡死，不是签名问题。
-- **解锁路径**：扫码登录（路线 v2-v8 已验证，铁律允许仅登录用 WebView）→ 拿到 cookie 后 mobile post 端点大概率直接可用（比挖 UIFID 链靠谱）。
-- **v150 占位反馈**：主页/合集点击给 toast「需登录支持，即将上线」（不再点了没反应）。
-- **已有资产**：sec_uid=author f191（实测）；works API 参数表全录（web+mobile 双形态）；zq5 有 UserWorksResponse 解析参照。
+### 5.3 作者主页与合集（v153 身份链已打通，作品列表差最后一口气）
+- **已探明并实装（DYProfileClient.swift，全部探针实测）**：
+  - **UIFID_TEMP 来源**：`tab/feed` 响应 `Set-Cookie` 自动下发（160 hex 字符）——不需要专门申请端点，cookie 罐收走即可（myDV sl4 同构）。之前的 403 "Uifid Not Found" 就是缺这个 cookie + `uifid` 参数/头。
+  - **x-secsdk-web-signature**：`MD5(uifid_timestamp_A96D855A08C0A9707F8BEF0D9A527E4E_全参数k=v&拼接)`（u11.i() 原样，参数含 a_bogus+uifid+timestamp）。签名错 → 403 "Sign Invalid"；对 → 过签名关。
+  - **user/profile/other 匿名全通**（sc=0：昵称/粉丝/获赞/作品数/简介）→ v153 主页屏已实装。
+- **仍卡的两点**：
+  - `aweme/post`（作品列表）：签名通过但 **200 + content-length:0 静默拒绝**（真 msToken（mssdk 照抄 u11:729 可换）/webid/参数变体全试过无效）。剩余疑点=**TLS 指纹**（Node 是已知 bot 特征；应用 URLSession 指纹不同）→ v153 已埋真机试探日志（WORKS probe），真机日志定论。
+  - `mix/aweme`（合集内容）：sc=4 参数错误（mix_id 从 aweme f14 子消息 f6 提取已验证）；`mix/detail` sc=0 但内容空。待真机同链试探。
+- **myDV 参照**：u11.java G0/withUserCenterSignChain（UIFID 缺失时仍发请求但不带 x-secsdk 头）；rz0（uifid 头注入）；sl4（cookie 罐）；mix/listcollection 与 favorite 在 myDV 源码里也标 blocked——myDV 的合集走的是 mix/aweme/detail 家族。
+- **探针**：`_tmp/round3_probe.js`（mssdk 照抄验证）、`_tmp/post_matrix_probe.js`（签名矩阵）、`_tmp/uifid_probe.js`（cookie 罐链）。
 
 ### 5.4 评论功能增强（次要）
 - 当前固定取 3 页 60 条；滚动到底自动加载更多（cursor 分页已支持，加个触底加载即可）。

@@ -39,6 +39,13 @@ struct RootView: View {
                     .zIndex(11)
             }
 
+            // 作者主页屏（v153：快捷面板「主页」打开；Menu 关闭回播放）
+            if quick.isProfileOpen {
+                DYProfileScreen()
+                    .ignoresSafeArea()
+                    .zIndex(12)
+            }
+
             // 轻提示（v150：主页/合集等占位动作反馈，2.5s 自动消失）
             if let toast = quick.toast {
                 Text(toast)

@@ -314,6 +314,7 @@ final class DYFeedClient {
             }
             if let author = a["author"] as? [String: Any] {
                 info.nickname = author["nickname"] as? String ?? ""
+                info.secUid = author["sec_uid"] as? String ?? ""
                 if let av = author["avatar_thumb"] as? [String: Any], let ul = av["url_list"] as? [String] {
                     info.avatarUrl = ul.first(where: { $0.hasPrefix("http") }) ?? ""
                 }
@@ -510,6 +511,7 @@ final class DYFeedClient {
             }
             if let ab = aweme.bytesFields(4).first, let af = Proto.parse(ab) {
                 info.nickname = af.string(3) ?? af.string(2) ?? ""
+                info.secUid = af.string(191) ?? ""   // v153 主页用（实测 MS4wLjAB...）
                 // 头像：author f5/f6/f7（PlayAddr 同构，url_list 取第一个）
                 for ak in [5, 6, 7] {
                     if let ab2 = af.bytesFields(ak).first, let cand = Proto.parse(ab2), let u = Proto.urlList(cand, 0).first, u.hasPrefix("http") {

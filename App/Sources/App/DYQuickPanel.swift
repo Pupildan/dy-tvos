@@ -7,6 +7,10 @@ final class DYQuickPanelModel: ObservableObject {
     @Published var isOpen = false
     /// 评论屏开关（v147：快捷面板「评论」项打开）
     @Published var isCommentOpen = false
+    /// 作者主页屏开关（v153：主页项打开；作品列表接口仍被风控，先展示资料）
+    @Published var isProfileOpen = false
+    /// 主页对应的作者 sec_uid
+    @Published var profileSecUid = ""
     /// 面板对应的视频 id（评论请求用）
     var awemeId = ""
     /// 当前视频信息（主页头像/合集条件显示）
@@ -44,10 +48,19 @@ final class DYQuickPanelModel: ObservableObject {
         DYLog.shared.log("QUICK panel close")
     }
 
+    /// 主页：关闭面板 → 0.4s 后开作者资料屏（事务分离防焦点异常，同评论屏 v148 模式）
     func selectHome() {
-        // v150：作品列表数据被登录态卡死（探针实锤：web=UIFID 墙 403；mobile /aweme/post/ 匿名一律空列表）
-        noteAndClose("home")
-        showToast("作者主页需登录支持，登录功能即将上线")
+        guard let sec = info?.secUid, !sec.isEmpty else {
+            noteAndClose("home")
+            showToast("该视频没有作者主页信息")
+            return
+        }
+        isOpen = false
+        profileSecUid = sec
+        DYLog.shared.event("QUICK select home sec=\(sec)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in
+            self?.isProfileOpen = true
+        }
     }
 
     /// 评论：关闭快捷面板 → 0.4s 后再开评论屏。
@@ -352,6 +365,153 @@ struct DYCommentScreen: View {
     }
 
     /// v149：标准液态玻璃无 tint（透出视频），与快捷面板一致
+    private var panelBackground: some View {
+        Group {
+            if #available(tvOS 26.0, *) {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(Color.clear)
+                    .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+            } else {
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            }
+        }
+    }
+}
+
+/// 作者主页屏（v153：快捷面板「主页」打开；user/profile/other 匿名已通）。
+/// 焦点规则：常驻可聚焦元素（返回按钮）；Menu 关闭回播放。
+struct DYProfileScreen: View {
+    @ObservedObject var model = DYQuickPanelModel.shared
+    @FocusState private var focused: String?
+    @State private var user: DYProfileUser?
+    @State private var worksCount = -2   // -2=加载中 -1=空响应 0+=数据
+    @State private var loaded = false
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.55).ignoresSafeArea()
+            HStack {
+                Spacer(minLength: 0)
+                panel
+                    .frame(width: 640)
+                    .padding(.trailing, 32)
+                    .padding(.vertical, 40)
+            }
+        }
+        .onAppear {
+            guard !loaded else { return }
+            loaded = true
+            focused = "close"
+            let sec = model.profileSecUid
+            DYProfileClient.shared.profile(for: sec) { u, works in
+                user = u
+                worksCount = works
+            }
+        }
+        .onExitCommand { model.isProfileOpen = false }   // Menu 关闭回播放
+        .transition(.opacity)
+    }
+
+    private var panel: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack {
+                Text("作者主页")
+                    .font(.system(size: 34, weight: .bold))
+                    .foregroundColor(.white)
+                Spacer(minLength: 0)
+                Button {
+                    model.isProfileOpen = false
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                        Text("返回播放")
+                    }
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 10)
+                    .background {
+                        if focused == "close" {
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .strokeBorder(Color.white, lineWidth: 4)
+                        }
+                    }
+                }
+                .buttonStyle(PanelRowButtonStyle())
+                .focused($focused, equals: "close")
+            }
+            if let u = user {
+                HStack(spacing: 18) {
+                    Group {
+                        if !u.avatarUrl.isEmpty, let url = URL(string: u.avatarUrl) {
+                            AvatarImage(url: url)
+                        } else {
+                            Image(systemName: "person.circle.fill")
+                                .font(.system(size: 60))
+                                .foregroundColor(.white.opacity(0.5))
+                        }
+                    }
+                    .frame(width: 110, height: 110)
+                    .clipShape(Circle())
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(u.nickname.isEmpty ? "抖音用户" : u.nickname)
+                            .font(.system(size: 36, weight: .bold))
+                            .foregroundColor(.white)
+                        Text("抖音号：\(String(u.secUid.suffix(12)))")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white.opacity(0.55))
+                    }
+                }
+                HStack(spacing: 0) {
+                    statCell(value: u.followerCount, label: "粉丝")
+                    statCell(value: u.followingCount, label: "关注")
+                    statCell(value: u.totalFavorited, label: "获赞")
+                    statCell(value: u.awemeCount, label: "作品")
+                }
+                if !u.signature.isEmpty {
+                    Text(u.signature)
+                        .font(.system(size: 22))
+                        .foregroundColor(.white.opacity(0.7))
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Text(worksNote)
+                    .font(.system(size: 20))
+                    .foregroundColor(.white.opacity(0.5))
+            } else {
+                Text("加载中...")
+                    .font(.system(size: 26))
+                    .foregroundColor(.white.opacity(0.6))
+                    .padding(.top, 40)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(28)
+        .background(panelBackground)
+    }
+
+    private var worksNote: String {
+        switch worksCount {
+        case -2: return "作品列表：加载中"
+        case -1: return "作品列表：接口静默拒绝（真机探测记录中，待后续版本解锁）"
+        case 0: return "作品列表：该作者暂无可见作品"
+        default: return "作品列表：接口已通（\(worksCount) 条，展示待下版本）"
+        }
+    }
+
+    private func statCell(value: Int, label: String) -> some View {
+        VStack(spacing: 4) {
+            Text(PlayerCell.cnCount(value))
+                .font(.system(size: 30, weight: .bold))
+                .foregroundColor(.white)
+            Text(label)
+                .font(.system(size: 20))
+                .foregroundColor(.white.opacity(0.6))
+        }
+        .frame(maxWidth: .infinity)
+    }
+
     private var panelBackground: some View {
         Group {
             if #available(tvOS 26.0, *) {
