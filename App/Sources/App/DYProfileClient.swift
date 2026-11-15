@@ -56,6 +56,19 @@ final class DYProfileClient {
         Self.randomMsToken()
     }
 
+    /// myDV D0 尾部附加：jar 里有 s_v_web_id/webid 时带 verifyFp/fp/webid 参数
+    private func d0Extras() -> [(String, String)] {
+        var out: [(String, String)] = []
+        if let sv = jar["s_v_web_id"], !sv.isEmpty {
+            out.append(("verifyFp", sv))
+            out.append(("fp", sv))
+        }
+        if let webid = jar["webid"], !webid.isEmpty {
+            out.append(("webid", webid))
+        }
+        return out
+    }
+
     // MARK: - cookie 罐
 
     /// 吸收响应 Set-Cookie（allHeaderFields 多条 Set-Cookie 会逗号合并；目标 cookie 值均不含逗号，按名定向提取）
@@ -93,16 +106,90 @@ final class DYProfileClient {
         guard !secUid.isEmpty else { onDone(nil, 0); return }
         queue.async { [weak self] in
             guard let self else { return }
-            self.ensureUIFID { [weak self] in
+            self.bootstrapHome { [weak self] in
                 guard let self else { return }
-                self.fetchProfile(secUid: secUid) { user in
-                    // 作品接口真机试探（v153 配方：假 msToken+最小头——v157 全套浏览器头反而被拒）
-                    self.fetchWorks(secUid: secUid) { count in
-                        DispatchQueue.main.async { onDone(user, count) }
+                self.ensureUIFID { [weak self] in
+                    guard let self else { return }
+                    self.fetchProfile(secUid: secUid) { user in
+                        self.fetchWorks(secUid: secUid) { count in
+                            DispatchQueue.main.async { onDone(user, count) }
+                        }
                     }
                 }
             }
         }
+    }
+
+    // MARK: - 首页引导（照抄 myDV u11.z()：首页 GET 5 跳手动跟随重定向吸 Set-Cookie + y() 解析 HTML）
+
+    /// myDV z() 原样：GET www.douyin.com/?recommend=1，每跳吸收 Set-Cookie；3xx→带罐跳 Location（≤5 跳）；
+    /// 最终 200 → y() 解析：HTML 内嵌 msToken/odin_tt/user_unique_id(=webid)。
+    /// 关键待真机定论：URLSession（Apple TLS 指纹）拉首页是否被 jsvmp 挑战页拦（Node 100% 被拦）。
+    private func bootstrapHome(_ done: @escaping () -> Void) {
+        queue.async { [weak self] in
+            guard let self else { return }
+            if self.jar["s_v_web_id"] != nil || self.homeBootstrapped { done(); return }
+            self.homeBootstrapped = true
+            var url = "https://www.douyin.com/?recommend=1"
+            var lastBody: String = ""
+
+            func hop(_ n: Int) {
+                guard n < 5 else {
+                    DYLog.shared.log("PROFILE boot hops exhausted jar=\(self.jar.keys.sorted().joined(separator: ","))")
+                    done(); return
+                }
+                var req = URLRequest(url: URL(string: url)!)
+                req.timeoutInterval = 15
+                req.setValue(DYProfileClient.webUA, forHTTPHeaderField: "User-Agent")
+                req.setValue("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", forHTTPHeaderField: "Accept")
+                req.setValue(self.cookieHeader(), forHTTPHeaderField: "Cookie")
+                req.setValue("https://www.douyin.com/", forHTTPHeaderField: "Referer")
+                self.session.dataTask(with: req) { [weak self] data, resp, err in
+                    guard let self else { return }
+                    guard let http = resp as? HTTPURLResponse, err == nil else {
+                        DYLog.shared.log("PROFILE boot hop\(n) err")
+                        done(); return
+                    }
+                    self.absorb(http)
+                    let code = http.statusCode
+                    let body = data ?? Data()
+                    DYLog.shared.log("PROFILE boot hop\(n) http=\(code) len=\(body.count) jar=\(self.jar.keys.sorted().joined(separator: ","))")
+                    if code >= 300 && code < 400, let loc = http.value(forHTTPHeaderField: "Location") {
+                        url = loc.hasPrefix("http") ? loc : "https://www.douyin.com" + loc
+                        hop(n + 1)
+                        return
+                    }
+                    // 最终页：y() 解析
+                    let html = String(data: body, encoding: .utf8) ?? ""
+                    lastBody = html
+                    let uuiCount = html.components(separatedBy: "user_unique_id").count - 1
+                    let isChallenge = html.contains("_$jsvmprt") || html.contains("__ac_signature")
+                    DYLog.shared.log("PROFILE boot final len=\(html.count) uui=\(uuiCount) challenge=\(isChallenge ? 1 : 0)")
+                    if !isChallenge {
+                        if let ms = self.regex1("\"msToken\"\\s*:\\s*\"([^\"]+)\"", html), ms.count >= 100 { self.jar["msToken"] = ms }
+                        if let odin = self.regex1("\"odin_tt\"\\s*:\\s*\"([^\"]+)\"", html) { self.jar["odin_tt"] = odin }
+                        let webid = self.regex1("\\\\\"user_unique_id\\\\\":\\\\\"(\\d+)\\\\\"", html)
+                            ?? self.regex1("\"user_unique_id\"\\s*:\\s*\"(\\d+)\"", html)
+                        if let webid { self.jar["webid"] = webid }
+                        DYLog.shared.log("PROFILE boot y() msToken=\(self.jar["msToken"] != nil) odin=\(self.jar["odin_tt"] != nil) webid=\(self.jar["webid"] != nil)")
+                    } else {
+                        DYLog.shared.log("PROFILE boot: URLSession 也被 jsvmp 挑战页拦（信任 cookie 需另路）")
+                    }
+                    _ = lastBody
+                    done()
+                }.resume()
+            }
+            hop(0)
+        }
+    }
+
+    private var homeBootstrapped = false
+
+    private func regex1(_ pattern: String, _ text: String) -> String? {
+        guard let re = try? NSRegularExpression(pattern: pattern) else { return nil }
+        let ns = text as NSString
+        guard let m = re.firstMatch(in: text, range: NSRange(location: 0, length: ns.length)) else { return nil }
+        return ns.substring(with: m.range(at: 1))
     }
 
     // MARK: - UIFID 种子（tab/feed 响应下发 UIFID_TEMP，探针实锤）
@@ -146,7 +233,7 @@ final class DYProfileClient {
     // MARK: - 作者资料（user/profile/other，探针实测匿名 sc=0）
 
     private func fetchProfile(secUid: String, onDone: @escaping (DYProfileUser?) -> Void) {
-        let params: [(String, String)] = Self.webCommon + [
+        var params: [(String, String)] = Self.webCommon + [
             ("sec_user_id", secUid),
             ("publish_video_strategy_type", "2"),
             ("source", "channel_pc_web"),
@@ -154,6 +241,7 @@ final class DYProfileClient {
             ("msToken", self.msToken()),
             ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
         ]
+        params.append(contentsOf: self.d0Extras())   // myDV D0: verifyFp/fp/webid（jar 有才加）
         self.signedGET("/aweme/v1/web/user/profile/other/", params: params,
                        referer: "https://www.douyin.com/user/" + secUid) { data, resp in
             self.absorb(resp)
@@ -186,7 +274,7 @@ final class DYProfileClient {
     // MARK: - 作品列表试探（aweme/post；探针 200 空——真机 URLSession TLS 指纹可能不同）
 
     private func fetchWorks(secUid: String, onDone: @escaping (Int) -> Void) {
-        let params: [(String, String)] = Self.webCommon + [
+        var params: [(String, String)] = Self.webCommon + [
             ("sec_user_id", secUid), ("count", "10"), ("max_cursor", "0"), ("locate_item_id", ""), ("locate_query", "false"),
             ("show_live_replay_strategy", "1"), ("need_time_list", "1"), ("time_list_query", "0"), ("whale_cut_token", ""),
             ("cut_version", "1"), ("publish_video_strategy_type", "2"), ("from_user_page", "1"),
@@ -194,6 +282,7 @@ final class DYProfileClient {
             ("msToken", self.msToken()),
             ("screen_width", "2560"), ("screen_height", "1440"), ("cpu_core_num", "24"), ("device_memory", "8"),
         ]
+        params.append(contentsOf: self.d0Extras())   // myDV D0: verifyFp/fp/webid（jar 有才加）
         self.signedGET("/aweme/v1/web/aweme/post/", params: params,
                        referer: "https://www.douyin.com/user/" + secUid) { data, resp in
             self.absorb(resp)
