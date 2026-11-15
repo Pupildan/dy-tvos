@@ -12,11 +12,13 @@ import UIKit
 final class DYWorksCapture: NSObject {
     static let shared = DYWorksCapture()
 
-    /// UI 订阅截获结果（DYProfileScreen 注册；回调已在主线程）
-    protocol Delegate: AnyObject {
+    /// UI 订阅截获结果（DYProfileScreen 注册；回调已在主线程）。
+    /// 注意：DYProfileScreen 是 struct（SwiftUI View），协议不能加 :AnyObject 约束（struct 无法遵循 class 协议）。
+    /// delegate 也用 strong（struct 非 weak 目标；DYWorksCapture 单例 + View 生命周期内注册，无循环引用）。
+    protocol Delegate {
         func worksCaptureDidCapture(profile: DYProfileUser)
     }
-    weak var delegate: Delegate?
+    var delegate: Delegate?
 
     private var webView: UIView?
     private var pollTimer: Timer?

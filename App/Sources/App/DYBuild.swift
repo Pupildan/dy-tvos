@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v166"
-    static let changes = "v166: 作品/资料截获接UI——DYWorksCapture解析截获的profile/other响应成DYProfileUser经delegate喂DYProfileScreen(v165真机截获成立POST len=60000);DYProfileScreen改吃WebView截获数据源弃用被200空拒的原生fetch链;body上限60000→300000(60KB是日志截断真作品JSON约212KB);主页资料+作品数真机可用,作品网格待下版本"
+    static let version = "v167"
+    static let changes = "v167: 修v166 CI编译错——DYProfileScreen是struct无法遵循class协议(Delegate:AnyObject),去掉AnyObject约束+delegate改strong(struct非weak目标,单例+View生命周期内注册无循环引用);其余同v166(WebView截获profile接UI,DYProfileScreen改吃截获数据源弃用被200空拒的原生fetch)"
 }
