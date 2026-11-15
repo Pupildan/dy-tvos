@@ -14,7 +14,7 @@ enum DYMsSdk {
         req.timeoutInterval = 15
         req.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
         req.setValue("text/plain;charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        let body = "{\"dataType\":8,\"magic\":538969122,\"strData\":\"" + strData + "\","\"tspFromClient\":" + String(Int(Date().timeIntervalSince1970)) + ",\"ulr\":0,\"version\":1}"
+        let body = "{\"dataType\":8,\"magic\":538969122,\"strData\":\"" + strData + "\",\"tspFromClient\":" + String(Int(Date().timeIntervalSince1970)) + ",\"ulr\":0,\"version\":1}"
         req.httpBody = body.data(using: .utf8)
         session.dataTask(with: req) { _, resp, _ in
             var found: String?
