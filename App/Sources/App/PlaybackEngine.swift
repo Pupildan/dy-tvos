@@ -93,6 +93,7 @@ final class PlaybackEngine: ObservableObject {
         currentAwemeId = ""
         fetchedAt = .distantPast
         consecutiveFailures = 0
+        worksSegment = nil
         DYLog.shared.log("ENGINE reset (source switch)")
     }
 
@@ -206,49 +207,119 @@ final class PlaybackEngine: ObservableObject {
         DYLog.shared.log("ENGINE setURLs count=\(new.count) index=\(index) refresh=\(isRefresh)")
     }
 
-    /// v173 单条插入（v172 真机反馈：插整个作品段=必须刷完所有作者作品才回推荐流，被否）。
-    /// 只把点播的那一条插到当前播放位置之后：看完这条 down 一下就回 feed 剩余、up 回已看 feed，
-    /// 随时退出。返回该作品最终位置（已在 feed 里则直接跳过去）。
+    /// v174 作品/合集段标记（用户拍板的点播语义）：
+    /// 未操作=自动刷作者作品段/合集段，刷完自动回归 feed（段插在当前播放位之后）；
+    /// 操作=快捷面板「回到推荐」立即 removeWorksSegment 推回正常视频流。
+    struct WorksSegment { let anchor: Int; let start: Int; let count: Int }
+    private(set) var worksSegment: WorksSegment?
+
+    /// v174 段插入式重建（v172 版本回归）：作品段插在当前播放位之后 = 已看 feed 前缀 + 作品段 + feed 剩余。
+    /// 已有段时先移除旧段再插新段（换作者/换合集场景）。返回选中作品的最终位置。
+    /// allDurations/allInfos 与 ids 同下标对位。
     @discardableResult
-    func insertSingleWork(id: String, url: URL, durationMs: Int, info: DYVideoInfo) -> Int {
+    func insertWorks(ids: [String], urls newUrls: [URL], allDurations: [Int]?, allInfos: [DYVideoInfo]?, selectedId: String) -> Int {
+        if worksSegment != nil { removeWorksSegment() }
         let cur = index
-        if let p = awemeOrder.firstIndex(of: id) {
-            index = p
-            currentAwemeId = id
-            DYLog.shared.log("ENGINE insertOne skip (already in feed) pos=\(p)")
-            return p
+        let existing = Set(awemeOrder)
+        var wIds: [String] = [], wUrls: [URL] = [], wDurs: [Int] = [], wInfos: [DYVideoInfo] = []
+        for (i, id) in ids.enumerated() where !existing.contains(id) {
+            wIds.append(id)
+            wUrls.append(newUrls[i])
+            wDurs.append(allDurations?[i] ?? 0)
+            wInfos.append(allInfos?[i] ?? DYVideoInfo())
         }
+        // 选中作品若已在 feed 里（当前作者=正在看的作者），直接跳到它的 feed 位置
+        if wIds.isEmpty || (!wIds.contains(selectedId) && existing.contains(selectedId)) {
+            let pos = awemeOrder.firstIndex(of: selectedId) ?? cur
+            index = pos
+            currentAwemeId = awemeOrder.indices.contains(pos) ? awemeOrder[pos] : ""
+            DYLog.shared.log("ENGINE insertWorks skip (selected already in feed) pos=\(pos)")
+            return pos
+        }
+        guard !wIds.isEmpty else { return cur }
         let insertAt = cur + 1
-        func newPos(_ p: Int) -> Int { p <= cur ? p : p + 1 }
-        rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.map { (newPos($0.key), $0.value) })
-        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.map { (newPos($0.key), $0.value) })
-        mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.map { (newPos($0.key), $0.value) })
-        durations = Dictionary(uniqueKeysWithValues: durations.map { (newPos($0.key), $0.value) })
-        infos = Dictionary(uniqueKeysWithValues: infos.map { (newPos($0.key), $0.value) })
+        let oldCount = awemeOrder.count
+        let newCount = oldCount + wIds.count
+        // 位置映射：p <= cur → p；p > cur → p + wIds.count；works 占 insertAt..insertAt+wIds.count-1
+        func newPos(_ p: Int) -> Int { p <= cur ? p : p + wIds.count }
+        var newRaw: [Int: [UInt8]] = [:]
+        var newRedir: [Int: URL] = [:]
+        var newMinted: [Int: Date] = [:]
+        var newDur: [Int: Int] = [:]
+        var newInfo: [Int: DYVideoInfo] = [:]
+        for (p, v) in rawVideos { newRaw[newPos(p)] = v }
+        for (p, v) in redirectUrls { newRedir[newPos(p)] = v }
+        for (p, v) in mintedAt { newMinted[newPos(p)] = v }
+        for (p, v) in durations { newDur[newPos(p)] = v }
+        for (p, v) in infos { newInfo[newPos(p)] = v }
         let now = Date()
-        mintedAt[insertAt] = now
-        durations[insertAt] = durationMs
-        infos[insertAt] = info
+        for i in 0..<wIds.count {
+            let p = insertAt + i
+            newMinted[p] = now   // works 无 raw bytes（web JSON 直链），不进 rawVideos
+            newDur[p] = wDurs[i]
+            newInfo[p] = wInfos[i]
+        }
         var newIds: [String] = []
-        var newUrls: [URL] = []
-        let newCount = awemeOrder.count + 1
+        var newUrls2: [URL] = []
         for i in 0..<newCount {
             if i < insertAt {
-                newIds.append(awemeOrder[i]); newUrls.append(urls[i])
-            } else if i == insertAt {
-                newIds.append(id); newUrls.append(url)
+                newIds.append(awemeOrder[i]); newUrls2.append(urls[i])
+            } else if i < insertAt + wIds.count {
+                let wi = i - insertAt
+                newIds.append(wIds[wi]); newUrls2.append(wUrls[wi])
             } else {
-                newIds.append(awemeOrder[i - 1]); newUrls.append(urls[i - 1])
+                let oi = i - wIds.count
+                newIds.append(awemeOrder[oi]); newUrls2.append(urls[oi])
             }
         }
         awemeOrder = newIds
-        self.urls = newUrls
+        self.urls = newUrls2
+        rawVideos = newRaw
+        redirectUrls = newRedir
+        mintedAt = newMinted
+        durations = newDur
+        infos = newInfo
         fetchedAt = Date()
         consecutiveFailures = 0
-        index = insertAt
-        currentAwemeId = id
-        DYLog.shared.log("ENGINE insertOne total=\(newCount) insertAt=\(insertAt)")
-        return insertAt
+        let pos = wIds.firstIndex(of: selectedId).map { insertAt + $0 } ?? cur
+        index = pos
+        currentAwemeId = awemeOrder.indices.contains(pos) ? awemeOrder[pos] : ""
+        worksSegment = WorksSegment(anchor: cur, start: insertAt, count: wIds.count)
+        DYLog.shared.log("ENGINE insertWorks total=\(newCount) works=\(wIds.count) insertAt=\(insertAt) pos=\(pos) anchor=\(cur)")
+        return pos
+    }
+
+    /// v174 用户操作「回到推荐」：移除作品/合集段，推回正常视频流（= 锚点视频的下一格）。
+    /// 返回应跳转的 feed 位置。
+    @discardableResult
+    func removeWorksSegment() -> Int {
+        guard let seg = worksSegment else { return index }
+        let (anchor, start, count) = (seg.anchor, seg.start, seg.count)
+        func oldPos(_ p: Int) -> Int { p <= anchor ? p : p - count }
+        rawVideos = Dictionary(uniqueKeysWithValues: rawVideos.map { (oldPos($0.key), $0.value) })
+        redirectUrls = Dictionary(uniqueKeysWithValues: redirectUrls.map { (oldPos($0.key), $0.value) })
+        mintedAt = Dictionary(uniqueKeysWithValues: mintedAt.map { (oldPos($0.key), $0.value) })
+        durations = Dictionary(uniqueKeysWithValues: durations.map { (oldPos($0.key), $0.value) })
+        infos = Dictionary(uniqueKeysWithValues: infos.map { (oldPos($0.key), $0.value) })
+        var newIds: [String] = []
+        var newUrls: [URL] = []
+        for i in 0..<urls.count where !(i >= start && i < start + count) {
+            newIds.append(awemeOrder[i]); newUrls.append(urls[i])
+        }
+        awemeOrder = newIds
+        urls = newUrls
+        worksSegment = nil
+        let jump = min(anchor + 1, max(0, awemeOrder.count - 1))
+        index = jump
+        currentAwemeId = awemeOrder.indices.contains(jump) ? awemeOrder[jump] : ""
+        DYLog.shared.log("ENGINE removeWorks anchor=\(anchor) count=\(count) jump=\(jump) total=\(awemeOrder.count)")
+        return jump
+    }
+
+    /// 当前 index 是否落在作品/合集段内（快捷面板「回到推荐」项的显示条件）
+    var isInWorksSegment: Bool {
+        guard let seg = worksSegment else { return false }
+        return index >= seg.start && index < seg.start + seg.count
     }
 
     func next() {

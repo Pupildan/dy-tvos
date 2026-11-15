@@ -1,36 +1,50 @@
 import SwiftUI
 
-/// v172/v173 作者作品/合集作品共用点播：单条插入（engine.insertSingleWork）+ DYWorksJump 跳转通知。
-/// v173 语义（用户拍板）：只插入选中的这一条——看完 down 一下就回推荐流、up 回已看 feed，随时退出。
+/// v172/v174 作者作品/合集作品共用点播：段插入（engine.insertWorks）+ DYWorksJump 跳转通知。
+/// v174 定版语义（用户拍板）：未操作=自动刷作品段/合集段（刷完自动回 feed）；
+/// 操作=快捷面板「回到推荐」立即 removeWorksSegment 推回正常视频流。
 /// 右轨统计自截获数据提取（statistics.digg/comment/collect/share）。
 enum DYWorksPlayback {
-    static func play(_ w: DYCapturedWork,
+    static func play(_ w: DYCapturedWork, works: [DYCapturedWork],
                      nickname: String, avatarUrl: String, secUid: String, sourceName: String) {
         let model = DYQuickPanelModel.shared
         if w.isImages {
             model.showToast("图集作品暂不支持播放")
             return
         }
-        guard let best = DYFeedClient.selectBestPlayUrl(w.playUrls), let url = URL(string: best) else {
+        guard DYFeedClient.selectBestPlayUrl(w.playUrls) != nil else {
             model.showToast("作品无可用播放地址")
             return
         }
-        var info = DYVideoInfo()
-        info.desc = w.desc
-        info.hashtags = w.desc
-        info.nickname = nickname
-        info.avatarUrl = avatarUrl
-        info.secUid = secUid
-        info.createTimeText = DYFeedClient.formatCreateTime(UInt64(w.createTime))
-        info.isMix = !w.mixName.isEmpty
-        info.mixName = w.mixName
-        info.mixId = w.mixId
-        info.digg = w.digg
-        info.comment = w.comment
-        info.collect = w.collect
-        info.share = w.share
-        let pos = PlaybackEngine.shared.insertSingleWork(id: w.id, url: url,
-                                                         durationMs: w.durationMs, info: info)
+        var ids: [String] = []
+        var urls: [URL] = []
+        var durs: [Int] = []
+        var infos: [DYVideoInfo] = []
+        for item in works where !item.isImages {
+            guard let b = DYFeedClient.selectBestPlayUrl(item.playUrls), let u = URL(string: b) else { continue }
+            ids.append(item.id)
+            urls.append(u)
+            durs.append(item.durationMs)
+            var info = DYVideoInfo()
+            info.desc = item.desc
+            info.hashtags = item.desc
+            info.nickname = nickname
+            info.avatarUrl = avatarUrl
+            info.secUid = secUid
+            info.createTimeText = DYFeedClient.formatCreateTime(UInt64(item.createTime))
+            info.isMix = !item.mixName.isEmpty
+            info.mixName = item.mixName
+            info.mixId = item.mixId
+            info.digg = item.digg
+            info.comment = item.comment
+            info.collect = item.collect
+            info.share = item.share
+            infos.append(info)
+        }
+        guard !ids.isEmpty else { return }
+        let pos = PlaybackEngine.shared.insertWorks(ids: ids, urls: urls,
+                                                    allDurations: durs, allInfos: infos,
+                                                    selectedId: w.id)
         DYLog.shared.event("\(sourceName) play aweme=\(w.id) pos=\(pos)")
         NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
     }
@@ -138,6 +152,15 @@ final class DYQuickPanelModel: ObservableObject {
         onDislike?()
     }
 
+    /// v174 回到推荐：移除作品/合集段，立即推回正常视频流（用户拍板的"操作后推回"）
+    func selectBack() {
+        DYLog.shared.event("QUICK select back-to-feed")
+        isOpen = false
+        let pos = PlaybackEngine.shared.removeWorksSegment()
+        NotificationCenter.default.post(name: Notification.Name("DYWorksJump"), object: pos)
+        showToast("已回到推荐流")
+    }
+
     private func noteAndClose(_ name: String) {
         DYLog.shared.event("QUICK select \(name) (待实施)")
         isOpen = false
@@ -151,7 +174,7 @@ struct DYQuickPanelView: View {
     @FocusState private var focusedRow: QuickRow?
 
     enum QuickRow: Hashable {
-        case home, comment, mix, dislike
+        case back, home, comment, mix, dislike
     }
 
     var body: some View {
@@ -170,6 +193,10 @@ struct DYQuickPanelView: View {
 
     private var panel: some View {
         HStack(spacing: 16) {
+            // v174 回到推荐（仅作品/合集段激活时显示）：立即推回正常视频流
+            if PlaybackEngine.shared.worksSegment != nil {
+                quickCard(row: .back, icon: "arrow.uturn.left.circle.fill", title: "回到推荐")
+            }
             quickCard(row: .home, icon: "avatar", title: "主页")
             quickCard(row: .comment, icon: "bubble.left.and.bubble.right.fill", title: "评论")
             if model.info?.isMix == true {
@@ -214,6 +241,7 @@ struct DYQuickPanelView: View {
         let focused = focusedRow == row
         return Button {
             switch row {
+            case .back: model.selectBack()
             case .home: model.selectHome()
             case .comment: model.selectComment()
             case .mix: model.selectMix()
@@ -646,9 +674,9 @@ struct DYProfileScreen: View {
         .animation(.easeOut(duration: 0.15), value: focused)
     }
 
-    /// v168 点击作品 → 播放 + 关主页屏回播放（v173 单条插入语义）
+    /// v168 点击作品 → 播放 + 关主页屏回播放（v174 段插入语义）
     private func playWork(_ w: DYCapturedWork) {
-        DYWorksPlayback.play(w,
+        DYWorksPlayback.play(w, works: works,
                              nickname: user?.nickname ?? "", avatarUrl: user?.avatarUrl ?? "",
                              secUid: user?.secUid ?? "", sourceName: "WORKS")
         model.isProfileOpen = false
@@ -783,7 +811,7 @@ struct DYMixScreen: View {
     /// 复用作者主页网格单元样式（封面 9:16 + 标题 + 合集角标 + 聚焦白描边）
     private func workCell(_ w: DYCapturedWork) -> some View {
         Button {
-            DYWorksPlayback.play(w,
+            DYWorksPlayback.play(w, works: works,
                                  nickname: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.nickname ?? "",
                                  avatarUrl: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.avatarUrl ?? "",
                                  secUid: PlaybackEngine.shared.videoInfo(at: PlaybackEngine.shared.index)?.secUid ?? "",
