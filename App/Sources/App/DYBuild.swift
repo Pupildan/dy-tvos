@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v191"
-    static let changes = "v191: 修v190回归(只第一个房间出画面,刷后面连声音都没)。v190日志铁证idx=2/idx=4卡ready=0 playing=0 status=0永不ready→根因prepareWindow驱逐时readyObservers[i].invalidate()掐死ready观察,快速滑动player刚建没ready就划出窗口→invalidate后player后来ready了没人接→永远status=0。修:readyObservers改按webRid键(原按index),驱逐别invalidate(player在playerCache活着观察保持armed),只在evictPlayerCacheIfNeeded真销毁时invalidate防泄漏;ensurePlayer复用/createPlayer已armed别重挂防重复观察泄漏。playerCache复用保留(v190)"
+    static let version = "v192"
+    static let changes = "v192: 推倒per-cell player池(连败v189/v190/v191三轮),照myDV反编译+VOD出画面代码改单AVPlayer换URL。agent翻反编译实锤:myDV整个滑动会话只有一个ExoPlayer(ij4.c全局共享),换房setMediaItem(newUrl).prepare()换URL无池;我建per-cell池多player抢解码器→大部分黑屏。且VOD出画面(NativePlayerView:423)用AVURLAsset带AVURLAssetHTTPHeaderFieldsKey(Referer+UA+ttwid),我直播用裸AVPlayerItem(url:)没带header→CDN返回空→黑屏(有声音=部分CDN宽松)。修:删players池/playerCache/evict/readyObservers/prepareWindow/ensurePlayer/createPlayer整套,加控制器级sharedPlayer单实例,playRoom resolve HLS→AVURLAsset带liveHeaders→replaceCurrentItem换URL→play;LivePlayerCell简化只bind共享player渲染。滑动切房动画层不动(用户核心关切)"
 }

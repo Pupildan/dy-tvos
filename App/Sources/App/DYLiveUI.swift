@@ -3,11 +3,10 @@ import UIKit
 import AVFoundation
 import AVKit
 
-// MARK: - 直播流屏（v184 全屏纵向分页刷直播间，照抄 NativePlayerView 分页/手势/遥控/池窗口）
+// MARK: - 直播流屏（v192 单 AVPlayer 换 URL，照 myDV 全局共享 player + VOD asset header）
 
 /// SwiftUI 包装：直播纵向分页流（全屏）。设置面板「直播」进入；Menu 关闭回播放。
-/// v186：删掉右上角返回按钮——它抢焦点导致遥控上下键被 SwiftUI 焦点引擎吃掉、
-/// 切不了房（真机日志实锤）。退出统一走 Menu（onExitCommand），无焦点竞争。
+/// v186：删掉右上角返回按钮——它抢焦点导致遥控上下键被 SwiftUI 焦点引擎吃掉、切不了房。
 struct DYLiveFeedScreen: View {
     @ObservedObject var model = DYQuickPanelModel.shared
 
@@ -26,40 +25,34 @@ struct DYLiveFeedView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: DYLiveFeedViewController, context: Context) {}
 }
 
-/// 可聚焦 collectionView（v186）：PlayerCell `canBecomeFocused=false`（照 VOD，避免 cell 抢焦点干扰滑动），
-/// 但直播屏需要遥控上下键锚点 → 让 collectionView 自己可聚焦。聚焦后遥控上下键走 live VC 的 pressesBegan 切房，
-/// 不再被 SwiftUI 焦点引擎吃掉（真机实锤：返回按钮/无可聚焦元素 → 上下键失效）。
+/// 可聚焦 collectionView：PlayerCell `canBecomeFocused=false`（照 VOD），但直播屏需要遥控上下键锚点
+/// → 让 collectionView 自己可聚焦。聚焦后遥控上下键走 live VC 的 pressesBegan 切房。
 final class DYLiveFocusCollectionView: UICollectionView {
     override var canBecomeFocused: Bool { true }
 }
 
-/// 直播单房间 cell（v188）：内嵌 AVPlayerViewController 出画面。
-/// v186/v187 手动管 AVPlayerLayer 连败两轮（日志 layer=1920x1080 ready=1 playing=1 全绿却黑屏）→
-/// 按铁律回退标准底座：AVPlayerViewController 自己管 AVPlayerLayer 渲染，天生出画面，绕开手动 layer 泥潭。
-/// 左下角标题/观看数 overlay 照 VOD PC 版排版。播放控件关掉（上下键切房，不要自带 UI）。
+/// 直播单房间 cell（v192 简化）：不再各自持 player，只渲染 + 标题/观看数 overlay。
+/// 出画面的 AVPlayer 在控制器级（单实例换 URL，照 myDV 全局共享 player）；cell 只 bind 共享 player 渲染。
+/// 照 VOD PlayerCell 结构（playerLayerView + cover + PC 版 overlay）——VOD 这套真机出画面，照抄。
 final class LivePlayerCell: UICollectionViewCell {
-    private let playerVC = AVPlayerViewController()
+    let playerLayerView = PlayerLayerView()
+    let coverImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.clipsToBounds = true
+        iv.backgroundColor = .black
+        iv.isHidden = true
+        return iv
+    }()
     private let nicknameLabel = UILabel()
     private let descLabel = UILabel()
-    /// 当前绑定的 player（供池驱逐时 pause）
-    private(set) var player: AVPlayer?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .black
-        // AVPlayerViewController：tvOS 标准出画面方案（自带 AVPlayerLayer 渲染）
-        playerVC.showsPlaybackControls = false
-        playerVC.videoGravity = .resizeAspect
-        // ⚠️ tvOS 上 AVPlayerViewController.view 是 UIView?（iOS 非可选）——必须解包，否则编译错
-        guard let pv = playerVC.view else { return }
-        pv.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(pv)
-        NSLayoutConstraint.activate([
-            pv.topAnchor.constraint(equalTo: contentView.topAnchor),
-            pv.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            pv.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            pv.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-        ])
+        contentView.addSubview(playerLayerView)
+        contentView.addSubview(coverImageView)
+        playerLayerView.playerLayer.videoGravity = .resizeAspect
         // 左下信息区（照 VOD PC 版：@主播·X观看 / 标题）
         nicknameLabel.font = .boldSystemFont(ofSize: 32)
         nicknameLabel.textColor = .white
@@ -72,11 +65,14 @@ final class LivePlayerCell: UICollectionViewCell {
         descLabel.numberOfLines = 2
         contentView.addSubview(nicknameLabel)
         contentView.addSubview(descLabel)
+        isUserInteractionEnabled = false   // 照 VOD cell：排除出焦点/触摸，滑动不被干扰
     }
     required init?(coder: NSCoder) { fatalError() }
-    override var canBecomeFocused: Bool { false }   // 照 VOD cell：排除出焦点系统，滑动不被焦点干扰
+    override var canBecomeFocused: Bool { false }
     override func layoutSubviews() {
         super.layoutSubviews()
+        playerLayerView.frame = contentView.bounds
+        coverImageView.frame = contentView.bounds
         let b = contentView.bounds
         let infoLeft: CGFloat = 24
         let infoBottom: CGFloat = 44
@@ -85,36 +81,36 @@ final class LivePlayerCell: UICollectionViewCell {
         nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 62 - 4 - 40, width: infoW, height: 40)
     }
 
-    /// 绑 player（AVPlayerViewController 自己 render）+ 填标题/观看数
-    func configure(room: DYLiveRoom, player: AVPlayer, viewerText: String) {
-        self.player = player
-        playerVC.player = player
+    /// 填标题/观看数（照 VOD applyInfo 同行排版：@主播 · X观看 / 标题）
+    func configure(room: DYLiveRoom, viewerText: String) {
         let nick = room.ownerName.isEmpty ? "" : "@\(room.ownerName)"
-        let time = viewerText
-        if nick.isEmpty && time.isEmpty {
+        if nick.isEmpty && viewerText.isEmpty {
             nicknameLabel.attributedText = nil
         } else {
             let s = NSMutableAttributedString()
             if !nick.isEmpty {
                 s.append(NSAttributedString(string: nick, attributes: [.font: UIFont.boldSystemFont(ofSize: 32), .foregroundColor: UIColor.white, .shadow: Self.textShadow]))
-                if !time.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
+                if !viewerText.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
             }
-            if !time.isEmpty {
-                s.append(NSAttributedString(string: time, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
+            if !viewerText.isEmpty {
+                s.append(NSAttributedString(string: viewerText, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
             }
             nicknameLabel.attributedText = s
         }
         descLabel.text = room.title.isEmpty ? nil : room.title
     }
-    /// 离屏解绑（池仍持有 player，回滚回来 configure 重绑）
-    func unbind() {
-        playerVC.player = nil
-        player = nil
-    }
-    /// 重绑 player（updatePlaybackStates 每 tick 调；标题/观看数已由 configure 填过，这里只换 player）
+    /// bind 共享 player 渲染（出画面 = AVPlayerLayer + VOD asset header）
     func bind(player: AVPlayer) {
-        self.player = player
-        playerVC.player = player
+        playerLayerView.player = player
+    }
+    func unbind() {
+        playerLayerView.player = nil
+    }
+    func setCover(_ image: UIImage?) {
+        coverImageView.image = image
+    }
+    func setCoverVisible(_ visible: Bool) {
+        coverImageView.isHidden = !visible
     }
     private static let textShadow: NSShadow = {
         let s = NSShadow()
@@ -125,28 +121,20 @@ final class LivePlayerCell: UICollectionViewCell {
     }()
 }
 
-/// 直播纵向分页控制器（照抄 DYPlayerViewController 的分页/snap/pan 护栏/遥控，但数据走 DYLiveClient
-/// 游标翻页、拉流走 HLS 单房间池）。池窗口 [idx-1, idx+1]，相邻房间预 resolve HLS 预取。
+/// 直播纵向分页控制器（照 myDV 全局共享 player：**单 AVPlayer 换 URL**，非池）。
+/// v189-v191 连败三轮的根因=per-cell player 池（窗口驱逐+缓存）多 player 抢解码器 → 大部分黑屏。
+/// myDV 反编译实锤：整个滑动会话只有一个 ExoPlayer，换房 setMediaItem(newUrl).prepare() 换 URL，无池。
+/// 且 VOD 出画面用 AVURLAsset 带 AVURLAssetHTTPHeaderFieldsKey（Referer+UA），我直播之前用裸 AVPlayerItem 没带 → CDN 返回空。
 final class DYLiveFeedViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
 
-    // MARK: 直播单房间 HLS 池（窗口 [idx-1, idx+1]；驱逐只 pause 不销毁，player 按 webRid 缓存）
-    private var players: [Int: AVPlayer] = [:]
-    /// player 缓存（webRid → AVPlayer）：驱逐只 pause 不销毁，刷回来复用已缓冲 player 秒出画面
-    /// （v189 铁证：同房间 player 被反复销毁重建 idx=0 出现 3 次 → 每次重缓冲黑屏。缓存修之）
-    private var playerCache: [String: AVPlayer] = [:]
-    /// 缓存顺序（webRid，用于超上限淘汰最旧）
-    private var playerCacheOrder: [String] = []
-    private let playerCacheLimit = 8
-    private var hlsCache: [String: String] = [:]        // webRid → 已 resolve 的 HLS URL
-    private var resolving = Set<String>()               // webRid → enter 在飞去重
-    private var playerRequests: [Int: String] = [:]     // index → 发起时的 webRid（防竞态）
-    /// KVO ready 观察（照 VOD readyObservers）：player status → readyToPlay 时补 play（修"没画面只有声音"）
-    /// v191：改按 webRid 键（原按 index）——驱逐别 invalidate，player 在 playerCache 活着观察保持 armed；
-    /// v190 铁证：驱逐 invalidate → 快速滑动 player 刚建没 ready 就划出窗口 → ready 了没人接 → 永远 status=0 连声音都没
-    private var readyObservers: [String: NSKeyValueObservation] = [:]
+    /// 全局共享单 player（照 myDV ij4.c 全局共享 ExoPlayer）——换房 replaceCurrentItem 换 URL，不销毁重建
+    private let sharedPlayer = AVPlayer()
+    private var hlsCache: [String: String] = [:]       // webRid → 已 resolve 的 HLS URL
+    private var resolving = Set<String>()              // webRid → enter 在飞去重
+    private var playingWebRid = ""                     // 当前共享 player 正在放的房间
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -174,11 +162,6 @@ final class DYLiveFeedViewController: UIViewController {
         loadFeed()
     }
 
-    /// 遥控焦点锚点：初始焦点落 collectionView → 上下键进 pressesBegan 切房（照 NativePlayerView）
-    override var preferredFocusEnvironments: [UIFocusEnvironment] {
-        return [collectionView]
-    }
-
     private func loadFeed() {
         DYLiveClient.shared.fetchLiveFeed { [weak self] fresh in
             guard let self else { return }
@@ -200,7 +183,6 @@ final class DYLiveFeedViewController: UIViewController {
     }
 
     @objc private func handlePan(_ g: UIPanGestureRecognizer) {
-        // 焦点屏护栏（照 v171）：面板/浏览屏打开时滑动交焦点引擎
         guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
               DYQuickPanelModel.shared.isProfileOpen == false, DYQuickPanelModel.shared.isCommentOpen == false,
               DYQuickPanelModel.shared.isMixOpen == false else { return }
@@ -224,7 +206,6 @@ final class DYLiveFeedViewController: UIViewController {
         let targetY = min(CGFloat(clamped) * pageHeight, maxOffset)
         collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
         currentIndex = clamped
-        prepareWindow(center: clamped)
         if clamped >= count - 5 { loadMoreIfNeeded() }
         DYLog.shared.log("LIVEFEED scrollTo idx=\(clamped) y=\(targetY) items=\(count)")
         DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
@@ -239,158 +220,80 @@ final class DYLiveFeedViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
-    // MARK: 池窗口（窗口 [idx-1, idx+1]；驱逐只 pause 不销毁，player 按 webRid 缓存供刷回复用）
-    private func prepareWindow(center idx: Int) {
+    /// 居中房间播放，非居中 pause（单共享 player；只有居中 cell bind 出画面）
+    private func updatePlaybackStates(center index: Int) {
         let rooms = DYLiveClient.shared.rooms
-        guard rooms.indices.contains(idx) else { return }
-        // 窗口外：只 pause 不销毁（player 留在 playerCache，刷回来复用已缓冲的秒出画面）
-        // v191：驱逐别 invalidate readyObservers——快速滑动 player 刚建没 ready 就划出窗口，
-        // invalidate 后 ready 了没人接 → 永远 status=0 连声音都没（v190 铁证）。观察按 webRid 随 cache 生命周期。
-        for (i, p) in players where abs(i - idx) > 1 {
-            p.pause()
-            players.removeValue(forKey: i)
-            playerRequests.removeValue(forKey: i)
+        guard rooms.indices.contains(index) else { return }
+        let room = rooms[index]
+        for cell in collectionView.visibleCells {
+            guard let c = cell as? LivePlayerCell,
+                  let ip = collectionView.indexPath(for: c) else { continue }
+            let isCenter = (ip.item == index)
+            if isCenter {
+                c.bind(player: sharedPlayer)
+            } else {
+                c.unbind()
+            }
         }
-        // 窗口内 ensure
-        for i in [idx - 1, idx, idx + 1] where rooms.indices.contains(i) {
-            ensurePlayer(index: i, room: rooms[i])
-        }
+        playRoom(room)
     }
 
-    /// ensure 房间 player：先查 playerCache(webRid) 复用 → 查 HLS 缓存建 → enter resolve 后建（异步）
-    private func ensurePlayer(index: Int, room: DYLiveRoom) {
-        if players[index] != nil { return }
-        let reqId = room.webRid
-        playerRequests[index] = reqId
-        // v190：先查 playerCache——刷回来复用已缓冲的 player 秒出画面，不再销毁重建重缓冲（v189 黑屏根因）
-        if let cached = playerCache[reqId] {
-            players[index] = cached
-            // v191：ready 观察按 webRid 键、驱逐不再 invalidate → 已 armed 就别重挂（否则重复观察泄漏）
-            if readyObservers[reqId] == nil {
-                readyObservers[reqId] = cached.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
-                    guard let self else { return }
-                    DispatchQueue.main.async {
-                        guard player.currentItem?.status == .readyToPlay else { return }
-                        self.updatePlaybackStates(center: self.currentIndex)
-                    }
-                }
-            }
-            DYLog.shared.log("LIVEFEED reuse cache idx=\(index) webRid=\(reqId)")
-            return
-        }
-        // 已 resolve 的 HLS 直接建 player（相邻预取命中缓存秒建）
+    /// 播房间：resolve HLS（缓存优先）→ AVURLAsset 带 header（黑屏关键）→ 共享 player 换 URL → play
+    private func playRoom(_ room: DYLiveRoom) {
+        if playingWebRid == room.webRid { return }   // 已在放同一房间
+        // 缓存命中：直接换 URL
         if let hls = hlsCache[room.webRid] {
-            createPlayer(index: index, url: hls)
+            play(url: hls, webRid: room.webRid)
             return
         }
-        // feed 阶段已带 hls（偶发）直接用
+        // feed 阶段已带 hls 直接用
         let feedHls = DYLiveClient.bestHlsUrl(room.hlsUrls)
         if !feedHls.isEmpty {
             hlsCache[room.webRid] = feedHls
-            createPlayer(index: index, url: feedHls)
+            play(url: feedHls, webRid: room.webRid)
             return
         }
         // enter resolve（去重防并发）
         guard !resolving.contains(room.webRid) else { return }
         resolving.insert(room.webRid)
-        DYLog.shared.log("LIVEFEED resolve idx=\(index) webRid=\(room.webRid)")
+        DYLog.shared.log("LIVEFEED resolve idx webRid=\(room.webRid)")
         DYLiveClient.shared.enterRoom(room.webRid) { [weak self] entered in
             guard let self else { return }
             self.resolving.remove(room.webRid)
             guard let entered else {
-                DYLog.shared.event("LIVEFEED resolve fail idx=\(index) webRid=\(room.webRid)")
+                DYLog.shared.event("LIVEFEED resolve fail webRid=\(room.webRid)")
                 return
             }
             let hls = DYLiveClient.bestHlsUrl(entered.hlsUrls)
             guard !hls.isEmpty else {
-                DYLog.shared.event("LIVEFEED resolve no-hls idx=\(index) webRid=\(room.webRid)")
+                DYLog.shared.event("LIVEFEED resolve no-hls webRid=\(room.webRid)")
                 return
             }
             self.hlsCache[room.webRid] = hls
-            // 仅当该 index 仍指向同一房间且还在窗口才建（防快速滑动竞态）
-            let rooms = DYLiveClient.shared.rooms
-            guard self.playerRequests[index] == reqId,
-                  rooms.indices.contains(index), rooms[index].webRid == reqId else { return }
-            self.createPlayer(index: index, url: hls)
-            self.updatePlaybackStates(center: self.currentIndex)
+            self.play(url: hls, webRid: room.webRid)
         }
     }
 
-    private func createPlayer(index: Int, url: String) {
-        guard let u = URL(string: url) else { return }
-        let item = AVPlayerItem(url: u)
-        let p = AVPlayer(playerItem: item)
-        players[index] = p
-        // 存进 playerCache（webRid 键）——驱逐只 pause 不销毁，刷回来复用已缓冲 player 秒出画面
-        let reqId = playerRequests[index] ?? ""
-        if !reqId.isEmpty {
-            if playerCache[reqId] == nil {
-                playerCacheOrder.append(reqId)
-            }
-            playerCache[reqId] = p
-            evictPlayerCacheIfNeeded()
-        }
-        // KVO ready 观察（照 VOD PlayerManager.readyObservers）：status 异步变 readyToPlay 时补 play
-        // v191：按 webRid 键（原按 index）——驱逐别 invalidate，观察随 playerCache 生命周期
-        if !reqId.isEmpty, readyObservers[reqId] == nil {
-            readyObservers[reqId] = p.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    guard player.currentItem?.status == .readyToPlay else { return }
-                    self.updatePlaybackStates(center: self.currentIndex)
-                }
-            }
-        }
-        DYLog.shared.log("LIVEFEED player idx=\(index) hls=\(url.prefix(70))")
-        DispatchQueue.main.async { [weak self] in
-            self?.updatePlaybackStates(center: self?.currentIndex ?? index)
-        }
+    /// 共享 player 换 URL（黑屏关键：AVURLAsset 带 AVURLAssetHTTPHeaderFieldsKey，照 VOD 出画面路径）
+    private func play(url: String, webRid: String) {
+        guard playingWebRid != webRid, let u = URL(string: url) else { return }
+        // 照 VOD NativePlayerView.swift:423：AVURLAsset 带 header（裸 AVPlayerItem 没带 → CDN 返回空 → 黑屏）
+        let asset = AVURLAsset(url: u, options: ["AVURLAssetHTTPHeaderFieldsKey": liveHeaders()])
+        let item = AVPlayerItem(asset: asset)
+        sharedPlayer.replaceCurrentItem(with: item)
+        playingWebRid = webRid
+        sharedPlayer.play()
+        DYLog.shared.event("LIVEFEED play webRid=\(webRid) hls=\(url.prefix(70))")
     }
 
-    /// player 缓存超上限：淘汰最旧且不在当前窗口的（释放解码器，防内存涨）
-    private func evictPlayerCacheIfNeeded() {
-        guard playerCacheOrder.count > playerCacheLimit else { return }
-        let windowRids = Set(DYLiveClient.shared.rooms.enumerated()
-            .filter { abs($0.offset - currentIndex) <= 1 }.map { $0.element.webRid })
-        // 从最旧往新找第一个不在窗口的淘汰
-        for i in 0..<playerCacheOrder.count {
-            let rid = playerCacheOrder[i]
-            guard !windowRids.contains(rid), let p = playerCache[rid] else { continue }
-            // 真销毁才 invalidate 观察（驱逐 pause 不销毁时不 invalidate，v191 铁证）
-            readyObservers[rid]?.invalidate()
-            readyObservers.removeValue(forKey: rid)
-            p.pause()
-            p.replaceCurrentItem(with: nil)
-            playerCache.removeValue(forKey: rid)
-            playerCacheOrder.remove(at: i)
-            DYLog.shared.log("LIVEFEED cache evict webRid=\(rid) left=\(playerCacheOrder.count)")
-            return
-        }
-    }
-
-    /// 居中播放，非居中暂停（AVPlayerViewController 自己 render 出画面，cell 只 bind + play/pause）
-    private func updatePlaybackStates(center index: Int) {
-        for cell in collectionView.visibleCells {
-            guard let c = cell as? LivePlayerCell,
-                  let ip = collectionView.indexPath(for: c) else { continue }
-            let idx = ip.item
-            let isCenter = (idx == index)
-            if let p = players[idx] {
-                c.bind(player: p)
-                let ready = (p.currentItem?.status == .readyToPlay)
-                if isCenter {
-                    if ready {
-                        if p.timeControlStatus != .playing { p.play() }
-                    } else {
-                        // ready 后 KVO readyObservers 会再触发本方法补 play
-                        p.pause()
-                    }
-                    DYLog.shared.log("LIVEFEED state idx=\(idx) ready=\(ready ? 1 : 0) playing=\(p.timeControlStatus == .playing ? 1 : 0) status=\(p.currentItem?.status.rawValue ?? -1)")
-                } else {
-                    p.pause()
-                }
-            }
-        }
+    /// 直播流 header（照 VOD playbackHeaders web 分支：Referer+UA+ttwid；绝不加 sec-ch-ua，v157 铁律）
+    private func liveHeaders() -> [String: String] {
+        var h: [String: String] = [:]
+        h["User-Agent"] = DYLiveClient.liveUA
+        h["Referer"] = "https://live.douyin.com/"
+        let ttwid = DYDanmakuClient.shared.ttwidValue
+        if !ttwid.isEmpty { h["Cookie"] = "ttwid=\(ttwid)" }
+        return h
     }
 
     private func loadMoreIfNeeded() {
@@ -398,14 +301,11 @@ final class DYLiveFeedViewController: UIViewController {
         DYLiveClient.shared.loadMore { [weak self] fresh in
             guard let self, !fresh.isEmpty else { return }
             self.collectionView.reloadData()
-            // 翻页追加后无需滚动手动对齐（cell 复用按 index，contentOffset 不变）
-            self.updatePlaybackStates(center: self.currentIndex)
         }
     }
 
     // MARK: 遥控（照 NativePlayerView pressesBegan：上下切房，Menu 关闭走 SwiftUI onExitCommand）
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        // 焦点屏护栏：其他屏打开时按键交 SwiftUI 焦点引擎（照 v171）
         if DYQuickPanelModel.shared.isProfileOpen || DYQuickPanelModel.shared.isCommentOpen
                 || DYQuickPanelModel.shared.isMixOpen {
             super.pressesBegan(presses, with: event)
@@ -428,6 +328,8 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! LivePlayerCell
+        cell.playerLayerView.frame = cell.contentView.bounds
+        cell.coverImageView.frame = cell.contentView.bounds
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -435,20 +337,30 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let c = cell as? LivePlayerCell else { return }
+        c.playerLayerView.frame = c.contentView.bounds
+        c.coverImageView.frame = c.contentView.bounds
         let idx = indexPath.item
         let rooms = DYLiveClient.shared.rooms
         guard rooms.indices.contains(idx) else { return }
         let room = rooms[idx]
-        // peekPlayer 语义：已建则绑，未建不 acquire（防快速滑动撑大池）
-        // AVPlayerViewController 自己 render 出画面（v186/v187 手动 AVPlayerLayer 连败两轮的黑屏根因绕开）
-        if let p = players[idx] {
-            let ready = (p.currentItem?.status == .readyToPlay)
-            c.configure(room: room, player: p, viewerText: room.userCount.isEmpty ? "" : "\(room.userCount)观看")
-            DYLog.shared.log("LIVEFEED willDisplay idx=\(idx) ready=\(ready ? 1 : 0) status=\(p.currentItem?.status.rawValue ?? -1)")
+        let viewerText = room.userCount.isEmpty ? "" : "\(room.userCount)观看"
+        c.configure(room: room, viewerText: viewerText)
+        // 封面兜底（未 bind/未 ready 时不黑屏）
+        if !room.coverUrl.isEmpty, let cu = URL(string: room.coverUrl) {
+            AvatarLoader.shared.load(cu) { [weak c] img in c?.setCover(img) }
+        }
+        // 居中 cell bind 共享 player 出画面
+        if idx == currentIndex {
+            c.bind(player: sharedPlayer)
+            let ready = (sharedPlayer.currentItem?.status == .readyToPlay)
+            c.setCoverVisible(!ready)
+            DYLog.shared.log("LIVEFEED willDisplay idx=\(idx) ready=\(ready ? 1 : 0) status=\(sharedPlayer.currentItem?.status.rawValue ?? -1)")
+        } else {
+            c.unbind()
+            c.setCoverVisible(true)
         }
     }
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // 离屏 cell 解绑 player（池仍持有，回滚回来 willDisplay 重绑）
         (cell as? LivePlayerCell)?.unbind()
     }
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, withTargetContentOffset targetContentOffset: UnsafeMutablePointer<CGPoint>) {
@@ -459,10 +371,6 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
     }
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         updatePlaybackStates(center: centeredIndex())
-        if !didInitialScroll {
-            didInitialScroll = true
-            prepareWindow(center: currentIndex)
-        }
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updatePlaybackStates(center: centeredIndex())
@@ -474,10 +382,6 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
             let idx = min(currentIndex, DYLiveClient.shared.rooms.count - 1)
             currentIndex = idx
             scrollTo(index: idx, animated: false)
-            // 焦点落到 collectionView → 遥控上下键进 pressesBegan 切房 + updatePlaybackStates 正常播放
-            DispatchQueue.main.async { [weak self] in
-                self?.view.window?.updateFocusIfNeeded()
-            }
         }
     }
 }
