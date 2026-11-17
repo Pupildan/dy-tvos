@@ -50,7 +50,8 @@ final class LivePlayerCell: UICollectionViewCell {
         // AVPlayerViewController：tvOS 标准出画面方案（自带 AVPlayerLayer 渲染）
         playerVC.showsPlaybackControls = false
         playerVC.videoGravity = .resizeAspect
-        let pv = playerVC.view
+        // ⚠️ tvOS 上 AVPlayerViewController.view 是 UIView?（iOS 非可选）——必须解包，否则编译错
+        guard let pv = playerVC.view else { return }
         pv.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(pv)
         NSLayoutConstraint.activate([

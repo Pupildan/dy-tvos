@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v188"
-    static let changes = "v188: 修直播黑屏(有声音无画面)。日志铁证ready=1 playing=1 layer=1920x1080全绿却黑屏=手动管AVPlayerLayer渲染在这条链断了,连败v186(KVO ready)+v187(frame诊断)两轮→按铁律回退标准底座:直播cell从PlayerCell(手动AVPlayerLayer)换成LivePlayerCell(内嵌AVPlayerViewController,它自己render天生出画面)。保留纵向分页/滑动切房/遥控上下键/游标无限翻页/池窗口/HLS,只换出画面那一环。showsPlaybackControls=false不干扰上下键切房"
+    static let version = "v189"
+    static let changes = "v189: 修 v188 CI 编译错 tvOS上AVPlayerViewController.view是UIView?(iOS非可选)必须guard解包。其余同v188: 直播黑屏换LivePlayerCell内嵌AVPlayerViewController(标准组件自己render出画面,绕开手动AVPlayerLayer连败v186/v187两轮的泥潭),保留纵向分页/滑动切房/遥控上下键/游标翻页/池窗口/HLS"
 }
