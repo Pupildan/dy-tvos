@@ -935,6 +935,11 @@ final class DYPlayerViewController: UIViewController {
         } else {
             rfd = false
         }
+        // v195：首帧 ready → 置 firstFrameReady，启动加载视频 overlay 观察它交叉淡化掉（替代启动黑屏）
+        if rfd, !PlaybackEngine.shared.firstFrameReady {
+            PlaybackEngine.shared.firstFrameReady = true
+            DYLog.shared.log("MGR first frame ready (launch overlay dismiss)")
+        }
         let t = item.currentTime()
         let tSec = t.seconds.isFinite ? t.seconds : 0
         if lastWatchTime < 0 {

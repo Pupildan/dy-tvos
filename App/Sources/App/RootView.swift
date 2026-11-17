@@ -8,6 +8,7 @@ import AVFoundation
 /// v135 设置面板：屏幕左侧悬浮液态玻璃面板（Menu 第一次按呼出；显示中再按=退出应用）。
 struct RootView: View {
     @State private var started = false
+    @State private var showLaunchVideo = true   // v195：冷启动加载视频 overlay（首帧 ready 后淡出）
     @ObservedObject private var engine = PlaybackEngine.shared
     @ObservedObject private var settings = DYSettingsModel.shared
     @ObservedObject private var quick = DYQuickPanelModel.shared
@@ -76,6 +77,14 @@ struct RootView: View {
                     .zIndex(20)
                     .transition(.opacity)
             }
+
+            // v195 启动加载视频：冷启动遮住黑屏，静音循环；主 feed 首帧 ready 后交叉淡化到视频
+            if showLaunchVideo {
+                LaunchVideoOverlay()
+                    .ignoresSafeArea()
+                    .zIndex(30)
+                    .transition(.opacity)
+            }
         }
         .background(Color.black)
         .onAppear {
@@ -83,6 +92,14 @@ struct RootView: View {
             started = true
             DanmakuOverlay.globalEnabled = settings.danmakuOn
             DYLog.shared.log("ROOT auto-start \(DYBuild.version)")
+        }
+        // v195：主 feed 首帧 ready → 交叉淡化掉启动加载视频（不突兀，露出底下 NativePlayerView）
+        .onChange(of: engine.firstFrameReady) { ready in
+            guard ready, showLaunchVideo else { return }
+            withAnimation(.easeInOut(duration: 0.6)) {
+                showLaunchVideo = false
+            }
+            DYLog.shared.log("ROOT launch video fade out (first frame ready)")
         }
         // v175：移除此处 v163 原型的重复 fetch（DYProfileScreen.onAppear 已发）；
         // 真机日志实锤双发 profcap/postcap 白等 2s，且双发的队列会互相踩分页游标。
@@ -99,3 +116,40 @@ struct RootView: View {
         }
     }
 }
+
+// MARK: - 启动加载视频（v195：冷启动遮住黑屏，静音循环，主 feed 首帧 ready 后交叉淡化）
+// 照 myDV/AVPlayerViewController 出画面方案；视频打包在 App/Resources/loading.mp4（Bundle.main 访问，照 DYSigner 同款）。
+
+struct LaunchVideoOverlay: View {
+    var body: some View {
+        LaunchVideoPlayerView()
+            .background(Color.black)   // 视频未 render 前兜底黑底（不是纯黑闪，是视频首帧前的底色）
+    }
+}
+
+struct LaunchVideoPlayerView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> AVPlayerViewController {
+        let vc = AVPlayerViewController()
+        vc.showsPlaybackControls = false
+        vc.videoGravity = .resizeAspect
+        // 打包的加载视频（App/Resources/loading.mp4 → Bundle.main 访问，照 DYSigner.swift:89 同款）
+        guard let url = Bundle.main.url(forResource: "loading", withExtension: "mp4") else {
+            DYLog.shared.log("LAUNCH loading.mp4 missing in bundle")
+            return vc
+        }
+        let player = AVPlayer(url: url)
+        player.isMuted = true          // 静音（需求：不能有声音）
+        player.actionAtItemEnd = .none // 播完不暂停，配合循环
+        vc.player = player
+        player.play()
+        // 循环：播完回到开头续播（静音加载动画循环遮住黑屏直到主 feed 首帧 ready）
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEnd, object: player.currentItem, queue: .main) { [weak player] _ in
+            player?.seek(to: .zero)
+            player?.play()
+        }
+        DYLog.shared.log("LAUNCH loading video play (muted loop)")
+        return vc
+    }
+    func updateUIViewController(_ uiViewController: AVPlayerViewController, context: Context) {}
+}
+

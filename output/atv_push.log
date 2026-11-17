@@ -9958,3 +9958,60 @@
 20:19:48  [20:19:50] LIVEFEED play webRid=526029049529 hls=http://pull-hls-q95.douyincdn.com/third/stream-696915342510785341_uhd5
 20:19:57  [20:19:59] SETTINGS panel open (menu #1)
 20:19:57  [20:19:59] SETTINGS panel exit-app (menu #2)
+20:46:59  [20:47:01] DYTV v194 launched
+20:46:59  [20:47:01] LOGSRV ready on port 8765
+20:46:59  [20:47:01] SIGNER init start
+20:46:59  [20:47:01] SIGNER load shim ok
+20:46:59  [20:47:01] SIGNER load abogus ok
+20:46:59  [20:47:01] LOGSRV advertising as DYTV-597
+20:46:59  [20:47:01] SIGNER load sign ok
+20:46:59  [20:47:01] SIGNER load abogus_dy ok
+20:46:59  [20:47:01] SIGNER extras sign=true dy=true
+20:46:59  [20:47:01] SIGNER bdms=yes
+20:46:59  [20:47:01] SIGNER initABogus=true
+20:46:59  [20:47:01] SIGNER fns=AB (期望 AB)
+20:46:59  [20:47:01] SIGNER smoke={"ok":true,"value":"dJmZBf0fmEdsvfSk5I9LfY3qVW33Yslb0SVkMDhezVfPgL39HMTQ9exElzkvHVWeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+20:46:59  [20:47:01] SIGNER READY a_bogus len=180
+20:46:59  [20:47:01] FEEDCOLL viewDidLoad
+20:46:59  [20:47:01] ROOT auto-start v194
+20:46:59  [20:47:01] FEED native pipeline armed (source=web)
+20:46:59  [20:47:01] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+20:47:00  [20:47:02] LOGSRV Bonjour published: DYTV-597
+20:47:01  [20:47:03] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+20:47:01  [20:47:03] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+20:47:01  [20:47:03] ENGINE needMore (index=0 count=2)
+20:47:01  [20:47:03] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+20:47:01  [20:47:03] MGR url idx=0 src=static age=0s
+20:47:01  [20:47:03] MGR acquire idx=0 total=1
+20:47:01  [20:47:03] MGR cold-start defer neighbors=[1]
+20:47:01  [20:47:03] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+20:47:02  [20:47:04] DMLOAD id=7701284049017427711 dur=15069
+20:47:02  [20:47:04] MGR ready idx=0
+20:47:02  [20:47:04] MGR url idx=1 src=static age=1s
+20:47:02  [20:47:04] DANM get id=7701284049017427711 [0-15s] ttwid=127
+20:47:02  [20:47:04] MGR acquire idx=1 total=2
+20:47:02  [20:47:04] MGR cold-start neighbors acquired=[1]
+20:47:03  [20:47:05] DANM all-segments done id=7701284049017427711 total=26 retry=0
+20:47:03  [20:47:05] DMLOAD done id=7701284049017427711 total=26
+20:47:03  [20:47:05] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+20:47:03  [20:47:05] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+20:47:03  [20:47:05] MGR ready idx=1
+20:47:05  [20:47:07] SETTINGS panel open (menu #1)
+20:47:07  [20:47:09] DMSYNC t=3s due=0 marked=13 items=26 stall=1
+20:47:11  [20:47:13] DMSYNC t=7s due=0 marked=21 items=26 stall=1
+20:47:11  [20:47:13] SETTINGS panel auto-hide (3s idle)
+20:47:13  [20:47:15] SETTINGS panel open (menu #1)
+20:47:15  [20:47:17] DMSYNC t=11s due=0 marked=23 items=26 stall=10
+20:47:17  [20:47:19] SETTINGS select live
+20:47:18  [20:47:20] FEEDPOOL pauseAll (live open)
+20:47:18  [20:47:20] ROOT live open → main feed paused
+20:47:18  [20:47:20] LIVE feed GET bogus_len=180 ttwid=127
+20:47:19  [20:47:21] LIVE feed ok page maxtime=0 got=20 fresh=20 total=20 hasMore=1
+20:47:19  [20:47:21] LIVEFEED scrollTo idx=0 y=0.0 items=20
+20:47:19  [20:47:21] LIVEFEED play webRid=418685854935 hls=http://pull-hls-q1.douyincdn.com/stage/stream-120454801600283452/playl
+20:47:28  [20:47:30] LIVEFEED scrollTo idx=1 y=1080.0 items=20
+20:47:29  [20:47:31] LIVEFEED play webRid=584161246852 hls=http://pull-hls-h95.douyincdn.com/stage/stream-120454945819591513.m3u8
+20:47:43  [20:47:45] LIVEFEED scrollTo idx=2 y=2160.0 items=20
+20:47:43  [20:47:45] LIVEFEED play webRid=428542265814 hls=http://pull-q5.douyincdn.com/third/stream-120454908292891453/index.m3u
+20:47:50  [20:47:52] SETTINGS panel open (menu #1)
+20:47:53  [20:47:55] SETTINGS panel exit-app (menu #2)

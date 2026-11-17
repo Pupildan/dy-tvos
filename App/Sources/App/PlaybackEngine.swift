@@ -43,6 +43,9 @@ final class PlaybackEngine: ObservableObject {
 
     @Published var urls: [URL] = []
     @Published var index: Int = 0
+    /// 主 feed 首帧已渲染（v195：NativePlayerView watchTick 检测居中 cell playerLayer.isReadyForDisplay）
+    /// 启动加载视频 overlay 观察它——首帧到了交叉淡化掉加载视频，露出主 feed（替代启动黑屏）
+    @Published var firstFrameReady = false
     /// 每条视频的原始 video 子消息 bytes（index→bytes）
     private var rawVideos: [Int: [UInt8]] = [:]
     /// 每条视频的备用重定向直链（index→URL）：/aweme/v1/play 端点——URL 本身不带时效签名，
