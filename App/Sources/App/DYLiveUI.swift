@@ -57,6 +57,13 @@ final class LivePlayerCell: UICollectionViewCell {
     }
     required init?(coder: NSCoder) { fatalError() }
     override var canBecomeFocused: Bool { false }
+    private static let textShadow: NSShadow = {
+        let s = NSShadow()
+        s.shadowColor = UIColor.black
+        s.shadowOffset = CGSize(width: 1, height: 1)
+        s.shadowBlurRadius = 2
+        return s
+    }()
     override func layoutSubviews() {
         super.layoutSubviews()
         let b = contentView.bounds
