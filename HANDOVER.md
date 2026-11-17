@@ -1,10 +1,10 @@
-# DYTV 交接文档（v162 · 2026-11-15 全面重构版）
+# DYTV 交接文档（v208 · 2026-11-18 更新）
 
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v182**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品首页+合集=WebView 页面上下文请求真机全通**（v163-v175）；点播/焦点/滑动/右轨统计/合集屏/点播段语义全修通（v169-v175）；**作者作品翻页=服务端信任墙**（v175-v179 连败，v179 判死参数路线；v180 页面作者页真实渲染 + 隐形 WebView 加入 window + 滚动泵触发 6 次，真机 `SESSION PAGE-NATIVE PAGING` **零次** → 页面原生翻页路线也判死；v181 探 count 上限 + 全端点透视/time_list，待验收）。匿名侧若穷尽，唯一出路 = §5.3⑤D 扫码登录（需用户拍板）。
+> **当前版本 v208**。稳定回退点：**v122**（git checkout 三文件）。
+> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194：数据链/纵向刷/无限翻页/遥控切房/主feed声音隔离）**；**直播黑屏（有声无画面）九轮排查 v207 收敛真凶=渲染层 playerVC.player 从未赋值（一行修复），v208 加剥嵌套清单+裸请求，待真机终验**；**app 图标 v195-v203 修复（brandassets 模板格式重建，v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md`（视频切换架构）+ `docs/tvos-app-icon-guide.md`（图标编译指南）。
 
 ---
 
@@ -156,10 +156,18 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 ### 5.5 图集显示（价值中等，待用户决定）
 - mobile proto 图片字段号未知、是否填充未证实；UI 方案已设计好（ImageCell 横滑 pager）；数据侧需 aweme 级 dump 探针。当前图集被 dur=0 信号过滤掉。
 
-### 5.6 直播 / 登录（面板占位）
-- **⚠️直播出画面搁置（v183-v194 六轮，2026-11-17 用户拍板等下一步命令）**：数据链全通（见 §8.2.5），但**黑屏（有声音无画面）未解决**。日志铁证：player ready/playing/换 URL 全绿（`LIVEFEED play webRid=X hls=真URL`），**渲染层不出帧**。试过的全黑屏：①per-cell AVPlayerViewController 池（v189，只一房间出）②+playerCache 复用（v190，埋回归）③readyObservers 改 webRid 键（v191）④推倒池换单 AVPlayer 换 URL + asset header + 手动 PlayerLayerView（v192，走 v186/v187 手动 layer 黑屏老路）⑤视频改控制器级 AVPlayerViewController 浮在 collection view 下（v193/v194，CI 修 textShadow 后仍黑屏）。**未知根因在更深层**：疑 CDN 对 tvOS AVPlayer 的 HLS 直播流返回的视频轨/解码问题，或 asset header 没真正生效，或 AVPlayerLayer/AVPlayerViewController 在此层级渲染问题。**下一步先诊断 CDN 是否对 tvOS AVPlayer 真返回视频轨**（参考 myDV `xo5.java` H.264 解码失败降档逻辑、`cn4.java` surfaceBound 门控）。探针 `_tmp/live_probe.js` 证明 HLS URL 本身 HEAD 200 可达。**别再盲试渲染方案。**
-- 直播弹幕：myDV 有 LiveWebSocket（kq2.java webRid 弹幕）可参考，需直播间入口数据。**出画面没解决前弹幕无意义（没画面弹幕无处叠加），先解出画面。**
-- 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，被铁律限制为"仅登录用"）——登录后可解锁更清晰度/收藏同步。
+### 5.6 直播 / 登录
+
+- **直播黑屏（有声无画面）排查史 v185→v208（2026-11-17/18，真凶已锁定一行修复，v208 待真机终验）**：
+  - **真凶（v207 实锤）**：`playerVC.player` 从 v193 创建 AVPlayerViewController 以来**从未赋值**（grep 零匹配）。`sharedPlayer` 独立播放出声（item ready/时间走/ps=1280×720/errLog 空），渲染层（AVPVC.view 的 AVPlayerLayer）没接 player → `isReadyForDisplay` 永远 0 → 全屏黑。修复=一行 `playerVC.player = sharedPlayer`。
+  - **方法论遗产（复用价值最高）**：设备端诊断三件套 `AVPlayerItem.errorLog()/accessLog()/presentationSize` + AVPlayerLayer.isReadyForDisplay——播放层全绿（ready/时间走/零错误）+ 渲染层 rfd=0 → 直接锁定"渲染层断链"而非解码/CDN/编码。**播放层和渲染层是两条独立链路，声音正常≠画面正常**。
+  - 排除项（全部探针实锤，别再怀疑）：编码=H.264 Main@L4.2-5.0 / 4:2:0 / 8-bit（ffprobe + SPS 解析双确认，HEVC/Hi10P 假设证伪）；CDN 可达（HEAD 200）；无加密（无 EXT-X-KEY）；header 无影响（带头/裸头清单一致）。
+  - **结构性发现**：HLS 清单是**嵌套链式结构**——L1 媒体清单的"片段"指向 L2 m3u8（livehwc4/100ycdn 防盗链包装域），L2 才是真 TS 片段清单。**非标准 HLS**（RFC 8216 只允许主清单引用子清单）；hls.js（网页端）递归解析没问题，AVPlayer 对此行为不可控。**v208 修法**：播放前手动剥嵌套（`resolvePlaylist`：L1 片段行若是 m3u8 → 改播 L2 URL）+ 裸 AVURLAsset（myDV live 无任何头，agent 实锤 fo5 头表仅 VOD 用）。
+  - v184 纵向刷体验线全通：游标翻页（`extra.max_time`+`has_more`）、UICollectionView 垂直分页、pan 手势、遥控上下键（DYLiveFocusCollectionView）、池窗口。
+- **myDV 直播路径实锤（agent 深挖反编译，照抄依据）**：①**播的是 FLV 不是 HLS**——`extractMainLiveUrls`（DataModelKt.java:56-75）flv 在前 index 0，走 media3 `FlvExtractor`；②**SDK 路径优先**：`live_core_sdk_data.pull_data.stream_data.data.<key>.main.flv/hls`（本 room 键=origin/hd/sd/ld/md/ao）优先于 flv_pull_url/hls_pull_url_map（后者是 fallback）；③**live 请求零自定义头**（裸 OkHttpDataSource，fo5 头表仅 VOD）；④"视频解码失败切 H.264"（xo5.java:78）对 **live 是死代码**（do2 传 null lambda，仅 VOD 生效）；⑤play 门控 surfaceBound（cn4.java）。
+- **第二版待做：WebSocket 弹幕** = kq2.java wss URL（`getMSSDKSignature(msStub,ua)` 来自 sign.js 纯 JS，专开 JSContext）+ 手写 protobuf 解码（x04.s/t/r，PushFrame→gzip→Response→WebcastChatMessage）+ ack + 心跳 + 推射发射器喂 DanmakuView（需加 nickname 字段）。前提=出画面已解决。
+- **第三版候选**：清晰度切换（复用 enter 的 hls_pull_url_map 多档）、FLV 低延迟路线（需本地转封装或换播放内核，成本高先缓）、直播关注流（/webcast/web/feed/follow/ 需登录态）。
+- 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，铁律限制"仅登录用"）——可解锁清晰度/收藏/关注流。
 
 ## 6. 踩过的坑全集（按类别，务必牢记）
 
@@ -186,6 +194,9 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 5. `AnyTransition.scale` 参数名是 `scale` 非 `scaleEffect`；`OSAtomicIncrement32` 新 SDK 移除 → NSLock。
 6. PowerShell 编码坑：inline `-Command` 写中文会 mojibake（用 Edit/Write 工具写文件）；`??` 是 PS7 语法 PS5.1 不支持；here-string 内联会炸；`>` 会被 cmd 当重定向吃掉。
 7. 属性重命名后引用未跟上（commentAwemeId→awemeId 实锤）——改名后全局搜索旧名。
+8. **DYVideoInfo 成员初始化器参数必须按声明序**（nickname→avatarUrl→…→desc→…→createTimeText），跳过又回填会编译错（v184 实锤）。
+9. **AVPlayerItem.errorLog/accessLog 在 tvOS SDK 是方法且返回 Optional**（`item.errorLog()`，v206 实锤）；**asset.loadTracks 回调是双参数**（`[AVAssetTrack]?, Error?`，v205 实锤）；`.AVPlayerItemDidPlayToEnd` 符号部分 SDK 解析不到 → `NSNotification.Name("AVPlayerItemDidPlayToEnd")` 字面量（v197）。
+10. PowerShell .ps1 含中文必须 UTF-8 BOM（Write 工具默认无 BOM → PS5.1 mojibake 解析错，v206 实锤）→ 脚本内字符串一律 ASCII。
 
 ### 6.3 CI/流程坑
 1. CI success 但下载/解压瞬态失败 → `dy_download.ps1 -ArtifactId <id>` 单独重下，**别重跑 pipeline**（双重 push）。
@@ -193,6 +204,11 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 3. 大响应 `curl` 56 截断（分块发送已处理）。
 4. CommitMsg 别带括号/特殊字符（cmd 转义坑）。
 5. 后台跑 pipeline 超 320s 会转后台任务——轮询其输出文件，别重跑。
+6. **GitHub 网络抖动期（整天级）**：推送报 RPC failed/curl 55 + "Everything up-to-date" ≠ 推送成功也 ≠ 推送失败——**必须用 API branches/main sha 对比本地 HEAD 确认**（`_tmp/push_retry.ps1` 全 IP 循环+自动校验）；API 走 api.github.com 会独立于 github.com 挂。
+7. **`Resolve-GhHost` helper bug**：永远返回第一个 IP（"IP 轮换"从未轮换）——单 IP 挂了全挂。手动 `Set-HostIp` 换 IP 或用 push_retry.ps1。
+8. **CI job 可能 concl=cancelled**（并发/重推触发）且无日志（logs 接口 404）→ 用 API `POST runs/{id}/rerun` 重触发，别重 commit。
+9. `dy_download.ps1` 慢的根因=逐 IP 试连（hosts 写入+flushdns+120s 超时/个），非带宽；失败重试即可，多线程版 `_tools/dy_download_mt.ps1` 首版有 bug 待修。
+10. **actool document error 不 fail CI**（构建绿但图标/资产内容被静默丢弃）——资产验证必须拆 ipa 查 Assets.car/plist 键 + 看 CI 日志 actool errors 段（v202/v206 两次假绿灯实锤）。
 
 ### 6.4 数据/字段坑（详见 §7 权威表）
 1. **mobile proto 与 web JSON 字段号不通用**——拿 JSON 序号套 proto 必错（BitRate/awemeType/desc 三次栽过）。
@@ -262,6 +278,11 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 | mssdk | POST mssdk.bytedance.com/web/r/token（u11:729 strData 常量，DYMsSdk.swift） | ⚠️ 换到真 msToken 但对 post 无帮助；真机 MISS |
 | webCommon（必需） | device_platform=webapp&aid=6383&channel=channel_pc_web&cookie_enabled=true&browser_* | 缺则 "AppId不合法" |
 | 签名 | getABogus(query,data,path,webUA) + timestamp 参数；a_bogus 后置 | ✅ 评论/弹幕/tab feed 全验证 |
+| `/webcast/feed/` | live_id=1+need_map=1+is_draw=1+custom_count+enter_source=web_homepage_hot_web_live_card；**翻页游标=响应 `extra.max_time`(毫秒时间戳)+`extra.has_more`**，跨页按 webRid 去重（相邻页有重叠） | ✅ v184 实测无限刷成立 |
+| `/webcast/room/web/enter/` | x04.p(webRid)：aid=6383+web_rid+空 msToken，referer=live.douyin.com/<webRid> | ✅ 返回 hls_pull_url_map(FULL_HD1/HD1/SD2/SD1)+flv_pull_url+live_core_sdk_data.pull_data |
+| 直播 HLS 清单 | TS 媒体清单；**部分 CDN 是嵌套链式结构（L1 片段行指向 L2 m3u8，livehwc4/100ycdn 包装域）——非标准 HLS，AVPlayer 需手动剥 L1→L2（v208 resolvePlaylist）** | ✅ v208 修复 |
+| 直播流编码 | TS PMT=H.264(AVC)+AAC；SPS=High profile/4:2:0/8-bit（ffprobe+SPS 解析双确认） | ✅ 标准 可解码 |
+| WebSocket 弹幕 | wss://webcast3-ws-web-lq.douyin.com/webcast/im/push/v2/ + signature(getMSSDKSignature, sign.js 纯 JS) | ⏳ 第二版 |
 
 ## 8. 未来开发方向（路线图）
 
@@ -276,7 +297,7 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 2. **合集/短剧浏览**：series/list 已通（作者合集列表）→ 有数据的作者直接接 UI；合集内容等 §5.3 数据解锁（或短剧 series_id 路线）。
 3. **搜索**：顶部搜索条 UI + web 搜索端点（myDV 有 search/single 端点参照）。
 4. **扫码登录**：解锁登录态（作品/合集/高清/收藏/关注流一步到位）——§5.3 若走到方向 D 就是它；网页套壳路线 v2-v8 已验证可行（铁律允许仅登录用 WebView）。
-5. **直播**：**第一版已实装（v183，匿名拉流播放，无弹幕）**——开发机探针 `_tmp/live_probe.js` 实锤 **live.douyin.com 不撞作品墙**：`/webcast/feed/` status_code=0 返回 20 真直播间、`/webcast/room/web/enter/` 返回 `hls_pull_url_map`（FULL_HD1/HD1/SD2/SD1）真 HLS URL（.m3u8 HEAD 200），与现有 feed/弹幕/评论**同款 a_bogus 签名 + 匿名 ttwid** 即可（照抄 myDV u11.java:1628-1695 + x04.java:327-333 + DataModelKt 清晰度优先级）。新增 `DYLiveClient`（fetchLiveFeed/enterRoom/bestHlsUrl）+ `DYLiveUI`（DYLiveBrowseScreen 网格 + DYLivePlayerScreen AVPlayer 播 HLS，复用 PlayerLayerView，单房间独立不进 PlayerManager 池）+ 设置面板「直播」占位行转真入口 + RootView isLiveOpen 挂载。**第二版待做**：WebSocket 弹幕（kq2.java `wss://webcast3-ws-web-lq...` + `getMSSDKSignature`（sign.js，专开 JSContext）+ 手写 protobuf 解码 x04.s/t/r + ack + 心跳 + 推射发射器喂 DanmakuView）。
+5. **直播**：**第一版实装并迭代到 v208（入口=设置面板「直播」）**。数据链全通：`/webcast/feed/`（20 房/页，游标翻页=响应 `extra.max_time`+`extra.has_more`，跨页按 webRid 去重）→ `/webcast/room/web/enter/` → `hls_pull_url_map` 各清晰度 HLS。UI=全屏纵向分页刷直播间（照 NativePlayerView 模式：UICollectionView 分页+pan 手势+遥控上下键+游标无限翻页+池窗口）。**黑屏（有声无画面）v185→v208 十轮排查收官**：真凶=渲染层 `playerVC.player` 从未赋值（v207 一行修复）+ HLS 嵌套清单链式结构（v208 播前剥 L1→L2）+ myDV live 零头实锤（v208 去掉全部自定义头）。详见 §5.6。**待真机终验 v208**。**第二版**：WebSocket 弹幕（kq2.java wss + getMSSDKSignature 纯 JS + protobuf x04.s/t/r + 推射发射器）。**第三版候选**：清晰度切换、FLV 低延迟路线。
 
 ### 8.3 长期（打磨）
 1. UI 美化统一轮：启动 spinner（v76 曾有）、弹幕样式设置、主题。
@@ -298,8 +319,14 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 - `DYSettingsModel.swift`：设置面板 + 快捷面板模型（SwiftUI）。
 - `DYSigner.swift`：4 参 a_bogus 签名（JavaScriptCore + Signer JS 资产）。
 - `DYLog.swift`：日志 + LAN 服务器（/log /stat /ping /clear）+ count()/event()。
+- `DYLiveClient.swift`：直播数据客户端（fetchLiveFeed 游标翻页/enterRoom/bestHlsUrl；a_bogus 同款签名+匿名 ttwid）。
+- `DYLiveUI.swift`：直播流屏（DYLiveFeedScreen/DYLiveFeedViewController 控制器级 AVPlayerViewController + 单共享 player + 嵌套清单剥离 resolvePlaylist + DYLiveFocusCollectionView 遥控锚点）。
+- `docs/video-switch-playback.md`：视频切换播放架构复用文档。
+- `docs/tvos-app-icon-guide.md`：tvOS 图标编译完全指南（brandassets 正确格式）。
 - `HANDOVER.md`（本文档）、`MYDV_FEED_BLUEPRINT.md`（数据蓝图）、记忆文件 `dytv-*-*.md`。
 - 探针（作品/合集攻坚线）：`_tmp/round3_probe.js`（mssdk）、`round5_probe.js`（全套头）、`round6_probe.js`（series/aweme）、`round7_probe.js`（series/list）、`round8_probe.js`（z() 引导）、`post_matrix_probe.js`（签名矩阵）、`uifid_probe.js`（cookie 罐）、`mobile_post_probe.js`（mobile 作品端点）、`offset_type_probe.js`（offset_time 类型）、`gen_mssdk_swift.js`（DYMsSdk 常量提取器）。
+- 探针（直播线，全部可复跑）：`_tmp/live_probe.js`（feed/enter/HLS 可达）、`live_feed_paging_probe.js`（extra.max_time 翻页游标）、`live_codec_probe.js`（m3u8 CODECS）、`live_ts_probe.js`（TS PMT 编码判定）、`ts_debug.js`（嵌套清单跟随+TS 存盘+PMT 解析，改过多轮最全）、`live_sps_probe.js`（SPS profile/chroma/bitDepth 解析）、`live_header_probe.js`（请求头对比）、`live_sdk_probe.js`（SDK 路径挖掘）、`live_fields_probe.js`（stream_url 全字段）。工具：`_tmp/ffmpeg/`（静态 ffprobe/ffmpeg，Windows 直用，专业流诊断）。
+- 工具脚本：`_tools/dy_download_mt.ps1`（并发下载，首版有 bug 待修）、`_tmp/push_retry.ps1`（全 IP 循环推送+API sha 校验，网络抖动期必用）。
 - 探针（弹幕/通用）：`_tmp/danmaku_probe.js`、`webfeed_probe.js`、`danmaku_hist_probe.js`、`danmaku_segment_probe.js`、`comment_works_probe.js`、`aweme_fields_probe.js`。
 - 反编译：`_apk_work/jadx_out_classes/sources/defpackage/u11.java`（API 总集+签名链 i()/G0/rz0）+ `sl4.java`（cookie 罐）+ `jadx_ui_out/sources/defpackage/`（**UI 层，classes2/3.dex，146 类**：ProfileViewModel=ux3/nx3、WidgetRefresher）+ `com/github/mytv/dv/model/`（JSON 模型）+ `s13`（jadx_out，protobuf 解析权威）。
 - **⚠️ 反编译注意：APK 有 3 个 dex，`jadx_out_classes` 只含 classes.dex——UI 层在 `jadx_ui_out`（classes2/3.dex，本会话才补齐）。**
