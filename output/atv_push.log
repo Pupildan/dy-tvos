@@ -9440,3 +9440,131 @@
 18:25:10  [18:25:12] DANM get id=7695198740910542106 [200-204s] ttwid=127
 18:25:10  [18:25:12] DMSYNC t=2s due=0 marked=0 items=30 stall=22
 18:25:10  [18:25:12] SETTINGS panel exit-app (menu #2)
+19:14:40  [19:14:42] DYTV v190 launched
+19:14:40  [19:14:42] SIGNER init start
+19:14:40  [19:14:42] LOGSRV ready on port 8765
+19:14:40  [19:14:42] SIGNER load shim ok
+19:14:40  [19:14:42] SIGNER load abogus ok
+19:14:40  [19:14:42] LOGSRV advertising as DYTV-353
+19:14:40  [19:14:42] SIGNER load sign ok
+19:14:40  [19:14:42] SIGNER load abogus_dy ok
+19:14:41  [19:14:42] SIGNER extras sign=true dy=true
+19:14:41  [19:14:42] SIGNER bdms=yes
+19:14:41  [19:14:42] SIGNER initABogus=true
+19:14:41  [19:14:42] SIGNER fns=AB (期望 AB)
+19:14:41  [19:14:43] SIGNER smoke={"ok":true,"value":"Ev8MMDhvDEDTkV6D5I9LfY3qVW33YsUg0SVkMDhezVfPwL39HMOT9exEloJv1TReF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+19:14:41  [19:14:43] SIGNER READY a_bogus len=180
+19:14:41  [19:14:43] FEEDCOLL viewDidLoad
+19:14:41  [19:14:43] ROOT auto-start v190
+19:14:41  [19:14:43] FEED native pipeline armed (source=web)
+19:14:41  [19:14:43] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+19:14:41  [19:14:43] LOGSRV Bonjour published: DYTV-353
+19:14:42  [19:14:44] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+19:14:42  [19:14:44] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+19:14:42  [19:14:44] ENGINE needMore (index=0 count=2)
+19:14:42  [19:14:44] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+19:14:42  [19:14:44] MGR url idx=0 src=static age=0s
+19:14:42  [19:14:44] MGR acquire idx=0 total=1
+19:14:42  [19:14:44] MGR cold-start defer neighbors=[1]
+19:14:42  [19:14:44] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+19:14:44  [19:14:46] DMLOAD id=7685738573416586154 dur=676674
+19:14:44  [19:14:46] MGR ready idx=0
+19:14:44  [19:14:46] MGR url idx=1 src=static age=1s
+19:14:44  [19:14:46] DANM get id=7685738573416586154 [0-20s] ttwid=127
+19:14:44  [19:14:46] MGR acquire idx=1 total=2
+19:14:44  [19:14:46] MGR cold-start neighbors acquired=[1]
+19:14:44  [19:14:46] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+19:14:44  [19:14:46] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+19:14:45  [19:14:47] DANM get id=7685738573416586154 [20-40s] ttwid=127
+19:14:45  [19:14:47] MGR ready idx=1
+19:14:45  [19:14:47] DANM get id=7685738573416586154 [40-60s] ttwid=127
+19:14:45  [19:14:47] DANM get id=7685738573416586154 [60-80s] ttwid=127
+19:14:46  [19:14:48] DANM get id=7685738573416586154 [80-100s] ttwid=127
+19:14:46  [19:14:48] DANM get id=7685738573416586154 [100-120s] ttwid=127
+19:14:46  [19:14:48] DANM get id=7685738573416586154 [120-140s] ttwid=127
+19:14:47  [19:14:49] DANM get id=7685738573416586154 [140-160s] ttwid=127
+19:14:47  [19:14:49] DANM get id=7685738573416586154 [160-180s] ttwid=127
+19:14:47  [19:14:49] DANM get id=7685738573416586154 [180-200s] ttwid=127
+19:14:48  [19:14:50] DANM get id=7685738573416586154 [200-220s] ttwid=127
+19:14:48  [19:14:50] DANM get id=7685738573416586154 [220-240s] ttwid=127
+19:14:48  [19:14:50] DANM get id=7685738573416586154 [240-260s] ttwid=127
+19:14:48  [19:14:50] DMSYNC t=3s due=0 marked=1 items=42 stall=4
+19:14:48  [19:14:50] DANM get id=7685738573416586154 [260-280s] ttwid=127
+19:14:49  [19:14:51] DANM get id=7685738573416586154 [280-300s] ttwid=127
+19:14:49  [19:14:51] DANM get id=7685738573416586154 [300-320s] ttwid=127
+19:14:49  [19:14:51] DANM get id=7685738573416586154 [320-340s] ttwid=127
+19:14:50  [19:14:52] DANM get id=7685738573416586154 [340-360s] ttwid=127
+19:14:50  [19:14:52] DANM get id=7685738573416586154 [360-380s] ttwid=127
+19:14:50  [19:14:52] DANM get id=7685738573416586154 [380-400s] ttwid=127
+19:14:51  [19:14:53] DANM get id=7685738573416586154 [400-420s] ttwid=127
+19:14:51  [19:14:53] DANM get id=7685738573416586154 [420-440s] ttwid=127
+19:14:51  [19:14:53] DANM get id=7685738573416586154 [440-460s] ttwid=127
+19:14:52  [19:14:54] DANM get id=7685738573416586154 [460-480s] ttwid=127
+19:14:52  [19:14:54] DANM get id=7685738573416586154 [480-500s] ttwid=127
+19:14:52  [19:14:54] DANM get id=7685738573416586154 [500-520s] ttwid=127
+19:14:52  [19:14:54] DMSYNC t=7s due=0 marked=2 items=65 stall=13
+19:14:53  [19:14:55] DANM get id=7685738573416586154 [520-540s] ttwid=127
+19:14:53  [19:14:55] SETTINGS panel open (menu #1)
+19:14:53  [19:14:55] DANM get id=7685738573416586154 [540-560s] ttwid=127
+19:14:53  [19:14:55] DANM get id=7685738573416586154 [560-580s] ttwid=127
+19:14:53  [19:14:55] DANM get id=7685738573416586154 [580-600s] ttwid=127
+19:14:54  [19:14:56] DANM get id=7685738573416586154 [600-620s] ttwid=127
+19:14:54  [19:14:56] DANM get id=7685738573416586154 [620-640s] ttwid=127
+19:14:54  [19:14:56] DANM get id=7685738573416586154 [640-660s] ttwid=127
+19:14:55  [19:14:57] DANM get id=7685738573416586154 [660-676s] ttwid=127
+19:14:55  [19:14:57] DANM all-segments done id=7685738573416586154 total=69 retry=0
+19:14:55  [19:14:57] DMLOAD done id=7685738573416586154 total=69
+19:14:56  [19:14:58] DMSYNC t=11s due=0 marked=2 items=69 stall=29
+19:14:57  [19:14:59] SETTINGS select live
+19:14:57  [19:14:59] FEEDPOOL pauseAll (live open)
+19:14:57  [19:14:59] ROOT live open → main feed paused
+19:14:57  [19:14:59] LIVE feed GET bogus_len=180 ttwid=127
+19:14:58  [19:15:00] LIVE feed ok page maxtime=0 got=20 fresh=20 total=20 hasMore=1
+19:14:58  [19:15:00] LIVEFEED player idx=0 hls=http://pull-hls-f1.douyincdn.com/media/stream-120422733547831986/playl
+19:14:59  [19:15:00] LIVEFEED player idx=1 hls=http://pull-hls-l26.douyincdn.com/third/stream-696915095813882342.m3u8
+19:14:59  [19:15:00] LIVEFEED scrollTo idx=0 y=0.0 items=20
+19:14:59  [19:15:00] LIVEFEED willDisplay idx=0 ready=0 status=0
+19:14:59  [19:15:00] LIVEFEED state idx=0 ready=0 playing=0 status=0
+19:14:59  [19:15:00] LIVEFEED state idx=0 ready=0 playing=0 status=0
+19:14:59  [19:15:00] LIVEFEED state idx=0 ready=0 playing=0 status=0
+19:14:59  [19:15:01] LIVEFEED state idx=0 ready=0 playing=0 status=0
+19:15:00  [19:15:02] LIVEFEED state idx=0 ready=0 playing=0 status=0
+19:15:05  [19:15:07] LIVEFEED state idx=0 ready=1 playing=0 status=1
+19:15:22  [19:15:24] LIVEFEED player idx=2 hls=http://pull-hls-q13.douyincdn.com/stage/stream-696915318490268476.m3u8
+19:15:22  [19:15:24] LIVEFEED scrollTo idx=1 y=1080.0 items=20
+19:15:22  [19:15:24] LIVEFEED willDisplay idx=1 ready=1 status=1
+19:15:22  [19:15:24] LIVEFEED state idx=1 ready=1 playing=0 status=1
+19:15:22  [19:15:24] LIVEFEED state idx=1 ready=1 playing=1 status=1
+19:15:37  [19:15:39] LIVEFEED player idx=3 hls=http://pull-hls-t1.douyincdn.com/stage/stream-696915318070313783/playl
+19:15:37  [19:15:39] LIVEFEED scrollTo idx=2 y=2160.0 items=20
+19:15:37  [19:15:39] LIVEFEED state idx=1 ready=1 playing=0 status=1
+19:15:37  [19:15:39] LIVEFEED scrollTo idx=2 y=2160.0 items=20
+19:15:37  [19:15:39] LIVEFEED willDisplay idx=2 ready=0 status=0
+19:15:37  [19:15:39] LIVEFEED state idx=2 ready=0 playing=0 status=0
+19:15:37  [19:15:39] LIVEFEED state idx=2 ready=0 playing=0 status=0
+19:15:40  [19:15:42] LIVEFEED state idx=2 ready=0 playing=0 status=0
+19:15:50  [19:15:52] LIVEFEED player idx=4 hls=http://pull-hls-t26.douyincdn.com/stage/stream-408684709192401719.m3u8
+19:15:50  [19:15:52] LIVEFEED scrollTo idx=3 y=3240.0 items=20
+19:15:50  [19:15:52] LIVEFEED willDisplay idx=3 ready=1 status=1
+19:15:51  [19:15:53] LIVEFEED state idx=3 ready=1 playing=0 status=1
+19:15:51  [19:15:53] LIVEFEED state idx=3 ready=1 playing=1 status=1
+19:16:18  [19:16:20] LIVEFEED player idx=5 hls=http://pull-hls-q6.douyincdn.com/third/stream-696914652958294845_uhd5/
+19:16:18  [19:16:20] LIVEFEED scrollTo idx=4 y=4320.0 items=20
+19:16:19  [19:16:21] LIVEFEED willDisplay idx=4 ready=0 status=0
+19:16:19  [19:16:21] LIVEFEED state idx=4 ready=0 playing=0 status=0
+19:16:19  [19:16:21] LIVEFEED state idx=4 ready=0 playing=0 status=0
+19:16:19  [19:16:21] LIVEFEED state idx=4 ready=0 playing=0 status=0
+19:16:38  [19:16:40] LIVEFEED player idx=6 hls=http://pull-hls-q6.douyincdn.com/stage/stream-696915122386371388/index
+19:16:38  [19:16:40] LIVEFEED scrollTo idx=5 y=5400.0 items=20
+19:16:38  [19:16:40] LIVEFEED willDisplay idx=5 ready=1 status=1
+19:16:38  [19:16:40] LIVEFEED state idx=5 ready=1 playing=0 status=1
+19:16:38  [19:16:40] LIVEFEED state idx=5 ready=1 playing=0 status=1
+19:16:39  [19:16:41] LIVEFEED state idx=5 ready=1 playing=0 status=1
+19:16:56  [19:16:58] LIVEFEED player idx=7 hls=http://pull-hls-l1.douyincdn.com/stage/stream-120454424710348830/playl
+19:16:56  [19:16:58] LIVEFEED scrollTo idx=6 y=6480.0 items=20
+19:16:56  [19:16:58] LIVEFEED willDisplay idx=6 ready=1 status=1
+19:16:56  [19:16:58] LIVEFEED state idx=6 ready=1 playing=0 status=1
+19:16:56  [19:16:58] LIVEFEED state idx=6 ready=1 playing=0 status=1
+19:17:00  [19:17:02] LIVEFEED state idx=6 ready=1 playing=0 status=1
+19:17:57  [19:17:59] SETTINGS panel open (menu #1)
+19:17:59  [19:18:01] SETTINGS panel exit-app (menu #2)
