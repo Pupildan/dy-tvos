@@ -63,6 +63,8 @@ final class DYQuickPanelModel: ObservableObject {
     @Published var profileSecUid = ""
     /// v172 合集屏开关（快捷面板「合集」项实装：页面上下文 fetch mix/aweme）
     @Published var isMixOpen = false
+    /// 直播浏览屏开关（v183 设置面板「直播」项实装：web /webcast/feed/ 热门直播间）
+    @Published var isLiveOpen = false
     /// 合集屏数据钥匙
     var mixId = ""
     var mixTitle = ""

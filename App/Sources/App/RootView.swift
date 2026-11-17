@@ -53,6 +53,13 @@ struct RootView: View {
                     .zIndex(12)
             }
 
+            // v183 直播浏览屏（设置面板「直播」打开；web /webcast/feed/ 热门直播间）
+            if quick.isLiveOpen {
+                DYLiveBrowseScreen()
+                    .ignoresSafeArea()
+                    .zIndex(13)
+            }
+
             // 轻提示（v150：主页/合集等占位动作反馈，2.5s 自动消失）
             if let toast = quick.toast {
                 Text(toast)

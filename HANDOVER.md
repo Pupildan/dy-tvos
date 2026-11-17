@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v181**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v182**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131 "趋近完美"）；双源架构全通（v135）；弹幕空窗真根因已修（v151-152）；两倍速=确认键长按 0.6s（v156 定版）；评论死锁修复（v149）；**作者资料+作品首页+合集=WebView 页面上下文请求真机全通**（v163-v175）；点播/焦点/滑动/右轨统计/合集屏/点播段语义全修通（v169-v175）；**作者作品翻页=服务端信任墙**（v175-v179 连败，v179 判死参数路线；v180 页面作者页真实渲染 + 隐形 WebView 加入 window + 滚动泵触发 6 次，真机 `SESSION PAGE-NATIVE PAGING` **零次** → 页面原生翻页路线也判死；v181 探 count 上限 + 全端点透视/time_list，待验收）。匿名侧若穷尽，唯一出路 = §5.3⑤D 扫码登录（需用户拍板）。
 
 ---
@@ -272,7 +272,7 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 2. **合集/短剧浏览**：series/list 已通（作者合集列表）→ 有数据的作者直接接 UI；合集内容等 §5.3 数据解锁（或短剧 series_id 路线）。
 3. **搜索**：顶部搜索条 UI + web 搜索端点（myDV 有 search/single 端点参照）。
 4. **扫码登录**：解锁登录态（作品/合集/高清/收藏/关注流一步到位）——§5.3 若走到方向 D 就是它；网页套壳路线 v2-v8 已验证可行（铁律允许仅登录用 WebView）。
-5. **直播**：myDV LiveWebSocket（kq2.java webRid 弹幕）参照，需直播间入口数据。
+5. **直播**：**第一版已实装（v183，匿名拉流播放，无弹幕）**——开发机探针 `_tmp/live_probe.js` 实锤 **live.douyin.com 不撞作品墙**：`/webcast/feed/` status_code=0 返回 20 真直播间、`/webcast/room/web/enter/` 返回 `hls_pull_url_map`（FULL_HD1/HD1/SD2/SD1）真 HLS URL（.m3u8 HEAD 200），与现有 feed/弹幕/评论**同款 a_bogus 签名 + 匿名 ttwid** 即可（照抄 myDV u11.java:1628-1695 + x04.java:327-333 + DataModelKt 清晰度优先级）。新增 `DYLiveClient`（fetchLiveFeed/enterRoom/bestHlsUrl）+ `DYLiveUI`（DYLiveBrowseScreen 网格 + DYLivePlayerScreen AVPlayer 播 HLS，复用 PlayerLayerView，单房间独立不进 PlayerManager 池）+ 设置面板「直播」占位行转真入口 + RootView isLiveOpen 挂载。**第二版待做**：WebSocket 弹幕（kq2.java `wss://webcast3-ws-web-lq...` + `getMSSDKSignature`（sign.js，专开 JSContext）+ 手写 protobuf 解码 x04.s/t/r + ack + 心跳 + 推射发射器喂 DanmakuView）。
 
 ### 8.3 长期（打磨）
 1. UI 美化统一轮：启动 spinner（v76 曾有）、弹幕样式设置、主题。

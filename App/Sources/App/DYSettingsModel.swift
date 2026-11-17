@@ -79,6 +79,18 @@ final class DYSettingsModel: ObservableObject {
         DYLog.shared.event("SETTINGS danmaku -> \(danmakuOn ? "on" : "off")")
     }
 
+    /// 直播（v183 实装）：关设置面板 → 0.4s 后开直播浏览屏。
+    /// 事务分离防焦点异常（同 selectMix/selectComment：tvOS 焦点环境同一事务里换含聚焦按钮的面板会闪退）。
+    func selectLive() {
+        noteInteraction()
+        DYLog.shared.event("SETTINGS select live")
+        isOpen = false
+        stopAutoHide()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            DYQuickPanelModel.shared.isLiveOpen = true
+        }
+    }
+
     /// 占位项（直播/登录）：只记日志，后续版本实施。
     func placeholderTapped(_ name: String) {
         noteInteraction()
@@ -134,7 +146,7 @@ struct SettingsPanelView: View {
             sourceRow(title: "移动端推荐", subtitle: "手机端视频源", target: .mobile, row: .mobile)
             sourceRow(title: "抖音精选", subtitle: "电脑端视频源", target: .web, row: .web)
             danmakuRow
-            placeholderRow(title: "直播", subtitle: "即将上线", row: .live)
+            liveRow
             placeholderRow(title: "登录", subtitle: "即将上线", row: .login)
 
             Spacer(minLength: 0)
@@ -183,6 +195,17 @@ struct SettingsPanelView: View {
         }
         .buttonStyle(PanelRowButtonStyle())
         .focused($focusedRow, equals: .danmaku)
+    }
+
+    /// 直播行（v183 实装：原占位项转真入口 → DYLiveBrowseScreen）
+    private var liveRow: some View {
+        Button {
+            model.selectLive()
+        } label: {
+            rowContent(title: "直播", subtitle: "热门直播间", badge: nil, focused: focusedRow == .live)
+        }
+        .buttonStyle(PanelRowButtonStyle())
+        .focused($focusedRow, equals: .live)
     }
 
     private func placeholderRow(title: String, subtitle: String, row: PanelRow) -> some View {
