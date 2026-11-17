@@ -118,6 +118,10 @@ final class DYLiveFeedViewController: UIViewController {
         // 1) 视频渲染层（控制器级 AVPlayerViewController，v189 出画面方案）——加在 collection view 下面
         playerVC.showsPlaybackControls = false
         playerVC.videoGravity = .resizeAspect
+        // ⚠️ v207 黑屏真凶修复：playerVC.player 从 v193 创建以来从未赋值！渲染层没有 player
+        // → isReadyForDisplay 永远 0、全屏黑（sharedPlayer 照常出声所以"有声无画面"）。
+        // 一行修复：把共享 player 接到渲染层。
+        playerVC.player = sharedPlayer
         // ⚠️ tvOS 上 AVPlayerViewController.view 是 UIView?（iOS 非可选）——必须解包
         if let pv = playerVC.view {
             pv.backgroundColor = .black
