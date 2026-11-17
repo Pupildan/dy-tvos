@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v203"
-    static let changes = "v203: 修图标-最后两个actool document error(v202 CI日志实锤,此前所有轮次没暴露因为旧格式错误actool根本没走到内容校验)。①The last image stack layer with content Front must be a fully opaque bitmap(alpha 139/84)→图标PNG是RGBA带透明,压平成RGB不透明(over black,视觉不变);②The image stack must have at least 2 layers→单层Front不合法,每stack加Back层(纯黑不透明)成Front+Back双层。顶架图也压平消warning(必须fully opaque)。⚠️坑:actool document error不fail CI构建(CI绿但图标内容被丢弃),验证必须拆ipa+看CI日志actool document errors段。含v195加载视频过渡+v202模板格式"
+    static let version = "v204"
+    static let changes = "v204: 直播黑屏-设备端终极诊断。开发机探针ts_debug.js实锤: 6房间×4清晰度全是H.264+AAC(HEVC假设证伪), 全部嵌套清单(L1指向L2 m3u8防盗链包装, livehwc4/100ycdn域), TS层100%对齐。编码假设排除后不再盲猜——加AVPlayerItem自带诊断: errorLog(底层错误码)/accessLog(传输字节)/presentationSize(视频解码出来才有值)/isReadyForDisplay/轨道数, play后3s+8s各dump一次LIVE DIAG行, 让AVPlayer自己说黑屏原因"
 }

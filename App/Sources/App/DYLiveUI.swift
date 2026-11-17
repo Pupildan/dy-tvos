@@ -251,7 +251,7 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// 共享 player 换 URL（AVPlayerViewController 渲染 + AVURLAsset 带 header，黑屏关键）
+    /// 共享 player 换 URL（AVPlayerViewController 渲染 + AVURLAsset 带 header）
     private func play(url: String, webRid: String) {
         guard playingWebRid != webRid, let u = URL(string: url) else { return }
         // 照 VOD NativePlayerView.swift:423：AVURLAsset 带 header（裸 AVPlayerItem 没带 → CDN 返回空 → 黑屏）
@@ -261,6 +261,43 @@ final class DYLiveFeedViewController: UIViewController {
         playingWebRid = webRid
         sharedPlayer.play()
         DYLog.shared.event("LIVEFEED play webRid=\(webRid) hls=\(url.prefix(70))")
+        // v204 设备端终极诊断：AVPlayerItem 自带 errorLog/accessLog + presentationSize + isReadyForDisplay
+        // （探针实锤全是 H.264+AAC 且嵌套清单——编码假设已排除，要看 AVPlayer 自己怎么抱怨）
+        for delay in [3.0, 8.0] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                guard let self, self.playingWebRid == webRid, let item = self.sharedPlayer.currentItem else { return }
+                let layer = (self.playerVC.view?.layer as? AVPlayerLayer)
+                let rfd = layer?.isReadyForDisplay ?? false
+                let ps = item.presentationSize
+                DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
+                if let errLog = item.errorLog, !errLog.events.isEmpty {
+                    for (i, e) in errLog.events.prefix(3).enumerated() {
+                        let uri = (e.uri as String?) ?? "-"
+                        DYLog.shared.log("LIVE DIAG err[\(i)] code=\(e.errorStatusCode) domain=\(e.errorDomain) uri=\(uri.prefix(70)) comment=\((e.errorComment as String?) ?? "-")")
+                    }
+                } else {
+                    DYLog.shared.log("LIVE DIAG errLog empty")
+                }
+                if let accLog = item.accessLog, !accLog.events.isEmpty {
+                    for (i, e) in accLog.events.suffix(3).enumerated() {
+                        let uri = (e.uri as String?) ?? "-"
+                        DYLog.shared.log("LIVE DIAG acc[\(i)] bytes=\(e.numberOfBytesTransferred) segs=\(e.numberOfServerAddressChanges) uri=\(uri.prefix(70))")
+                    }
+                } else {
+                    DYLog.shared.log("LIVE DIAG accLog empty")
+                }
+                item.asset.loadTracks(withMediaType: .video) { tracks in
+                    DYLog.shared.log("LIVE DIAG videoTracks=\(tracks?.count ?? -1)")
+                    if let f = tracks?.first?.formatDescriptions.first {
+                        let d = CMVideoFormatDescriptionGetDimensions(f as! CMVideoFormatDescription)
+                        DYLog.shared.log("LIVE DIAG videoDims=\(d.width)x\(d.height)")
+                    }
+                }
+                item.asset.loadTracks(withMediaType: .audio) { tracks in
+                    DYLog.shared.log("LIVE DIAG audioTracks=\(tracks?.count ?? -1)")
+                }
+            }
+        }
     }
 
     /// 直播流 header（照 VOD playbackHeaders web 分支：Referer+UA+ttwid；绝不加 sec-ch-ua，v157 铁律）
