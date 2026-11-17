@@ -90,5 +90,12 @@ struct RootView: View {
             guard open else { return }
             DYLog.shared.log("ROOT profile open → \(quick.profileSecUid.prefix(16))... (数据由 DYProfileScreen.onAppear 发起)")
         }
+        // v186：进直播流屏暂停主 feed 所有 player（真机实锤两层声音叠加）；退出后 scrollTo 恢复居中播放
+        .onChange(of: quick.isLiveOpen) { open in
+            if open {
+                PlayerManager.shared.pauseAll()
+                DYLog.shared.log("ROOT live open → main feed paused")
+            }
+        }
     }
 }

@@ -309,6 +309,13 @@ final class PlayerManager {
         players[index]
     }
 
+    /// 暂停池里所有 player（v186：进直播流屏时停掉主 feed 声音，避免两层声音叠加）。
+    /// 不驱逐（保留 item/封面），返回直播屏后 resumeAll 恢复。
+    func pauseAll() {
+        for (_, p) in players { p.pause() }
+        DYLog.shared.log("FEEDPOOL pauseAll (live open)")
+    }
+
     /// index 的封面兜底图（异步生成，未就绪返回 nil，生成完回调刷新）。
     /// 静态直链过期时封面同样生成失败 → 用重定向直链重试一次（与播放选链同源逻辑，防封面黑屏）。
     func cover(at index: Int, completion: @escaping (UIImage?) -> Void) {

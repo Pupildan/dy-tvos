@@ -5,49 +5,17 @@ import AVKit
 
 // MARK: - 直播流屏（v184 全屏纵向分页刷直播间，照抄 NativePlayerView 分页/手势/遥控/池窗口）
 
-/// SwiftUI 包装：直播纵向分页流 + 常驻可聚焦「返回」按钮（v148 焦点铁律：时刻有可聚焦元素）。
-/// 设置面板「直播」进入；Menu 关闭回播放。
+/// SwiftUI 包装：直播纵向分页流（全屏）。设置面板「直播」进入；Menu 关闭回播放。
+/// v186：删掉右上角返回按钮——它抢焦点导致遥控上下键被 SwiftUI 焦点引擎吃掉、
+/// 切不了房（真机日志实锤）。退出统一走 Menu（onExitCommand），无焦点竞争。
 struct DYLiveFeedScreen: View {
     @ObservedObject var model = DYQuickPanelModel.shared
-    @FocusState private var closeFocused: Bool
 
     var body: some View {
-        ZStack {
-            DYLiveFeedView()
-                .ignoresSafeArea()
-            VStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        model.isLiveOpen = false
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                            Text("返回")
-                        }
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 10)
-                        .background(Color.black.opacity(0.5), in: RoundedRectangle(cornerRadius: 12))
-                        .overlay {
-                            if closeFocused {
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .strokeBorder(Color.white, lineWidth: 4)
-                            }
-                        }
-                    }
-                    .buttonStyle(PanelRowButtonStyle())
-                    .focused($closeFocused)
-                }
-                .padding(.horizontal, 32)
-                .padding(.top, 28)
-                Spacer()
-            }
-        }
-        .onAppear { closeFocused = true }
-        .onExitCommand { model.isLiveOpen = false }
-        .transition(.opacity)
+        DYLiveFeedView()
+            .ignoresSafeArea()
+            .onExitCommand { model.isLiveOpen = false }
+            .transition(.opacity)
     }
 }
 
@@ -56,6 +24,13 @@ struct DYLiveFeedView: UIViewControllerRepresentable {
         DYLiveFeedViewController()
     }
     func updateUIViewController(_ uiViewController: DYLiveFeedViewController, context: Context) {}
+}
+
+/// 可聚焦 collectionView（v186）：PlayerCell `canBecomeFocused=false`（照 VOD，避免 cell 抢焦点干扰滑动），
+/// 但直播屏需要遥控上下键锚点 → 让 collectionView 自己可聚焦。聚焦后遥控上下键走 live VC 的 pressesBegan 切房，
+/// 不再被 SwiftUI 焦点引擎吃掉（真机实锤：返回按钮/无可聚焦元素 → 上下键失效）。
+final class DYLiveFocusCollectionView: UICollectionView {
+    override var canBecomeFocused: Bool { true }
 }
 
 /// 直播纵向分页控制器（照抄 DYPlayerViewController 的分页/snap/pan 护栏/遥控，但数据走 DYLiveClient
@@ -70,6 +45,8 @@ final class DYLiveFeedViewController: UIViewController {
     private var hlsCache: [String: String] = [:]        // webRid → 已 resolve 的 HLS URL
     private var resolving = Set<String>()               // webRid → enter 在飞去重
     private var playerRequests: [Int: String] = [:]     // index → 发起时的 webRid（防竞态）
+    /// KVO ready 观察（照 VOD readyObservers）：player status → readyToPlay 时补 play（修"没画面只有声音"）
+    private var readyObservers: [Int: NSKeyValueObservation] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +55,7 @@ final class DYLiveFeedViewController: UIViewController {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView = DYLiveFocusCollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.register(PlayerCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -95,6 +72,11 @@ final class DYLiveFeedViewController: UIViewController {
         ])
         setupGestures()
         loadFeed()
+    }
+
+    /// 遥控焦点锚点：初始焦点落 collectionView → 上下键进 pressesBegan 切房（照 NativePlayerView）
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        return [collectionView]
     }
 
     private func loadFeed() {
@@ -163,6 +145,8 @@ final class DYLiveFeedViewController: UIViewController {
         guard rooms.indices.contains(idx) else { return }
         // 驱逐窗口外
         for (i, p) in players where abs(i - idx) > 1 {
+            readyObservers[i]?.invalidate()
+            readyObservers.removeValue(forKey: i)
             p.pause()
             p.replaceCurrentItem(with: nil)
             players.removeValue(forKey: i)
@@ -222,6 +206,16 @@ final class DYLiveFeedViewController: UIViewController {
         let item = AVPlayerItem(url: u)
         let p = AVPlayer(playerItem: item)
         players[index] = p
+        // KVO ready 观察（照 VOD PlayerManager.readyObservers）：status 异步变 readyToPlay 时补 play
+        // 真机实锤"没画面只有声音"根因——createPlayer 后只 updatePlaybackStates 一次，那时 status 尚未 ready
+        // → 卡在封面不 play；ready 回调没人接 → 永远黑屏。ready 时再触发一次即可。
+        readyObservers[index] = p.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                guard player.currentItem?.status == .readyToPlay else { return }
+                self.updatePlaybackStates(center: self.currentIndex)
+            }
+        }
         DYLog.shared.log("LIVEFEED player idx=\(index) hls=\(url.prefix(70))")
         DispatchQueue.main.async { [weak self] in
             self?.updatePlaybackStates(center: self?.currentIndex ?? index)
@@ -345,6 +339,10 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
             let idx = min(currentIndex, DYLiveClient.shared.rooms.count - 1)
             currentIndex = idx
             scrollTo(index: idx, animated: false)
+            // 焦点落到 collectionView → 遥控上下键进 pressesBegan 切房 + updatePlaybackStates 正常播放
+            DispatchQueue.main.async { [weak self] in
+                self?.view.window?.updateFocusIfNeeded()
+            }
         }
     }
 }
