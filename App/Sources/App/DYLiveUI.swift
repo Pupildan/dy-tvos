@@ -33,6 +33,97 @@ final class DYLiveFocusCollectionView: UICollectionView {
     override var canBecomeFocused: Bool { true }
 }
 
+/// 直播单房间 cell（v188）：内嵌 AVPlayerViewController 出画面。
+/// v186/v187 手动管 AVPlayerLayer 连败两轮（日志 layer=1920x1080 ready=1 playing=1 全绿却黑屏）→
+/// 按铁律回退标准底座：AVPlayerViewController 自己管 AVPlayerLayer 渲染，天生出画面，绕开手动 layer 泥潭。
+/// 左下角标题/观看数 overlay 照 VOD PC 版排版。播放控件关掉（上下键切房，不要自带 UI）。
+final class LivePlayerCell: UICollectionViewCell {
+    private let playerVC = AVPlayerViewController()
+    private let nicknameLabel = UILabel()
+    private let descLabel = UILabel()
+    /// 当前绑定的 player（供池驱逐时 pause）
+    private(set) var player: AVPlayer?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.backgroundColor = .black
+        // AVPlayerViewController：tvOS 标准出画面方案（自带 AVPlayerLayer 渲染）
+        playerVC.showsPlaybackControls = false
+        playerVC.videoGravity = .resizeAspect
+        let pv = playerVC.view
+        pv.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(pv)
+        NSLayoutConstraint.activate([
+            pv.topAnchor.constraint(equalTo: contentView.topAnchor),
+            pv.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            pv.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            pv.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+        ])
+        // 左下信息区（照 VOD PC 版：@主播·X观看 / 标题）
+        nicknameLabel.font = .boldSystemFont(ofSize: 32)
+        nicknameLabel.textColor = .white
+        nicknameLabel.shadowColor = .black
+        nicknameLabel.shadowOffset = CGSize(width: 1, height: 1)
+        descLabel.font = .systemFont(ofSize: 26, weight: .medium)
+        descLabel.textColor = .white
+        descLabel.shadowColor = .black
+        descLabel.shadowOffset = CGSize(width: 1, height: 1)
+        descLabel.numberOfLines = 2
+        contentView.addSubview(nicknameLabel)
+        contentView.addSubview(descLabel)
+    }
+    required init?(coder: NSCoder) { fatalError() }
+    override var canBecomeFocused: Bool { false }   // 照 VOD cell：排除出焦点系统，滑动不被焦点干扰
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let b = contentView.bounds
+        let infoLeft: CGFloat = 24
+        let infoBottom: CGFloat = 44
+        let infoW = b.width - infoLeft * 2
+        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 62, width: infoW, height: 62)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 62 - 4 - 40, width: infoW, height: 40)
+    }
+
+    /// 绑 player（AVPlayerViewController 自己 render）+ 填标题/观看数
+    func configure(room: DYLiveRoom, player: AVPlayer, viewerText: String) {
+        self.player = player
+        playerVC.player = player
+        let nick = room.ownerName.isEmpty ? "" : "@\(room.ownerName)"
+        let time = viewerText
+        if nick.isEmpty && time.isEmpty {
+            nicknameLabel.attributedText = nil
+        } else {
+            let s = NSMutableAttributedString()
+            if !nick.isEmpty {
+                s.append(NSAttributedString(string: nick, attributes: [.font: UIFont.boldSystemFont(ofSize: 32), .foregroundColor: UIColor.white, .shadow: Self.textShadow]))
+                if !time.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
+            }
+            if !time.isEmpty {
+                s.append(NSAttributedString(string: time, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
+            }
+            nicknameLabel.attributedText = s
+        }
+        descLabel.text = room.title.isEmpty ? nil : room.title
+    }
+    /// 离屏解绑（池仍持有 player，回滚回来 configure 重绑）
+    func unbind() {
+        playerVC.player = nil
+        player = nil
+    }
+    /// 重绑 player（updatePlaybackStates 每 tick 调；标题/观看数已由 configure 填过，这里只换 player）
+    func bind(player: AVPlayer) {
+        self.player = player
+        playerVC.player = player
+    }
+    private static let textShadow: NSShadow = {
+        let s = NSShadow()
+        s.shadowColor = UIColor.black
+        s.shadowOffset = CGSize(width: 1, height: 1)
+        s.shadowBlurRadius = 2
+        return s
+    }()
+}
+
 /// 直播纵向分页控制器（照抄 DYPlayerViewController 的分页/snap/pan 护栏/遥控，但数据走 DYLiveClient
 /// 游标翻页、拉流走 HLS 单房间池）。池窗口 [idx-1, idx+1]，相邻房间预 resolve HLS 预取。
 final class DYLiveFeedViewController: UIViewController {
@@ -56,7 +147,7 @@ final class DYLiveFeedViewController: UIViewController {
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         collectionView = DYLiveFocusCollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.register(PlayerCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(LivePlayerCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.backgroundColor = .black
@@ -222,31 +313,27 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// 居中播放（ready 才 play），非居中暂停；未 ready 显示封面兜底，绝不强行 play。
+    /// 居中播放，非居中暂停（AVPlayerViewController 自己 render 出画面，cell 只 bind + play/pause）
     private func updatePlaybackStates(center index: Int) {
         for cell in collectionView.visibleCells {
-            guard let c = cell as? PlayerCell,
+            guard let c = cell as? LivePlayerCell,
                   let ip = collectionView.indexPath(for: c) else { continue }
             let idx = ip.item
             let isCenter = (idx == index)
             if let p = players[idx] {
                 c.bind(player: p)
                 let ready = (p.currentItem?.status == .readyToPlay)
-                // v187 诊断：定位"没画面只有声音"——playerLayer frame=0 → AVPlayerLayer 不 render（有声音无画面）
                 if isCenter {
-                    let lf = c.playerLayerView.frame
-                    let cf = c.frame
-                    DYLog.shared.log("LIVEFEED state idx=\(idx) ready=\(ready ? 1 : 0) playing=\(p.timeControlStatus == .playing ? 1 : 0) layer=\(Int(lf.width))x\(Int(lf.height)) cell=\(Int(cf.width))x\(Int(cf.height)) status=\(p.currentItem?.status.rawValue ?? -1)")
-                }
-                if isCenter, ready {
-                    if p.timeControlStatus != .playing { p.play() }
-                    c.setCoverVisible(false)
+                    if ready {
+                        if p.timeControlStatus != .playing { p.play() }
+                    } else {
+                        // ready 后 KVO readyObservers 会再触发本方法补 play
+                        p.pause()
+                    }
+                    DYLog.shared.log("LIVEFEED state idx=\(idx) ready=\(ready ? 1 : 0) playing=\(p.timeControlStatus == .playing ? 1 : 0) status=\(p.currentItem?.status.rawValue ?? -1)")
                 } else {
                     p.pause()
-                    c.setCoverVisible(!ready)
                 }
-            } else {
-                c.setCoverVisible(true)
             }
         }
     }
@@ -285,47 +372,29 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
         DYLiveClient.shared.rooms.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PlayerCell
-        cell.playerLayerView.frame = cell.contentView.bounds
-        cell.coverImageView.frame = cell.contentView.bounds
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! LivePlayerCell
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         collectionView.bounds.size
     }
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let c = cell as? PlayerCell else { return }
-        c.playerLayerView.frame = c.contentView.bounds
-        c.coverImageView.frame = c.contentView.bounds
+        guard let c = cell as? LivePlayerCell else { return }
         let idx = indexPath.item
         let rooms = DYLiveClient.shared.rooms
         guard rooms.indices.contains(idx) else { return }
         let room = rooms[idx]
-        // 观看数拼进 createTimeText → "@主播 · 1.2万观看"（复用 applyInfo 同行排版）
-        // ⚠️ 成员初始化器参数必须按声明序：nickname→avatarUrl→desc→createTimeText
-        let info = DYVideoInfo(nickname: room.ownerName, avatarUrl: room.ownerAvatar,
-                               desc: room.title, createTimeText: room.userCount.isEmpty ? "" : "\(room.userCount)观看")
-        c.configureLive(info: info)
-        // 封面兜底（未 ready 时不黑屏）
-        if !room.coverUrl.isEmpty, let cu = URL(string: room.coverUrl) {
-            AvatarLoader.shared.load(cu) { [weak c] img in c?.setCover(img) }
-        }
-        c.setCoverVisible(true)
         // peekPlayer 语义：已建则绑，未建不 acquire（防快速滑动撑大池）
+        // AVPlayerViewController 自己 render 出画面（v186/v187 手动 AVPlayerLayer 连败两轮的黑屏根因绕开）
         if let p = players[idx] {
-            c.bind(player: p)
-            // v187 诊断+修 frame=0：bind 后强制布局，确保 AVPlayerLayer 拿到非 0 尺寸（否则有声音无画面）
-            c.layoutIfNeeded()
-            c.playerLayerView.frame = c.contentView.bounds
             let ready = (p.currentItem?.status == .readyToPlay)
-            c.setCoverVisible(!ready)
-            let lf = c.playerLayerView.frame
-            DYLog.shared.log("LIVEFEED willDisplay idx=\(idx) ready=\(ready ? 1 : 0) layer=\(Int(lf.width))x\(Int(lf.height)) status=\(p.currentItem?.status.rawValue ?? -1)")
+            c.configure(room: room, player: p, viewerText: room.userCount.isEmpty ? "" : "\(room.userCount)观看")
+            DYLog.shared.log("LIVEFEED willDisplay idx=\(idx) ready=\(ready ? 1 : 0) status=\(p.currentItem?.status.rawValue ?? -1)")
         }
     }
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        // 离屏 cell 解绑 player（池仍持有，回滚回来 willDisplay 重绑；nil=AVPlayerLayer 无 holder）
-        (cell as? PlayerCell)?.playerLayerView.player = nil
+        // 离屏 cell 解绑 player（池仍持有，回滚回来 willDisplay 重绑）
+        (cell as? LivePlayerCell)?.unbind()
     }
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, withTargetContentOffset targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let pageHeight = max(1, scrollView.bounds.height)
