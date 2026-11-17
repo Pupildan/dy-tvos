@@ -255,53 +255,70 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// 共享 player 换 URL（AVPlayerViewController 渲染 + AVURLAsset 带 header）
+    /// 共享 player 换 URL（先剥嵌套清单 → 裸 AVURLAsset（myDV live 无任何头）→ AVPlayerViewController 渲染）
     private func play(url: String, webRid: String) {
         guard playingWebRid != webRid, let u = URL(string: url) else { return }
-        // 照 VOD NativePlayerView.swift:423：AVURLAsset 带 header（裸 AVPlayerItem 没带 → CDN 返回空 → 黑屏）
-        let asset = AVURLAsset(url: u, options: ["AVURLAssetHTTPHeaderFieldsKey": liveHeaders()])
-        let item = AVPlayerItem(asset: asset)
-        sharedPlayer.replaceCurrentItem(with: item)
-        playingWebRid = webRid
-        sharedPlayer.play()
-        DYLog.shared.event("LIVEFEED play webRid=\(webRid) hls=\(url.prefix(70))")
-        // v204 设备端终极诊断：AVPlayerItem 自带 errorLog/accessLog + presentationSize + isReadyForDisplay
-        // （探针实锤全是 H.264+AAC 且嵌套清单——编码假设已排除，要看 AVPlayer 自己怎么抱怨）
-        for delay in [3.0, 8.0] {
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                guard let self, self.playingWebRid == webRid, let item = self.sharedPlayer.currentItem else { return }
-                let layer = (self.playerVC.view?.layer as? AVPlayerLayer)
-                let rfd = layer?.isReadyForDisplay ?? false
-                let ps = item.presentationSize
-                DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
-                if let errLog = item.errorLog(), !errLog.events.isEmpty {
-                    for (i, e) in errLog.events.prefix(3).enumerated() {
-                        let uri = (e.uri as String?) ?? "-"
-                        DYLog.shared.log("LIVE DIAG err[\(i)] code=\(e.errorStatusCode) domain=\(e.errorDomain) uri=\(uri.prefix(70)) comment=\((e.errorComment as String?) ?? "-")")
+        // v208：先剥嵌套清单——L1 媒体清单的"片段"可能指向 L2 m3u8（非标准 HLS 链式结构，
+        // hls.js 会递归解析但 AVPlayer 对这种结构行为不可控）。L2 才是真 TS 片段清单。
+        resolvePlaylist(url) { [weak self] finalUrl in
+            guard let self else { return }
+            // v208：裸 AVURLAsset——myDV live 路径 OkHttpDataSource 无任何自定义头（agent 实锤
+            // fo5 头表仅 VOD 用，live 走裸 client），实测带头/无头清单一致 → 完全对齐原项目
+            let asset = AVURLAsset(url: URL(string: finalUrl)!)
+            let item = AVPlayerItem(asset: asset)
+            self.sharedPlayer.replaceCurrentItem(with: item)
+            self.playingWebRid = webRid
+            self.sharedPlayer.play()
+            DYLog.shared.event("LIVEFEED play webRid=\(webRid) final=\(finalUrl.prefix(70))")
+            // v204 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay
+            for delay in [3.0, 8.0] {
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                    guard let self, self.playingWebRid == webRid, let item = self.sharedPlayer.currentItem else { return }
+                    let layer = (self.playerVC.view?.layer as? AVPlayerLayer)
+                    let rfd = layer?.isReadyForDisplay ?? false
+                    let ps = item.presentationSize
+                    DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
+                    if let errLog = item.errorLog(), !errLog.events.isEmpty {
+                        for (i, e) in errLog.events.prefix(3).enumerated() {
+                            let uri = (e.uri as String?) ?? "-"
+                            DYLog.shared.log("LIVE DIAG err[\(i)] code=\(e.errorStatusCode) domain=\(e.errorDomain) uri=\(uri.prefix(70)) comment=\((e.errorComment as String?) ?? "-")")
+                        }
+                    } else {
+                        DYLog.shared.log("LIVE DIAG errLog empty")
                     }
-                } else {
-                    DYLog.shared.log("LIVE DIAG errLog empty")
-                }
-                if let accLog = item.accessLog(), !accLog.events.isEmpty {
-                    for (i, e) in accLog.events.suffix(3).enumerated() {
-                        let uri = (e.uri as String?) ?? "-"
-                        DYLog.shared.log("LIVE DIAG acc[\(i)] bytes=\(e.numberOfBytesTransferred) segs=\(e.numberOfServerAddressChanges) uri=\(uri.prefix(70))")
+                    if let accLog = item.accessLog(), !accLog.events.isEmpty {
+                        for (i, e) in accLog.events.suffix(3).enumerated() {
+                            let uri = (e.uri as String?) ?? "-"
+                            DYLog.shared.log("LIVE DIAG acc[\(i)] bytes=\(e.numberOfBytesTransferred) uri=\(uri.prefix(70))")
+                        }
+                    } else {
+                        DYLog.shared.log("LIVE DIAG accLog empty")
                     }
-                } else {
-                    DYLog.shared.log("LIVE DIAG accLog empty")
-                }
-                item.asset.loadTracks(withMediaType: .video) { tracks, _ in
-                    DYLog.shared.log("LIVE DIAG videoTracks=\(tracks?.count ?? -1)")
-                    if let f = tracks?.first?.formatDescriptions.first {
-                        let d = CMVideoFormatDescriptionGetDimensions(f as! CMVideoFormatDescription)
-                        DYLog.shared.log("LIVE DIAG videoDims=\(d.width)x\(d.height)")
-                    }
-                }
-                item.asset.loadTracks(withMediaType: .audio) { tracks, _ in
-                    DYLog.shared.log("LIVE DIAG audioTracks=\(tracks?.count ?? -1)")
                 }
             }
         }
+    }
+
+    /// v208：剥嵌套清单——L1 媒体清单的"片段行"若是 m3u8（非标准链式结构），改播 L2 URL。
+    /// 平铺 TS 清单（片段行=.ts）原样返回。
+    private func resolvePlaylist(_ url: String, done: @escaping (String) -> Void) {
+        guard let u = URL(string: url) else { done(url); return }
+        URLSession.shared.dataTask(with: u) { data, _, _ in
+            guard let data, let text = String(data: data, encoding: .utf8), text.contains("#EXTM3U") else {
+                DispatchQueue.main.async { done(url) }
+                return
+            }
+            let seg = text.components(separatedBy: "\n")
+                .map { $0.trimmingCharacters(in: .whitespaces) }
+                .first { !$0.isEmpty && !$0.hasPrefix("#") } ?? ""
+            if seg.contains(".m3u8") {
+                let abs = seg.hasPrefix("http") ? seg : (URL(string: seg, relativeTo: u)?.absoluteString ?? seg)
+                DYLog.shared.log("LIVEFEED nested unwrap L1→L2 \(abs.prefix(80))")
+                DispatchQueue.main.async { done(abs) }
+            } else {
+                DispatchQueue.main.async { done(url) }
+            }
+        }.resume()
     }
 
     /// 直播流 header（照 VOD playbackHeaders web 分支：Referer+UA+ttwid；绝不加 sec-ch-ua，v157 铁律）
