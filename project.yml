@@ -36,9 +36,12 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         CURRENT_PROJECT_VERSION: "1"
         MARKETING_VERSION: "1.0"
-        # v199：删掉 ASSETCATALOG_COMPILER_APPICON_NAME——它强找名为 AppIcon 的 brand assets collection，
-        # 但 tvOS brandassets 集合名不匹配会报"None of the input catalogs contained a matching..."(v198 实锤)。
-        # 只留 brandassets(大1280×768+小400×240)，actool 自动识别唯一集合产图标。
+        # v201：恢复 ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon。
+        # v199/v200 日志铁证：删掉它后 tvOS 构建系统回退默认图标名"App Icon & Top Shelf Image"，
+        # 与文件夹名 AppIcon.brandassets(集合名=AppIcon)不匹配 → "None of the input catalogs contained
+        # a matching..." → 整个 brandassets 不编译 → 无 Assets.car。且集合必须四槽位完整
+        # (v197 只有 large+small 也静默不产出)，square 已修成 1280×1280。
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: DYTV
         # tvOS：无启动 storyboard（全屏黑屏启动即可），无状态栏
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
