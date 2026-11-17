@@ -132,8 +132,14 @@ final class DYLiveFeedViewController: UIViewController {
     private var currentIndex = 0
     private var didInitialScroll = false
 
-    // MARK: 直播单房间 HLS 池（窗口 [idx-1, idx+1]；照 PlayerManager 驱逐语义）
+    // MARK: 直播单房间 HLS 池（窗口 [idx-1, idx+1]；驱逐只 pause 不销毁，player 按 webRid 缓存）
     private var players: [Int: AVPlayer] = [:]
+    /// player 缓存（webRid → AVPlayer）：驱逐只 pause 不销毁，刷回来复用已缓冲 player 秒出画面
+    /// （v189 铁证：同房间 player 被反复销毁重建 idx=0 出现 3 次 → 每次重缓冲黑屏。缓存修之）
+    private var playerCache: [String: AVPlayer] = [:]
+    /// 缓存顺序（webRid，用于超上限淘汰最旧）
+    private var playerCacheOrder: [String] = []
+    private let playerCacheLimit = 8
     private var hlsCache: [String: String] = [:]        // webRid → 已 resolve 的 HLS URL
     private var resolving = Set<String>()               // webRid → enter 在飞去重
     private var playerRequests: [Int: String] = [:]     // index → 发起时的 webRid（防竞态）
@@ -231,16 +237,16 @@ final class DYLiveFeedViewController: UIViewController {
         return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
     }
 
-    // MARK: 池窗口（照 PlayerManager.prepare：只留 [idx-1, idx+1]，超范围驱逐回收解码器）
+    // MARK: 池窗口（窗口 [idx-1, idx+1]；驱逐只 pause 不销毁，player 按 webRid 缓存供刷回复用）
     private func prepareWindow(center idx: Int) {
         let rooms = DYLiveClient.shared.rooms
         guard rooms.indices.contains(idx) else { return }
-        // 驱逐窗口外
+        // 窗口外：只 pause 不销毁（player 留在 playerCache，刷回来复用已缓冲的秒出画面）
+        // v189 铁证：旧版 replaceCurrentItem(nil)+删除 → 刷回来 createPlayer 重建重缓冲 → 黑屏（有声音）
         for (i, p) in players where abs(i - idx) > 1 {
             readyObservers[i]?.invalidate()
             readyObservers.removeValue(forKey: i)
             p.pause()
-            p.replaceCurrentItem(with: nil)
             players.removeValue(forKey: i)
             playerRequests.removeValue(forKey: i)
         }
@@ -250,11 +256,25 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// ensure 房间 player：先查池 → 查 HLS 缓存直接建 → enter resolve 后建（异步，回主线程再绑）
+    /// ensure 房间 player：先查 playerCache(webRid) 复用 → 查 HLS 缓存建 → enter resolve 后建（异步）
     private func ensurePlayer(index: Int, room: DYLiveRoom) {
         if players[index] != nil { return }
         let reqId = room.webRid
         playerRequests[index] = reqId
+        // v190：先查 playerCache——刷回来复用已缓冲的 player 秒出画面，不再销毁重建重缓冲（v189 黑屏根因）
+        if let cached = playerCache[reqId] {
+            players[index] = cached
+            // 重新挂 ready 观察（驱逐时 invalidate 了）
+            readyObservers[index] = cached.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    guard player.currentItem?.status == .readyToPlay else { return }
+                    self.updatePlaybackStates(center: self.currentIndex)
+                }
+            }
+            DYLog.shared.log("LIVEFEED reuse cache idx=\(index) webRid=\(reqId)")
+            return
+        }
         // 已 resolve 的 HLS 直接建 player（相邻预取命中缓存秒建）
         if let hls = hlsCache[room.webRid] {
             createPlayer(index: index, url: hls)
@@ -298,9 +318,16 @@ final class DYLiveFeedViewController: UIViewController {
         let item = AVPlayerItem(url: u)
         let p = AVPlayer(playerItem: item)
         players[index] = p
+        // 存进 playerCache（webRid 键）——驱逐只 pause 不销毁，刷回来复用已缓冲 player 秒出画面
+        let reqId = playerRequests[index] ?? ""
+        if !reqId.isEmpty {
+            if playerCache[reqId] == nil {
+                playerCacheOrder.append(reqId)
+            }
+            playerCache[reqId] = p
+            evictPlayerCacheIfNeeded()
+        }
         // KVO ready 观察（照 VOD PlayerManager.readyObservers）：status 异步变 readyToPlay 时补 play
-        // 真机实锤"没画面只有声音"根因——createPlayer 后只 updatePlaybackStates 一次，那时 status 尚未 ready
-        // → 卡在封面不 play；ready 回调没人接 → 永远黑屏。ready 时再触发一次即可。
         readyObservers[index] = p.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
             guard let self else { return }
             DispatchQueue.main.async {
@@ -311,6 +338,24 @@ final class DYLiveFeedViewController: UIViewController {
         DYLog.shared.log("LIVEFEED player idx=\(index) hls=\(url.prefix(70))")
         DispatchQueue.main.async { [weak self] in
             self?.updatePlaybackStates(center: self?.currentIndex ?? index)
+        }
+    }
+
+    /// player 缓存超上限：淘汰最旧且不在当前窗口的（释放解码器，防内存涨）
+    private func evictPlayerCacheIfNeeded() {
+        guard playerCacheOrder.count > playerCacheLimit else { return }
+        let windowRids = Set(DYLiveClient.shared.rooms.enumerated()
+            .filter { abs($0.offset - currentIndex) <= 1 }.map { $0.element.webRid })
+        // 从最旧往新找第一个不在窗口的淘汰
+        for i in 0..<playerCacheOrder.count {
+            let rid = playerCacheOrder[i]
+            guard !windowRids.contains(rid), let p = playerCache[rid] else { continue }
+            p.pause()
+            p.replaceCurrentItem(with: nil)
+            playerCache.removeValue(forKey: rid)
+            playerCacheOrder.remove(at: i)
+            DYLog.shared.log("LIVEFEED cache evict webRid=\(rid) left=\(playerCacheOrder.count)")
+            return
         }
     }
 

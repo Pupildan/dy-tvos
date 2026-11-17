@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v189"
-    static let changes = "v189: 修 v188 CI 编译错 tvOS上AVPlayerViewController.view是UIView?(iOS非可选)必须guard解包。其余同v188: 直播黑屏换LivePlayerCell内嵌AVPlayerViewController(标准组件自己render出画面,绕开手动AVPlayerLayer连败v186/v187两轮的泥潭),保留纵向分页/滑动切房/遥控上下键/游标翻页/池窗口/HLS"
+    static let version = "v190"
+    static let changes = "v190: 修直播刷很多个只一个房间出画面其余黑屏(有声音)。v189日志铁证同房间player被反复销毁重建(idx=0出现3次)→根因prepareWindow每次滚动把窗口[idx-1,idx+1]外player replaceCurrentItem(nil)+从字典删除(照抄VOD解码器回收),刷回来ensurePlayer见字典空就createPlayer重建→HLS直播重新缓冲→黑屏(有声音=新player在缓冲),只当前居中那个刚好活着出画面。修:加playerCache(webRid→AVPlayer)驱逐只pause不销毁,ensurePlayer先查cache复用已缓冲player秒出画面,createPlayer存cache+超上限8淘汰最旧不在窗口的释放解码器。AVPlayerViewController出画面保留(v189已验证)"
 }
