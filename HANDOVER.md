@@ -157,7 +157,8 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 - mobile proto 图片字段号未知、是否填充未证实；UI 方案已设计好（ImageCell 横滑 pager）；数据侧需 aweme 级 dump 探针。当前图集被 dur=0 信号过滤掉。
 
 ### 5.6 直播 / 登录（面板占位）
-- 直播：myDV 有 LiveWebSocket（kq2.java webRid 弹幕）可参考，需直播间入口数据。
+- **⚠️直播出画面搁置（v183-v194 六轮，2026-11-17 用户拍板等下一步命令）**：数据链全通（见 §8.2.5），但**黑屏（有声音无画面）未解决**。日志铁证：player ready/playing/换 URL 全绿（`LIVEFEED play webRid=X hls=真URL`），**渲染层不出帧**。试过的全黑屏：①per-cell AVPlayerViewController 池（v189，只一房间出）②+playerCache 复用（v190，埋回归）③readyObservers 改 webRid 键（v191）④推倒池换单 AVPlayer 换 URL + asset header + 手动 PlayerLayerView（v192，走 v186/v187 手动 layer 黑屏老路）⑤视频改控制器级 AVPlayerViewController 浮在 collection view 下（v193/v194，CI 修 textShadow 后仍黑屏）。**未知根因在更深层**：疑 CDN 对 tvOS AVPlayer 的 HLS 直播流返回的视频轨/解码问题，或 asset header 没真正生效，或 AVPlayerLayer/AVPlayerViewController 在此层级渲染问题。**下一步先诊断 CDN 是否对 tvOS AVPlayer 真返回视频轨**（参考 myDV `xo5.java` H.264 解码失败降档逻辑、`cn4.java` surfaceBound 门控）。探针 `_tmp/live_probe.js` 证明 HLS URL 本身 HEAD 200 可达。**别再盲试渲染方案。**
+- 直播弹幕：myDV 有 LiveWebSocket（kq2.java webRid 弹幕）可参考，需直播间入口数据。**出画面没解决前弹幕无意义（没画面弹幕无处叠加），先解出画面。**
 - 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，被铁律限制为"仅登录用"）——登录后可解锁更清晰度/收藏同步。
 
 ## 6. 踩过的坑全集（按类别，务必牢记）
