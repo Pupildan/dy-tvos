@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v192"
-    static let changes = "v192: 推倒per-cell player池(连败v189/v190/v191三轮),照myDV反编译+VOD出画面代码改单AVPlayer换URL。agent翻反编译实锤:myDV整个滑动会话只有一个ExoPlayer(ij4.c全局共享),换房setMediaItem(newUrl).prepare()换URL无池;我建per-cell池多player抢解码器→大部分黑屏。且VOD出画面(NativePlayerView:423)用AVURLAsset带AVURLAssetHTTPHeaderFieldsKey(Referer+UA+ttwid),我直播用裸AVPlayerItem(url:)没带header→CDN返回空→黑屏(有声音=部分CDN宽松)。修:删players池/playerCache/evict/readyObservers/prepareWindow/ensurePlayer/createPlayer整套,加控制器级sharedPlayer单实例,playRoom resolve HLS→AVURLAsset带liveHeaders→replaceCurrentItem换URL→play;LivePlayerCell简化只bind共享player渲染。滑动切房动画层不动(用户核心关切)"
+    static let version = "v193"
+    static let changes = "v193: 修v192直播黑屏。日志铁证v192 ready=1 status=1 playing但黑屏=我把出画面的AVPlayerViewController换成了手动PlayerLayerView(AVPlayerLayer),正是v186/v187黑屏老路;v189出画面靠AVPlayerViewController。正确组合=控制器级AVPlayerViewController渲染(v189出画面方案)+v192 asset header(CDN不返回空),这组合没试过。改:删LivePlayerCell的playerLayerView/cover(cell不渲染视频,透明背景),视频改控制器级AVPlayerViewController渲染浮在collection view下,cell只留标题/观看数overlay。保留单AVPlayer换URL(v192)+滑动切房动画不动"
 }
