@@ -286,14 +286,14 @@ final class DYLiveFeedViewController: UIViewController {
                 } else {
                     DYLog.shared.log("LIVE DIAG accLog empty")
                 }
-                item.asset.loadTracks(withMediaType: .video) { tracks in
+                item.asset.loadTracks(withMediaType: .video) { tracks, _ in
                     DYLog.shared.log("LIVE DIAG videoTracks=\(tracks?.count ?? -1)")
                     if let f = tracks?.first?.formatDescriptions.first {
                         let d = CMVideoFormatDescriptionGetDimensions(f as! CMVideoFormatDescription)
                         DYLog.shared.log("LIVE DIAG videoDims=\(d.width)x\(d.height)")
                     }
                 }
-                item.asset.loadTracks(withMediaType: .audio) { tracks in
+                item.asset.loadTracks(withMediaType: .audio) { tracks, _ in
                     DYLog.shared.log("LIVE DIAG audioTracks=\(tracks?.count ?? -1)")
                 }
             }
