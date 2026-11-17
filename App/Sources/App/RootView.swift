@@ -143,12 +143,11 @@ struct LaunchVideoPlayerView: UIViewControllerRepresentable {
         vc.player = player
         player.play()
         // 循环：播完回到开头续播（静音加载动画循环遮住黑屏直到主 feed 首帧 ready）
-        // ⚠️ object 传局部非可选 item（player.currentItem 可选会污染 .AVPlayerItemDidPlayToEnd 成员查找，v195 CI 实锤）
-        if let item = player.currentItem {
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEnd, object: item, queue: .main) { [weak player] _ in
-                player?.seek(to: .zero)
-                player?.play()
-            }
+        // ⚠️ v196：.AVPlayerItemDoPlayToEnd 符号在当前 SDK 解析不到（NSNotification.Name? 无此成员，v195/v196 CI 实锤）
+        // → 用字符串字面量构造通知名（AVPlayerItemDidPlayToEnd 的原始名），object 传 player 不依赖可选 item
+        NotificationCenter.default.addObserver(forName: NSNotification.Name("AVPlayerItemDidPlayToEnd"), object: player, queue: .main) { [weak player] _ in
+            player?.seek(to: .zero)
+            player?.play()
         }
         DYLog.shared.log("LAUNCH loading video play (muted loop)")
         return vc
