@@ -138,14 +138,14 @@ final class DYLiveClient {
                 return
             }
             let list = obj["data"] as? [[String: Any]] ?? []
-            // 翻页游标（探针实锤：extra.max_time 毫秒时间戳 + extra.has_more）
+            // 翻页游标（探针实锤：extra.max_time 毫秒时间戳 + extra.has_more，恒为 Bool）
             let extra = obj["extra"] as? [String: Any] ?? [:]
             if let mt = extra["max_time"] as? String, !mt.isEmpty {
                 feedMaxTime = mt
             } else if let mt = (extra["max_time"] as? NSNumber)?.stringValue, !mt.isEmpty {
                 feedMaxTime = mt
             }
-            feedHasMore = (extra["has_more"] as? Bool) ?? ((extra["has_more"] as? Int) ?? 1) == 1
+            feedHasMore = (extra["has_more"] as? Bool) ?? true
             // 跨页去重追加（抖音混推相邻页有重叠）
             var fresh: [DYLiveRoom] = []
             for e in list {
