@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v201"
-    static let changes = "v201: 修app图标不显示-完整根因链(v195-v200六轮)。v200 CI日志铁证:删ASSETCATALOG后tvOS构建系统回退默认图标名'App Icon & Top Shelf Image'(actool参数--app-icon App\\ Icon\\ \\&\\ Top\\ Shelf\\ Image),与文件夹名AppIcon.brandassets(集合名=AppIcon)不匹配→None of the input catalogs contained a matching→整个brandassets不编译→无Assets.car。且v197复盘:名字匹配但只有large+small两槽位也静默不产出=tvOS brandassets集合必须四槽位完整(App Icon & Top Shelf Image类型)。修:①恢复ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon(匹配文件夹名)②catalog四槽位完整(已v200做到)③尺寸全对(square已修1280×1280,logo居中未切,PIL从1920×720源图按logo位置裁)。名字匹配+集合完整+尺寸正确三条件齐"
+    static let version = "v202"
+    static let changes = "v202: 修app图标-真正根因(axiom-tvos技能+Apple BrandAssetsType文档+react-native-vanilla模板三方交叉)。旧brandassets的Contents.json从项目第一天就是错的:对象式assets+裸PNG+无role/size,actool根本不认是合法brandassets集合→None of the input catalogs contained a matching→图标永不编译(记忆里的Assets.car gap就是它)。正确格式=assets数组+每条size/idiom/filename/role(primary-app-icon/top-shelf-image/top-shelf-image-wide)+filename指向.imagestack/.imageset子文件夹(图标是分层imagestack,顶架是imageset)。修:整目录重建为模板结构'App Icon & Top Shelf Image.brandassets'(tvOS默认查找名免设置,react-native-vanilla逐字节照抄)+AppStore图标imagestack(1280×768)+主屏图标imagestack(400×240)+顶架imageset两张(1920×720/2320×720),全单Front层平铺图标,删ASSETCATALOG设置(v199/v200实锤默认名匹配)。含v195启动加载视频过渡"
 }

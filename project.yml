@@ -36,12 +36,10 @@ targets:
         GENERATE_INFOPLIST_FILE: "YES"
         CURRENT_PROJECT_VERSION: "1"
         MARKETING_VERSION: "1.0"
-        # v201：恢复 ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon。
-        # v199/v200 日志铁证：删掉它后 tvOS 构建系统回退默认图标名"App Icon & Top Shelf Image"，
-        # 与文件夹名 AppIcon.brandassets(集合名=AppIcon)不匹配 → "None of the input catalogs contained
-        # a matching..." → 整个 brandassets 不编译 → 无 Assets.car。且集合必须四槽位完整
-        # (v197 只有 large+small 也静默不产出)，square 已修成 1280×1280。
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # v202：不设 ASSETCATALOG_COMPILER_APPICON_NAME——tvOS 默认查找名 "App Icon & Top Shelf Image"，
+        # catalog 文件夹已按模板改名 "App Icon & Top Shelf Image.brandassets" 正好匹配（v199/v200 日志实锤默认名）。
+        # 根因（六轮排查）：旧 brandassets 的 Contents.json 是手写对象格式+裸PNG+无 role/size，actool 不认；
+        # 正确格式=数组+role(primary-app-icon/top-shelf-image)+filename 指向 .imagestack/.imageset 子文件夹。
         INFOPLIST_KEY_CFBundleDisplayName: DYTV
         # tvOS：无启动 storyboard（全屏黑屏启动即可），无状态栏
         INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
