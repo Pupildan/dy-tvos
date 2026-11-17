@@ -270,7 +270,7 @@ final class DYLiveFeedViewController: UIViewController {
                 let rfd = layer?.isReadyForDisplay ?? false
                 let ps = item.presentationSize
                 DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
-                if let errLog = item.errorLog, !errLog.events.isEmpty {
+                if let errLog = item.errorLog(), !errLog.events.isEmpty {
                     for (i, e) in errLog.events.prefix(3).enumerated() {
                         let uri = (e.uri as String?) ?? "-"
                         DYLog.shared.log("LIVE DIAG err[\(i)] code=\(e.errorStatusCode) domain=\(e.errorDomain) uri=\(uri.prefix(70)) comment=\((e.errorComment as String?) ?? "-")")
@@ -278,7 +278,7 @@ final class DYLiveFeedViewController: UIViewController {
                 } else {
                     DYLog.shared.log("LIVE DIAG errLog empty")
                 }
-                if let accLog = item.accessLog, !accLog.events.isEmpty {
+                if let accLog = item.accessLog(), !accLog.events.isEmpty {
                     for (i, e) in accLog.events.suffix(3).enumerated() {
                         let uri = (e.uri as String?) ?? "-"
                         DYLog.shared.log("LIVE DIAG acc[\(i)] bytes=\(e.numberOfBytesTransferred) segs=\(e.numberOfServerAddressChanges) uri=\(uri.prefix(70))")
