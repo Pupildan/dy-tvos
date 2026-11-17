@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v197"
-    static let changes = "v197: 修v196 CI编译错 .AVPlayerItemDidPlayToEnd符号在当前SDK解析不到(v195 object可选/v196 if let item 两写法都报NSNotification.Name?无此成员)→改字符串字面量NSNotification.Name(\"AVPlayerItemDidPlayToEnd\")构造通知名绕开符号解析,object传player。其余同v195: 图标修(删top-shelf错尺寸槽位+删AccentColor)+启动加载视频过渡(LaunchVideoOverlay静音循环遮黑屏,首帧ready交叉淡化0.6s掉overlay)"
+    static let version = "v198"
+    static let changes = "v198: 修app图标不显示。根因(v197 ipa铁证)=tvOS brandassets格式(AppIcon.brandassets+idiom tv)actool编译出空结果——构建日志compilation-results块全空,ipa里无Assets.car、Info.plist无任何图标键(CFBundleIcons/AppIcon全False)。v195删top-shelf槽位/v196/v197都没治本。修=换标准AppIcon.appiconset(用户拍板):PIL把icon-large(1280×768)居中裁方+缩1024×1024生成icon-1024.png(抖音音符logo居中未切),新建AppIcon.appiconset/Contents.json(idiom tv/platform tvos/size 1024x1024),删整个AppIcon.brandassets旧目录。ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon指向不变。含v195启动加载视频过渡+首帧淡化"
 }
