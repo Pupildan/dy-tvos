@@ -45,22 +45,43 @@ final class DYLiveClient {
 
     private var feedCache: [DYLiveRoom] = []
     private var feedInflight = false
+    /// 翻页游标（探针实锤：响应 extra.max_time 毫秒时间戳 + extra.has_more，逐页前进）
+    private var feedMaxTime: String = "0"
+    private var feedHasMore = true
+    /// 跨页去重（抖音混推相邻页有重叠，page2-dup 只 2 新——必须按 webRid 全局去重）
+    private var seenWebRids = Set<String>()
 
-    // MARK: - 直播间列表
+    /// 已累积直播间（feedCache 的只读快照；直播流屏数据源）
+    var rooms: [DYLiveRoom] { feedCache }
+    var isLoadingMore: Bool { feedInflight }
 
-    /// 拉热门直播间列表（web /webcast/feed/）。onDone 主队列回调（空数组=失败/无数据）。
+    // MARK: - 直播间列表（游标翻页，无限刷）
+
+    /// 首页（maxtime=0）。onDone 主队列回调本页新增房间（空数组=失败/无数据）。
     func fetchLiveFeed(force: Bool = false, onDone: @escaping ([DYLiveRoom]) -> Void) {
-        if !force, !feedCache.isEmpty { onDone(feedCache); return }
+        if !force, !feedCache.isEmpty { onDone([]); return }
+        feedMaxTime = "0"
+        feedHasMore = true
+        seenWebRids.removeAll()
+        feedCache.removeAll()
+        loadMore(onDone: onDone)
+    }
+
+    /// 翻下一页（用 feedMaxTime 游标）。onDone 主队列回调**本页新增**（去重后）房间；空=无更多/在飞/失败。
+    /// 直播流屏滚到倒数 ~5 个时调用（照 PlaybackEngine.triggerNeedMore 末尾翻页）。
+    func loadMore(onDone: @escaping ([DYLiveRoom]) -> Void) {
         guard !feedInflight else { onDone([]); return }
+        guard feedHasMore else { onDone([]); return }
         feedInflight = true
+        let maxTime = feedMaxTime
         DYDanmakuClient.shared.ensureTTWID { [weak self] in
             guard let self else { return }
-            self.fetchFeedInternal(onDone: onDone)
+            self.fetchFeedInternal(maxTime: maxTime, onDone: onDone)
         }
     }
 
-    private func fetchFeedInternal(onDone: @escaping ([DYLiveRoom]) -> Void) {
-        // 参数照抄 myDV u11.java:1628-1695（首页首页卡片配方）
+    private func fetchFeedInternal(maxTime: String, onDone: @escaping ([DYLiveRoom]) -> Void) {
+        // 参数照抄 myDV u11.java:1628-1695（首页首页卡片配方）；maxtime=翻页游标（0=首页）
         var p: [(String, String)] = [
             ("device_platform", "web"),
             ("app_name", "douyin_web"),
@@ -75,7 +96,7 @@ final class DYLiveClient {
             ("enter_source", "web_homepage_hot_web_live_card"),
             ("source_key", "web_homepage_hot_web_live_card"),
             ("is_ssr", "true"),
-            ("maxtime", "0"),
+            ("maxtime", maxTime),
             ("aid", "6383"),
             ("language", "zh-CN"),
             ("tz_name", "Asia/Shanghai"),
@@ -117,17 +138,25 @@ final class DYLiveClient {
                 return
             }
             let list = obj["data"] as? [[String: Any]] ?? []
-            var rooms: [DYLiveRoom] = []
-            var seen = Set<String>()
+            // 翻页游标（探针实锤：extra.max_time 毫秒时间戳 + extra.has_more）
+            let extra = obj["extra"] as? [String: Any] ?? [:]
+            if let mt = extra["max_time"] as? String, !mt.isEmpty {
+                feedMaxTime = mt
+            } else if let mt = (extra["max_time"] as? NSNumber)?.stringValue, !mt.isEmpty {
+                feedMaxTime = mt
+            }
+            feedHasMore = (extra["has_more"] as? Bool) ?? ((extra["has_more"] as? Int) ?? 1) == 1
+            // 跨页去重追加（抖音混推相邻页有重叠）
+            var fresh: [DYLiveRoom] = []
             for e in list {
-                if let room = Self.parseRoom(e) , !seen.contains(room.webRid) {
-                    seen.insert(room.webRid)
-                    rooms.append(room)
+                if let room = Self.parseRoom(e), !seenWebRids.contains(room.webRid) {
+                    seenWebRids.insert(room.webRid)
+                    feedCache.append(room)
+                    fresh.append(room)
                 }
             }
-            self.feedCache = rooms
-            DYLog.shared.event("LIVE feed ok n=\(rooms.count)")
-            DispatchQueue.main.async { onDone(rooms) }
+            DYLog.shared.event("LIVE feed ok page maxtime=\(maxTime) got=\(list.count) fresh=\(fresh.count) total=\(feedCache.count) hasMore=\(feedHasMore ? 1 : 0)")
+            DispatchQueue.main.async { onDone(fresh) }
         }.resume()
     }
 

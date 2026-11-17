@@ -203,6 +203,28 @@ final class PlayerCell: UICollectionViewCell {
     func setCoverVisible(_ visible: Bool) {
         coverImageView.isHidden = !visible
     }
+    /// 直播复用：隐藏右侧赞/评/藏/享动作轨（直播无这些计数，v184）。左下信息区仍用（@主播+标题）。
+    func setRailVisible(_ visible: Bool) {
+        for v in [railAvatarView, railLikeIcon, railLikeLabel, railCommentIcon, railCommentLabel,
+                  railStarIcon, railStarLabel, railShareIcon, railShareLabel] {
+            v.isHidden = !visible
+        }
+    }
+    /// 直播流屏配置（v184）：隐藏弹幕层（第一版无直播弹幕）+ 右轨，左下信息区加宽到近全宽。
+    /// 观看数拼进 createTimeText → 渲染成 "@主播 · 1.2万观看"（复用 applyInfo 同一行排版）。
+    func configureLive(info: DYVideoInfo) {
+        applyInfo(info)
+        danmakuOverlay.isHidden = true
+        setRailVisible(false)
+        let b = contentView.bounds
+        let infoLeft: CGFloat = 24
+        let infoBottom: CGFloat = 44
+        let infoW = b.width - infoLeft * 2
+        hashtagLabel.isHidden = true
+        hashtagLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30, width: infoW, height: 0)
+        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30 - 4 - 62, width: infoW, height: 62)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 30 - 4 - 62 - 4 - 40, width: infoW, height: 40)
+    }
 }
 
 /// 全局唯一 Player 管理器：最多维护 3 个 AVPlayer（current-1 / current / current+1）。

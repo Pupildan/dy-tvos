@@ -197,7 +197,7 @@ struct SettingsPanelView: View {
         .focused($focusedRow, equals: .danmaku)
     }
 
-    /// 直播行（v183 实装：原占位项转真入口 → DYLiveBrowseScreen）
+    /// 直播行（v183 实装：原占位项转真入口 → DYLiveFeedScreen 全屏纵向刷直播间）
     private var liveRow: some View {
         Button {
             model.selectLive()

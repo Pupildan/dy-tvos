@@ -1,257 +1,25 @@
 import SwiftUI
+import UIKit
 import AVFoundation
 import AVKit
 
-// MARK: - AVPlayer 包装（直播 HLS 播放，复用 PlayerLayerView）
+// MARK: - 直播流屏（v184 全屏纵向分页刷直播间，照抄 NativePlayerView 分页/手势/遥控/池窗口）
 
-/// 把 PlayerLayerView（AVPlayerLayer）包成 SwiftUI view。player 由外部 DYLivePlayerController 持有。
-struct DYLivePlayerLayerView: UIViewRepresentable {
-    let player: AVPlayer
-    func makeUIView(context: Context) -> PlayerLayerView {
-        let v = PlayerLayerView()
-        v.player = player
-        v.playerLayer.videoGravity = .resizeAspect
-        return v
-    }
-    func updateUIView(_ uiView: PlayerLayerView, context: Context) {}
-}
-
-// MARK: - 直播浏览屏（设置面板「直播」进入；网格选房 → 进播放屏）
-
-/// 直播浏览屏（第一版）：web /webcast/feed/ 热门直播间网格，选中 → DYLivePlayerScreen。
-/// 照抄 DYMixScreen/DYCommentScreen 骨架：常驻「返回播放」可聚焦按钮（v148 焦点铁律）+ onExitCommand 关闭。
-struct DYLiveBrowseScreen: View {
+/// SwiftUI 包装：直播纵向分页流 + 常驻可聚焦「返回」按钮（v148 焦点铁律：时刻有可聚焦元素）。
+/// 设置面板「直播」进入；Menu 关闭回播放。
+struct DYLiveFeedScreen: View {
     @ObservedObject var model = DYQuickPanelModel.shared
-    @FocusState private var focused: String?
-    @State private var rooms: [DYLiveRoom] = []
-    @State private var loaded = false
-    @State private var failed = false
-    @State private var selectedRoom: DYLiveRoom?
+    @FocusState private var closeFocused: Bool
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.55).ignoresSafeArea()
-            HStack {
-                Spacer(minLength: 0)
-                panel
-                    .frame(width: 1040)
-                    .padding(.trailing, 32)
-                    .padding(.vertical, 40)
-            }
-        }
-        .onAppear {
-            guard !loaded else { return }
-            loaded = true
-            focused = "close"
-            DYLiveClient.shared.fetchLiveFeed { list in
-                rooms = list
-                failed = list.isEmpty
-                if focused == nil || focused == "close" {
-                    focused = list.first.map { "room-\($0.webRid)" } ?? "close"
-                }
-            }
-        }
-        .onExitCommand { model.isLiveOpen = false }
-        .transition(.opacity)
-        // 进房播放（全屏覆盖，zIndex 更高）
-        .overlay {
-            if let room = selectedRoom {
-                DYLivePlayerScreen(room: room) { selectedRoom = nil }
-                    .transition(.opacity)
-            }
-        }
-    }
-
-    private var panel: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack {
-                Text("直播 · 热门")
-                    .font(.system(size: 34, weight: .bold))
-                    .foregroundColor(.white)
-                Spacer(minLength: 0)
-                Button {
-                    model.isLiveOpen = false
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "chevron.left")
-                        Text("返回播放")
-                    }
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 18)
-                    .padding(.vertical, 10)
-                    .background {
-                        if focused == "close" {
-                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                .strokeBorder(Color.white, lineWidth: 4)
-                        }
-                    }
-                }
-                .buttonStyle(PanelRowButtonStyle())
-                .focused($focused, equals: "close")
-            }
-            if !rooms.isEmpty {
-                ScrollView {
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16), GridItem(.flexible(), spacing: 16)], spacing: 18) {
-                        ForEach(rooms, id: \.webRid) { room in
-                            roomCell(room)
-                        }
-                    }
-                    .padding(.top, 4)
-                }
-            } else if failed {
-                Text("直播列表获取失败（日志 LIVE 行有详情），请稍后重试")
-                    .font(.system(size: 24))
-                    .foregroundColor(.white.opacity(0.6))
-                    .padding(.top, 40)
-            } else {
-                Text("直播列表加载中…")
-                    .font(.system(size: 26))
-                    .foregroundColor(.white.opacity(0.6))
-                    .padding(.top, 40)
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(28)
-        .background(livePanelBackground)
-    }
-
-    /// 直播间单元：封面 16:9 + 标题 + 主播 + 观看数 + 聚焦白描边（照抄 workCell 样式）
-    private func roomCell(_ room: DYLiveRoom) -> some View {
-        Button {
-            focused = "room-\(room.webRid)"
-            DYLog.shared.event("LIVE select webRid=\(room.webRid) title=\(room.title.prefix(20))")
-            selectedRoom = room
-        } label: {
-            VStack(alignment: .leading, spacing: 6) {
-                ZStack {
-                    if !room.coverUrl.isEmpty, let cu = URL(string: room.coverUrl) {
-                        AvatarImage(url: cu)
-                    } else {
-                        Color.white.opacity(0.1)
-                    }
-                    // 直播角标 + 观看数
-                    VStack {
-                        HStack {
-                            Text("直播中")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 7)
-                                .padding(.vertical, 3)
-                                .background(Color.red.opacity(0.85), in: RoundedRectangle(cornerRadius: 5))
-                            Spacer()
-                        }
-                        .padding(6)
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            if !room.userCount.isEmpty {
-                                Label(room.userCount, systemImage: "eye")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 7)
-                                    .padding(.vertical, 3)
-                                    .background(Color.black.opacity(0.6), in: RoundedRectangle(cornerRadius: 5))
-                            }
-                        }
-                        .padding(6)
-                    }
-                }
-                .frame(height: 150)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                Text(room.title.isEmpty ? "（无标题）" : room.title)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.9))
-                    .lineLimit(1)
-                if !room.ownerName.isEmpty {
-                    Text(room.ownerName)
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
-                        .lineLimit(1)
-                }
-            }
-            .background {
-                if focused == "room-\(room.webRid)" {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Color.white, lineWidth: 4)
-                        .padding(-6)
-                }
-            }
-        }
-        .buttonStyle(PanelRowButtonStyle())
-        .focused($focused, equals: "room-\(room.webRid)")
-    }
-
-    /// 液态玻璃背景（tvOS 26 glassEffect；低版本 ultraThinMaterial 回退，照抄 DYMixScreen）
-    @ViewBuilder
-    private var livePanelBackground: some View {
-        if #available(tvOS 26.0, *) {
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .fill(Color.clear)
-                .glassEffect(.regular.tint(.black.opacity(0.35)), in: RoundedRectangle(cornerRadius: 30, style: .continuous))
-        } else {
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .strokeBorder(Color.white.opacity(0.18), lineWidth: 1)
-                )
-        }
-    }
-}
-
-// MARK: - 直播播放屏（单房间 AVPlayer HLS，全屏；Menu 关闭回浏览）
-
-/// 直播播放屏（第一版：匿名 HLS 拉流，无弹幕）。进房取 hls_pull_url_map → AVPlayer 播 .m3u8。
-/// 单房间独立 AVPlayer，不进 PlayerManager 池（池是 feed 索引驱动，硬塞会打架）。
-struct DYLivePlayerScreen: View {
-    let room: DYLiveRoom
-    var onClose: () -> Void
-    @FocusState private var focused: Bool
-    @State private var player: AVPlayer?
-    @State private var statusText = "进房中…"
-    @State private var failed = false
-    /// 自动隐藏的返回按钮（播放后 3s 淡出，按 Menu/任意键唤出——第一版简化：常驻右上角）
-    private let controller = DYLivePlayerController()
-
-    var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
-            if let player {
-                DYLivePlayerLayerView(player: player)
-                    .ignoresSafeArea()
-            } else {
-                VStack(spacing: 16) {
-                    if failed {
-                        Text("直播拉流失败（日志 LIVE 行有详情）")
-                            .font(.system(size: 26))
-                            .foregroundColor(.white.opacity(0.7))
-                    } else {
-                        ProgressView().scaleEffect(1.6)
-                        Text(statusText)
-                            .font(.system(size: 24))
-                            .foregroundColor(.white.opacity(0.7))
-                    }
-                }
-            }
-            // 右上角返回 + 标题
+            DYLiveFeedView()
+                .ignoresSafeArea()
             VStack {
                 HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(room.title.isEmpty ? "直播" : room.title)
-                            .font(.system(size: 26, weight: .bold))
-                            .foregroundColor(.white)
-                            .lineLimit(1)
-                        if !room.ownerName.isEmpty {
-                            Text(room.ownerName + (room.userCount.isEmpty ? "" : " · \(room.userCount)人观看"))
-                                .font(.system(size: 18))
-                                .foregroundColor(.white.opacity(0.7))
-                        }
-                    }
-                    Spacer(minLength: 0)
+                    Spacer()
                     Button {
-                        controller.stop()
-                        onClose()
+                        model.isLiveOpen = false
                     } label: {
                         HStack(spacing: 6) {
                             Image(systemName: "chevron.left")
@@ -263,79 +31,320 @@ struct DYLivePlayerScreen: View {
                         .padding(.vertical, 10)
                         .background(Color.black.opacity(0.5), in: RoundedRectangle(cornerRadius: 12))
                         .overlay {
-                            if focused {
+                            if closeFocused {
                                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                                     .strokeBorder(Color.white, lineWidth: 4)
                             }
                         }
                     }
                     .buttonStyle(PanelRowButtonStyle())
-                    .focused($focused)
+                    .focused($closeFocused)
                 }
                 .padding(.horizontal, 32)
                 .padding(.top, 28)
                 Spacer()
             }
         }
-        .onAppear {
-            focused = true   // 常驻可聚焦返回按钮（v148 焦点铁律）
-            loadStream()
-        }
-        .onExitCommand {
-            controller.stop()
-            onClose()
-        }
-        .onDisappear { controller.stop() }
+        .onAppear { closeFocused = true }
+        .onExitCommand { model.isLiveOpen = false }
         .transition(.opacity)
     }
+}
 
-    private func loadStream() {
-        DYLiveClient.shared.enterRoom(room.webRid) { entered in
-            guard let entered, !entered.hlsUrls.isEmpty else {
-                // enter 失败但 feed 阶段可能已带 hls（罕见），兜底用 room 自己的
-                let fallback = DYLiveClient.bestHlsUrl(room.hlsUrls)
-                guard !fallback.isEmpty else {
-                    failed = true
-                    statusText = "该直播间暂无可用拉流地址"
-                    return
-                }
-                startPlayer(url: fallback)
+struct DYLiveFeedView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> DYLiveFeedViewController {
+        DYLiveFeedViewController()
+    }
+    func updateUIViewController(_ uiViewController: DYLiveFeedViewController, context: Context) {}
+}
+
+/// 直播纵向分页控制器（照抄 DYPlayerViewController 的分页/snap/pan 护栏/遥控，但数据走 DYLiveClient
+/// 游标翻页、拉流走 HLS 单房间池）。池窗口 [idx-1, idx+1]，相邻房间预 resolve HLS 预取。
+final class DYLiveFeedViewController: UIViewController {
+    private var collectionView: UICollectionView!
+    private var currentIndex = 0
+    private var didInitialScroll = false
+
+    // MARK: 直播单房间 HLS 池（窗口 [idx-1, idx+1]；照 PlayerManager 驱逐语义）
+    private var players: [Int: AVPlayer] = [:]
+    private var hlsCache: [String: String] = [:]        // webRid → 已 resolve 的 HLS URL
+    private var resolving = Set<String>()               // webRid → enter 在飞去重
+    private var playerRequests: [Int: String] = [:]     // index → 发起时的 webRid（防竞态）
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .black
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView.register(PlayerCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.backgroundColor = .black
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.panGestureRecognizer.isEnabled = false   // 关原生滚动，手势接管（照 NativePlayerView）
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        setupGestures()
+        loadFeed()
+    }
+
+    private func loadFeed() {
+        DYLiveClient.shared.fetchLiveFeed { [weak self] fresh in
+            guard let self else { return }
+            guard !fresh.isEmpty else {
+                DYLog.shared.event("LIVE feed empty on open")
+                return
+            }
+            self.collectionView.reloadData()
+            self.didInitialScroll = false
+            self.view.setNeedsLayout()
+        }
+    }
+
+    // MARK: 手势（照 NativePlayerView：关原生滚动 + pan 阈值 100 + 焦点屏护栏）
+    private func setupGestures() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.cancelsTouchesInView = false
+        view.addGestureRecognizer(pan)
+    }
+
+    @objc private func handlePan(_ g: UIPanGestureRecognizer) {
+        // 焦点屏护栏（照 v171）：面板/浏览屏打开时滑动交焦点引擎
+        guard DYQuickPanelModel.shared.isOpen == false, DYSettingsModel.shared.isOpen == false,
+              DYQuickPanelModel.shared.isProfileOpen == false, DYQuickPanelModel.shared.isCommentOpen == false,
+              DYQuickPanelModel.shared.isMixOpen == false else { return }
+        let t = g.translation(in: view)
+        guard abs(t.y) > 100 else { return }
+        g.setTranslation(.zero, in: view)
+        if t.y < 0 { advance() } else { rewind() }
+        DYLog.shared.log("LIVEFEED swipe \(t.y < 0 ? "up" : "down") -> switch")
+    }
+
+    private func advance() { scrollTo(index: centeredIndex() + 1, animated: true) }
+    private func rewind() { scrollTo(index: max(0, centeredIndex() - 1), animated: true) }
+
+    private func scrollTo(index: Int, animated: Bool) {
+        let count = DYLiveClient.shared.rooms.count
+        guard count > 0, index >= 0, index < count else { return }
+        let clamped = min(max(0, index), count - 1)
+        // setContentOffset 替代 scrollToItem（后者 flow layout 未就绪抛 NSException，.ips 实锤）
+        let pageHeight = max(1, collectionView.bounds.height)
+        let maxOffset = max(0, collectionView.contentSize.height - collectionView.bounds.height)
+        let targetY = min(CGFloat(clamped) * pageHeight, maxOffset)
+        collectionView.setContentOffset(CGPoint(x: 0, y: targetY), animated: animated)
+        currentIndex = clamped
+        prepareWindow(center: clamped)
+        if clamped >= count - 5 { loadMoreIfNeeded() }
+        DYLog.shared.log("LIVEFEED scrollTo idx=\(clamped) y=\(targetY) items=\(count)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + (animated ? 0.35 : 0.05)) { [weak self] in
+            self?.updatePlaybackStates(center: clamped)
+        }
+    }
+
+    private func centeredIndex() -> Int {
+        guard collectionView.bounds.height > 0 else { return currentIndex }
+        let center = CGPoint(x: collectionView.bounds.midX, y: collectionView.bounds.midY)
+        if let ip = collectionView.indexPathForItem(at: center) { return ip.item }
+        return Int(round(collectionView.contentOffset.y / max(1, collectionView.bounds.height)))
+    }
+
+    // MARK: 池窗口（照 PlayerManager.prepare：只留 [idx-1, idx+1]，超范围驱逐回收解码器）
+    private func prepareWindow(center idx: Int) {
+        let rooms = DYLiveClient.shared.rooms
+        guard rooms.indices.contains(idx) else { return }
+        // 驱逐窗口外
+        for (i, p) in players where abs(i - idx) > 1 {
+            p.pause()
+            p.replaceCurrentItem(with: nil)
+            players.removeValue(forKey: i)
+            playerRequests.removeValue(forKey: i)
+        }
+        // 窗口内 ensure
+        for i in [idx - 1, idx, idx + 1] where rooms.indices.contains(i) {
+            ensurePlayer(index: i, room: rooms[i])
+        }
+    }
+
+    /// ensure 房间 player：先查池 → 查 HLS 缓存直接建 → enter resolve 后建（异步，回主线程再绑）
+    private func ensurePlayer(index: Int, room: DYLiveRoom) {
+        if players[index] != nil { return }
+        let reqId = room.webRid
+        playerRequests[index] = reqId
+        // 已 resolve 的 HLS 直接建 player（相邻预取命中缓存秒建）
+        if let hls = hlsCache[room.webRid] {
+            createPlayer(index: index, url: hls)
+            return
+        }
+        // feed 阶段已带 hls（偶发）直接用
+        let feedHls = DYLiveClient.bestHlsUrl(room.hlsUrls)
+        if !feedHls.isEmpty {
+            hlsCache[room.webRid] = feedHls
+            createPlayer(index: index, url: feedHls)
+            return
+        }
+        // enter resolve（去重防并发）
+        guard !resolving.contains(room.webRid) else { return }
+        resolving.insert(room.webRid)
+        DYLog.shared.log("LIVEFEED resolve idx=\(index) webRid=\(room.webRid)")
+        DYLiveClient.shared.enterRoom(room.webRid) { [weak self] entered in
+            guard let self else { return }
+            self.resolving.remove(room.webRid)
+            guard let entered else {
+                DYLog.shared.event("LIVEFEED resolve fail idx=\(index) webRid=\(room.webRid)")
                 return
             }
             let hls = DYLiveClient.bestHlsUrl(entered.hlsUrls)
             guard !hls.isEmpty else {
-                failed = true
-                statusText = "该直播间暂无 HLS 拉流地址"
+                DYLog.shared.event("LIVEFEED resolve no-hls idx=\(index) webRid=\(room.webRid)")
                 return
             }
-            startPlayer(url: hls)
+            self.hlsCache[room.webRid] = hls
+            // 仅当该 index 仍指向同一房间且还在窗口才建（防快速滑动竞态）
+            let rooms = DYLiveClient.shared.rooms
+            guard self.playerRequests[index] == reqId,
+                  rooms.indices.contains(index), rooms[index].webRid == reqId else { return }
+            self.createPlayer(index: index, url: hls)
+            self.updatePlaybackStates(center: self.currentIndex)
         }
     }
 
-    private func startPlayer(url: String) {
-        guard let u = URL(string: url) else {
-            failed = true
-            statusText = "拉流地址解析失败"
-            return
-        }
-        statusText = "连接直播流…"
+    private func createPlayer(index: Int, url: String) {
+        guard let u = URL(string: url) else { return }
         let item = AVPlayerItem(url: u)
         let p = AVPlayer(playerItem: item)
-        player = p
-        controller.attach(p)
-        p.play()
-        DYLog.shared.event("LIVE play webRid=\(room.webRid) hls=\(url.prefix(80))")
+        players[index] = p
+        DYLog.shared.log("LIVEFEED player idx=\(index) hls=\(url.prefix(70))")
+        DispatchQueue.main.async { [weak self] in
+            self?.updatePlaybackStates(center: self?.currentIndex ?? index)
+        }
+    }
+
+    /// 居中播放（ready 才 play），非居中暂停；未 ready 显示封面兜底，绝不强行 play。
+    private func updatePlaybackStates(center index: Int) {
+        for cell in collectionView.visibleCells {
+            guard let c = cell as? PlayerCell,
+                  let ip = collectionView.indexPath(for: c) else { continue }
+            let idx = ip.item
+            let isCenter = (idx == index)
+            if let p = players[idx] {
+                c.bind(player: p)
+                let ready = (p.currentItem?.status == .readyToPlay)
+                if isCenter, ready {
+                    if p.timeControlStatus != .playing { p.play() }
+                    c.setCoverVisible(false)
+                } else {
+                    p.pause()
+                    c.setCoverVisible(!ready)
+                }
+            } else {
+                c.setCoverVisible(true)
+            }
+        }
+    }
+
+    private func loadMoreIfNeeded() {
+        guard !DYLiveClient.shared.isLoadingMore else { return }
+        DYLiveClient.shared.loadMore { [weak self] fresh in
+            guard let self, !fresh.isEmpty else { return }
+            self.collectionView.reloadData()
+            // 翻页追加后无需滚动手动对齐（cell 复用按 index，contentOffset 不变）
+            self.updatePlaybackStates(center: self.currentIndex)
+        }
+    }
+
+    // MARK: 遥控（照 NativePlayerView pressesBegan：上下切房，Menu 关闭走 SwiftUI onExitCommand）
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        // 焦点屏护栏：其他屏打开时按键交 SwiftUI 焦点引擎（照 v171）
+        if DYQuickPanelModel.shared.isProfileOpen || DYQuickPanelModel.shared.isCommentOpen
+                || DYQuickPanelModel.shared.isMixOpen {
+            super.pressesBegan(presses, with: event)
+            return
+        }
+        for press in presses {
+            switch press.type {
+            case .downArrow: advance(); return
+            case .upArrow: rewind(); return
+            default: break
+            }
+        }
+        super.pressesBegan(presses, with: event)
     }
 }
 
-/// 直播播放器生命周期管理（stop 时暂停并释放 item，防后台续流）。
-final class DYLivePlayerController {
-    private var player: AVPlayer?
-    func attach(_ p: AVPlayer) { player = p }
-    func stop() {
-        player?.pause()
-        player?.replaceCurrentItem(with: nil)
-        player = nil
-        DYLog.shared.log("LIVE player stop")
+extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        DYLiveClient.shared.rooms.count
+    }
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PlayerCell
+        cell.playerLayerView.frame = cell.contentView.bounds
+        cell.coverImageView.frame = cell.contentView.bounds
+        return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        collectionView.bounds.size
+    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let c = cell as? PlayerCell else { return }
+        c.playerLayerView.frame = c.contentView.bounds
+        c.coverImageView.frame = c.contentView.bounds
+        let idx = indexPath.item
+        let rooms = DYLiveClient.shared.rooms
+        guard rooms.indices.contains(idx) else { return }
+        let room = rooms[idx]
+        // 观看数拼进 createTimeText → "@主播 · 1.2万观看"（复用 applyInfo 同行排版）
+        // ⚠️ 成员初始化器参数必须按声明序：nickname→avatarUrl→desc→createTimeText
+        let info = DYVideoInfo(nickname: room.ownerName, avatarUrl: room.ownerAvatar,
+                               desc: room.title, createTimeText: room.userCount.isEmpty ? "" : "\(room.userCount)观看")
+        c.configureLive(info: info)
+        // 封面兜底（未 ready 时不黑屏）
+        if !room.coverUrl.isEmpty, let cu = URL(string: room.coverUrl) {
+            AvatarLoader.shared.load(cu) { [weak c] img in c?.setCover(img) }
+        }
+        c.setCoverVisible(true)
+        // peekPlayer 语义：已建则绑，未建不 acquire（防快速滑动撑大池）
+        if let p = players[idx] {
+            c.bind(player: p)
+            let ready = (p.currentItem?.status == .readyToPlay)
+            c.setCoverVisible(!ready)
+        }
+    }
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        // 离屏 cell 解绑 player（池仍持有，回滚回来 willDisplay 重绑；nil=AVPlayerLayer 无 holder）
+        (cell as? PlayerCell)?.playerLayerView.player = nil
+    }
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, withTargetContentOffset targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let pageHeight = max(1, scrollView.bounds.height)
+        let targetY = targetContentOffset.pointee.y
+        let snappedY = (velocity.y >= 0 ? ceil(targetY / pageHeight) : floor(targetY / pageHeight)) * pageHeight
+        targetContentOffset.pointee.y = snappedY
+    }
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        updatePlaybackStates(center: centeredIndex())
+        if !didInitialScroll {
+            didInitialScroll = true
+            prepareWindow(center: currentIndex)
+        }
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updatePlaybackStates(center: centeredIndex())
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if !didInitialScroll, !DYLiveClient.shared.rooms.isEmpty, collectionView.bounds.height > 0 {
+            didInitialScroll = true
+            let idx = min(currentIndex, DYLiveClient.shared.rooms.count - 1)
+            currentIndex = idx
+            scrollTo(index: idx, animated: false)
+        }
     }
 }

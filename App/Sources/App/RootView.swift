@@ -53,9 +53,9 @@ struct RootView: View {
                     .zIndex(12)
             }
 
-            // v183 直播浏览屏（设置面板「直播」打开；web /webcast/feed/ 热门直播间）
+            // v183 直播流屏（设置面板「直播」打开；全屏纵向分页刷直播间 + 无限加载，v184）
             if quick.isLiveOpen {
-                DYLiveBrowseScreen()
+                DYLiveFeedScreen()
                     .ignoresSafeArea()
                     .zIndex(13)
             }
