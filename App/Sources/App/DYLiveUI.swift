@@ -144,7 +144,9 @@ final class DYLiveFeedViewController: UIViewController {
     private var resolving = Set<String>()               // webRid → enter 在飞去重
     private var playerRequests: [Int: String] = [:]     // index → 发起时的 webRid（防竞态）
     /// KVO ready 观察（照 VOD readyObservers）：player status → readyToPlay 时补 play（修"没画面只有声音"）
-    private var readyObservers: [Int: NSKeyValueObservation] = [:]
+    /// v191：改按 webRid 键（原按 index）——驱逐别 invalidate，player 在 playerCache 活着观察保持 armed；
+    /// v190 铁证：驱逐 invalidate → 快速滑动 player 刚建没 ready 就划出窗口 → ready 了没人接 → 永远 status=0 连声音都没
+    private var readyObservers: [String: NSKeyValueObservation] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -242,10 +244,9 @@ final class DYLiveFeedViewController: UIViewController {
         let rooms = DYLiveClient.shared.rooms
         guard rooms.indices.contains(idx) else { return }
         // 窗口外：只 pause 不销毁（player 留在 playerCache，刷回来复用已缓冲的秒出画面）
-        // v189 铁证：旧版 replaceCurrentItem(nil)+删除 → 刷回来 createPlayer 重建重缓冲 → 黑屏（有声音）
+        // v191：驱逐别 invalidate readyObservers——快速滑动 player 刚建没 ready 就划出窗口，
+        // invalidate 后 ready 了没人接 → 永远 status=0 连声音都没（v190 铁证）。观察按 webRid 随 cache 生命周期。
         for (i, p) in players where abs(i - idx) > 1 {
-            readyObservers[i]?.invalidate()
-            readyObservers.removeValue(forKey: i)
             p.pause()
             players.removeValue(forKey: i)
             playerRequests.removeValue(forKey: i)
@@ -264,12 +265,14 @@ final class DYLiveFeedViewController: UIViewController {
         // v190：先查 playerCache——刷回来复用已缓冲的 player 秒出画面，不再销毁重建重缓冲（v189 黑屏根因）
         if let cached = playerCache[reqId] {
             players[index] = cached
-            // 重新挂 ready 观察（驱逐时 invalidate 了）
-            readyObservers[index] = cached.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    guard player.currentItem?.status == .readyToPlay else { return }
-                    self.updatePlaybackStates(center: self.currentIndex)
+            // v191：ready 观察按 webRid 键、驱逐不再 invalidate → 已 armed 就别重挂（否则重复观察泄漏）
+            if readyObservers[reqId] == nil {
+                readyObservers[reqId] = cached.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
+                    guard let self else { return }
+                    DispatchQueue.main.async {
+                        guard player.currentItem?.status == .readyToPlay else { return }
+                        self.updatePlaybackStates(center: self.currentIndex)
+                    }
                 }
             }
             DYLog.shared.log("LIVEFEED reuse cache idx=\(index) webRid=\(reqId)")
@@ -328,11 +331,14 @@ final class DYLiveFeedViewController: UIViewController {
             evictPlayerCacheIfNeeded()
         }
         // KVO ready 观察（照 VOD PlayerManager.readyObservers）：status 异步变 readyToPlay 时补 play
-        readyObservers[index] = p.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                guard player.currentItem?.status == .readyToPlay else { return }
-                self.updatePlaybackStates(center: self.currentIndex)
+        // v191：按 webRid 键（原按 index）——驱逐别 invalidate，观察随 playerCache 生命周期
+        if !reqId.isEmpty, readyObservers[reqId] == nil {
+            readyObservers[reqId] = p.observe(\.currentItem?.status, options: [.new]) { [weak self] player, _ in
+                guard let self else { return }
+                DispatchQueue.main.async {
+                    guard player.currentItem?.status == .readyToPlay else { return }
+                    self.updatePlaybackStates(center: self.currentIndex)
+                }
             }
         }
         DYLog.shared.log("LIVEFEED player idx=\(index) hls=\(url.prefix(70))")
@@ -350,6 +356,9 @@ final class DYLiveFeedViewController: UIViewController {
         for i in 0..<playerCacheOrder.count {
             let rid = playerCacheOrder[i]
             guard !windowRids.contains(rid), let p = playerCache[rid] else { continue }
+            // 真销毁才 invalidate 观察（驱逐 pause 不销毁时不 invalidate，v191 铁证）
+            readyObservers[rid]?.invalidate()
+            readyObservers.removeValue(forKey: rid)
             p.pause()
             p.replaceCurrentItem(with: nil)
             playerCache.removeValue(forKey: rid)

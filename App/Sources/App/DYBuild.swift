@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v190"
-    static let changes = "v190: 修直播刷很多个只一个房间出画面其余黑屏(有声音)。v189日志铁证同房间player被反复销毁重建(idx=0出现3次)→根因prepareWindow每次滚动把窗口[idx-1,idx+1]外player replaceCurrentItem(nil)+从字典删除(照抄VOD解码器回收),刷回来ensurePlayer见字典空就createPlayer重建→HLS直播重新缓冲→黑屏(有声音=新player在缓冲),只当前居中那个刚好活着出画面。修:加playerCache(webRid→AVPlayer)驱逐只pause不销毁,ensurePlayer先查cache复用已缓冲player秒出画面,createPlayer存cache+超上限8淘汰最旧不在窗口的释放解码器。AVPlayerViewController出画面保留(v189已验证)"
+    static let version = "v191"
+    static let changes = "v191: 修v190回归(只第一个房间出画面,刷后面连声音都没)。v190日志铁证idx=2/idx=4卡ready=0 playing=0 status=0永不ready→根因prepareWindow驱逐时readyObservers[i].invalidate()掐死ready观察,快速滑动player刚建没ready就划出窗口→invalidate后player后来ready了没人接→永远status=0。修:readyObservers改按webRid键(原按index),驱逐别invalidate(player在playerCache活着观察保持armed),只在evictPlayerCacheIfNeeded真销毁时invalidate防泄漏;ensurePlayer复用/createPlayer已armed别重挂防重复观察泄漏。playerCache复用保留(v190)"
 }
