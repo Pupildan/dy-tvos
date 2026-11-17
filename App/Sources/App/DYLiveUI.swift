@@ -232,6 +232,12 @@ final class DYLiveFeedViewController: UIViewController {
             if let p = players[idx] {
                 c.bind(player: p)
                 let ready = (p.currentItem?.status == .readyToPlay)
+                // v187 诊断：定位"没画面只有声音"——playerLayer frame=0 → AVPlayerLayer 不 render（有声音无画面）
+                if isCenter {
+                    let lf = c.playerLayerView.frame
+                    let cf = c.frame
+                    DYLog.shared.log("LIVEFEED state idx=\(idx) ready=\(ready ? 1 : 0) playing=\(p.timeControlStatus == .playing ? 1 : 0) layer=\(Int(lf.width))x\(Int(lf.height)) cell=\(Int(cf.width))x\(Int(cf.height)) status=\(p.currentItem?.status.rawValue ?? -1)")
+                }
                 if isCenter, ready {
                     if p.timeControlStatus != .playing { p.play() }
                     c.setCoverVisible(false)
@@ -308,8 +314,13 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
         // peekPlayer 语义：已建则绑，未建不 acquire（防快速滑动撑大池）
         if let p = players[idx] {
             c.bind(player: p)
+            // v187 诊断+修 frame=0：bind 后强制布局，确保 AVPlayerLayer 拿到非 0 尺寸（否则有声音无画面）
+            c.layoutIfNeeded()
+            c.playerLayerView.frame = c.contentView.bounds
             let ready = (p.currentItem?.status == .readyToPlay)
             c.setCoverVisible(!ready)
+            let lf = c.playerLayerView.frame
+            DYLog.shared.log("LIVEFEED willDisplay idx=\(idx) ready=\(ready ? 1 : 0) layer=\(Int(lf.width))x\(Int(lf.height)) status=\(p.currentItem?.status.rawValue ?? -1)")
         }
     }
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
