@@ -88,6 +88,8 @@ final class DYLiveDanmakuSocket: NSObject {
             URLQueryItem(name: "signature", value: signature),
         ]
         guard let url = comps?.url else { log("bad wss url"); return }
+        // v215 采集诊断：打出完整 wss URL（跟探针 live_danmaku_probe.js 逐参对比，定位服务端为何不推消息）
+        log("wss url=\(url.absoluteString)")
 
         // 4) 开 socket（自定义头：UA / Origin / Cookie，照 kq2.java:440-461）
         var req = URLRequest(url: url)
@@ -160,11 +162,29 @@ final class DYLiveDanmakuSocket: NSObject {
 
     private func startHeartbeat() {
         heartbeat?.invalidate()
-        let t = Timer(timeInterval: 10, repeats: true) { [weak self] _ in
-            self?.sendFrame(payloadType: "hb", logId: 0, payload: Data())   // 照 jq2 join/heartbeat
+        // v215：改 DispatchQueue 递归心跳（原 Timer 在 send 完成回调的后台线程创建 + RunLoop.main.add，
+        // 跨线程调度可能不触发 → 服务端 heartbeatDuration=10 超时关闭连接=receive "not connected"）。
+        // 加 hb 发送日志确认心跳真发出去了。
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, !self.manuallyClosed else { return }
+            self.sendFrame(payloadType: "hb", logId: 0, payload: Data())   // 照 jq2 join/heartbeat
+            self.log("hb sent webRid=\(self.webRid)")
+            self.scheduleNextHeartbeat()
         }
-        RunLoop.main.add(t, forMode: .common)
-        heartbeat = t
+        heartbeat = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: work)
+    }
+
+    private func scheduleNextHeartbeat() {
+        guard !manuallyClosed else { return }
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, !self.manuallyClosed else { return }
+            self.sendFrame(payloadType: "hb", logId: 0, payload: Data())
+            self.log("hb sent webRid=\(self.webRid)")
+            self.scheduleNextHeartbeat()
+        }
+        heartbeat = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: work)
     }
 
     /// 回 ack（照 kq2.java:352-358：needAck 时回 PushFrame("ack", logId, internalExt)）
@@ -212,10 +232,14 @@ extension DYLiveDanmakuSocket {
         let raw = isGz ? KSGzip.inflate(frame.payload) : frame.payload
         let resp = KSResponse.decode(raw)
         if resp.needAck { sendAck(logId: frame.logId, internalExt: resp.internalExt) }
+        // v215 采集诊断：打出收到的每个 message method（确认服务端到底推没推、推了什么）
+        let methods = resp.messages.map { $0.method }.joined(separator: ",")
+        log("recv frame logId=\(frame.logId) pt=\(frame.payloadType) gz=\(isGz ? 1 : 0) msgs=\(resp.messages.count) [\(methods)]")
         for m in resp.messages where m.method == "WebcastChatMessage" {
             let cm = KSChatMessage.decode(m.payload)
             guard !cm.content.isEmpty else { continue }
             let nick = cm.nickname.isEmpty ? "用户" : cm.nickname
+            log("chat @\(nick): \(cm.content)")
             DispatchQueue.main.async { [weak self] in self?.onChat?(ChatMessage(nickname: nick, content: cm.content)) }
         }
     }

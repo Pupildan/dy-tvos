@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v214"
-    static let changes = "v214: 修v213两个真机问题。①左下角没出弹幕: 真机日志 receive fail=Socket is not connected——根因=resume后WS握手未完成就立即receive/send join(对比探针Node ws是等open事件后才发join)。修=sendJoinWhenConnected: resume后先发join帧, 用其send完成回调作已连接信号(成功→起心跳+receive循环; not connected→延迟1s重试join等握手)。②封面放大显示: 旧coverImageView用scaleAspectFill会裁切放大。改主流做法=coverView容器内两层: coverBgImageView(同封面CIGaussianBlur高斯模糊铺满)+coverFgImageView(scaleAspectFit原比例居中不裁切), blurredImage(radius:25) helper。v213其余(弹幕WS receive循环/protobuf/gzip/解流失败重试/焦点隔离)保留"
+    static let version = "v215"
+    static let changes = "v215: 直播弹幕采集诊断(铁律:先采到数据才真机验证渲染)。v214真机: OPENED(join sent)成功但11s内服务端0消息→连接被heartbeatDuration=10超时关闭(receive not connected)。两处采集诊断+心跳修复: ①心跳改DispatchQueue递归(原Timer在send完成回调后台线程创建+RunLoop.main.add跨线程可能不触发→服务端超时关连接), 加hb sent日志确认心跳真发出 ②打完整wss url(跟探针live_danmaku_probe.js逐参对比) ③handleBinary打收到的每条message method+chat内容(确认服务端推没推/推了什么)。目标=日志看到采到弹幕数据, 渲染验证往后放"
 }

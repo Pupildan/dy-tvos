@@ -10233,3 +10233,448 @@
 02:12:04  [02:12:04] LIVE KS state=bufferFinished webRid=5378575310
 02:12:05  [02:12:05] SETTINGS panel open (menu #1)
 02:12:07  [02:12:07] SETTINGS panel exit-app (menu #2)
+03:09:48  [03:09:48] DYTV v214 launched
+03:09:48  [03:09:48] LOGSRV ready on port 8765
+03:09:48  [03:09:48] SIGNER init start
+03:09:48  [03:09:48] LOGSRV advertising as DYTV-883
+03:09:48  [03:09:48] SIGNER load shim ok
+03:09:48  [03:09:48] SIGNER load abogus ok
+03:09:48  [03:09:48] SIGNER load sign ok
+03:09:48  [03:09:48] SIGNER load abogus_dy ok
+03:09:48  [03:09:48] SIGNER extras sign=true dy=true
+03:09:48  [03:09:48] SIGNER bdms=yes
+03:09:48  [03:09:48] SIGNER initABogus=true
+03:09:48  [03:09:48] SIGNER fns=AB (期望 AB)
+03:09:48  [03:09:48] SIGNER smoke={"ok":true,"value":"QymqBd0vdkIP6DW651VLfY3qVW33YsUN0SVkMDhezVfPvg39HMPs9exE4yzvNQueF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+03:09:48  [03:09:48] SIGNER READY a_bogus len=180
+03:09:48  [03:09:48] FEEDCOLL viewDidLoad
+03:09:48  [03:09:48] LAUNCH loading video play (muted loop)
+03:09:48  [03:09:48] ROOT auto-start v214
+03:09:48  [03:09:48] FEED native pipeline armed (source=web)
+03:09:48  [03:09:48] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+03:09:49  [03:09:49] LOGSRV Bonjour published: DYTV-883
+03:09:50  [03:09:50] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+03:09:50  [03:09:50] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+03:09:50  [03:09:50] ENGINE needMore (index=0 count=2)
+03:09:50  [03:09:50] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+03:09:50  [03:09:50] MGR url idx=0 src=static age=0s
+03:09:50  [03:09:50] MGR acquire idx=0 total=1
+03:09:50  [03:09:50] MGR cold-start defer neighbors=[1]
+03:09:50  [03:09:50] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+03:09:52  [03:09:52] DMLOAD id=7697551489913324197 dur=833572
+03:09:52  [03:09:52] MGR ready idx=0
+03:09:52  [03:09:52] MGR url idx=1 src=static age=1s
+03:09:52  [03:09:52] DANM get id=7697551489913324197 [0-20s] ttwid=127
+03:09:52  [03:09:52] MGR acquire idx=1 total=2
+03:09:52  [03:09:52] MGR cold-start neighbors acquired=[1]
+03:09:52  [03:09:52] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+03:09:52  [03:09:52] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+03:09:52  [03:09:52] DANM get id=7697551489913324197 [20-40s] ttwid=127
+03:09:52  [03:09:52] MGR first frame ready (launch overlay dismiss)
+03:09:52  [03:09:52] ROOT launch video fade out (first frame ready)
+03:09:53  [03:09:52] DANM get id=7697551489913324197 [40-60s] ttwid=127
+03:09:53  [03:09:53] DANM get id=7697551489913324197 [60-80s] ttwid=127
+03:09:53  [03:09:53] DANM get id=7697551489913324197 [80-100s] ttwid=127
+03:09:53  [03:09:53] MGR ready idx=1
+03:09:54  [03:09:53] DANM get id=7697551489913324197 [100-120s] ttwid=127
+03:09:54  [03:09:54] DANM get id=7697551489913324197 [120-140s] ttwid=127
+03:09:54  [03:09:54] DANM get id=7697551489913324197 [140-160s] ttwid=127
+03:09:54  [03:09:54] DANM get id=7697551489913324197 [160-180s] ttwid=127
+03:09:55  [03:09:55] DANM get id=7697551489913324197 [180-200s] ttwid=127
+03:09:55  [03:09:55] DANM get id=7697551489913324197 [200-220s] ttwid=127
+03:09:55  [03:09:55] DANM get id=7697551489913324197 [220-240s] ttwid=127
+03:09:56  [03:09:56] DANM get id=7697551489913324197 [240-260s] ttwid=127
+03:09:56  [03:09:56] DMSYNC t=3s due=16 marked=20 items=774 stall=0
+03:09:56  [03:09:56] DANM get id=7697551489913324197 [260-280s] ttwid=127
+03:09:56  [03:09:56] QUICK panel open (ok) mix=0
+03:09:56  [03:09:56] DANM get id=7697551489913324197 [280-300s] ttwid=127
+03:09:57  [03:09:57] DANM get id=7697551489913324197 [300-320s] ttwid=127
+03:09:57  [03:09:57] DANM get id=7697551489913324197 [320-340s] ttwid=127
+03:09:57  [03:09:57] DANM get id=7697551489913324197 [340-360s] ttwid=127
+03:09:58  [03:09:58] DANM get id=7697551489913324197 [360-380s] ttwid=127
+03:09:58  [03:09:58] DANM get id=7697551489913324197 [380-400s] ttwid=127
+03:09:58  [03:09:58] DANM get id=7697551489913324197 [400-420s] ttwid=127
+03:09:59  [03:09:58] DANM get id=7697551489913324197 [420-440s] ttwid=127
+03:09:59  [03:09:59] DANM get id=7697551489913324197 [440-460s] ttwid=127
+03:09:59  [03:09:59] DANM get id=7697551489913324197 [460-480s] ttwid=127
+03:09:59  [03:09:59] QUICK panel close
+03:10:00  [03:09:59] DANM get id=7697551489913324197 [480-500s] ttwid=127
+03:10:00  [03:10:00] DMSYNC t=7s due=17 marked=39 items=1336 stall=0
+03:10:00  [03:10:00] DANM get id=7697551489913324197 [500-520s] ttwid=127
+03:10:00  [03:10:00] DANM get id=7697551489913324197 [520-540s] ttwid=127
+03:10:01  [03:10:00] DANM get id=7697551489913324197 [540-560s] ttwid=127
+03:10:01  [03:10:01] DANM get id=7697551489913324197 [560-580s] ttwid=127
+03:10:01  [03:10:01] SETTINGS panel open (menu #1)
+03:10:01  [03:10:01] DANM get id=7697551489913324197 [580-600s] ttwid=127
+03:10:02  [03:10:01] DANM get id=7697551489913324197 [600-620s] ttwid=127
+03:10:02  [03:10:02] DANM get id=7697551489913324197 [620-640s] ttwid=127
+03:10:02  [03:10:02] DANM get id=7697551489913324197 [640-660s] ttwid=127
+03:10:02  [03:10:02] DANM get id=7697551489913324197 [660-680s] ttwid=127
+03:10:03  [03:10:03] DANM get id=7697551489913324197 [680-700s] ttwid=127
+03:10:03  [03:10:03] DANM get id=7697551489913324197 [700-720s] ttwid=127
+03:10:03  [03:10:03] DANM get id=7697551489913324197 [720-740s] ttwid=127
+03:10:04  [03:10:04] DANM cap-hit [720-740s] n=1061 → split
+03:10:04  [03:10:04] DANM get id=7697551489913324197 [720-730s] ttwid=127
+03:10:04  [03:10:04] DMSYNC t=11s due=23 marked=62 items=1718 stall=0
+03:10:04  [03:10:04] DANM get id=7697551489913324197 [730-740s] ttwid=127
+03:10:04  [03:10:04] SETTINGS select live
+03:10:05  [03:10:05] DANM get id=7697551489913324197 [740-760s] ttwid=127
+03:10:05  [03:10:05] FEEDPOOL pauseAll (live open)
+03:10:05  [03:10:05] ROOT live open → main feed paused
+03:10:05  [03:10:05] LIVE feed GET bogus_len=180 ttwid=127
+03:10:05  [03:10:05] DANM cap-hit [740-760s] n=1267 → split
+03:10:05  [03:10:05] DANM get id=7697551489913324197 [740-750s] ttwid=127
+03:10:05  [03:10:05] DANM get id=7697551489913324197 [750-760s] ttwid=127
+03:10:06  [03:10:06] DANM get id=7697551489913324197 [760-780s] ttwid=127
+03:10:06  [03:10:06] LIVE feed ok page maxtime=0 got=20 fresh=20 total=20 hasMore=1
+03:10:06  [03:10:06] DANM get id=7697551489913324197 [780-800s] ttwid=127
+03:10:06  [03:10:06] LIVEFEED scrollTo idx=0 y=0.0 items=20
+03:10:06  [03:10:06] LIVE DM connecting webRid=11612678936 roomId=7709545585564814121 sigLen=16
+03:10:06  [03:10:06] LIVEFEED play(KS) webRid=11612678936 url=http://pull-hls-l26.douyincdn.com/third/stream-408692025795543526_uhd5
+03:10:06  [03:10:06] LIVE KS state=preparing webRid=11612678936
+03:10:07  [03:10:06] DANM get id=7697551489913324197 [800-820s] ttwid=127
+03:10:07  [03:10:06] LIVE DM OPENED webRid=11612678936 (join sent)
+03:10:07  [03:10:07] DANM get id=7697551489913324197 [820-833s] ttwid=127
+03:10:07  [03:10:07] LIVE cover shown webRid=11612678936
+03:10:07  [03:10:07] DANM all-segments done id=7697551489913324197 total=3245 retry=0
+03:10:07  [03:10:07] DMLOAD done id=7697551489913324197 total=3245
+03:10:11  [03:10:11] LIVE KS state=readyToPlay webRid=11612678936
+03:10:11  [03:10:11] LIVE KS state=buffering webRid=11612678936
+03:10:11  [03:10:11] LIVE KS onPlay cur=0.0 total=0.0 webRid=11612678936
+03:10:11  [03:10:11] LIVE KS state=bufferFinished webRid=11612678936
+03:10:16  [03:10:16] LIVE KS onPlay cur=4.8 total=0.0 webRid=11612678936
+03:10:18  [03:10:17] LIVEFEED scrollTo idx=1 y=1080.0 items=20
+03:10:18  [03:10:18] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:18  [03:10:18] LIVE DM reconnect 1/5 in 5s
+03:10:18  [03:10:18] LIVE DM connecting webRid=618916328993 roomId=7709226201013668618 sigLen=16
+03:10:18  [03:10:18] LIVEFEED play(KS) webRid=618916328993 url=http://pull-hls-l6.douyincdn.com/radio/stream-120456662179381283/index
+03:10:18  [03:10:18] LIVE cover shown webRid=618916328993
+03:10:18  [03:10:18] LIVE DM OPENED webRid=618916328993 (join sent)
+03:10:19  [03:10:19] LIVE KS state=readyToPlay webRid=618916328993
+03:10:19  [03:10:19] LIVE KS state=buffering webRid=618916328993
+03:10:19  [03:10:19] LIVE KS state=bufferFinished webRid=618916328993
+03:10:21  [03:10:21] LIVE KS onPlay cur=1.5 total=0.0 webRid=618916328993
+03:10:22  [03:10:22] LIVEFEED scrollTo idx=2 y=2160.0 items=20
+03:10:23  [03:10:23] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:23  [03:10:23] LIVE DM reconnect 1/5 in 5s
+03:10:23  [03:10:23] LIVE DM connecting webRid=863381146393 roomId=7709541613110004520 sigLen=16
+03:10:23  [03:10:23] LIVEFEED play(KS) webRid=863381146393 url=http://pull-x0-t5-hls.douyincdn.com/stage/stream-696922340744758071/in
+03:10:23  [03:10:23] LIVE DM connecting webRid=863381146393 roomId=7709541613110004520 sigLen=16
+03:10:23  [03:10:23] LIVE cover shown webRid=863381146393
+03:10:23  [03:10:23] LIVE DM OPENED webRid=863381146393 (join sent)
+03:10:23  [03:10:23] LIVE DM OPENED webRid=863381146393 (join sent)
+03:10:25  [03:10:25] LIVE KS state=readyToPlay webRid=863381146393
+03:10:25  [03:10:25] LIVE KS state=buffering webRid=863381146393
+03:10:25  [03:10:25] LIVE KS state=bufferFinished webRid=863381146393
+03:10:26  [03:10:26] LIVE KS onPlay cur=0.8 total=0.0 webRid=863381146393
+03:10:28  [03:10:28] LIVE DM connecting webRid=863381146393 roomId=7709541613110004520 sigLen=16
+03:10:28  [03:10:28] LIVE DM OPENED webRid=863381146393 (join sent)
+03:10:28  [03:10:28] LIVEFEED scrollTo idx=3 y=3240.0 items=20
+03:10:29  [03:10:28] LIVE KS state=buffering webRid=863381146393
+03:10:29  [03:10:29] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:29  [03:10:29] LIVE DM reconnect 1/5 in 5s
+03:10:29  [03:10:29] LIVE DM connecting webRid=735248078052 roomId=7708892788892519168 sigLen=16
+03:10:29  [03:10:29] LIVEFEED play(KS) webRid=735248078052 url=http://pull-hls-h1.douyincdn.com/third/stream-696912200262484828/playl
+03:10:29  [03:10:29] LIVE cover shown webRid=735248078052
+03:10:29  [03:10:29] LIVE DM OPENED webRid=735248078052 (join sent)
+03:10:31  [03:10:31] LIVE KS state=readyToPlay webRid=735248078052
+03:10:31  [03:10:31] LIVE KS state=buffering webRid=735248078052
+03:10:31  [03:10:31] LIVE KS onPlay cur=0.0 total=0.0 webRid=735248078052
+03:10:31  [03:10:31] LIVE KS state=bufferFinished webRid=735248078052
+03:10:33  [03:10:33] LIVEFEED scrollTo idx=4 y=4320.0 items=20
+03:10:33  [03:10:33] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:33  [03:10:33] LIVE DM reconnect 1/5 in 5s
+03:10:33  [03:10:33] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:33  [03:10:33] LIVE DM reconnect 2/5 in 5s
+03:10:33  [03:10:33] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:33  [03:10:33] LIVE DM reconnect 3/5 in 5s
+03:10:33  [03:10:33] LIVE DM connecting webRid=990166663668 roomId=7709539986731420456 sigLen=16
+03:10:33  [03:10:33] LIVEFEED play(KS) webRid=990166663668 url=http://pull-hls-l11.douyincdn.com/stage/stream-696922315983159441.m3u8
+03:10:33  [03:10:33] LIVE cover shown webRid=990166663668
+03:10:34  [03:10:33] LIVE DM OPENED webRid=990166663668 (join sent)
+03:10:34  [03:10:34] LIVE DM connecting webRid=990166663668 roomId=7709539986731420456 sigLen=16
+03:10:34  [03:10:34] LIVE DM OPENED webRid=990166663668 (join sent)
+03:10:37  [03:10:37] LIVE KS state=readyToPlay webRid=990166663668
+03:10:37  [03:10:37] LIVE KS state=buffering webRid=990166663668
+03:10:37  [03:10:37] LIVE KS onPlay cur=0.0 total=0.0 webRid=990166663668
+03:10:37  [03:10:37] LIVE KS state=bufferFinished webRid=990166663668
+03:10:38  [03:10:38] LIVE DM connecting webRid=990166663668 roomId=7709539986731420456 sigLen=16
+03:10:38  [03:10:38] LIVE DM connecting webRid=990166663668 roomId=7709539986731420456 sigLen=16
+03:10:38  [03:10:38] LIVE DM connecting webRid=990166663668 roomId=7709539986731420456 sigLen=16
+03:10:39  [03:10:39] LIVE DM OPENED webRid=990166663668 (join sent)
+03:10:39  [03:10:39] LIVE DM OPENED webRid=990166663668 (join sent)
+03:10:39  [03:10:39] LIVE DM OPENED webRid=990166663668 (join sent)
+03:10:39  [03:10:39] LIVEFEED scrollTo idx=5 y=5400.0 items=20
+03:10:39  [03:10:39] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:39  [03:10:39] LIVE DM reconnect 1/5 in 5s
+03:10:39  [03:10:39] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:39  [03:10:39] LIVE DM reconnect 2/5 in 5s
+03:10:39  [03:10:39] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:39  [03:10:39] LIVE DM reconnect 3/5 in 5s
+03:10:39  [03:10:39] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:39  [03:10:39] LIVE DM reconnect 4/5 in 5s
+03:10:39  [03:10:39] LIVE DM connecting webRid=836979139608 roomId=7709584753405545242 sigLen=16
+03:10:39  [03:10:39] LIVEFEED play(KS) webRid=836979139608 url=http://pull-h3.douyincdn.com/stage/stream-120462264629723993.m3u8?auth
+03:10:39  [03:10:39] LIVE cover shown webRid=836979139608
+03:10:40  [03:10:40] LIVE DM OPENED webRid=836979139608 (join sent)
+03:10:40  [03:10:40] LIVE KS state=readyToPlay webRid=836979139608
+03:10:40  [03:10:40] LIVE KS state=buffering webRid=836979139608
+03:10:40  [03:10:40] LIVE KS state=bufferFinished webRid=836979139608
+03:10:42  [03:10:42] LIVE KS onPlay cur=1.8 total=0.0 webRid=836979139608
+03:10:43  [03:10:43] LIVEFEED scrollTo idx=6 y=6480.0 items=20
+03:10:44  [03:10:44] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:44  [03:10:44] LIVE DM reconnect 1/5 in 5s
+03:10:44  [03:10:44] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:44  [03:10:44] LIVE DM reconnect 2/5 in 5s
+03:10:44  [03:10:44] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:44  [03:10:44] LIVEFEED play(KS) webRid=811444437686 url=http://pull-t5.douyincdn.com/third/stream-120462141283631930/index.m3u
+03:10:44  [03:10:44] LIVE cover shown webRid=811444437686
+03:10:44  [03:10:44] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:45  [03:10:44] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:45  [03:10:44] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:45  [03:10:44] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:45  [03:10:44] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:45  [03:10:45] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:45  [03:10:45] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:45  [03:10:45] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:45  [03:10:45] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:45  [03:10:45] LIVE KS state=readyToPlay webRid=811444437686
+03:10:45  [03:10:45] LIVE KS state=buffering webRid=811444437686
+03:10:45  [03:10:45] LIVE KS state=bufferFinished webRid=811444437686
+03:10:47  [03:10:47] LIVE KS onPlay cur=1.7 total=0.0 webRid=811444437686
+03:10:49  [03:10:49] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:49  [03:10:49] LIVE DM connecting webRid=811444437686 roomId=7709576986426903305 sigLen=16
+03:10:49  [03:10:49] LIVEFEED scrollTo idx=7 y=7560.0 items=20
+03:10:49  [03:10:49] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:49  [03:10:49] LIVE DM OPENED webRid=811444437686 (join sent)
+03:10:49  [03:10:49] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:49  [03:10:49] LIVE DM reconnect 1/5 in 5s
+03:10:49  [03:10:49] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:49  [03:10:49] LIVE DM reconnect 2/5 in 5s
+03:10:49  [03:10:49] LIVE DM connecting webRid=959992984062 roomId=7709500266462448435 sigLen=16
+03:10:49  [03:10:49] LIVEFEED play(KS) webRid=959992984062 url=http://pull-hls-l13.douyincdn.com/third/stream-120460941990560531_uhd5
+03:10:49  [03:10:49] LIVE cover shown webRid=959992984062
+03:10:49  [03:10:49] LIVE DM OPENED webRid=959992984062 (join sent)
+03:10:50  [03:10:50] LIVE KS state=readyToPlay webRid=959992984062
+03:10:50  [03:10:50] LIVE KS state=buffering webRid=959992984062
+03:10:50  [03:10:50] LIVE KS state=bufferFinished webRid=959992984062
+03:10:51  [03:10:51] LIVEFEED scrollTo idx=8 y=8640.0 items=20
+03:10:52  [03:10:52] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:52  [03:10:52] LIVE DM reconnect 1/5 in 5s
+03:10:52  [03:10:52] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:52  [03:10:52] LIVE DM reconnect 2/5 in 5s
+03:10:52  [03:10:52] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:52  [03:10:52] LIVE DM reconnect 3/5 in 5s
+03:10:52  [03:10:52] LIVE DM connecting webRid=366770679348 roomId=7709538797582863131 sigLen=16
+03:10:52  [03:10:52] LIVEFEED play(KS) webRid=366770679348 url=http://pull-hls-q6.douyincdn.com/third/stream-120461544821097277/index
+03:10:52  [03:10:52] LIVE cover shown webRid=366770679348
+03:10:52  [03:10:52] LIVE DM OPENED webRid=366770679348 (join sent)
+03:10:53  [03:10:53] LIVE KS state=readyToPlay webRid=366770679348
+03:10:53  [03:10:53] LIVE KS state=buffering webRid=366770679348
+03:10:53  [03:10:53] LIVE KS onPlay cur=0.0 total=0.0 webRid=366770679348
+03:10:53  [03:10:53] LIVE KS state=bufferFinished webRid=366770679348
+03:10:54  [03:10:54] LIVE DM connecting webRid=366770679348 roomId=7709538797582863131 sigLen=16
+03:10:54  [03:10:54] LIVE DM connecting webRid=366770679348 roomId=7709538797582863131 sigLen=16
+03:10:54  [03:10:54] LIVE DM OPENED webRid=366770679348 (join sent)
+03:10:54  [03:10:54] LIVE DM OPENED webRid=366770679348 (join sent)
+03:10:55  [03:10:55] LIVEFEED scrollTo idx=9 y=9720.0 items=20
+03:10:55  [03:10:55] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:55  [03:10:55] LIVE DM reconnect 1/5 in 5s
+03:10:55  [03:10:55] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:55  [03:10:55] LIVE DM reconnect 2/5 in 5s
+03:10:55  [03:10:55] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:55  [03:10:55] LIVE DM reconnect 3/5 in 5s
+03:10:55  [03:10:55] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:55  [03:10:55] LIVE DM reconnect 4/5 in 5s
+03:10:55  [03:10:55] LIVE DM connecting webRid=491423081816 roomId=7709564260975659827 sigLen=16
+03:10:55  [03:10:55] LIVEFEED play(KS) webRid=491423081816 url=http://pull-hs-f5.flive.douyincdn.com/third/stream-120461943378018987/
+03:10:56  [03:10:55] LIVE cover shown webRid=491423081816
+03:10:56  [03:10:56] LIVE DM OPENED webRid=491423081816 (join sent)
+03:10:56  [03:10:56] LIVE KS state=readyToPlay webRid=491423081816
+03:10:56  [03:10:56] LIVE KS state=buffering webRid=491423081816
+03:10:56  [03:10:56] LIVE KS state=bufferFinished webRid=491423081816
+03:10:57  [03:10:57] LIVE DM connecting webRid=491423081816 roomId=7709564260975659827 sigLen=16
+03:10:57  [03:10:57] LIVE DM connecting webRid=491423081816 roomId=7709564260975659827 sigLen=16
+03:10:57  [03:10:57] LIVE DM connecting webRid=491423081816 roomId=7709564260975659827 sigLen=16
+03:10:57  [03:10:57] LIVE DM OPENED webRid=491423081816 (join sent)
+03:10:57  [03:10:57] LIVE DM OPENED webRid=491423081816 (join sent)
+03:10:57  [03:10:57] LIVE DM OPENED webRid=491423081816 (join sent)
+03:10:58  [03:10:58] LIVE KS onPlay cur=1.6 total=0.0 webRid=491423081816
+03:10:58  [03:10:58] LIVEFEED scrollTo idx=10 y=10800.0 items=20
+03:10:58  [03:10:58] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:59  [03:10:58] LIVE DM reconnect 1/5 in 5s
+03:10:59  [03:10:58] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:59  [03:10:58] LIVE DM reconnect 2/5 in 5s
+03:10:59  [03:10:58] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:59  [03:10:58] LIVE DM reconnect 3/5 in 5s
+03:10:59  [03:10:58] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:59  [03:10:58] LIVE DM reconnect 4/5 in 5s
+03:10:59  [03:10:58] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:10:59  [03:10:58] LIVE DM reconnect 5/5 in 5s
+03:10:59  [03:10:58] LIVE DM connecting webRid=741401343906 roomId=7709562103815850778 sigLen=16
+03:10:59  [03:10:58] LIVEFEED play(KS) webRid=741401343906 url=http://pull-hls-l26.douyincdn.com/stage/stream-120461909219868811.m3u8
+03:10:59  [03:10:58] LIVE cover shown webRid=741401343906
+03:10:59  [03:10:59] LIVE DM OPENED webRid=741401343906 (join sent)
+03:11:00  [03:11:00] LIVE KS state=readyToPlay webRid=741401343906
+03:11:00  [03:11:00] LIVE KS state=buffering webRid=741401343906
+03:11:00  [03:11:00] LIVE KS state=bufferFinished webRid=741401343906
+03:11:00  [03:11:00] LIVE DM connecting webRid=741401343906 roomId=7709562103815850778 sigLen=16
+03:11:01  [03:11:00] LIVE DM connecting webRid=741401343906 roomId=7709562103815850778 sigLen=16
+03:11:01  [03:11:00] LIVE DM connecting webRid=741401343906 roomId=7709562103815850778 sigLen=16
+03:11:01  [03:11:00] LIVE DM connecting webRid=741401343906 roomId=7709562103815850778 sigLen=16
+03:11:01  [03:11:01] LIVE DM OPENED webRid=741401343906 (join sent)
+03:11:01  [03:11:01] LIVE DM OPENED webRid=741401343906 (join sent)
+03:11:01  [03:11:01] LIVE DM OPENED webRid=741401343906 (join sent)
+03:11:01  [03:11:01] LIVE DM OPENED webRid=741401343906 (join sent)
+03:11:02  [03:11:01] LIVEFEED scrollTo idx=11 y=11880.0 items=20
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM reconnect 1/5 in 5s
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM reconnect 2/5 in 5s
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM reconnect 3/5 in 5s
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM reconnect 4/5 in 5s
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM reconnect 5/5 in 5s
+03:11:02  [03:11:02] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:02  [03:11:02] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:02  [03:11:02] LIVEFEED play(KS) webRid=847984251692 url=http://pull-cold-f5.douyincdn.com/third/stream-696922714270860118_uhd5
+03:11:02  [03:11:02] LIVE cover shown webRid=847984251692
+03:11:02  [03:11:02] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:04  [03:11:03] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:04  [03:11:03] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:04  [03:11:03] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:04  [03:11:03] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:04  [03:11:03] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:04  [03:11:04] LIVE KS state=readyToPlay webRid=847984251692
+03:11:04  [03:11:04] LIVE KS state=buffering webRid=847984251692
+03:11:04  [03:11:04] LIVE KS onPlay cur=0.0 total=0.0 webRid=847984251692
+03:11:04  [03:11:04] LIVE KS state=bufferFinished webRid=847984251692
+03:11:04  [03:11:04] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:04  [03:11:04] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:04  [03:11:04] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:04  [03:11:04] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:04  [03:11:04] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:07  [03:11:07] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:07  [03:11:07] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:07  [03:11:07] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:07  [03:11:07] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:07  [03:11:07] LIVE DM connecting webRid=847984251692 roomId=7709565477734959906 sigLen=16
+03:11:07  [03:11:07] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:07  [03:11:07] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:07  [03:11:07] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:07  [03:11:07] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:07  [03:11:07] LIVE DM OPENED webRid=847984251692 (join sent)
+03:11:08  [03:11:08] LIVE KS state=buffering webRid=847984251692
+03:11:08  [03:11:08] LIVE KS state=bufferFinished webRid=847984251692
+03:11:08  [03:11:08] LIVEFEED scrollTo idx=12 y=12960.0 items=20
+03:11:08  [03:11:08] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:08  [03:11:08] LIVE DM reconnect 1/5 in 5s
+03:11:08  [03:11:08] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:08  [03:11:08] LIVE DM reconnect 2/5 in 5s
+03:11:08  [03:11:08] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:08  [03:11:08] LIVE DM reconnect 3/5 in 5s
+03:11:08  [03:11:08] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:08  [03:11:08] LIVE DM reconnect 4/5 in 5s
+03:11:08  [03:11:08] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:08  [03:11:08] LIVE DM reconnect 5/5 in 5s
+03:11:08  [03:11:08] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:08  [03:11:08] LIVEFEED play(KS) webRid=706414362325 url=http://pull-hls-d11.douyincdn.com/third/stream-120461475703423877_uhd5
+03:11:08  [03:11:08] LIVE cover shown webRid=706414362325
+03:11:09  [03:11:08] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:13  [03:11:13] LIVE KS state=readyToPlay webRid=706414362325
+03:11:13  [03:11:13] LIVE KS state=buffering webRid=706414362325
+03:11:13  [03:11:13] LIVE KS onPlay cur=0.0 total=0.0 webRid=706414362325
+03:11:13  [03:11:13] LIVE KS state=bufferFinished webRid=706414362325
+03:11:13  [03:11:13] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:13  [03:11:13] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:13  [03:11:13] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:13  [03:11:13] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:13  [03:11:13] LIVE DM connecting webRid=706414362325 roomId=7709534385233595163 sigLen=16
+03:11:14  [03:11:13] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:14  [03:11:13] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:14  [03:11:13] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:14  [03:11:13] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:14  [03:11:13] LIVE DM OPENED webRid=706414362325 (join sent)
+03:11:16  [03:11:16] LIVEFEED scrollTo idx=13 y=14040.0 items=20
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM reconnect 1/5 in 5s
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM reconnect 2/5 in 5s
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM reconnect 3/5 in 5s
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM reconnect 4/5 in 5s
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM reconnect 5/5 in 5s
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:16  [03:11:16] LIVE DM connecting webRid=503320729772 roomId=7709585371609828122 sigLen=16
+03:11:16  [03:11:16] LIVEFEED play(KS) webRid=503320729772 url=http://pull-hls-l13.douyincdn.com/stage/stream-120462273487307192.m3u8
+03:11:16  [03:11:16] LIVE cover shown webRid=503320729772
+03:11:16  [03:11:16] LIVE DM OPENED webRid=503320729772 (join sent)
+03:11:16  [03:11:16] LIVE KS state=readyToPlay webRid=503320729772
+03:11:16  [03:11:16] LIVE KS state=buffering webRid=503320729772
+03:11:17  [03:11:16] LIVE KS state=bufferFinished webRid=503320729772
+03:11:18  [03:11:18] LIVE KS onPlay cur=1.5 total=0.0 webRid=503320729772
+03:11:19  [03:11:19] LIVEFEED scrollTo idx=14 y=15120.0 items=20
+03:11:19  [03:11:19] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:19  [03:11:19] LIVE DM reconnect 1/5 in 5s
+03:11:19  [03:11:19] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:19  [03:11:19] LIVEFEED play(KS) webRid=198816263379 url=http://pull-hls-l26.douyincdn.com/third/stream-408692446029939174.m3u8
+03:11:19  [03:11:19] LIVE cover shown webRid=198816263379
+03:11:19  [03:11:19] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:21  [03:11:21] LIVE KS state=readyToPlay webRid=198816263379
+03:11:21  [03:11:21] LIVE KS state=buffering webRid=198816263379
+03:11:21  [03:11:21] LIVE KS state=bufferFinished webRid=198816263379
+03:11:21  [03:11:21] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:21  [03:11:21] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:21  [03:11:21] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:21  [03:11:21] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:21  [03:11:21] LIVE DM connecting webRid=198816263379 roomId=7709572370020715327 sigLen=16
+03:11:21  [03:11:21] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:21  [03:11:21] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:21  [03:11:21] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:21  [03:11:21] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:21  [03:11:21] LIVE DM OPENED webRid=198816263379 (join sent)
+03:11:23  [03:11:23] LIVE KS onPlay cur=2.1 total=0.0 webRid=198816263379
+03:11:24  [03:11:24] LIVEFEED scrollTo idx=15 y=16200.0 items=20
+03:11:24  [03:11:24] LIVE feed GET bogus_len=180 ttwid=127
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM reconnect 1/5 in 5s
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM reconnect 2/5 in 5s
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM reconnect 3/5 in 5s
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM reconnect 4/5 in 5s
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM reconnect 5/5 in 5s
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM receive fail=The operation couldn’t be completed. Socket is not connected
+03:11:24  [03:11:24] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:24  [03:11:24] LIVEFEED play(KS) webRid=111570739221 url=http://pull-hls-l13.douyincdn.com/third/stream-696921973658747667_uhd5
+03:11:24  [03:11:24] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:24  [03:11:24] LIVE cover shown webRid=111570739221
+03:11:24  [03:11:24] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:24  [03:11:24] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:25  [03:11:25] LIVE feed ok page maxtime=1795029006462 got=20 fresh=15 total=35 hasMore=1
+03:11:29  [03:11:29] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:29  [03:11:29] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:29  [03:11:29] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:29  [03:11:29] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:29  [03:11:29] LIVE DM connecting webRid=111570739221 roomId=7709518144658459426 sigLen=16
+03:11:29  [03:11:29] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:29  [03:11:29] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:29  [03:11:29] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:29  [03:11:29] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:29  [03:11:29] LIVE DM OPENED webRid=111570739221 (join sent)
+03:11:30  [03:11:29] LIVE KS state=readyToPlay webRid=111570739221
+03:11:30  [03:11:29] LIVE KS state=buffering webRid=111570739221
+03:11:30  [03:11:29] LIVE KS onPlay cur=0.0 total=0.0 webRid=111570739221
+03:11:30  [03:11:30] LIVE KS state=bufferFinished webRid=111570739221
+03:11:32  [03:11:32] SETTINGS panel open (menu #1)
+03:11:33  [03:11:33] SETTINGS panel exit-app (menu #2)
