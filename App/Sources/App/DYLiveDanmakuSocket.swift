@@ -98,13 +98,35 @@ final class DYLiveDanmakuSocket: NSObject {
         self.session = session
         let task = session.webSocketTask(with: req)
         self.task = task
-        // v213：不用 URLSessionWebSocketTaskDelegate（部分 tvOS SDK 下 cannot find type），
-        // 改 receive 循环收消息。resume 后立即发 join 帧(hb)（send 会排队到连接建立），再起心跳 + receive 循环。
+        // v213：不用 URLSessionWebSocketTaskDelegate（部分 tvOS SDK 下 cannot find type）。
+        // ⚠️时序坑：resume 后 WS 握手未完成，立即 receive/send 会 "Socket is not connected"（真机实锤）。
+        // 改：resume 后先发 join 帧，用其 send 完成回调作为"已连接"信号——成功才起心跳+receive 循环；
+        // 若 "not connected" 则延迟重试 join（等握手完成）。
         task.resume()
-        sendFrame(payloadType: "hb", logId: 0, payload: Data())   // join 帧（照 jq2）
-        startHeartbeat()
-        startReceiveLoop()
         log("connecting webRid=\(webRid) roomId=\(roomId) sigLen=\(signature.count)")
+        sendJoinWhenConnected()
+    }
+
+    /// v213：发 join 帧(hb)，用 send 完成回调确认"已连接"→ 起心跳+receive 循环。未连上则重试。
+    private func sendJoinWhenConnected() {
+        guard let task, !manuallyClosed else { return }
+        let join = KSPushFrame.encode(payloadType: "hb", logId: 0, payload: Data())
+        task.send(.data(join)) { [weak self] error in
+            guard let self, !self.manuallyClosed else { return }
+            if let error {
+                // 握手未完成 → 延迟重试 join（照 jq2 连接建立后才发 join）
+                self.log("join not ready (\(error.localizedDescription)), retry in 1s")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                    self?.sendJoinWhenConnected()
+                }
+                return
+            }
+            // join 发送成功 = 已连接 → 起心跳 + receive 循环
+            self.log("OPENED webRid=\(self.webRid) (join sent)")
+            self.reconnectAttempts = 0
+            self.startHeartbeat()
+            self.startReceiveLoop()
+        }
     }
 
     /// v213：receive 循环（替代 delegate）。每次收到消息处理后再次 receive，连接关闭/出错时回调里触发重连。

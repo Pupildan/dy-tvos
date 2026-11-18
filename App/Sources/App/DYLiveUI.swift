@@ -117,8 +117,10 @@ final class DYLiveFeedViewController: UIViewController {
     private var resolving = Set<String>()              // webRid → enter 在飞去重
     private var playingWebRid = ""                     // 当前共享 player 正在放的房间
     private var lastKSPlayLogAt = TimeInterval(0)      // v212 onPlay 节流（0.1s 定时器驱动，不节流会刷爆日志）
-    // v213：封面占位（首帧前盖住黑屏，bufferFinished 淡出）
-    private let coverImageView = UIImageView()
+    // v213：封面占位（首帧前盖住黑屏，bufferFinished 淡出）。主流做法=全屏模糊背景 + 原比例居中封面。
+    private let coverView = UIView()                   // 封面容器（满屏）
+    private let coverBgImageView = UIImageView()       // 模糊背景（同封面高斯模糊，铺满）
+    private let coverFgImageView = UIImageView()       // 原比例封面（scaleAspectFit 居中，不裁切）
     private var coverLoadToken = 0                     // 防异步封面加载竞态（快速切房时旧加载回写）
     // v213：底部聊天列表 overlay（抖音样式）+ 弹幕 WS
     private var chatOverlay: DYLiveChatOverlay!
@@ -146,18 +148,39 @@ final class DYLiveFeedViewController: UIViewController {
             ksContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             ksContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        // 1b) 封面占位层（v213：首帧前盖住黑屏，bufferFinished 淡出）——z 序 ksContainer < cover < chat < collection
-        coverImageView.contentMode = .scaleAspectFill
-        coverImageView.clipsToBounds = true
-        coverImageView.backgroundColor = .black
-        coverImageView.isHidden = true
-        coverImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(coverImageView)
+        // 1b) 封面占位层（v213：主流做法=全屏模糊背景 + 原比例居中封面）——z 序 ksContainer < cover < chat < collection
+        coverView.backgroundColor = .black
+        coverView.clipsToBounds = true
+        coverView.isHidden = true
+        coverView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coverView)
         NSLayoutConstraint.activate([
-            coverImageView.topAnchor.constraint(equalTo: view.topAnchor),
-            coverImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            coverView.topAnchor.constraint(equalTo: view.topAnchor),
+            coverView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            coverView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            coverView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        // 模糊背景层（同封面高斯模糊后铺满，主流做法）
+        coverBgImageView.contentMode = .scaleAspectFill
+        coverBgImageView.clipsToBounds = true
+        coverBgImageView.translatesAutoresizingMaskIntoConstraints = false
+        coverView.addSubview(coverBgImageView)
+        NSLayoutConstraint.activate([
+            coverBgImageView.topAnchor.constraint(equalTo: coverView.topAnchor),
+            coverBgImageView.bottomAnchor.constraint(equalTo: coverView.bottomAnchor),
+            coverBgImageView.leadingAnchor.constraint(equalTo: coverView.leadingAnchor),
+            coverBgImageView.trailingAnchor.constraint(equalTo: coverView.trailingAnchor),
+        ])
+        // 原比例前景层（scaleAspectFit 居中，不放大不裁切）
+        coverFgImageView.contentMode = .scaleAspectFit
+        coverFgImageView.clipsToBounds = true
+        coverFgImageView.translatesAutoresizingMaskIntoConstraints = false
+        coverView.addSubview(coverFgImageView)
+        NSLayoutConstraint.activate([
+            coverFgImageView.topAnchor.constraint(equalTo: coverView.topAnchor),
+            coverFgImageView.bottomAnchor.constraint(equalTo: coverView.bottomAnchor),
+            coverFgImageView.leadingAnchor.constraint(equalTo: coverView.leadingAnchor),
+            coverFgImageView.trailingAnchor.constraint(equalTo: coverView.trailingAnchor),
         ])
         // 1c) 弹幕底部聊天列表 overlay（v213 抖音样式，纯展示层，焦点隔离）——z 序在封面上、标题下
         chatOverlay = DYLiveChatOverlay(containerWidth: UIScreen.main.bounds.width * 0.6)
@@ -304,19 +327,35 @@ final class DYLiveFeedViewController: UIViewController {
         // 先清掉旧封面（显示黑屏），等新封面加载好再显示
         DispatchQueue.main.async { [weak self] in
             guard let self, token == self.coverLoadToken else { return }
-            self.coverImageView.image = nil
-            self.coverImageView.isHidden = true
+            self.coverBgImageView.image = nil
+            self.coverFgImageView.image = nil
+            self.coverView.isHidden = true
         }
         guard !room.coverUrl.isEmpty, let url = URL(string: room.coverUrl) else { return }
         URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
             guard let data, let img = UIImage(data: data) else { return }
+            // 主流做法：背景=同封面高斯模糊铺满；前景=原比例居中（不放大不裁切）
+            let blurred = Self.blurredImage(img, radius: 25)
             DispatchQueue.main.async {
                 guard let self, token == self.coverLoadToken else { return }
-                self.coverImageView.image = img
-                self.coverImageView.isHidden = false
+                self.coverBgImageView.image = blurred ?? img
+                self.coverFgImageView.image = img
+                self.coverView.isHidden = false
                 DYLog.shared.log("LIVE cover shown webRid=\(room.webRid)")
             }
         }.resume()
+    }
+
+    /// v213：高斯模糊（封面背景用，CoreImage CIGaussianBlur）
+    private static func blurredImage(_ image: UIImage, radius: CGFloat) -> UIImage? {
+        guard let ci = CIImage(image: image) else { return nil }
+        let filter = CIFilter(name: "CIGaussianBlur")
+        filter?.setValue(ci, forKey: kCIInputImageKey)
+        filter?.setValue(radius, forKey: kCIInputRadiusKey)
+        guard let out = filter?.outputImage else { return nil }
+        let context = CIContext(options: [.useSoftwareRenderer: false])
+        guard let cg = context.createCGImage(out, from: out.extent) else { return nil }
+        return UIImage(cgImage: cg)
     }
 
     /// v213：连直播弹幕 WS（roomId 从 enter 解析；userId/cookie 用匿名 ttwid，探针已验证）
@@ -358,10 +397,10 @@ final class DYLiveFeedViewController: UIViewController {
             switch state {
             case .bufferFinished:
                 // v213：首帧已渲染 → 淡出封面占位（封面 → 直播画面过渡）
-                if !self.coverImageView.isHidden {
-                    UIView.animate(withDuration: 0.35, animations: { self.coverImageView.alpha = 0 }) { _ in
-                        self.coverImageView.isHidden = true
-                        self.coverImageView.alpha = 1   // 复位 alpha 供下次切房
+                if !self.coverView.isHidden {
+                    UIView.animate(withDuration: 0.35, animations: { self.coverView.alpha = 0 }) { _ in
+                        self.coverView.isHidden = true
+                        self.coverView.alpha = 1   // 复位 alpha 供下次切房
                     }
                 }
             case .error:
