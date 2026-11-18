@@ -4,7 +4,7 @@
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > **当前版本 v208**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194：数据链/纵向刷/无限翻页/遥控切房/主feed声音隔离）**；**直播黑屏（有声无画面）十轮排查 v209 收敛两病灶**：①旧 rfd 诊断假阴性（`view?.layer as? AVPlayerLayer` 永远失败→rfd 恒 0 害盲调，v209 递归找真 layer+dump 渲染树）②-16832 stall danger→ps=0x0 不解出视频（单 player 从直播边缘开播卡末端，v209 ready 后回退 seek 8s）；v207 `playerVC.player` 赋值+v208 剥嵌套/裸 asset 保留，**待真机终验 v209**；**app 图标 v195-v203 修复（brandassets 模板格式重建，v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md`（视频切换架构）+ `docs/tvos-app-icon-guide.md`（图标编译指南）。
+> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194）**；**直播黑屏（有声无画面）⭐v209/v210 终极判定=ffprobe 啃本地真实 TS 段**：视频轨完好（H.264 High@L4.0 1080x1920+AAC）、清单标准平铺 TS 非嵌套、渲染树 AVPlayerLayer 满屏挂载——全环节都好，**真根因=AVPlayer 卡 -16832 直播追边 stall 不解首帧**（前十几轮全在渲染/编码/清单错的层打转）；v210 修=automaticallyWaitsToMinimizeStalling=false + item.preferredForwardBufferDuration + pollAndSeekBehindLiveEdge 轮询（v209 status-KVO 那刻 ranges 没填充失效），**待真机终验 v210**；**app 图标 v195-v203 修复（v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
 
 ---
 
@@ -158,14 +158,12 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 
 ### 5.6 直播 / 登录
 
-- **直播黑屏（有声无画面）排查史 v185→v209（2026-11-17/18）**：
-  - **v208 真机日志复盘（output/atv_push.log，`12:25:46 DYTV v208 launched` 会话）实锤两个新病灶，v209 修复**：
-    - **病灶 A＝rfd 诊断假阴性（最坑，害盲调十轮）**：DIAG 取渲染层用 `playerVC.view?.layer as? AVPlayerLayer`，但 **AVPVC.view 的根 layer 是普通容器 CALayer，真 AVPlayerLayer 在它的 sublayers 里** → `as?` 永远 cast 失败 → nil → `?? false` → **rfd 恒 0（整份日志 49 次全 0，无一例外）**。这条诊断从 v204 加进来就没量到过真东西——**v189 当年"出画面"若也打这条日志同样会是 0**。**别再信旧的 rfd=0**。v209 修法=递归 sublayers 找真 AVPlayerLayer（`findPlayerLayer`）+ dump 渲染树 frame（`dumpRenderTree`）。
-    - **病灶 B＝-16832 stall danger（11 次）→ ps=0x0 不解出视频（35/49 房）**：单 player `replaceCurrentItem` 后 AVPlayer 默认从**直播边缘**开播，等 item ready 那几秒直播已往前走 → 卡在清单末端反复重启（`code=-16832 "restarting from end of live playlist — stall danger"`）→ presentationSize 恒 0x0（数据在下载 bytes 涨、视频轨却没解出）。v209 修法=item 一 `.readyToPlay` 就从边缘往回 seek 8s（2 个 target duration）再播（`statusObservation` KVO）。
-    - 另：`code=-12318 "Segment exceeds specified bandwidth for variant"`（3 次）=CDN 分段超带宽，偶发。
-    - `nested unwrap L1→L2` 在 v208 会话一次没触发（count=0）——这批房清单首行不是嵌套 m3u8，剥嵌套没帮上忙（**不是没装 v208**，已核对启动标记）。
-  - **v207 实锤（历史，仍有效）**：`playerVC.player` 从 v193 创建 AVPVC 以来从未赋值（grep 零匹配）。`sharedPlayer` 独立播放出声（item ready/时间走/ps=1280×720/errLog 空），渲染层没接 player → 全屏黑。v209 保留此修复。**播放层和渲染层是两条独立链路，声音正常≠画面正常**（方法论遗产）。
-  - 排除项（全部探针实锤，别再怀疑）：编码=H.264 Main@L4.2-5.0 / 4:2:0 / 8-bit（ffprobe + SPS 解析双确认，HEVC/Hi10P 假设证伪）；CDN 可达（HEAD 200）；无加密（无 EXT-X-KEY）；header 无影响（带头/裸头清单一致）。cell/collectionView 背景全透明，无遮挡。
+- **直播黑屏（有声无画面）排查史 v185→v210（2026-11-17/18）**：
+  - **⭐v209/v210 终极判定（ffprobe + 渲染树实锤，推翻前十几轮方向）**：下载真实直播 TS 段（2.9MB）用静态 ffprobe 啃 → **视频轨完好**（`h264 High@L4.0 1080x1920 yuv420p` + `aac LC`）；清单是**标准平铺 TS 滑动窗口**（非嵌套，`nested unwrap count=0` 是对的）；v209 渲染树 dump → **AVPlayerLayer 满屏(0,0,1920,1080)正确挂载**。**全部环节都好，唯独 AVPlayer 卡 `-16832` 直播追边 stall 不解首帧 → ps=0x0/rfd=0**。真根因=**AVPlayer 直播边缘 stall**，不是渲染/编码/清单/CDN。
+  - **v210 修法**：①`sharedPlayer.automaticallyWaitsToMinimizeStalling = false`（直播标准修法，默认 true 起播前等缓冲又追不上边缘 → 反复重启）②`item.preferredForwardBufferDuration = 4.0`（item 级，⚠️是 AVPlayerItem 属性不是 AVPlayer，v210 首次 CI 失败踩此坑）③v209 失效的 status-KVO seek-back（`.readyToPlay` 那刻 seekableTimeRanges 还没填充 → count=0 一次没触发）换成 `pollAndSeekBehindLiveEdge` 轮询（0.5s 间隔最多 20 次，等 ranges 填充后 seek 到边缘后方 10s 稳定点）。**待真机终验 v210**。
+  - **病灶 A（v209 实锤）＝rfd 诊断假阴性（最坑，害盲调）**：旧代码 `playerVC.view?.layer as? AVPlayerLayer`，但 **AVPVC.view 根 layer 是普通容器 CALayer，真 AVPlayerLayer 在 sublayers 里** → `as?` 永远失败 → rfd 恒 0（49 次全 0）。**通用铁律：对 AVPlayerViewController.view 根 layer 做 `as? AVPlayerLayer` 必然失败，必须递归 sublayers 找**（v209 `findPlayerLayer`）。**别再信旧 rfd=0**。
+  - **v207（历史，仍有效）**：`playerVC.player` 从 v193 起从未赋值（已修，保留）。**播放层和渲染层是两条独立链路，声音正常≠画面正常**。
+  - 排除项（全部实锤，别再怀疑）：编码=H.264 High@L4.0 / 4:2:0 / 8-bit（ffprobe 啃真实 TS 段确认）；CDN 可达（TS 段 200/2.9MB）；清单=标准平铺 TS 滑动窗口（非嵌套）；header 无影响；cell/collectionView 背景全透明无遮挡；**渲染层 v209 渲染树确认挂载正确**。
   - **结构性发现**：HLS 清单是**嵌套链式结构**——L1 媒体清单的"片段"指向 L2 m3u8（livehwc4/100ycdn 防盗链包装域），L2 才是真 TS 片段清单。**非标准 HLS**（RFC 8216 只允许主清单引用子清单）；hls.js（网页端）递归解析没问题，AVPlayer 对此行为不可控。**v208 修法**：播放前手动剥嵌套（`resolvePlaylist`：L1 片段行若是 m3u8 → 改播 L2 URL）+ 裸 AVURLAsset（myDV live 无任何头，agent 实锤 fo5 头表仅 VOD 用）。
   - v184 纵向刷体验线全通：游标翻页（`extra.max_time`+`has_more`）、UICollectionView 垂直分页、pan 手势、遥控上下键（DYLiveFocusCollectionView）、池窗口。
 - **myDV 直播路径实锤（agent 深挖反编译，照抄依据）**：①**播的是 FLV 不是 HLS**——`extractMainLiveUrls`（DataModelKt.java:56-75）flv 在前 index 0，走 media3 `FlvExtractor`；②**SDK 路径优先**：`live_core_sdk_data.pull_data.stream_data.data.<key>.main.flv/hls`（本 room 键=origin/hd/sd/ld/md/ao）优先于 flv_pull_url/hls_pull_url_map（后者是 fallback）；③**live 请求零自定义头**（裸 OkHttpDataSource，fo5 头表仅 VOD）；④"视频解码失败切 H.264"（xo5.java:78）对 **live 是死代码**（do2 传 null lambda，仅 VOD 生效）；⑤play 门控 surfaceBound（cn4.java）。
