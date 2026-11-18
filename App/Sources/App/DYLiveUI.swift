@@ -111,6 +111,7 @@ final class DYLiveFeedViewController: UIViewController {
     private var hlsCache: [String: String] = [:]       // webRid → 已 resolve 的 HLS URL
     private var resolving = Set<String>()              // webRid → enter 在飞去重
     private var playingWebRid = ""                     // 当前共享 player 正在放的房间
+    private var statusObservation: NSKeyValueObservation?  // v209 item status 观察者（回退 seek 用）
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -270,14 +271,43 @@ final class DYLiveFeedViewController: UIViewController {
             self.playingWebRid = webRid
             self.sharedPlayer.play()
             DYLog.shared.event("LIVEFEED play webRid=\(webRid) final=\(finalUrl.prefix(70))")
-            // v204 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay
+            // v209 修 -16832 stall danger：单 player replaceCurrentItem 默认从直播边缘开播，
+            // 等 item ready 那几秒直播已往前走 → AVPlayer 卡在清单末端反复重启 → ps=0x0 不解出视频。
+            // 修法：item 一 ready 就从边缘往回 seek（避开正在写的最后一段 + 目标时长 2 段的余量）。
+            self.statusObservation?.invalidate()
+            self.statusObservation = item.observe(\.status, options: [.new]) { [weak self] it, _ in
+                guard let self, self.playingWebRid == webRid, it.status == .readyToPlay else { return }
+                self.statusObservation?.invalidate()
+                self.statusObservation = nil
+                // 取可 seek 区间末端（直播边缘），往回退 ~2 个 target duration（清单 target=4s → 退 8s）
+                if let range = it.seekableTimeRanges.last?.timeRangeValue {
+                    let edge = CMTimeGetSeconds(range.start) + CMTimeGetSeconds(range.duration)
+                    let target = max(CMTimeGetSeconds(range.start), edge - 8.0)
+                    if target.isFinite, target > 0 {
+                        DYLog.shared.log("LIVEFEED seek-back edge=\(String(format: "%.2f", edge)) -> \(String(format: "%.2f", target)) (修 -16832 stall)")
+                        self.sharedPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600))
+                    }
+                }
+            }
+            // v204/v209 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay + 渲染树
             for delay in [3.0, 8.0] {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
                     guard let self, self.playingWebRid == webRid, let item = self.sharedPlayer.currentItem else { return }
-                    let layer = (self.playerVC.view?.layer as? AVPlayerLayer)
+                    // v209 修 rfd 假阴性：playerVC.view 根 layer 不是 AVPlayerLayer（是普通容器），
+                    // 旧代码 `view?.layer as? AVPlayerLayer` 永远 cast 失败 → rfd 恒 0（49 次全 0）。
+                    // 改：递归在 sublayer 树里找真正的 AVPlayerLayer。
+                    let rootLayer = self.playerVC.view?.layer
+                    let layer = rootLayer.flatMap(findPlayerLayer)
                     let rfd = layer?.isReadyForDisplay ?? false
                     let ps = item.presentationSize
                     DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
+                    // v209：dump 渲染层树 + frame，判定 AVPVC.view 到底有没有尺寸/有没有接上 playerLayer
+                    if let rl = rootLayer {
+                        DYLog.shared.log("LIVE RENDER root frame=\(self.playerVC.view?.frame ?? .zero) sublayers=\(rl.sublayers?.count ?? 0)")
+                        dumpRenderTree(rl, depth: 1)
+                    } else {
+                        DYLog.shared.log("LIVE RENDER root layer nil (playerVC.view 未就绪?)")
+                    }
                     if let errLog = item.errorLog(), !errLog.events.isEmpty {
                         for (i, e) in errLog.events.prefix(3).enumerated() {
                             let uri = (e.uri as String?) ?? "-"
@@ -296,6 +326,28 @@ final class DYLiveFeedViewController: UIViewController {
                     }
                 }
             }
+        }
+    }
+
+    /// v209：递归在 layer 树里找真正的 AVPlayerLayer（playerVC.view 根 layer 是普通容器，
+    /// 直接 `as? AVPlayerLayer` 永远失败 → 旧 rfd 恒 0 假阴性）。
+    private func findPlayerLayer(_ layer: CALayer) -> AVPlayerLayer? {
+        if let p = layer as? AVPlayerLayer { return p }
+        for sub in layer.sublayers ?? [] {
+            if let found = findPlayerLayer(sub) { return found }
+        }
+        return nil
+    }
+
+    /// v209：dump 渲染层树（class + frame），真机判定 AVPVC.view 有没有尺寸、AVPlayerLayer 有没有挂上。
+    private func dumpRenderTree(_ layer: CALayer, depth: Int) {
+        guard depth <= 4 else { return }
+        let indent = String(repeating: "  ", count: depth)
+        let cls = String(describing: type(of: layer))
+        let f = layer.frame
+        DYLog.shared.log("LIVE RENDER \(indent)- \(cls) frame=(\(Int(f.origin.x)),\(Int(f.origin.y)),\(Int(f.width)),\(Int(f.height)))")
+        for sub in layer.sublayers ?? [] {
+            dumpRenderTree(sub, depth: depth + 1)
         }
     }
 
@@ -354,6 +406,10 @@ final class DYLiveFeedViewController: UIViewController {
             }
         }
         super.pressesBegan(presses, with: event)
+    }
+
+    deinit {
+        statusObservation?.invalidate()
     }
 }
 
