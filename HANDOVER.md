@@ -4,7 +4,7 @@
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > **当前版本 v208**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194）**；**直播黑屏（有声无画面）⭐v209/v210 终极判定=ffprobe 啃本地真实 TS 段**：视频轨完好（H.264 High@L4.0 1080x1920+AAC）、清单标准平铺 TS 非嵌套、渲染树 AVPlayerLayer 满屏挂载——全环节都好，**真根因=AVPlayer 卡 -16832 直播追边 stall 不解首帧**（前十几轮全在渲染/编码/清单错的层打转）；v210 修=automaticallyWaitsToMinimizeStalling=false + item.preferredForwardBufferDuration + pollAndSeekBehindLiveEdge 轮询（v209 status-KVO 那刻 ranges 没填充失效），**待真机终验 v210**；**app 图标 v195-v203 修复（v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
+> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194）**；**直播黑屏（有声无画面）⭐v209 终极判定=ffprobe 啃本地真实 TS 段**：视频轨完好（H.264 High@L4.0 1080x1920+AAC）、清单标准平铺 TS 非嵌套、渲染树 AVPlayerLayer 满屏挂载——全环节都好，**真根因=AVPlayer 卡 -16832 直播追边 stall 不解首帧**（前十几轮全在渲染/编码/清单错的层打转）；⚠️**v210 暴力修法是回归**（automaticallyWaitsToMinimizeStalling=false 把唯一的声音也搞没 t=0.0 冻结；pollAndSeek 死代码 count=0），**v211 已回退到 v209 播放路径**（保留 findPlayerLayer 递归真 rfd + dumpRenderTree 渲染树诊断），**待真机终验 v211（应恢复 v209 有声音）**；**app 图标 v195-v203 修复（v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
 
 ---
 
@@ -159,8 +159,8 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 ### 5.6 直播 / 登录
 
 - **直播黑屏（有声无画面）排查史 v185→v210（2026-11-17/18）**：
-  - **⭐v209/v210 终极判定（ffprobe + 渲染树实锤，推翻前十几轮方向）**：下载真实直播 TS 段（2.9MB）用静态 ffprobe 啃 → **视频轨完好**（`h264 High@L4.0 1080x1920 yuv420p` + `aac LC`）；清单是**标准平铺 TS 滑动窗口**（非嵌套，`nested unwrap count=0` 是对的）；v209 渲染树 dump → **AVPlayerLayer 满屏(0,0,1920,1080)正确挂载**。**全部环节都好，唯独 AVPlayer 卡 `-16832` 直播追边 stall 不解首帧 → ps=0x0/rfd=0**。真根因=**AVPlayer 直播边缘 stall**，不是渲染/编码/清单/CDN。
-  - **v210 修法**：①`sharedPlayer.automaticallyWaitsToMinimizeStalling = false`（直播标准修法，默认 true 起播前等缓冲又追不上边缘 → 反复重启）②`item.preferredForwardBufferDuration = 4.0`（item 级，⚠️是 AVPlayerItem 属性不是 AVPlayer，v210 首次 CI 失败踩此坑）③v209 失效的 status-KVO seek-back（`.readyToPlay` 那刻 seekableTimeRanges 还没填充 → count=0 一次没触发）换成 `pollAndSeekBehindLiveEdge` 轮询（0.5s 间隔最多 20 次，等 ranges 填充后 seek 到边缘后方 10s 稳定点）。**待真机终验 v210**。
+  - **⚠️v210 回归 → v211 回退（重要负面经验）**：v210 试图修 -16832 追边 stall，加了 ①`automaticallyWaitsToMinimizeStalling=false` ②`item.preferredForwardBufferDuration=4.0` ③`pollAndSeekBehindLiveEdge` 轮询 seek，**结果声音+画面全没了（回归）**。真机日志实锤：`t=0.0` 时间冻结、`status=0 Unknown`、`seek-poll give up (20 次无 seekableTimeRanges)` count=0。**罪魁=`automaticallyWaitsToMinimizeStalling=false`**——默认 **true** 才对（AVPlayer 等够缓冲再走，v209 有声音靠这个）；关掉=逼它不等缓冲硬播直播边缘→彻底 stall 连声音都没。**铁律：此属性直播上保持系统默认，别动。** v211 回退=删这三个，回 v209 播放路径（保留 v209 的 findPlayerLayer 递归真 rfd + dumpRenderTree）。**直播播放路径每改一行都可能把唯一还在工作的"声音"搞没——改前想清 baseline，回归靠 `t=` 时间走不走+有没有声音判断。**
+  - **⭐v209/v210 终极判定（ffprobe + 渲染树实锤，推翻前十几轮方向）**：下载真实直播 TS 段（2.9MB）用静态 ffprobe 啃 → **视频轨完好**（`h264 High@L4.0 1080x1920 yuv420p` + `aac LC`）；清单是**标准平铺 TS 滑动窗口**（非嵌套，`nested unwrap count=0` 是对的）；v209 渲染树 dump → **AVPlayerLayer 满屏(0,0,1920,1080)正确挂载**。**全部环节都好，唯独 AVPlayer 卡 `-16832` 直播追边 stall 不解首帧 → ps=0x0/rfd=0**。真根因=**AVPlayer 直播边缘 stall**，不是渲染/编码/清单/CDN。**⚠️但 v210 的暴力修法是回归，需换思路**（候选：参考 myDV 走 FLV 路线需换播放内核/本地转封装，成本高先缓；或深挖 AVPlayer live-edge 缓冲参数组合）。
   - **病灶 A（v209 实锤）＝rfd 诊断假阴性（最坑，害盲调）**：旧代码 `playerVC.view?.layer as? AVPlayerLayer`，但 **AVPVC.view 根 layer 是普通容器 CALayer，真 AVPlayerLayer 在 sublayers 里** → `as?` 永远失败 → rfd 恒 0（49 次全 0）。**通用铁律：对 AVPlayerViewController.view 根 layer 做 `as? AVPlayerLayer` 必然失败，必须递归 sublayers 找**（v209 `findPlayerLayer`）。**别再信旧 rfd=0**。
   - **v207（历史，仍有效）**：`playerVC.player` 从 v193 起从未赋值（已修，保留）。**播放层和渲染层是两条独立链路，声音正常≠画面正常**。
   - 排除项（全部实锤，别再怀疑）：编码=H.264 High@L4.0 / 4:2:0 / 8-bit（ffprobe 啃真实 TS 段确认）；CDN 可达（TS 段 200/2.9MB）；清单=标准平铺 TS 滑动窗口（非嵌套）；header 无影响；cell/collectionView 背景全透明无遮挡；**渲染层 v209 渲染树确认挂载正确**。
