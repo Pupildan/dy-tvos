@@ -16,7 +16,9 @@ concurrency:
 jobs:
   build:
     runs-on: macos-latest
-    timeout-minutes: 30
+    # v212：直播内核换 KSPlayer(KSMEPlayer) 会拉进 FFmpegKit 6.1.4（大二进制），首次 SPM 解析+编译显著变慢
+    # → timeout 从 30 提到 60 兜底。
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4

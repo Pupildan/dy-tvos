@@ -2,8 +2,11 @@ import SwiftUI
 import UIKit
 import AVFoundation
 import AVKit
+import KSPlayer
 
-// MARK: - 直播流屏（v193 单 AVPlayer 换 URL + AVPlayerViewController 渲染，照 myDV 全局共享 player）
+// MARK: - 直播流屏（v212 播放内核 AVPlayer→KSPlayer/KSMEPlayer。铁律：只有直播内核能换，VOD/主feed/loading 不动）
+// v185→v211 十几轮实锤：AVPlayer 对抖音直播 HLS 卡 -16832 追边 stall 永远解不出首帧（ffprobe 证实流/渲染层都好）。
+// 换 KSMEPlayer（FFmpeg 软解，独立 HLS demuxer）绕开 AVPlayer 整套 live-edge 逻辑。
 
 /// SwiftUI 包装：直播纵向分页流（全屏）。设置面板「直播」进入；Menu 关闭回播放。
 struct DYLiveFeedScreen: View {
@@ -94,49 +97,45 @@ final class LivePlayerCell: UICollectionViewCell {
     }
 }
 
-/// 直播纵向分页控制器（照 myDV 全局共享 player：**单 AVPlayer 换 URL**，非池）。
+/// 直播纵向分页控制器（v212 播放内核 AVPlayer→KSPlayer/KSMEPlayer，照 myDV 全局共享单 player 换 URL，非池）。
 /// v189-v191 连败三轮根因=per-cell player 池（窗口驱逐+缓存）多 player 抢解码器 → 大部分黑屏。
-/// v192 黑屏根因=手动 PlayerLayerView(AVPlayerLayer) 渲染（v186/v187 老路）。
-/// v193 正确组合：**控制器级 AVPlayerViewController 渲染（v189 出画面方案）+ v192 asset header（CDN 不返回空）**。
-/// 视频层浮在 collection view 下；cell 透明只显示标题/观看数 overlay；换房 replaceCurrentItem 换 URL（分页/滑动动画不动）。
+/// v185→v211 AVPlayer 路径：渲染层/流/编码全好（ffprobe+渲染树实锤），唯独 AVPlayer 卡 -16832 追边 stall 解不出首帧。
+/// v212 换 KSMEPlayer（FFmpeg 软解，独立 HLS demuxer）绕开 AVPlayer 整套 live-edge 逻辑。
+/// 视频层浮在 collection view 下；cell 透明只显示标题/观看数 overlay；换房 makeView(新URL) 换流（分页/滑动动画不动）。
 final class DYLiveFeedViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var currentIndex = 0
     private var didInitialScroll = false
 
-    /// 全局共享单 player（照 myDV ij4.c 全局共享 ExoPlayer）——换房 replaceCurrentItem 换 URL，不销毁重建
-    private let sharedPlayer = AVPlayer()
-    /// 渲染层（v189 出画面方案：AVPlayerViewController 自己管 AVPlayerLayer）
-    private let playerVC = AVPlayerViewController()
+    /// KSPlayer 协调器（持 KSPlayerLayer，换房 makeView(新URL) 内部走 playerLayer.set(url:) 换流）
+    /// ⚠️ Coordinator 是 @MainActor——在 viewDidLoad（主线程）里初始化，避免属性初始化器的 actor 隔离问题。
+    private var ksCoordinator: KSVideoPlayer.Coordinator!
+    /// 视频渲染容器（KSPlayer 的 player.view 加在这里面，浮在 collection view 下）
+    private let ksContainer = UIView()
+    private var ksViewAdded = false
     private var hlsCache: [String: String] = [:]       // webRid → 已 resolve 的 HLS URL
     private var resolving = Set<String>()              // webRid → enter 在飞去重
     private var playingWebRid = ""                     // 当前共享 player 正在放的房间
+    private var lastKSPlayLogAt = TimeInterval(0)      // v212 onPlay 节流（0.1s 定时器驱动，不节流会刷爆日志）
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        // 1) 视频渲染层（控制器级 AVPlayerViewController，v189 出画面方案）——加在 collection view 下面
-        playerVC.showsPlaybackControls = false
-        playerVC.videoGravity = .resizeAspect
-        // ⚠️ v211 回退：v210 的 automaticallyWaitsToMinimizeStalling=false 是回归——真机日志实锤
-        // 把唯一还在工作的"声音"也弄没了（t=0.0 时间冻结/status=0 Unknown/无声音）。
-        // 默认 true 才对：AVPlayer 等够缓冲再走（v209 有声音）。此属性保持系统默认，勿再动。
-        // ⚠️ v207 黑屏真凶修复：playerVC.player 从 v193 创建以来从未赋值！渲染层没有 player
-        // → isReadyForDisplay 永远 0、全屏黑（sharedPlayer 照常出声所以"有声无画面"）。
-        // 一行修复：把共享 player 接到渲染层。
-        playerVC.player = sharedPlayer
-        // ⚠️ tvOS 上 AVPlayerViewController.view 是 UIView?（iOS 非可选）——必须解包
-        if let pv = playerVC.view {
-            pv.backgroundColor = .black
-            pv.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(pv)
-            NSLayoutConstraint.activate([
-                pv.topAnchor.constraint(equalTo: view.topAnchor),
-                pv.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                pv.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                pv.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            ])
-        }
+        // 1) 视频渲染层（v212 KSPlayer/KSMEPlayer）——先锁 FFmpeg 软解，再建容器（视频 view 在 play() 里 makeView 后加进来）
+        // ⚠️ 锁 KSMEPlayer 是换内核的真正价值：AVPlayer 卡 -16832 追边 stall，FFmpeg 有独立 HLS demuxer 绕开它。
+        //    若落回 KSAVPlayer（KSPlayer 对 AVPlayer 的封装）= 换汤不换药还是同一个 stall。
+        KSOptions.firstPlayerType = KSMEPlayer.self
+        ksCoordinator = KSVideoPlayer.Coordinator()
+        setupKSCallbacks()
+        ksContainer.backgroundColor = .black
+        ksContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ksContainer)
+        NSLayoutConstraint.activate([
+            ksContainer.topAnchor.constraint(equalTo: view.topAnchor),
+            ksContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ksContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            ksContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
         // 2) collection view（透明，标题 overlay 浮在视频上）
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -258,107 +257,55 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// 共享 player 换 URL（先剥嵌套清单 → 裸 AVURLAsset（myDV live 无任何头）→ AVPlayerViewController 渲染）
+    /// KSPlayer 换流播房（v212）。makeView 幂等：同 URL 返回已有 view，URL 变了内部走 playerLayer.set(url:) 换流。
+    /// 不再剥嵌套清单——KSMEPlayer 用 FFmpeg 自己的 HLS demuxer，不吃 AVPlayer 那套嵌套限制。
     private func play(url: String, webRid: String) {
         guard playingWebRid != webRid, let u = URL(string: url) else { return }
-        // v208：先剥嵌套清单——L1 媒体清单的"片段"可能指向 L2 m3u8（非标准 HLS 链式结构，
-        // hls.js 会递归解析但 AVPlayer 对这种结构行为不可控）。L2 才是真 TS 片段清单。
-        resolvePlaylist(url) { [weak self] finalUrl in
+        playingWebRid = webRid
+        DYLog.shared.event("LIVEFEED play(KS) webRid=\(webRid) url=\(url.prefix(70))")
+        // makeView 返回 KSPlayerLayer 的 player.view；首次加进 ksContainer 并锚满四边，之后复用同一 view
+        let v = ksCoordinator.makeView(url: u, options: makeKSOptions())
+        if !ksViewAdded {
+            v.backgroundColor = .black
+            v.translatesAutoresizingMaskIntoConstraints = false
+            ksContainer.addSubview(v)
+            NSLayoutConstraint.activate([
+                v.topAnchor.constraint(equalTo: ksContainer.topAnchor),
+                v.bottomAnchor.constraint(equalTo: ksContainer.bottomAnchor),
+                v.leadingAnchor.constraint(equalTo: ksContainer.leadingAnchor),
+                v.trailingAnchor.constraint(equalTo: ksContainer.trailingAnchor),
+            ])
+            ksViewAdded = true
+        }
+    }
+
+    /// v212：KSPlayer 状态回调（替代原 AVPlayer 的 LIVE DIAG）。
+    /// KSPlayer 无 isReadyForDisplay/首帧回调——`.bufferFinished` 是"画面正在渲染"的代理信号。
+    private func setupKSCallbacks() {
+        ksCoordinator.onStateChanged = { [weak self] _, state in
+            DYLog.shared.log("LIVE KS state=\(state.description) webRid=\(self?.playingWebRid ?? "-")")
+        }
+        ksCoordinator.onPlay = { [weak self] current, total in
+            // onPlay 由 KSPlayerLayer 0.1s 定时器驱动（每秒 ~10 次）——节流到每 5s 记一条，否则刷爆日志。
             guard let self else { return }
-            // v208：裸 AVURLAsset——myDV live 路径 OkHttpDataSource 无任何自定义头（agent 实锤
-            // fo5 头表仅 VOD 用，live 走裸 client），实测带头/无头清单一致 → 完全对齐原项目
-            let asset = AVURLAsset(url: URL(string: finalUrl)!)
-            let item = AVPlayerItem(asset: asset)
-            self.sharedPlayer.replaceCurrentItem(with: item)
-            self.playingWebRid = webRid
-            self.sharedPlayer.play()
-            DYLog.shared.event("LIVEFEED play webRid=\(webRid) final=\(finalUrl.prefix(70))")
-            // v211 回退：v210 的 preferredForwardBufferDuration + pollAndSeekBehindLiveEdge 也是回归
-            // 一部分——真机日志 seek-poll 全部 "give up (20 次无 seekableTimeRanges)"（count=0 死代码），
-            // 且配合 autoWaits=false 把播放彻底搞停（t=0.0 冻结）。两者一并移除，回到 v209 播放路径。
-            // v204/v209 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay + 渲染树
-            for delay in [3.0, 8.0] {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                    guard let self, self.playingWebRid == webRid, let item = self.sharedPlayer.currentItem else { return }
-                    // v209 修 rfd 假阴性：playerVC.view 根 layer 不是 AVPlayerLayer（是普通容器），
-                    // 旧代码 `view?.layer as? AVPlayerLayer` 永远 cast 失败 → rfd 恒 0（49 次全 0）。
-                    // 改：递归在 sublayer 树里找真正的 AVPlayerLayer。
-                    let rootLayer = self.playerVC.view?.layer
-                    let layer = rootLayer.flatMap(findPlayerLayer)
-                    let rfd = layer?.isReadyForDisplay ?? false
-                    let ps = item.presentationSize
-                    DYLog.shared.log("LIVE DIAG t=\(delay) status=\(item.status.rawValue) tc=\(self.sharedPlayer.timeControlStatus.rawValue) t=\(String(format: "%.1f", self.sharedPlayer.currentTime().seconds)) ps=\(Int(ps.width))x\(Int(ps.height)) rfd=\(rfd ? 1 : 0) itemErr=\(item.error?.localizedDescription ?? "-")")
-                    // v209：dump 渲染层树 + frame，判定 AVPVC.view 到底有没有尺寸/有没有接上 playerLayer
-                    if let rl = rootLayer {
-                        DYLog.shared.log("LIVE RENDER root frame=\(self.playerVC.view?.frame ?? .zero) sublayers=\(rl.sublayers?.count ?? 0)")
-                        dumpRenderTree(rl, depth: 1)
-                    } else {
-                        DYLog.shared.log("LIVE RENDER root layer nil (playerVC.view 未就绪?)")
-                    }
-                    if let errLog = item.errorLog(), !errLog.events.isEmpty {
-                        for (i, e) in errLog.events.prefix(3).enumerated() {
-                            let uri = (e.uri as String?) ?? "-"
-                            DYLog.shared.log("LIVE DIAG err[\(i)] code=\(e.errorStatusCode) domain=\(e.errorDomain) uri=\(uri.prefix(70)) comment=\((e.errorComment as String?) ?? "-")")
-                        }
-                    } else {
-                        DYLog.shared.log("LIVE DIAG errLog empty")
-                    }
-                    if let accLog = item.accessLog(), !accLog.events.isEmpty {
-                        for (i, e) in accLog.events.suffix(3).enumerated() {
-                            let uri = (e.uri as String?) ?? "-"
-                            DYLog.shared.log("LIVE DIAG acc[\(i)] bytes=\(e.numberOfBytesTransferred) uri=\(uri.prefix(70))")
-                        }
-                    } else {
-                        DYLog.shared.log("LIVE DIAG accLog empty")
-                    }
-                }
-            }
+            let now = Date().timeIntervalSince1970
+            guard now - self.lastKSPlayLogAt >= 5.0 else { return }
+            self.lastKSPlayLogAt = now
+            DYLog.shared.log("LIVE KS onPlay cur=\(String(format: "%.1f", current)) total=\(String(format: "%.1f", total)) webRid=\(self.playingWebRid)")
+        }
+        ksCoordinator.onFinish = { [weak self] _, error in
+            DYLog.shared.log("LIVE KS finish err=\(error?.localizedDescription ?? "-") webRid=\(self?.playingWebRid ?? "-")")
         }
     }
 
-    /// v209：递归在 layer 树里找真正的 AVPlayerLayer（playerVC.view 根 layer 是普通容器，
-    /// 直接 `as? AVPlayerLayer` 永远失败 → 旧 rfd 恒 0 假阴性）。
-    private func findPlayerLayer(_ layer: CALayer) -> AVPlayerLayer? {
-        if let p = layer as? AVPlayerLayer { return p }
-        for sub in layer.sublayers ?? [] {
-            if let found = findPlayerLayer(sub) { return found }
-        }
-        return nil
+    /// v212：直播 KSOptions（KSMEPlayer 走 FFmpeg，认证用 formatContextOptions，直播零自定义头 v208 实锤）。
+    private func makeKSOptions() -> KSOptions {
+        let o = KSOptions()
+        o.isLoopPlay = true   // 直播流断了自动重连
+        // 缓冲 preferredForwardBufferDuration 保持默认 3.0——v210 教训：直播缓冲参数乱动会回归，先不碰。
+        return o
     }
 
-    /// v209：dump 渲染层树（class + frame），真机判定 AVPVC.view 有没有尺寸、AVPlayerLayer 有没有挂上。
-    private func dumpRenderTree(_ layer: CALayer, depth: Int) {
-        guard depth <= 4 else { return }
-        let indent = String(repeating: "  ", count: depth)
-        let cls = String(describing: type(of: layer))
-        let f = layer.frame
-        DYLog.shared.log("LIVE RENDER \(indent)- \(cls) frame=(\(Int(f.origin.x)),\(Int(f.origin.y)),\(Int(f.width)),\(Int(f.height)))")
-        for sub in layer.sublayers ?? [] {
-            dumpRenderTree(sub, depth: depth + 1)
-        }
-    }
-
-    /// v208：剥嵌套清单——L1 媒体清单的"片段行"若是 m3u8（非标准链式结构），改播 L2 URL。
-    /// 平铺 TS 清单（片段行=.ts）原样返回。
-    private func resolvePlaylist(_ url: String, done: @escaping (String) -> Void) {
-        guard let u = URL(string: url) else { done(url); return }
-        URLSession.shared.dataTask(with: u) { data, _, _ in
-            guard let data, let text = String(data: data, encoding: .utf8), text.contains("#EXTM3U") else {
-                DispatchQueue.main.async { done(url) }
-                return
-            }
-            let seg = text.components(separatedBy: "\n")
-                .map { $0.trimmingCharacters(in: .whitespaces) }
-                .first { !$0.isEmpty && !$0.hasPrefix("#") } ?? ""
-            if seg.contains(".m3u8") {
-                let abs = seg.hasPrefix("http") ? seg : (URL(string: seg, relativeTo: u)?.absoluteString ?? seg)
-                DYLog.shared.log("LIVEFEED nested unwrap L1→L2 \(abs.prefix(80))")
-                DispatchQueue.main.async { done(abs) }
-            } else {
-                DispatchQueue.main.async { done(url) }
-            }
-        }.resume()
-    }
 
     /// 直播流 header（照 VOD playbackHeaders web 分支：Referer+UA+ttwid；绝不加 sec-ch-ua，v157 铁律）
     private func liveHeaders() -> [String: String] {

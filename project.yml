@@ -11,6 +11,14 @@ options:
     tvOS: "16.0"
   xcodeVersion: "15.0"
 
+# v212：第一个 SPM 远程依赖 —— 直播播放内核换成 KSPlayer（铁律：只有直播内核能换，VOD/主feed/loading 一律不动）。
+# 用 KSMEPlayer（FFmpeg 软解）绕开 AVPlayer 的 HLS live-edge stall（-16832，v185→v211 十几轮实锤救不了）。
+# 版本 2.3.4 对齐 newbeetv 项目的 Package.resolved。会传递拉进 kingslay/FFmpegKit 6.1.4（大二进制）。
+packages:
+  KSPlayer:
+    url: https://github.com/kingslay/KSPlayer.git
+    exactVersion: 2.3.4
+
 settings:
   base:
     # 公共构建设置：Swift 版本、关闭签名（签名由本地 AltStore/SideStore 完成）
@@ -27,6 +35,9 @@ targets:
     sources:
       - path: App/Sources
       - path: App/Resources
+    # v212：直播播放内核依赖 KSPlayer（FFmpeg 软解 KSMEPlayer）。只直播用，VOD/主feed 不引用。
+    dependencies:
+      - package: KSPlayer
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: tv.dy.client
