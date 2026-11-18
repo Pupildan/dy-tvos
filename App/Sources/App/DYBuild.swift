@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v216"
-    static let changes = "v216: 直播弹幕渲染诊断(采集已确认通-日志采到32条真实聊天@昵称:内容, 但刷一堆房左下角一个都没显示)。数据通→渲染bug, 加临时诊断定位: chatOverlay.append时打 overlayFrame(在superview里的x/y/w/h)+rows行数+hidden+alpha+superview类型, 确认overlay在屏内/frame非0/行数累积/没被遮挡。怀疑方向: overlay自动布局塌缩(底部对齐+height lessThan 0.45,空时stack高0)/z序被挡/frame在屏外。采集链(v215已验证通:WS连接/心跳/gzip/protobuf/WebcastChatMessage解码全好)不动"
+    static let version = "v217"
+    static let changes = "v217: 修直播弹幕渲染塌缩(v216诊断实锤)。v216诊断: chatOverlay.append rows=1 overlayFrame=(24,959,1872,2)/rows=2 (24,954,1872,10)——宽度1872正常/位置底部/没遮挡/alpha=1, 但overlay高度塌缩到2-10px(每行~8px, 正常该~50px)=聊天行被压成一条线肉眼看不见。根因=ChatRow高度靠label内在内容尺寸驱动, 但overlay height<=0.45(只上限无下限)+stack top>=top让布局塌缩到最小, label被压缩。修=ChatRow加显式高度约束52px(52-4padding=48px容fontSize26单行)+label numberOfLines=1。采集链(v215已验证:WS/心跳/gzip/protobuf/WebcastChatMessage解码全好,采到32条真实聊天)不动"
 }

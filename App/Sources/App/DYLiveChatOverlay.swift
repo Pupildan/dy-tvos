@@ -18,7 +18,7 @@ final class DYLiveChatOverlay: UIView {
         let label = UILabel()
         init(width: CGFloat) {
             super.init(frame: .zero)
-            label.numberOfLines = 0
+            label.numberOfLines = 1   // v216 修塌缩：单行 + 显式行高（原 numberOfLines=0 靠 label 内在高度驱动，被 autolayout 压成 ~8px）
             label.font = .systemFont(ofSize: 26, weight: .medium)
             translatesAutoresizingMaskIntoConstraints = false
             addSubview(label)
@@ -27,6 +27,8 @@ final class DYLiveChatOverlay: UIView {
                 label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2),
                 label.leadingAnchor.constraint(equalTo: leadingAnchor),
                 label.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
+                // v216：显式行高——原靠 label 内在内容尺寸驱动高度，被 overlay 的 height<=0.45 + stack top>=top 压塌成 ~8px/行
+                heightAnchor.constraint(equalToConstant: 52),
             ])
         }
         required init?(coder: NSCoder) { fatalError() }
