@@ -98,9 +98,34 @@ final class DYLiveDanmakuSocket: NSObject {
         self.session = session
         let task = session.webSocketTask(with: req)
         self.task = task
-        task.delegate = self
+        // v213：不用 URLSessionWebSocketTaskDelegate（部分 tvOS SDK 下 cannot find type），
+        // 改 receive 循环收消息。resume 后立即发 join 帧(hb)（send 会排队到连接建立），再起心跳 + receive 循环。
         task.resume()
+        sendFrame(payloadType: "hb", logId: 0, payload: Data())   // join 帧（照 jq2）
+        startHeartbeat()
+        startReceiveLoop()
         log("connecting webRid=\(webRid) roomId=\(roomId) sigLen=\(signature.count)")
+    }
+
+    /// v213：receive 循环（替代 delegate）。每次收到消息处理后再次 receive，连接关闭/出错时回调里触发重连。
+    private func startReceiveLoop() {
+        guard let task, !manuallyClosed else { return }
+        task.receive { [weak self] result in
+            guard let self, !self.manuallyClosed else { return }
+            switch result {
+            case .success(let message):
+                switch message {
+                case .data(let data): self.handleBinary(data)
+                case .string(let s): self.log("text msg len=\(s.count)")
+                @unknown default: break
+                }
+                self.startReceiveLoop()   // 继续收下一条
+            case .failure(let error):
+                self.log("receive fail=\(error.localizedDescription)")
+                self.heartbeat?.invalidate(); self.heartbeat = nil
+                self.scheduleReconnect()
+            }
+        }
     }
 
     // MARK: 发送
@@ -144,34 +169,7 @@ final class DYLiveDanmakuSocket: NSObject {
     /// 解流失败（供 KSMEPlayer 重试用）—— 这里只管弹幕，不处理
 }
 
-// MARK: - URLSessionWebSocketTaskDelegate
-extension DYLiveDanmakuSocket: URLSessionWebSocketTaskDelegate {
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        log("OPENED webRid=\(webRid)")
-        reconnectAttempts = 0
-        sendFrame(payloadType: "hb", logId: 0, payload: Data())   // join 帧
-        startHeartbeat()
-    }
-
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didReceive message: URLSessionWebSocketTask.Message) {
-        switch message {
-        case .data(let data):
-            handleBinary(data)
-        case .string(let s):
-            log("text msg (unexpected) len=\(s.count)")
-        @unknown default:
-            break
-        }
-    }
-
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        log("CLOSED code=\(closeCode.rawValue)")
-        heartbeat?.invalidate(); heartbeat = nil
-        scheduleReconnect()
-    }
-}
-
-// MARK: - 私有 helper（重连 + 二进制解码，非 delegate 回调）
+// MARK: - 私有 helper（重连 + 二进制解码）
 extension DYLiveDanmakuSocket {
     private func scheduleReconnect() {
         guard !manuallyClosed, reconnectAttempts < maxReconnect else { return }
