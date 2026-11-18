@@ -117,6 +117,16 @@ final class DYLiveFeedViewController: UIViewController {
     private var resolving = Set<String>()              // webRid → enter 在飞去重
     private var playingWebRid = ""                     // 当前共享 player 正在放的房间
     private var lastKSPlayLogAt = TimeInterval(0)      // v212 onPlay 节流（0.1s 定时器驱动，不节流会刷爆日志）
+    // v213：封面占位（首帧前盖住黑屏，bufferFinished 淡出）
+    private let coverImageView = UIImageView()
+    private var coverLoadToken = 0                     // 防异步封面加载竞态（快速切房时旧加载回写）
+    // v213：底部聊天列表 overlay（抖音样式）+ 弹幕 WS
+    private var chatOverlay: DYLiveChatOverlay!
+    private let danmakuSocket = DYLiveDanmakuSocket()
+    // v213：KSMEPlayer 解流失败重试（avformat can't open input 等）
+    private var currentPlayUrl = ""
+    private var ksRetryUsed = false
+    private var ksFailureHandling = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,6 +146,32 @@ final class DYLiveFeedViewController: UIViewController {
             ksContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             ksContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+        // 1b) 封面占位层（v213：首帧前盖住黑屏，bufferFinished 淡出）——z 序 ksContainer < cover < chat < collection
+        coverImageView.contentMode = .scaleAspectFill
+        coverImageView.clipsToBounds = true
+        coverImageView.backgroundColor = .black
+        coverImageView.isHidden = true
+        coverImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(coverImageView)
+        NSLayoutConstraint.activate([
+            coverImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            coverImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            coverImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            coverImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        // 1c) 弹幕底部聊天列表 overlay（v213 抖音样式，纯展示层，焦点隔离）——z 序在封面上、标题下
+        chatOverlay = DYLiveChatOverlay(containerWidth: UIScreen.main.bounds.width * 0.6)
+        view.addSubview(chatOverlay)
+        NSLayoutConstraint.activate([
+            chatOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            chatOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            chatOverlay.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -120),
+            chatOverlay.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.45),
+        ])
+        // 弹幕 WS 回调：收到聊天 → 喂底部列表
+        danmakuSocket.onChat = { [weak self] msg in
+            self?.chatOverlay.append(nickname: msg.nickname, content: msg.content)
+        }
         // 2) collection view（透明，标题 overlay 浮在视频上）
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -224,9 +260,13 @@ final class DYLiveFeedViewController: UIViewController {
         playRoom(room)
     }
 
-    /// 播房间：resolve HLS（缓存优先）→ 共享 player 换 URL（AVPlayerViewController 渲染）→ play
+    /// 播房间：显示封面占位 + 连弹幕 WS → resolve HLS（缓存优先）→ KSPlayer 换 URL 播
     private func playRoom(_ room: DYLiveRoom) {
         if playingWebRid == room.webRid { return }   // 已在放同一房间
+        // v213：新房间 → 重置解流失败重试 + 显示封面占位 + 连弹幕 WS
+        ksRetryUsed = false
+        showCover(for: room)
+        connectDanmaku(room: room)
         if let hls = hlsCache[room.webRid] {
             play(url: hls, webRid: room.webRid)
             return
@@ -257,11 +297,42 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
+    /// v213：显示房间封面占位（异步加载，带 token 防快速切房竞态）
+    private func showCover(for room: DYLiveRoom) {
+        coverLoadToken += 1
+        let token = coverLoadToken
+        // 先清掉旧封面（显示黑屏），等新封面加载好再显示
+        DispatchQueue.main.async { [weak self] in
+            guard let self, token == self.coverLoadToken else { return }
+            self.coverImageView.image = nil
+            self.coverImageView.isHidden = true
+        }
+        guard !room.coverUrl.isEmpty, let url = URL(string: room.coverUrl) else { return }
+        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
+            guard let data, let img = UIImage(data: data) else { return }
+            DispatchQueue.main.async {
+                guard let self, token == self.coverLoadToken else { return }
+                self.coverImageView.image = img
+                self.coverImageView.isHidden = false
+                DYLog.shared.log("LIVE cover shown webRid=\(room.webRid)")
+            }
+        }.resume()
+    }
+
+    /// v213：连直播弹幕 WS（roomId 从 enter 解析；userId/cookie 用匿名 ttwid，探针已验证）
+    private func connectDanmaku(room: DYLiveRoom) {
+        chatOverlay.clear()
+        let ttwid = DYDanmakuClient.shared.ttwidValue
+        danmakuSocket.connect(room: room, ttwid: ttwid)
+    }
+
     /// KSPlayer 换流播房（v212）。makeView 幂等：同 URL 返回已有 view，URL 变了内部走 playerLayer.set(url:) 换流。
     /// 不再剥嵌套清单——KSMEPlayer 用 FFmpeg 自己的 HLS demuxer，不吃 AVPlayer 那套嵌套限制。
     private func play(url: String, webRid: String) {
         guard playingWebRid != webRid, let u = URL(string: url) else { return }
         playingWebRid = webRid
+        currentPlayUrl = url
+        ksFailureHandling = false   // 每次播放尝试重置失败处理闩（重试/新流都算新尝试）
         DYLog.shared.event("LIVEFEED play(KS) webRid=\(webRid) url=\(url.prefix(70))")
         // makeView 返回 KSPlayerLayer 的 player.view；首次加进 ksContainer 并锚满四边，之后复用同一 view
         let v = ksCoordinator.makeView(url: u, options: makeKSOptions())
@@ -279,11 +350,26 @@ final class DYLiveFeedViewController: UIViewController {
         }
     }
 
-    /// v212：KSPlayer 状态回调（替代原 AVPlayer 的 LIVE DIAG）。
-    /// KSPlayer 无 isReadyForDisplay/首帧回调——`.bufferFinished` 是"画面正在渲染"的代理信号。
+    /// v212/v213：KSPlayer 状态回调。`.bufferFinished`=画面渲染中（淡出封面）；`.error`=解流失败（重试再跳房）。
     private func setupKSCallbacks() {
         ksCoordinator.onStateChanged = { [weak self] _, state in
             DYLog.shared.log("LIVE KS state=\(state.description) webRid=\(self?.playingWebRid ?? "-")")
+            guard let self else { return }
+            switch state {
+            case .bufferFinished:
+                // v213：首帧已渲染 → 淡出封面占位（封面 → 直播画面过渡）
+                if !self.coverImageView.isHidden {
+                    UIView.animate(withDuration: 0.35, animations: { self.coverImageView.alpha = 0 }) { _ in
+                        self.coverImageView.isHidden = true
+                        self.coverImageView.alpha = 1   // 复位 alpha 供下次切房
+                    }
+                }
+            case .error:
+                // v213：解流失败（avformat can't open input 等）→ 重试 1 次再跳下一房
+                self.handleKSFailure()
+            default:
+                break
+            }
         }
         ksCoordinator.onPlay = { [weak self] current, total in
             // onPlay 由 KSPlayerLayer 0.1s 定时器驱动（每秒 ~10 次）——节流到每 5s 记一条，否则刷爆日志。
@@ -295,6 +381,22 @@ final class DYLiveFeedViewController: UIViewController {
         }
         ksCoordinator.onFinish = { [weak self] _, error in
             DYLog.shared.log("LIVE KS finish err=\(error?.localizedDescription ?? "-") webRid=\(self?.playingWebRid ?? "-")")
+        }
+    }
+
+    /// v213：KSMEPlayer 解流失败处理（重试 1 次同 URL，仍失败 advance 跳下一房）。
+    private func handleKSFailure() {
+        guard !ksFailureHandling else { return }   // 防重入（error + finish 可能连发）
+        ksFailureHandling = true
+        if !ksRetryUsed {
+            ksRetryUsed = true
+            let url = currentPlayUrl; let rid = playingWebRid
+            DYLog.shared.log("LIVE KS retry once webRid=\(rid) url=\(url.prefix(60))")
+            playingWebRid = ""        // 清掉让 play() 的去重 guard 放行
+            if let u = URL(string: url) { play(url: url, webRid: rid) }
+        } else {
+            DYLog.shared.log("LIVE KS retry exhausted, advance webRid=\(playingWebRid)")
+            advance()
         }
     }
 
@@ -340,6 +442,11 @@ final class DYLiveFeedViewController: UIViewController {
             }
         }
         super.pressesBegan(presses, with: event)
+    }
+
+    deinit {
+        // v213：退出直播屏断开弹幕 WS + 停心跳（防泄漏/后台空转）
+        danmakuSocket.disconnect()
     }
 }
 

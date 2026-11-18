@@ -153,4 +153,25 @@ final class DYSigner {
             .replacingOccurrences(of: "\r", with: "\\r")
         return "'\(escaped)'"
     }
+
+    /// v213：直播弹幕 WS 签名 —— 调 sign.js 的 getMSSDKSignature(msStub, ua)（同已加载的 JSContext）。
+    /// msStub = MD5(逗号连接的 k=v 串)，由调用方（DYLiveDanmakuSocket）算好传入。串行队列内执行。
+    func msSign(stub: String, ua: String) -> String? {
+        var result: String?
+        queue.sync {
+            guard ready, let ctx = context, let fn = ctx.objectForKeyedSubscript("getMSSDKSignature") else {
+                DYLog.shared.log("SIGNER msSign not-ready")
+                result = nil
+                return
+            }
+            ctx.evaluateScript("if (typeof navigator !== 'undefined') { navigator.userAgent = \(jsString(ua)); }")
+            guard let out = fn.call(withArguments: [stub, ua])?.toString(), !out.isEmpty, out != "undefined" else {
+                DYLog.shared.log("SIGNER msSign fail (empty)")
+                result = nil
+                return
+            }
+            result = out
+        }
+        return result
+    }
 }
