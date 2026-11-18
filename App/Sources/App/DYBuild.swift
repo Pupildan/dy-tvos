@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v215"
-    static let changes = "v215: 直播弹幕采集诊断(铁律:先采到数据才真机验证渲染)。v214真机: OPENED(join sent)成功但11s内服务端0消息→连接被heartbeatDuration=10超时关闭(receive not connected)。两处采集诊断+心跳修复: ①心跳改DispatchQueue递归(原Timer在send完成回调后台线程创建+RunLoop.main.add跨线程可能不触发→服务端超时关连接), 加hb sent日志确认心跳真发出 ②打完整wss url(跟探针live_danmaku_probe.js逐参对比) ③handleBinary打收到的每条message method+chat内容(确认服务端推没推/推了什么)。目标=日志看到采到弹幕数据, 渲染验证往后放"
+    static let version = "v216"
+    static let changes = "v216: 直播弹幕渲染诊断(采集已确认通-日志采到32条真实聊天@昵称:内容, 但刷一堆房左下角一个都没显示)。数据通→渲染bug, 加临时诊断定位: chatOverlay.append时打 overlayFrame(在superview里的x/y/w/h)+rows行数+hidden+alpha+superview类型, 确认overlay在屏内/frame非0/行数累积/没被遮挡。怀疑方向: overlay自动布局塌缩(底部对齐+height lessThan 0.45,空时stack高0)/z序被挡/frame在屏外。采集链(v215已验证通:WS连接/心跳/gzip/protobuf/WebcastChatMessage解码全好)不动"
 }

@@ -84,6 +84,9 @@ final class DYLiveChatOverlay: UIView {
         row.configure(nickname: nickname, content: content)
         stack.addArrangedSubview(row)
         row.layoutIfNeeded()
+        // v216 临时诊断：确认 overlay 在屏内、frame 非 0、行数在累积（定位"采到数据但不显示"）
+        layoutIfNeeded()
+        DYLog.shared.log("LIVE CHAT append rows=\(stack.arrangedSubviews.count) overlayFrame=(\(Int(frame.origin.x)),\(Int(frame.origin.y)),\(Int(frame.width)),\(Int(frame.height))) hidden=\(isHidden) alpha=\(alpha) superview=\(superview.map { String(describing: type(of: $0)) } ?? "nil")")
         // 淡入 + 轻微上移（抖音直播新消息浮现）
         row.alpha = 0
         row.transform = CGAffineTransform(translationX: 0, y: 12)
