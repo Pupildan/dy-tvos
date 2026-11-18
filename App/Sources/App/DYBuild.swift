@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v217"
-    static let changes = "v217: 修直播弹幕渲染塌缩(v216诊断实锤)。v216诊断: chatOverlay.append rows=1 overlayFrame=(24,959,1872,2)/rows=2 (24,954,1872,10)——宽度1872正常/位置底部/没遮挡/alpha=1, 但overlay高度塌缩到2-10px(每行~8px, 正常该~50px)=聊天行被压成一条线肉眼看不见。根因=ChatRow高度靠label内在内容尺寸驱动, 但overlay height<=0.45(只上限无下限)+stack top>=top让布局塌缩到最小, label被压缩。修=ChatRow加显式高度约束52px(52-4padding=48px容fontSize26单行)+label numberOfLines=1。采集链(v215已验证:WS/心跳/gzip/protobuf/WebcastChatMessage解码全好,采到32条真实聊天)不动"
+    static let version = "v218"
+    static let changes = "v218: 直播弹幕不显示-彻底重写chatOverlay为frame布局(一次性排除所有不显示可能)。v217仅改行高52px仍不显示, 用户要求一次性排除所有可能。系统排查6类可能(overlay高度autolayout塌缩/行高塌缩/z序遮挡/frame屏外/hidden-alpha/连接掉线清空), 根因=overlay用autolayout(height<=0.45只上限+stack top>=top)允许塌缩到2-10px。彻底重写DYLiveChatOverlay为frame布局: 去掉UIStackView+autolayout, chatRows数组+layoutSubviews按底部向上定位每行(固定52px行高+6px间距), overlay本身固定frame(左下角x24/宽屏0.6/高344/底距屏底140), 尺寸位置完全确定消灭autolayout塌缩整类问题。加append诊断(打每行frame+overlay frame+n+hidden+superview)。采集链(v215验证通)不动, 铁律只动直播"
 }

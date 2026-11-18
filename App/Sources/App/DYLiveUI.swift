@@ -182,15 +182,16 @@ final class DYLiveFeedViewController: UIViewController {
             coverFgImageView.leadingAnchor.constraint(equalTo: coverView.leadingAnchor),
             coverFgImageView.trailingAnchor.constraint(equalTo: coverView.trailingAnchor),
         ])
-        // 1c) 弹幕底部聊天列表 overlay（v213 抖音样式，纯展示层，焦点隔离）——z 序在封面上、标题下
-        chatOverlay = DYLiveChatOverlay(containerWidth: UIScreen.main.bounds.width * 0.6)
+        // 1c) 弹幕底部聊天列表 overlay（v217 frame 布局，固定尺寸/位置，彻底消灭 autolayout 塌缩）
+        //     固定左下角：x=24，宽=屏宽*0.6，高=344（6 行*52 + 5*6 间距），底边距屏底 140。z 序在封面上、标题下。
+        let chatW = UIScreen.main.bounds.width * 0.6
+        let chatH: CGFloat = 344
+        chatOverlay = DYLiveChatOverlay(frame: CGRect(
+            x: 24,
+            y: UIScreen.main.bounds.height - 140 - chatH,
+            width: chatW,
+            height: chatH))
         view.addSubview(chatOverlay)
-        NSLayoutConstraint.activate([
-            chatOverlay.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            chatOverlay.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            chatOverlay.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -120),
-            chatOverlay.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, multiplier: 0.45),
-        ])
         // 弹幕 WS 回调：收到聊天 → 喂底部列表
         danmakuSocket.onChat = { [weak self] msg in
             self?.chatOverlay.append(nickname: msg.nickname, content: msg.content)
