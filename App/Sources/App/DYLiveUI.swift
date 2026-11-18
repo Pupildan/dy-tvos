@@ -119,6 +119,12 @@ final class DYLiveFeedViewController: UIViewController {
         // 1) 视频渲染层（控制器级 AVPlayerViewController，v189 出画面方案）——加在 collection view 下面
         playerVC.showsPlaybackControls = false
         playerVC.videoGravity = .resizeAspect
+        // ⚠️ v210 修 -16832 直播追边 stall（真根因，v209 渲染树+ffprobe 实锤：清单/编码/渲染全好，
+        // 唯独 AVPlayer 卡在直播边缘 stall 不解首帧）。automaticallyWaitsToMinimizeStalling 默认 true
+        // 会让 AVPlayer 起播前等缓冲、又追不上直播边缘 → 反复重启。关掉它=立刻起播（直播标准修法）。
+        sharedPlayer.automaticallyWaitsToMinimizeStalling = false
+        // 保留缓冲一点余量（避免 seek 到边缘后方后又立刻追边 stall）
+        sharedPlayer.preferredForwardBufferDuration = 4.0
         // ⚠️ v207 黑屏真凶修复：playerVC.player 从 v193 创建以来从未赋值！渲染层没有 player
         // → isReadyForDisplay 永远 0、全屏黑（sharedPlayer 照常出声所以"有声无画面"）。
         // 一行修复：把共享 player 接到渲染层。
@@ -271,24 +277,13 @@ final class DYLiveFeedViewController: UIViewController {
             self.playingWebRid = webRid
             self.sharedPlayer.play()
             DYLog.shared.event("LIVEFEED play webRid=\(webRid) final=\(finalUrl.prefix(70))")
-            // v209 修 -16832 stall danger：单 player replaceCurrentItem 默认从直播边缘开播，
-            // 等 item ready 那几秒直播已往前走 → AVPlayer 卡在清单末端反复重启 → ps=0x0 不解出视频。
-            // 修法：item 一 ready 就从边缘往回 seek（避开正在写的最后一段 + 目标时长 2 段的余量）。
+            // v210 修 -16832 直播追边 stall（真根因）。v209 的 status-KVO seek-back 一次没触发——
+            // 因为 .readyToPlay 那一刻 seekableTimeRanges 还没填充（count=0 实锤）。改用轮询：
+            // 起播后每隔 0.5s 查 seekableTimeRanges，一旦有值就 seek 到「边缘后方 ~2 段」的稳定点，
+            // 避开正在写的最后一段（清单 target=5s → 退 10s），让 AVPlayer 有缓冲可解首帧。
             self.statusObservation?.invalidate()
-            self.statusObservation = item.observe(\.status, options: [.new]) { [weak self] it, _ in
-                guard let self, self.playingWebRid == webRid, it.status == .readyToPlay else { return }
-                self.statusObservation?.invalidate()
-                self.statusObservation = nil
-                // 取可 seek 区间末端（直播边缘），往回退 ~2 个 target duration（清单 target=4s → 退 8s）
-                if let range = it.seekableTimeRanges.last?.timeRangeValue {
-                    let edge = CMTimeGetSeconds(range.start) + CMTimeGetSeconds(range.duration)
-                    let target = max(CMTimeGetSeconds(range.start), edge - 8.0)
-                    if target.isFinite, target > 0 {
-                        DYLog.shared.log("LIVEFEED seek-back edge=\(String(format: "%.2f", edge)) -> \(String(format: "%.2f", target)) (修 -16832 stall)")
-                        self.sharedPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600))
-                    }
-                }
-            }
+            self.statusObservation = nil
+            pollAndSeekBehindLiveEdge(webRid: webRid, attempts: 0)
             // v204/v209 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay + 渲染树
             for delay in [3.0, 8.0] {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
@@ -326,6 +321,30 @@ final class DYLiveFeedViewController: UIViewController {
                     }
                 }
             }
+        }
+    }
+
+    /// v210：轮询等 seekableTimeRanges 填充，然后 seek 到直播边缘后方 ~2 段的稳定点（修 -16832 追边 stall）。
+    /// .readyToPlay 那刻 ranges 通常还是空，所以不能用 status-KVO——必须轮询。
+    private func pollAndSeekBehindLiveEdge(webRid: String, attempts: Int) {
+        guard attempts < 20 else {
+            DYLog.shared.log("LIVEFEED seek-poll give up (20 次无 seekableTimeRanges)")
+            return
+        }
+        guard playingWebRid == webRid, let item = sharedPlayer.currentItem else { return }
+        if let range = item.seekableTimeRanges.last?.timeRangeValue,
+           CMTimeGetSeconds(range.duration) > 0 {
+            let start = CMTimeGetSeconds(range.start)
+            let edge = start + CMTimeGetSeconds(range.duration)
+            let target = max(start, edge - 10.0)   // 退 2 段（target duration 5s）
+            if target.isFinite, target > 0 {
+                DYLog.shared.log("LIVEFEED seek-behind edge=\(String(format: "%.2f", edge)) -> \(String(format: "%.2f", target)) (修 -16832, attempts=\(attempts))")
+                sharedPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600))
+                return
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.pollAndSeekBehindLiveEdge(webRid: webRid, attempts: attempts + 1)
         }
     }
 
