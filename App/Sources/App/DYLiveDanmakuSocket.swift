@@ -15,7 +15,7 @@ final class DYLiveDanmakuSocket: NSObject {
 
     private var task: URLSessionWebSocketTask?
     private var session: URLSession?
-    private var heartbeat: Timer?
+    private var heartbeat: DispatchWorkItem?
     private var webRid = ""
     private var roomId = ""
     private var userId = ""          // 匿名用 ttwid
@@ -146,7 +146,7 @@ final class DYLiveDanmakuSocket: NSObject {
                 self.startReceiveLoop()   // 继续收下一条
             case .failure(let error):
                 self.log("receive fail=\(error.localizedDescription)")
-                self.heartbeat?.invalidate(); self.heartbeat = nil
+                self.heartbeat?.cancel(); self.heartbeat = nil
                 self.scheduleReconnect()
             }
         }
@@ -161,7 +161,7 @@ final class DYLiveDanmakuSocket: NSObject {
     }
 
     private func startHeartbeat() {
-        heartbeat?.invalidate()
+        heartbeat?.cancel()
         // v215：改 DispatchQueue 递归心跳（原 Timer 在 send 完成回调的后台线程创建 + RunLoop.main.add，
         // 跨线程调度可能不触发 → 服务端 heartbeatDuration=10 超时关闭连接=receive "not connected"）。
         // 加 hb 发送日志确认心跳真发出去了。
@@ -195,7 +195,7 @@ final class DYLiveDanmakuSocket: NSObject {
     // MARK: 断开
     func disconnect() {
         manuallyClosed = true
-        heartbeat?.invalidate(); heartbeat = nil
+        heartbeat?.cancel(); heartbeat = nil
         task?.cancel(with: .normalClosure, reason: nil)
         task = nil
         session?.invalidateAndCancel()
