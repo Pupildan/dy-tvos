@@ -111,7 +111,6 @@ final class DYLiveFeedViewController: UIViewController {
     private var hlsCache: [String: String] = [:]       // webRid → 已 resolve 的 HLS URL
     private var resolving = Set<String>()              // webRid → enter 在飞去重
     private var playingWebRid = ""                     // 当前共享 player 正在放的房间
-    private var statusObservation: NSKeyValueObservation?  // v209 item status 观察者（回退 seek 用）
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,8 +122,6 @@ final class DYLiveFeedViewController: UIViewController {
         // 唯独 AVPlayer 卡在直播边缘 stall 不解首帧）。automaticallyWaitsToMinimizeStalling 默认 true
         // 会让 AVPlayer 起播前等缓冲、又追不上直播边缘 → 反复重启。关掉它=立刻起播（直播标准修法）。
         sharedPlayer.automaticallyWaitsToMinimizeStalling = false
-        // 保留缓冲一点余量（避免 seek 到边缘后方后又立刻追边 stall）
-        sharedPlayer.preferredForwardBufferDuration = 4.0
         // ⚠️ v207 黑屏真凶修复：playerVC.player 从 v193 创建以来从未赋值！渲染层没有 player
         // → isReadyForDisplay 永远 0、全屏黑（sharedPlayer 照常出声所以"有声无画面"）。
         // 一行修复：把共享 player 接到渲染层。
@@ -273,6 +270,8 @@ final class DYLiveFeedViewController: UIViewController {
             // fo5 头表仅 VOD 用，live 走裸 client），实测带头/无头清单一致 → 完全对齐原项目
             let asset = AVURLAsset(url: URL(string: finalUrl)!)
             let item = AVPlayerItem(asset: asset)
+            // v210：item 级缓冲余量（避免 seek 到边缘后方后又立刻追边 stall）。preferredForwardBufferDuration 是 AVPlayerItem 属性。
+            item.preferredForwardBufferDuration = 4.0
             self.sharedPlayer.replaceCurrentItem(with: item)
             self.playingWebRid = webRid
             self.sharedPlayer.play()
@@ -281,8 +280,6 @@ final class DYLiveFeedViewController: UIViewController {
             // 因为 .readyToPlay 那一刻 seekableTimeRanges 还没填充（count=0 实锤）。改用轮询：
             // 起播后每隔 0.5s 查 seekableTimeRanges，一旦有值就 seek 到「边缘后方 ~2 段」的稳定点，
             // 避开正在写的最后一段（清单 target=5s → 退 10s），让 AVPlayer 有缓冲可解首帧。
-            self.statusObservation?.invalidate()
-            self.statusObservation = nil
             pollAndSeekBehindLiveEdge(webRid: webRid, attempts: 0)
             // v204/v209 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay + 渲染树
             for delay in [3.0, 8.0] {
@@ -425,10 +422,6 @@ final class DYLiveFeedViewController: UIViewController {
             }
         }
         super.pressesBegan(presses, with: event)
-    }
-
-    deinit {
-        statusObservation?.invalidate()
     }
 }
 
