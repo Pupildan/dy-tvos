@@ -23,6 +23,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # 缓存加速（FFmpegKit 大依赖 + 全量重编是 10-15min 瓶颈 → 缓存后常规改动降到 ~5min）
+      # 层1：SPM 依赖下载缓存（FFmpegKit/KSPlayer 二进制），key 绑 project.yml（仅 KSPlayer 升版才失效）
+      - name: Cache SPM packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/org.swift.swiftpm
+            build/SourcePackages
+          key: dytv-spm-${{ hashFiles('project.yml') }}
+          restore-keys: |
+            dytv-spm-
+      # 层2：DerivedData 编译中间产物缓存（key 绑 commit sha；restore-keys 前缀恢复最近一次 → 增量编译只重编改动文件）
+      - name: Cache DerivedData build intermediates
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/Build
+            build/Index
+          key: dytv-build-${{ github.sha }}
+          restore-keys: |
+            dytv-build-
+
       # 项目结构由 project.yml 唯一驱动，CI 上现场生成 .xcodeproj，避免二进制 pbxproj 漂移
       - name: Generate Xcode project (XcodeGen)
         run: |
