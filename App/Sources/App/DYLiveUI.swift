@@ -118,10 +118,9 @@ final class DYLiveFeedViewController: UIViewController {
         // 1) 视频渲染层（控制器级 AVPlayerViewController，v189 出画面方案）——加在 collection view 下面
         playerVC.showsPlaybackControls = false
         playerVC.videoGravity = .resizeAspect
-        // ⚠️ v210 修 -16832 直播追边 stall（真根因，v209 渲染树+ffprobe 实锤：清单/编码/渲染全好，
-        // 唯独 AVPlayer 卡在直播边缘 stall 不解首帧）。automaticallyWaitsToMinimizeStalling 默认 true
-        // 会让 AVPlayer 起播前等缓冲、又追不上直播边缘 → 反复重启。关掉它=立刻起播（直播标准修法）。
-        sharedPlayer.automaticallyWaitsToMinimizeStalling = false
+        // ⚠️ v211 回退：v210 的 automaticallyWaitsToMinimizeStalling=false 是回归——真机日志实锤
+        // 把唯一还在工作的"声音"也弄没了（t=0.0 时间冻结/status=0 Unknown/无声音）。
+        // 默认 true 才对：AVPlayer 等够缓冲再走（v209 有声音）。此属性保持系统默认，勿再动。
         // ⚠️ v207 黑屏真凶修复：playerVC.player 从 v193 创建以来从未赋值！渲染层没有 player
         // → isReadyForDisplay 永远 0、全屏黑（sharedPlayer 照常出声所以"有声无画面"）。
         // 一行修复：把共享 player 接到渲染层。
@@ -270,17 +269,13 @@ final class DYLiveFeedViewController: UIViewController {
             // fo5 头表仅 VOD 用，live 走裸 client），实测带头/无头清单一致 → 完全对齐原项目
             let asset = AVURLAsset(url: URL(string: finalUrl)!)
             let item = AVPlayerItem(asset: asset)
-            // v210：item 级缓冲余量（避免 seek 到边缘后方后又立刻追边 stall）。preferredForwardBufferDuration 是 AVPlayerItem 属性。
-            item.preferredForwardBufferDuration = 4.0
             self.sharedPlayer.replaceCurrentItem(with: item)
             self.playingWebRid = webRid
             self.sharedPlayer.play()
             DYLog.shared.event("LIVEFEED play webRid=\(webRid) final=\(finalUrl.prefix(70))")
-            // v210 修 -16832 直播追边 stall（真根因）。v209 的 status-KVO seek-back 一次没触发——
-            // 因为 .readyToPlay 那一刻 seekableTimeRanges 还没填充（count=0 实锤）。改用轮询：
-            // 起播后每隔 0.5s 查 seekableTimeRanges，一旦有值就 seek 到「边缘后方 ~2 段」的稳定点，
-            // 避开正在写的最后一段（清单 target=5s → 退 10s），让 AVPlayer 有缓冲可解首帧。
-            pollAndSeekBehindLiveEdge(webRid: webRid, attempts: 0)
+            // v211 回退：v210 的 preferredForwardBufferDuration + pollAndSeekBehindLiveEdge 也是回归
+            // 一部分——真机日志 seek-poll 全部 "give up (20 次无 seekableTimeRanges)"（count=0 死代码），
+            // 且配合 autoWaits=false 把播放彻底搞停（t=0.0 冻结）。两者一并移除，回到 v209 播放路径。
             // v204/v209 设备端诊断：errorLog/accessLog/presentationSize/isReadyForDisplay + 渲染树
             for delay in [3.0, 8.0] {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
@@ -318,30 +313,6 @@ final class DYLiveFeedViewController: UIViewController {
                     }
                 }
             }
-        }
-    }
-
-    /// v210：轮询等 seekableTimeRanges 填充，然后 seek 到直播边缘后方 ~2 段的稳定点（修 -16832 追边 stall）。
-    /// .readyToPlay 那刻 ranges 通常还是空，所以不能用 status-KVO——必须轮询。
-    private func pollAndSeekBehindLiveEdge(webRid: String, attempts: Int) {
-        guard attempts < 20 else {
-            DYLog.shared.log("LIVEFEED seek-poll give up (20 次无 seekableTimeRanges)")
-            return
-        }
-        guard playingWebRid == webRid, let item = sharedPlayer.currentItem else { return }
-        if let range = item.seekableTimeRanges.last?.timeRangeValue,
-           CMTimeGetSeconds(range.duration) > 0 {
-            let start = CMTimeGetSeconds(range.start)
-            let edge = start + CMTimeGetSeconds(range.duration)
-            let target = max(start, edge - 10.0)   // 退 2 段（target duration 5s）
-            if target.isFinite, target > 0 {
-                DYLog.shared.log("LIVEFEED seek-behind edge=\(String(format: "%.2f", edge)) -> \(String(format: "%.2f", target)) (修 -16832, attempts=\(attempts))")
-                sharedPlayer.seek(to: CMTime(seconds: target, preferredTimescale: 600))
-                return
-            }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.pollAndSeekBehindLiveEdge(webRid: webRid, attempts: attempts + 1)
         }
     }
 
