@@ -4,7 +4,7 @@
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
 > **当前版本 v208**。稳定回退点：**v122**（git checkout 三文件）。
-> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194）**；**直播黑屏（有声无画面）⭐v209 终极判定=ffprobe 啃本地真实 TS 段**：视频轨完好（H.264 High@L4.0 1080x1920+AAC）、清单标准平铺 TS 非嵌套、渲染树 AVPlayerLayer 满屏挂载——全环节都好，**真根因=AVPlayer 卡 -16832 直播追边 stall 不解首帧**（前十几轮全在渲染/编码/清单错的层打转）；⚠️**v210 暴力修法是回归**（automaticallyWaitsToMinimizeStalling=false 把唯一的声音也搞没 t=0.0 冻结；pollAndSeek 死代码 count=0），**v211 已回退到 v209 播放路径**（保留 findPlayerLayer 递归真 rfd + dumpRenderTree 渲染树诊断），**待真机终验 v211（应恢复 v209 有声音）**；**app 图标 v195-v203 修复（v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
+> 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；**直播第一版全通（v183-v194）**；**直播黑屏（有声无画面）v185→v211 十几轮实锤：AVPlayer 这内核对抖音直播 HLS 卡 -16832 追边 stall 永解不出首帧**（ffprobe 啃本地 TS 证实流/编码/清单/渲染层全好，唯独 AVPlayer 这内核的 live-edge 逻辑救不了；v210 暴力修法回归已 v211 回退）；⭐**v212 换播放内核 AVPlayer→KSPlayer(KSMEPlayer/FFmpeg 软解)**（铁律：只有直播内核能换，VOD/主feed/loading 一律不动）——加第一个 SPM 依赖 KSPlayer 2.3.4（传递拉 FFmpegKit 6.1.4，ipa 13.8MB→26.4MB），DYLiveUI 删 AVPlayer 全套改用 `KSVideoPlayer.Coordinator.makeView(url:options:)` 换流，`KSOptions.firstPlayerType=KSMEPlayer.self` 锁 FFmpeg（落回 KSAVPlayer=换汤不换药），`.bufferFinished`=画面渲染中代理信号（KSPlayer 无 isReadyForDisplay/首帧回调）；**CI success，待真机终验 v212（KSMEPlayer 能否解抖音 live HLS 出画面）**；**app 图标 v195-v203 修复（v203 真机出图标）**；启动加载视频过渡已实装（v195）。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
 
 ---
 
