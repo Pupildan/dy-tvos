@@ -205,22 +205,16 @@ enum KSGzip {
     private static func rawInflate(_ src: Data) -> Data? {
         guard !src.isEmpty else { return Data() }
         let srcBytes = [UInt8](src)
-        var dst = [UInt8](repeating: 0, count: max(srcBytes.count * 4, 4096))
-        var decoded = 0
-        let status = dst.withUnsafeMutableBytes { dstPtr -> compression_status in
-            srcBytes.withUnsafeBytes { srcPtr -> compression_status in
-                let srcPtrBase = srcPtr.bindMemory(to: UInt8.self).baseAddress!
-                let dstPtrBase = dstPtr.bindMemory(to: UInt8.self).baseAddress!
-                return compression_decode_buffer(
-                    dstPtrBase, dst.count,
-                    srcPtrBase, src.count,
-                    nil,
-                    COMPRESSION_ZLIB
-                )
+        let dstCapacity = max(srcBytes.count * 4, 4096)
+        var dst = Data(count: dstCapacity)
+        let decoded = dst.withUnsafeMutableBytes { (dstPtr: UnsafeMutableRawBufferPointer) -> Int in
+            srcBytes.withUnsafeBytes { (srcPtr: UnsafeRawBufferPointer) -> Int in
+                let d = dstPtr.bindMemory(to: UInt8.self).baseAddress!
+                let s = srcPtr.assumingMemoryBound(to: UInt8.self).baseAddress!
+                return Int(compression_decode_buffer(d, dstCapacity, s, srcBytes.count, nil, COMPRESSION_ZLIB))
             }
         }
-        guard status > 0 else { return nil }
-        decoded = status
-        return Data(dst.prefix(decoded))
+        guard decoded > 0 else { return nil }
+        return dst.prefix(decoded)
     }
 }

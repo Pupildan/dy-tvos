@@ -169,11 +169,10 @@ extension DYLiveDanmakuSocket: URLSessionWebSocketTaskDelegate {
         heartbeat?.invalidate(); heartbeat = nil
         scheduleReconnect()
     }
+}
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let error { log("didComplete err=\(error.localizedDescription)") }
-    }
-
+// MARK: - 私有 helper（重连 + 二进制解码，非 delegate 回调）
+extension DYLiveDanmakuSocket {
     private func scheduleReconnect() {
         guard !manuallyClosed, reconnectAttempts < maxReconnect else { return }
         reconnectAttempts += 1
