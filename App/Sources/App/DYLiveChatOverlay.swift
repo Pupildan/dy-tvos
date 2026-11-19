@@ -28,27 +28,65 @@ final class DYLiveChatOverlay: UIView {
         }
         required init?(coder: NSCoder) { fatalError() }
 
-        func configure(nickname: String, content: String) {
-            // @昵称 高亮（抖音直播浅色）+ 内容白字，均带阴影（照 DanmakuKit 文字样式）
-            let nick = nickname.isEmpty ? "" : "@\(nickname)"
+        func configure(nickname: String, content: String, emojiImages: [String: UIImage]) {
+            // v219：去掉 @ 符号（用户要求）。昵称高亮 + 内容白字 + 内联表情图片，均带阴影。
+            let nick = nickname
             let attr = NSMutableAttributedString()
             if !nick.isEmpty {
                 attr.append(NSAttributedString(string: nick, attributes: [
                     .font: UIFont.systemFont(ofSize: 26, weight: .bold),
                     .foregroundColor: UIColor.white.withAlphaComponent(0.85),
                 ]))
-                attr.append(NSAttributedString(string: " ", attributes: [.font: UIFont.systemFont(ofSize: 26)]))
+                attr.append(NSAttributedString(string: "：", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.85)]))
             }
-            attr.append(NSAttributedString(string: content, attributes: [
-                .font: UIFont.systemFont(ofSize: 26, weight: .medium),
-                .foregroundColor: UIColor.white,
-            ]))
+            // v219：内容里的 [表情] shortcode 渲染成内联图片（表情包），文字正常排
+            attr.append(emojiAttributedContent(content, emojiImages: emojiImages))
             // 阴影（照 DanmakuKit 文字阴影，保证在亮画面上可读）
             label.layer.shadowColor = UIColor.black.cgColor
             label.layer.shadowOpacity = 1
             label.layer.shadowRadius = 2
             label.layer.shadowOffset = CGSize(width: 1, height: 1)
             label.attributedText = attr
+        }
+
+        /// v219：把 content 里的 [表情] shortcode 替换成内联表情图片（NSTextAttachment），文字原样保留。
+        private func emojiAttributedContent(_ content: String, emojiImages: [String: UIImage]) -> NSAttributedString {
+            let out = NSMutableAttributedString()
+            // 按 [xxx] 切分：正则抓所有 [..] 段，段间是普通文字
+            let regex = try? NSRegularExpression(pattern: "\\[([^\\[\\]]+)\\]")
+            let ns = content as NSString
+            var cursor = 0
+            let matches = regex?.matches(in: content, range: NSRange(location: 0, length: ns.length)) ?? []
+            for m in matches {
+                if m.range.location > cursor {
+                    out.append(NSAttributedString(string: ns.substring(with: NSRange(location: cursor, length: m.range.location - cursor)), attributes: textAttrs))
+                }
+                let shortcode = ns.substring(with: m.range)             // 含方括号，如 [捂脸]
+                if let img = emojiImages[shortcode] {
+                    out.append(imageAttachment(img))
+                } else {
+                    out.append(NSAttributedString(string: shortcode, attributes: textAttrs))   // 无映射→原样文本
+                }
+                cursor = m.range.location + m.range.length
+            }
+            if cursor < ns.length {
+                out.append(NSAttributedString(string: ns.substring(from: cursor), attributes: textAttrs))
+            }
+            if out.length == 0 { out.append(NSAttributedString(string: content, attributes: textAttrs)) }
+            return out
+        }
+
+        private var textAttrs: [NSAttributedString.Key: Any] {
+            [.font: UIFont.systemFont(ofSize: 26, weight: .medium), .foregroundColor: UIColor.white]
+        }
+
+        /// 表情图片转 NSTextAttachment（按文字行高缩放）
+        private func imageAttachment(_ img: UIImage) -> NSAttributedString {
+            let att = NSTextAttachment()
+            let side: CGFloat = 34
+            att.image = img
+            att.bounds = CGRect(x: 0, y: -4, width: side, height: side)
+            return NSAttributedString(attachment: att)
         }
     }
 
@@ -59,11 +97,11 @@ final class DYLiveChatOverlay: UIView {
     }
     required init?(coder: NSCoder) { fatalError() }
 
-    /// 追加一条聊天（主队列）。frame 布局：加入数组 → layoutSubviews 按底部向上定位。超 maxRows 移除最旧。
-    func append(nickname: String, content: String) {
+    /// 追加一条聊天（主队列）。emojiImages=shortcode→图片（表情包内联渲染）。frame 布局：加入数组 → layoutSubviews 按底部向上定位。
+    func append(nickname: String, content: String, emojiImages: [String: UIImage]) {
         guard !content.isEmpty else { return }
         let row = ChatRow()
-        row.configure(nickname: nickname, content: content)
+        row.configure(nickname: nickname, content: content, emojiImages: emojiImages)
         addSubview(row)
         chatRows.append(row)
         // 超出上限移除最旧

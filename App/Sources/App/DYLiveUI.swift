@@ -58,6 +58,8 @@ final class LivePlayerCell: UICollectionViewCell {
         contentView.addSubview(descLabel)
         isUserInteractionEnabled = false   // 照 VOD cell：排除出焦点/触摸，滑动不被干扰
     }
+    /// v219：视频显示区域（VC 算好传入）——标题定位到视频区左下角
+    var videoRect: CGRect = .zero
     required init?(coder: NSCoder) { fatalError() }
     override var canBecomeFocused: Bool { false }
     private static let textShadow: NSShadow = {
@@ -69,12 +71,14 @@ final class LivePlayerCell: UICollectionViewCell {
     }()
     override func layoutSubviews() {
         super.layoutSubviews()
-        let b = contentView.bounds
-        let infoLeft: CGFloat = 24
-        let infoBottom: CGFloat = 44
-        let infoW = b.width - infoLeft * 2
-        descLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 62, width: infoW, height: 62)
-        nicknameLabel.frame = CGRect(x: infoLeft, y: b.height - infoBottom - 62 - 4 - 40, width: infoW, height: 40)
+        // v219：标题定位到视频区左下角（竖屏视频居中留黑边时，标题落在视频内而非黑边）
+        // videoRect 由 VC 算好传进来；为空/异常时回退到 cell bounds（旧行为）。
+        let vr = videoRect.isEmpty ? contentView.bounds : videoRect
+        let infoLeft: CGFloat = vr.minX + 24
+        let infoBottom: CGFloat = (contentView.bounds.height - vr.maxY) + 44
+        let infoW = vr.width - 48
+        descLabel.frame = CGRect(x: infoLeft, y: contentView.bounds.height - infoBottom - 62, width: infoW, height: 62)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: contentView.bounds.height - infoBottom - 62 - 4 - 40, width: infoW, height: 40)
     }
 
     /// 填标题/观看数（照 VOD applyInfo 同行排版：@主播 · X观看 / 标题）
@@ -129,6 +133,10 @@ final class DYLiveFeedViewController: UIViewController {
     private var currentPlayUrl = ""
     private var ksRetryUsed = false
     private var ksFailureHandling = false
+    // v219：视频显示区域（aspectFit 后视频实际占的 rect，竖屏居中窄条/横屏满宽）——弹幕+标题按它定位
+    private var videoRect: CGRect = .zero
+    // v219：表情包图片（shortcode 含方括号 → UIImage），开直播屏时预加载
+    private var emojiImages: [String: UIImage] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,9 +200,16 @@ final class DYLiveFeedViewController: UIViewController {
             width: chatW,
             height: chatH))
         view.addSubview(chatOverlay)
-        // 弹幕 WS 回调：收到聊天 → 喂底部列表
+        // 弹幕 WS 回调：收到聊天 → 喂底部列表（带表情包图片内联渲染）
         danmakuSocket.onChat = { [weak self] msg in
-            self?.chatOverlay.append(nickname: msg.nickname, content: msg.content)
+            guard let self else { return }
+            self.chatOverlay.append(nickname: msg.nickname, content: msg.content, emojiImages: self.emojiImages)
+        }
+        // v219：预加载表情包图片（[捂脸]→图片，供弹幕内联渲染）
+        let ttwid = DYDanmakuClient.shared.ttwidValue
+        DYLiveEmojiClient.shared.loadAll(ttwid: ttwid) { [weak self] images in
+            self?.emojiImages = images
+            DYLog.shared.log("LIVE emoji loaded count=\(images.count)")
         }
         // 2) collection view（透明，标题 overlay 浮在视频上）
         let layout = UICollectionViewFlowLayout()
@@ -397,7 +412,8 @@ final class DYLiveFeedViewController: UIViewController {
             guard let self else { return }
             switch state {
             case .bufferFinished:
-                // v213：首帧已渲染 → 淡出封面占位（封面 → 直播画面过渡）
+                // v219：首帧已渲染 → 重算视频显示区域（naturalSize 此时已知）+ 淡出封面占位
+                self.updateVideoRect()
                 if !self.coverView.isHidden {
                     UIView.animate(withDuration: 0.35, animations: { self.coverView.alpha = 0 }) { _ in
                         self.coverView.isHidden = true
@@ -422,6 +438,33 @@ final class DYLiveFeedViewController: UIViewController {
         ksCoordinator.onFinish = { [weak self] _, error in
             DYLog.shared.log("LIVE KS finish err=\(error?.localizedDescription ?? "-") webRid=\(self?.playingWebRid ?? "-")")
         }
+    }
+
+    /// v219：计算视频显示区域（aspectFit 后视频实际占的 rect）——弹幕/标题按它定位，竖屏居中窄条/横屏满宽自动适配。
+    /// naturalSize 从 KSPlayer 取（ KSMEPlayer.naturalSize）；ksContainer 满屏，视频 aspectFit 居中留黑边。
+    private func updateVideoRect() {
+        let container = ksContainer.bounds
+        guard container.width > 0, container.height > 0 else { return }
+        let ns = ksCoordinator.playerLayer?.player.naturalSize ?? .zero
+        guard ns.width > 0, ns.height > 0 else { return }
+        let rect = AVMakeRect(aspectRatio: ns, insideRect: container)
+        // 只在变化时更新（避免重复 relayout）
+        guard abs(rect.minX - videoRect.minX) > 0.5 || abs(rect.width - videoRect.width) > 0.5 || videoRect.isEmpty else { return }
+        videoRect = rect
+        DYLog.shared.log("LIVE videoRect ns=\(Int(ns.width))x\(Int(ns.height)) rect=(\(Int(rect.minX)),\(Int(rect.minY)),\(Int(rect.width)),\(Int(rect.height)))")
+        // 弹幕 overlay 移到视频区左下角
+        positionChatOverlay()
+        // 标题层（collectionView 的 cell）也要按 videoRect 重排 → 触发 cell layoutSubviews
+        collectionView?.setNeedsLayout()
+    }
+
+    /// v219：把弹幕 overlay 定位到视频区左下角（frame 布局）
+    private func positionChatOverlay() {
+        guard !videoRect.isEmpty else { return }
+        let w = videoRect.width - 48
+        let h: CGFloat = 344
+        chatOverlay.frame = CGRect(x: videoRect.minX + 24, y: videoRect.maxY - 44 - h, width: w, height: h)
+        chatOverlay.setNeedsLayout()
     }
 
     /// v213：KSMEPlayer 解流失败处理（重试 1 次同 URL，仍失败 advance 跳下一房）。
@@ -501,6 +544,7 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
         if rooms.indices.contains(idx) {
             let room = rooms[idx]
             let viewerText = room.userCount.isEmpty ? "" : "\(room.userCount)观看"
+            cell.videoRect = videoRect
             cell.configure(room: room, viewerText: viewerText)
         }
         return cell
@@ -522,6 +566,8 @@ extension DYLiveFeedViewController: UICollectionViewDataSource, UICollectionView
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        // v219：布局变化（旋转/初次布局）时重算视频显示区域 → 弹幕/标题跟随
+        updateVideoRect()
         if !didInitialScroll, !DYLiveClient.shared.rooms.isEmpty, collectionView.bounds.height > 0 {
             didInitialScroll = true
             let idx = min(currentIndex, DYLiveClient.shared.rooms.count - 1)
