@@ -92,6 +92,15 @@ struct RootView: View {
             started = true
             DanmakuOverlay.globalEnabled = settings.danmakuOn
             DYLog.shared.log("ROOT auto-start \(DYBuild.version)")
+            // v225 加载屏超时兜底：首帧 15s 没来也放行（v223 真机实锤卡死——TikTok 源被持久化后
+            // 每次冷启动泵截不到视频→引擎空→firstFrameReady 永不来→加载视频永不退场）。
+            // 宁可露出短暂黑屏/空列表，绝不无限卡加载。
+            DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+                if showLaunchVideo {
+                    withAnimation(.easeInOut(duration: 0.6)) { showLaunchVideo = false }
+                    DYLog.shared.event("ROOT launch video TIMEOUT dismiss (15s, first frame never ready)")
+                }
+            }
         }
         // v195：主 feed 首帧 ready → 交叉淡化掉启动加载视频（不突兀，露出底下 NativePlayerView）
         .onChange(of: engine.firstFrameReady) { ready in
