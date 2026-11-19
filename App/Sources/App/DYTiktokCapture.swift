@@ -188,6 +188,13 @@ final class DYTiktokCapture: NSObject {
                     self.evalJS(Self.scrollJS, tag: "rehook-scroll") { _ in }
                 }
             }
+            // v229：自举滚动泵——真机实锤设备上从没发生滚动（requestMore 被"引擎非空才滚"门挡住、
+            // 补装 scrollJS 只滚一轮），TikTok 预载池耗尽前页面不发 recommend → total 恒 0 黑屏。
+            // 开发机已实测纯 scrollJS（无键盘）3 轮即触发 2 次 recommend + 截获 12 条。
+            // hooked 且没截到货时每 5 tick 滚一轮；截到第一批后停（后续翻页走 engine needMore→requestMore）。
+            if hooked, self.totalCap == 0, self.pollCount % 5 == 0 {
+                self.evalJS(Self.scrollJS, tag: "scrollpump\(self.pollCount)") { _ in }
+            }
             let cap = diag["cap"] as? [[String: Any]] ?? []
             guard !cap.isEmpty else { return }
             var items: [TiktokItem] = []
