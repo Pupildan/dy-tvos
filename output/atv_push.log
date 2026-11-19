@@ -2534,3 +2534,884 @@
 03:41:27  [03:41:27] DMSYNC t=632s due=0 marked=1048 items=1060 stall=11
 03:41:31  [03:41:31] DMSYNC t=636s due=0 marked=1055 items=1060 stall=0
 03:41:35  [03:41:35] DMSYNC t=640s due=0 marked=1059 items=1060 stall=0
+04:03:34  [04:03:34] SETTINGS panel open (menu #1)
+04:03:34  [04:03:34] SETTINGS panel exit-app (menu #2)
+04:08:48  [04:08:48] DYTV v232 launched
+04:08:48  [04:08:48] SIGNER init start
+04:08:48  [04:08:48] SIGNER load shim ok
+04:08:48  [04:08:48] SIGNER load abogus ok
+04:08:48  [04:08:48] LOGSRV ready on port 8765
+04:08:48  [04:08:48] LOGSRV advertising as DYTV-538
+04:08:48  [04:08:48] SIGNER load sign ok
+04:08:48  [04:08:48] SIGNER load abogus_dy ok
+04:08:48  [04:08:48] SIGNER extras sign=true dy=true
+04:08:48  [04:08:48] SIGNER bdms=yes
+04:08:48  [04:08:48] SIGNER initABogus=true
+04:08:48  [04:08:48] SIGNER fns=AB (期望 AB)
+04:08:48  [04:08:48] SIGNER smoke={"ok":true,"value":"xfWh/mzvdi6phV6D512LfY3qVW33YsWA0SVkMDhezVfPGy39HMOW9exERN4vBbueF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+04:08:48  [04:08:48] SIGNER READY a_bogus len=180
+04:08:49  [04:08:49] FEEDCOLL viewDidLoad
+04:08:49  [04:08:49] LAUNCH loading video play (muted loop)
+04:08:49  [04:08:49] ROOT auto-start v232
+04:08:49  [04:08:49] LOGSRV Bonjour published: DYTV-538
+04:08:49  [04:08:49] FEED native pipeline armed (source=web)
+04:08:49  [04:08:49] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+04:08:51  [04:08:50] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+04:08:51  [04:08:50] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+04:08:51  [04:08:50] ENGINE needMore (index=0 count=2)
+04:08:51  [04:08:51] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+04:08:51  [04:08:51] MGR url idx=0 src=static age=0s
+04:08:51  [04:08:51] MGR acquire idx=0 total=1
+04:08:51  [04:08:51] MGR cold-start defer neighbors=[1]
+04:08:51  [04:08:51] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+04:08:52  [04:08:52] DMLOAD id=7704563815450447142 dur=491847
+04:08:52  [04:08:52] MGR ready idx=0
+04:08:52  [04:08:52] MGR url idx=1 src=static age=1s
+04:08:52  [04:08:52] DANM get id=7704563815450447142 [0-20s] ttwid=127
+04:08:52  [04:08:52] MGR acquire idx=1 total=2
+04:08:52  [04:08:52] MGR cold-start neighbors acquired=[1]
+04:08:52  [04:08:52] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+04:08:52  [04:08:52] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+04:08:52  [04:08:52] DANM get id=7704563815450447142 [20-40s] ttwid=127
+04:08:52  [04:08:52] DANM get id=7704563815450447142 [40-60s] ttwid=127
+04:08:53  [04:08:52] DANM get id=7704563815450447142 [60-80s] ttwid=127
+04:08:53  [04:08:53] MGR ready idx=1
+04:08:53  [04:08:53] MGR first frame ready (launch overlay dismiss)
+04:08:53  [04:08:53] ROOT launch video fade out (first frame ready)
+04:08:53  [04:08:53] DANM get id=7704563815450447142 [80-100s] ttwid=127
+04:08:53  [04:08:53] DANM get id=7704563815450447142 [100-120s] ttwid=127
+04:08:53  [04:08:53] DANM get id=7704563815450447142 [120-140s] ttwid=127
+04:08:54  [04:08:54] DANM get id=7704563815450447142 [140-160s] ttwid=127
+04:08:54  [04:08:54] DANM get id=7704563815450447142 [160-180s] ttwid=127
+04:08:54  [04:08:54] DANM get id=7704563815450447142 [180-200s] ttwid=127
+04:08:55  [04:08:55] DANM get id=7704563815450447142 [200-220s] ttwid=127
+04:08:55  [04:08:55] DANM get id=7704563815450447142 [220-240s] ttwid=127
+04:08:55  [04:08:55] DANM get id=7704563815450447142 [240-260s] ttwid=127
+04:08:55  [04:08:55] DANM get id=7704563815450447142 [260-280s] ttwid=127
+04:08:56  [04:08:56] DMSYNC t=3s due=0 marked=0 items=13 stall=16
+04:08:56  [04:08:56] DANM get id=7704563815450447142 [280-300s] ttwid=127
+04:08:56  [04:08:56] DANM get id=7704563815450447142 [300-320s] ttwid=127
+04:08:56  [04:08:56] DANM get id=7704563815450447142 [320-340s] ttwid=127
+04:08:57  [04:08:57] DANM get id=7704563815450447142 [340-360s] ttwid=127
+04:08:57  [04:08:57] DANM get id=7704563815450447142 [360-380s] ttwid=127
+04:08:57  [04:08:57] DANM get id=7704563815450447142 [380-400s] ttwid=127
+04:08:57  [04:08:57] SETTINGS panel open (menu #1)
+04:08:58  [04:08:57] DANM get id=7704563815450447142 [400-420s] ttwid=127
+04:08:58  [04:08:58] DANM get id=7704563815450447142 [420-440s] ttwid=127
+04:08:58  [04:08:58] DANM get id=7704563815450447142 [440-460s] ttwid=127
+04:08:58  [04:08:58] DANM get id=7704563815450447142 [460-480s] ttwid=127
+04:08:59  [04:08:59] DANM get id=7704563815450447142 [480-491s] ttwid=127
+04:08:59  [04:08:59] DANM all-segments done id=7704563815450447142 total=14 retry=0
+04:08:59  [04:08:59] DMLOAD done id=7704563815450447142 total=14
+04:09:00  [04:09:00] DMSYNC t=7s due=0 marked=2 items=14 stall=7
+04:09:00  [04:09:00] FEED source switch web -> tiktok
+04:09:00  [04:09:00] FEEDPOOL pauseAll (live open)
+04:09:00  [04:09:00] ENGINE reset (source switch)
+04:09:00  [04:09:00] TIKTOK boot → tiktok.com/foryou (invisible pump webview)
+04:09:00  [04:09:00] FEEDCOLL reset view (source switch)
+04:09:03  [04:09:03] TIKTOK cookie harvest n=28 len=2633
+04:09:05  [04:09:05] TIKTOK hooked=false → evaluateJavaScript 补装 hook (v226 fallback)
+04:09:07  [04:09:07] TIKTOK page-api https://mcs-sg.tiktokv.com/v1/list
+04:09:11  [04:09:11] TIKTOK other-json https://mcs-sg.tiktokv.com/v1/list keys=["e","sc","tc"]
+04:09:12  [04:09:11] TIKTOK page-api https://mssdk-sg.tiktok.com/web/report
+04:09:12  [04:09:11] TIKTOK page-api https://mon-sg.tiktokv.com/monitor_browser/collect/batch/?biz_id=tiktok_webapp_mobile
+04:09:12  [04:09:11] TIKTOK page-api https://www.tiktok.com/tiktok/pns/privacy_headers?aid=1180
+04:09:13  [04:09:13] TIKTOK page-api https://mon.tiktokv.com/monitor_browser/collect/batch/?biz_id=webmssdk
+04:09:15  [04:09:15] TIKTOK page-api https://mon.tiktokv.com/monitor_browser/collect/batch/?bid=tiktok_pns_web_runtime
+04:09:15  [04:09:15] TIKTOK scroll-diag p=15 {"found":1,"wy":120,"wy2":1080,"bt":888,"bt2":888,"bsh":1776,"bch":888}
+04:09:15  [04:09:15] TIKTOK proxy-fetch fire cursor=0 → fired cursor=0 tpl=captured
+04:09:16  [04:09:16] TIKTOK page-api https://www.tiktok.com/api/recommend/item_list/?aid=1988&count=12&cursor=0
+04:09:17  [04:09:17] FEEDCOLL scrollTo SKIP idx=1 (not laid out / no data)
+04:09:18  [04:09:18] TIKTOK raw-item-schema {"AIGCDescription":"","CategoryType":120,"IsHDBitrate":false,"ShowAIGC":false,"adAuthorization":true,"anchors":[{"description":"CapCut · Video Editor","extraInfo":{"subtype":""},"icon":{"urlList":["https://p16-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.image?dr=14566&x-expires=1795140000&x-signature=t95MWWDmaUi7vZS31LikH3H84XQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my","https://p19-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.image?dr=14566&x-expires=1795140000&x-signature=HBqoju69OUvo9vX3I0MWjjQHLRE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my","https://p16-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.jpeg?dr=14566&x-expires=1795140000&x-signature=9wKTO46YoYOgfqwNp3nYwy859rk%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my"]},"id":"0","keyword":"CapCut · Try this template","logExtra":"{\"anchor_id\":0,\"anchor_name\":\"CapCut · Try this template\",\"anchor_name_type\":\"template_0\",\"anchor_title_detail\":\"None\",\"anchor_type\":\"TT_CAPCUT\",\"anchor_type_level1\":\"template\",\"anchor_type_level2\":\"template_video\",\"capabi
+04:09:18  [04:09:18] TIKTOK drain[p18] got=9 total=9 hooked=true
+04:09:18  [04:09:18] TIKTOK merge ids=9 first=7701696668852292871
+04:09:18  [04:09:18] ENGINE merge total=9 index=0 replace=false auto=true redirect=0
+04:09:18  [04:09:18] MGR url idx=2 src=static age=0s
+04:09:18  [04:09:18] MGR acquire idx=2 total=3
+04:09:18  [04:09:18] FEEDCOLL scrollTo idx=0 y=0.0 items=9
+04:09:18  [04:09:18] DMLOAD id=7701696668852292871 dur=17
+04:09:18  [04:09:18] DANM get id=7701696668852292871 [0-0s] ttwid=127
+04:09:18  [04:09:18] DANM all-segments done id=7701696668852292871 total=0 retry=0
+04:09:18  [04:09:18] DMLOAD done id=7701696668852292871 total=0
+04:09:19  [04:09:19] MGR ready idx=2
+04:09:20  [04:09:20] TIKTOK status p=20 hooked=true rs=complete href=https://www.tiktok.com/foryou total=9
+04:09:20  [04:09:20] TIKTOK cookie harvest n=28 len=2661
+04:09:30  [04:09:30] TIKTOK status p=30 hooked=true rs=complete href=https://www.tiktok.com/foryou total=9
+04:09:30  [04:09:30] TIKTOK page-shape p=30 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:09:33  [04:09:33] ENGINE next -> index=1
+04:09:34  [04:09:33] MGR url idx=3 src=static age=15s
+04:09:34  [04:09:33] MGR acquire idx=3 total=4
+04:09:34  [04:09:33] FEEDCOLL scrollTo idx=1 y=1080.0 items=9
+04:09:34  [04:09:34] FEEDCOLL scrollTo idx=1 y=1080.0 items=9
+04:09:34  [04:09:34] DMLOAD id=7696437338980781326 dur=411
+04:09:34  [04:09:34] MGR ready idx=3
+04:09:34  [04:09:34] DANM get id=7696437338980781326 [0-0s] ttwid=127
+04:09:34  [04:09:34] DANM all-segments done id=7696437338980781326 total=0 retry=0
+04:09:34  [04:09:34] DMLOAD done id=7696437338980781326 total=0
+04:09:36  [04:09:36] ENGINE next -> index=2
+04:09:36  [04:09:36] ENGINE needMore (index=2 count=9)
+04:09:36  [04:09:36] MGR url idx=4 src=static age=17s
+04:09:36  [04:09:36] MGR acquire idx=4 total=5
+04:09:36  [04:09:36] FEEDCOLL scrollTo idx=2 y=2160.0 items=9
+04:09:36  [04:09:36] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:09:36  [04:09:36] DMLOAD id=7692474314968337685 dur=7
+04:09:36  [04:09:36] MGR ready idx=4
+04:09:36  [04:09:36] DANM get id=7692474314968337685 [0-0s] ttwid=127
+04:09:37  [04:09:37] DANM all-segments done id=7692474314968337685 total=0 retry=0
+04:09:37  [04:09:37] DMLOAD done id=7692474314968337685 total=0
+04:09:39  [04:09:39] TIKTOK drain[p39] got=8 total=17 hooked=true
+04:09:39  [04:09:39] TIKTOK merge ids=8 first=7678463282339990797
+04:09:39  [04:09:39] ENGINE merge total=17 index=2 replace=false auto=false redirect=0
+04:09:40  [04:09:40] TIKTOK status p=40 hooked=true rs=complete href=https://www.tiktok.com/foryou total=17
+04:09:40  [04:09:40] TIKTOK cookie harvest n=28 len=2661
+04:09:49  [04:09:49] ENGINE next -> index=3
+04:09:49  [04:09:49] MGR evict idx=0
+04:09:49  [04:09:49] MGR url idx=5 src=static age=30s
+04:09:49  [04:09:49] MGR acquire idx=5 total=5
+04:09:49  [04:09:49] FEEDCOLL scrollTo idx=3 y=3240.0 items=17
+04:09:49  [04:09:49] DMLOAD id=7708632521327627540 dur=38
+04:09:49  [04:09:49] MGR ready idx=5
+04:09:49  [04:09:49] DANM get id=7708632521327627540 [0-0s] ttwid=127
+04:09:49  [04:09:49] DANM all-segments done id=7708632521327627540 total=0 retry=0
+04:09:49  [04:09:49] DMLOAD done id=7708632521327627540 total=0
+04:09:50  [04:09:50] TIKTOK status p=50 hooked=true rs=complete href=https://www.tiktok.com/foryou total=17
+04:09:54  [04:09:54] ENGINE next -> index=4
+04:09:54  [04:09:54] MGR evict idx=1
+04:09:54  [04:09:54] MGR url idx=6 src=static age=36s
+04:09:54  [04:09:54] MGR acquire idx=6 total=5
+04:09:54  [04:09:54] FEEDCOLL scrollTo idx=4 y=4320.0 items=17
+04:09:55  [04:09:54] DMLOAD id=7686923587030174998 dur=17
+04:09:55  [04:09:54] MGR ready idx=6
+04:09:55  [04:09:55] DANM get id=7686923587030174998 [0-0s] ttwid=127
+04:09:55  [04:09:55] DANM all-segments done id=7686923587030174998 total=0 retry=0
+04:09:55  [04:09:55] DMLOAD done id=7686923587030174998 total=0
+04:10:00  [04:10:00] TIKTOK status p=60 hooked=true rs=complete href=https://www.tiktok.com/foryou total=17
+04:10:00  [04:10:00] TIKTOK page-shape p=60 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:10:00  [04:10:00] TIKTOK cookie harvest n=28 len=2661
+04:10:02  [04:10:02] ENGINE next -> index=5
+04:10:02  [04:10:02] MGR evict idx=2
+04:10:02  [04:10:02] MGR url idx=7 src=static age=44s
+04:10:02  [04:10:02] MGR acquire idx=7 total=5
+04:10:02  [04:10:02] FEEDCOLL scrollTo idx=5 y=5400.0 items=17
+04:10:03  [04:10:03] DMLOAD id=7703791678636805398 dur=7
+04:10:03  [04:10:03] DANM get id=7703791678636805398 [0-0s] ttwid=127
+04:10:03  [04:10:03] MGR ready idx=7
+04:10:03  [04:10:03] DANM all-segments done id=7703791678636805398 total=0 retry=0
+04:10:03  [04:10:03] DMLOAD done id=7703791678636805398 total=0
+04:10:07  [04:10:07] ENGINE next -> index=6
+04:10:07  [04:10:07] MGR evict idx=3
+04:10:07  [04:10:07] MGR url idx=8 src=static age=49s
+04:10:07  [04:10:07] MGR acquire idx=8 total=5
+04:10:07  [04:10:07] FEEDCOLL scrollTo idx=6 y=6480.0 items=17
+04:10:07  [04:10:07] DMLOAD id=7705862241333103894 dur=15
+04:10:07  [04:10:07] MGR ready idx=8
+04:10:07  [04:10:07] DANM get id=7705862241333103894 [0-0s] ttwid=127
+04:10:08  [04:10:08] DANM all-segments done id=7705862241333103894 total=0 retry=0
+04:10:08  [04:10:08] DMLOAD done id=7705862241333103894 total=0
+04:10:10  [04:10:10] TIKTOK status p=70 hooked=true rs=complete href=https://www.tiktok.com/foryou total=17
+04:10:13  [04:10:13] ENGINE next -> index=7
+04:10:13  [04:10:13] MGR evict idx=4
+04:10:13  [04:10:13] MGR url idx=9 src=static age=34s
+04:10:13  [04:10:13] MGR acquire idx=9 total=5
+04:10:13  [04:10:13] FEEDCOLL scrollTo idx=7 y=7560.0 items=17
+04:10:14  [04:10:14] DMLOAD id=7701023718675369222 dur=23
+04:10:14  [04:10:14] DANM get id=7701023718675369222 [0-0s] ttwid=127
+04:10:14  [04:10:14] MGR ready idx=9
+04:10:14  [04:10:14] DANM all-segments done id=7701023718675369222 total=0 retry=0
+04:10:14  [04:10:14] DMLOAD done id=7701023718675369222 total=0
+04:10:17  [04:10:17] ENGINE next -> index=8
+04:10:17  [04:10:17] MGR evict idx=5
+04:10:17  [04:10:17] MGR url idx=10 src=static age=38s
+04:10:17  [04:10:17] MGR acquire idx=10 total=5
+04:10:17  [04:10:17] FEEDCOLL scrollTo idx=8 y=8640.0 items=17
+04:10:18  [04:10:18] DMLOAD id=7682134636750834964 dur=16
+04:10:18  [04:10:18] DANM get id=7682134636750834964 [0-0s] ttwid=127
+04:10:18  [04:10:18] MGR ready idx=10
+04:10:18  [04:10:18] DANM all-segments done id=7682134636750834964 total=0 retry=0
+04:10:18  [04:10:18] DMLOAD done id=7682134636750834964 total=0
+04:10:20  [04:10:20] ENGINE next -> index=9
+04:10:20  [04:10:20] MGR evict idx=6
+04:10:20  [04:10:20] MGR url idx=11 src=static age=40s
+04:10:20  [04:10:20] MGR acquire idx=11 total=5
+04:10:20  [04:10:20] FEEDCOLL scrollTo idx=9 y=9720.0 items=17
+04:10:20  [04:10:20] TIKTOK status p=80 hooked=true rs=complete href=https://www.tiktok.com/foryou total=17
+04:10:20  [04:10:20] TIKTOK cookie harvest n=28 len=2661
+04:10:20  [04:10:20] DMLOAD id=7678463282339990797 dur=74
+04:10:20  [04:10:20] DANM get id=7678463282339990797 [0-0s] ttwid=127
+04:10:21  [04:10:20] DANM all-segments done id=7678463282339990797 total=0 retry=0
+04:10:21  [04:10:20] DMLOAD done id=7678463282339990797 total=0
+04:10:21  [04:10:21] MGR ready idx=11
+04:10:26  [04:10:25] ENGINE next -> index=10
+04:10:26  [04:10:25] ENGINE needMore (index=10 count=17)
+04:10:26  [04:10:26] MGR evict idx=7
+04:10:26  [04:10:26] MGR url idx=12 src=static age=46s
+04:10:26  [04:10:26] MGR acquire idx=12 total=5
+04:10:26  [04:10:26] FEEDCOLL scrollTo idx=10 y=10800.0 items=17
+04:10:26  [04:10:26] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:10:26  [04:10:26] DMLOAD id=7708384118500871444 dur=114
+04:10:26  [04:10:26] DANM get id=7708384118500871444 [0-0s] ttwid=127
+04:10:26  [04:10:26] DANM all-segments done id=7708384118500871444 total=0 retry=0
+04:10:26  [04:10:26] DMLOAD done id=7708384118500871444 total=0
+04:10:26  [04:10:26] MGR ready idx=12
+04:10:28  [04:10:28] TIKTOK drain[p88] got=2 total=19 hooked=true
+04:10:28  [04:10:28] TIKTOK merge ids=2 first=7701698174334848278
+04:10:28  [04:10:28] ENGINE merge total=19 index=10 replace=false auto=false redirect=0
+04:10:30  [04:10:30] TIKTOK status p=90 hooked=true rs=complete href=https://www.tiktok.com/foryou total=19
+04:10:30  [04:10:30] TIKTOK page-shape p=90 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:10:30  [04:10:30] ENGINE next -> index=11
+04:10:30  [04:10:30] MGR evict idx=8
+04:10:30  [04:10:30] MGR url idx=13 src=static age=51s
+04:10:30  [04:10:30] MGR acquire idx=13 total=5
+04:10:30  [04:10:30] FEEDCOLL scrollTo idx=11 y=11880.0 items=19
+04:10:31  [04:10:31] DMLOAD id=7700275922322148622 dur=317
+04:10:31  [04:10:31] MGR ready idx=13
+04:10:31  [04:10:31] DANM get id=7700275922322148622 [0-0s] ttwid=127
+04:10:31  [04:10:31] DANM all-segments done id=7700275922322148622 total=0 retry=0
+04:10:31  [04:10:31] DMLOAD done id=7700275922322148622 total=0
+04:10:36  [04:10:36] ENGINE next -> index=12
+04:10:36  [04:10:36] ENGINE needMore (index=12 count=19)
+04:10:36  [04:10:36] MGR evict idx=9
+04:10:36  [04:10:36] MGR url idx=14 src=static age=57s
+04:10:36  [04:10:36] MGR acquire idx=14 total=5
+04:10:36  [04:10:36] FEEDCOLL scrollTo idx=12 y=12960.0 items=19
+04:10:36  [04:10:36] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:10:36  [04:10:36] DMLOAD id=7705898223470152991 dur=5
+04:10:37  [04:10:36] MGR ready idx=14
+04:10:37  [04:10:36] DANM get id=7705898223470152991 [0-0s] ttwid=127
+04:10:37  [04:10:37] DANM all-segments done id=7705898223470152991 total=0 retry=0
+04:10:37  [04:10:37] DMLOAD done id=7705898223470152991 total=0
+04:10:40  [04:10:40] TIKTOK status p=100 hooked=true rs=complete href=https://www.tiktok.com/foryou total=19
+04:10:40  [04:10:40] TIKTOK cookie harvest n=28 len=2661
+04:10:47  [04:10:47] ENGINE needMore (index=12 count=19)
+04:10:47  [04:10:47] ENGINE next -> index=13
+04:10:47  [04:10:47] MGR evict idx=10
+04:10:47  [04:10:47] MGR url idx=15 src=static age=68s
+04:10:47  [04:10:47] MGR acquire idx=15 total=5
+04:10:47  [04:10:47] FEEDCOLL scrollTo idx=13 y=14040.0 items=19
+04:10:47  [04:10:47] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:10:47  [04:10:47] DMLOAD id=7679501880652877086 dur=46
+04:10:47  [04:10:47] MGR ready idx=15
+04:10:47  [04:10:47] DANM get id=7679501880652877086 [0-0s] ttwid=127
+04:10:48  [04:10:48] DANM all-segments done id=7679501880652877086 total=0 retry=0
+04:10:48  [04:10:48] DMLOAD done id=7679501880652877086 total=0
+04:10:50  [04:10:50] TIKTOK status p=110 hooked=true rs=complete href=https://www.tiktok.com/foryou total=19
+04:10:50  [04:10:50] TIKTOK drain[p110] got=2 total=21 hooked=true
+04:10:50  [04:10:50] TIKTOK merge ids=2 first=7708747510818278664
+04:10:50  [04:10:50] ENGINE merge total=21 index=13 replace=false auto=false redirect=0
+04:10:52  [04:10:52] ENGINE prev -> index=12
+04:10:52  [04:10:52] MGR evict idx=15
+04:10:52  [04:10:52] MGR url idx=10 src=static age=72s
+04:10:52  [04:10:52] MGR acquire idx=10 total=5
+04:10:52  [04:10:52] FEEDCOLL scrollTo idx=12 y=12960.0 items=21
+04:10:52  [04:10:52] MGR ready idx=10
+04:10:52  [04:10:52] ENGINE prev -> index=11
+04:10:53  [04:10:52] MGR evict idx=14
+04:10:53  [04:10:52] MGR url idx=9 src=static age=73s
+04:10:53  [04:10:52] MGR acquire idx=9 total=5
+04:10:53  [04:10:52] FEEDCOLL scrollTo idx=11 y=11880.0 items=21
+04:10:53  [04:10:53] MGR ready idx=9
+04:10:54  [04:10:54] ENGINE next -> index=12
+04:10:55  [04:10:54] MGR evict idx=9
+04:10:55  [04:10:54] MGR url idx=14 src=static age=75s
+04:10:55  [04:10:54] MGR acquire idx=14 total=5
+04:10:55  [04:10:54] FEEDCOLL scrollTo idx=12 y=12960.0 items=21
+04:10:55  [04:10:55] MGR ready idx=14
+04:10:59  [04:10:59] QUICK panel open (ok) mix=0
+04:11:00  [04:11:00] TIKTOK status p=120 hooked=true rs=complete href=https://www.tiktok.com/foryou total=21
+04:11:00  [04:11:00] TIKTOK page-shape p=120 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:11:00  [04:11:00] TIKTOK cookie harvest n=28 len=2661
+04:11:02  [04:11:02] QUICK select comment id=7705898223470152991
+04:11:03  [04:11:03] CMT get id=7705898223470152991 cursor=0
+04:11:07  [04:11:07] ENGINE next -> index=13
+04:11:07  [04:11:07] MGR evict idx=10
+04:11:07  [04:11:07] MGR url idx=15 src=static age=87s
+04:11:07  [04:11:07] MGR acquire idx=15 total=5
+04:11:07  [04:11:07] FEEDCOLL scrollTo idx=13 y=14040.0 items=21
+04:11:07  [04:11:07] FEEDCOLL scrollTo idx=13 y=14040.0 items=21
+04:11:07  [04:11:07] MGR ready idx=15
+04:11:09  [04:11:09] ENGINE next -> index=14
+04:11:09  [04:11:09] ENGINE needMore (index=14 count=21)
+04:11:09  [04:11:09] MGR evict idx=11
+04:11:09  [04:11:09] MGR url idx=16 src=static age=89s
+04:11:09  [04:11:09] MGR acquire idx=16 total=5
+04:11:09  [04:11:09] FEEDCOLL scrollTo idx=14 y=15120.0 items=21
+04:11:09  [04:11:09] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:11:09  [04:11:09] DMLOAD id=7687620713452260628 dur=9
+04:11:09  [04:11:09] MGR ready idx=16
+04:11:09  [04:11:09] DANM get id=7687620713452260628 [0-0s] ttwid=127
+04:11:10  [04:11:09] DANM all-segments done id=7687620713452260628 total=0 retry=0
+04:11:10  [04:11:09] DMLOAD done id=7687620713452260628 total=0
+04:11:10  [04:11:10] TIKTOK status p=130 hooked=true rs=complete href=https://www.tiktok.com/foryou total=21
+04:11:11  [04:11:11] TIKTOK drain[p131] got=1 total=22 hooked=true
+04:11:11  [04:11:11] TIKTOK merge ids=1 first=7686881611912088853
+04:11:11  [04:11:11] ENGINE merge total=22 index=14 replace=false auto=false redirect=0
+04:11:20  [04:11:20] TIKTOK status p=140 hooked=true rs=complete href=https://www.tiktok.com/foryou total=22
+04:11:20  [04:11:20] TIKTOK cookie harvest n=28 len=2661
+04:11:30  [04:11:30] TIKTOK status p=150 hooked=true rs=complete href=https://www.tiktok.com/foryou total=22
+04:11:30  [04:11:30] TIKTOK page-shape p=150 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:11:33  [04:11:33] ENGINE next -> index=15
+04:11:33  [04:11:33] ENGINE needMore (index=15 count=22)
+04:11:33  [04:11:33] MGR evict idx=12
+04:11:33  [04:11:33] MGR url idx=17 src=static age=65s
+04:11:33  [04:11:33] MGR acquire idx=17 total=5
+04:11:33  [04:11:33] FEEDCOLL scrollTo idx=15 y=16200.0 items=22
+04:11:33  [04:11:33] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:11:33  [04:11:33] FEEDCOLL scrollTo idx=15 y=16200.0 items=22
+04:11:34  [04:11:33] DMLOAD id=7676861427654659349 dur=23
+04:11:34  [04:11:33] MGR ready idx=17
+04:11:34  [04:11:33] DANM get id=7676861427654659349 [0-0s] ttwid=127
+04:11:34  [04:11:34] DANM all-segments done id=7676861427654659349 total=0 retry=0
+04:11:34  [04:11:34] DMLOAD done id=7676861427654659349 total=0
+04:11:40  [04:11:40] ENGINE needMore (index=15 count=22)
+04:11:40  [04:11:40] ENGINE next -> index=16
+04:11:40  [04:11:40] MGR evict idx=13
+04:11:40  [04:11:40] MGR url idx=18 src=static age=71s
+04:11:40  [04:11:40] MGR acquire idx=18 total=5
+04:11:40  [04:11:40] FEEDCOLL scrollTo idx=16 y=17280.0 items=22
+04:11:40  [04:11:40] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:11:40  [04:11:40] TIKTOK status p=160 hooked=true rs=complete href=https://www.tiktok.com/foryou total=22
+04:11:40  [04:11:40] TIKTOK cookie harvest n=28 len=2661
+04:11:40  [04:11:40] DMLOAD id=7709040661755890964 dur=21
+04:11:40  [04:11:40] DANM get id=7709040661755890964 [0-0s] ttwid=127
+04:11:41  [04:11:40] DANM all-segments done id=7709040661755890964 total=0 retry=0
+04:11:41  [04:11:40] DMLOAD done id=7709040661755890964 total=0
+04:11:41  [04:11:41] MGR ready idx=18
+04:11:42  [04:11:42] ENGINE next -> index=17
+04:11:42  [04:11:42] MGR evict idx=14
+04:11:42  [04:11:42] MGR url idx=19 src=static age=51s
+04:11:42  [04:11:42] MGR acquire idx=19 total=5
+04:11:42  [04:11:42] FEEDCOLL scrollTo idx=17 y=18360.0 items=22
+04:11:42  [04:11:42] FEEDCOLL scrollTo idx=17 y=18360.0 items=22
+04:11:42  [04:11:42] DMLOAD id=7701698174334848278 dur=7
+04:11:42  [04:11:42] DANM get id=7701698174334848278 [0-0s] ttwid=127
+04:11:42  [04:11:42] DANM all-segments done id=7701698174334848278 total=0 retry=0
+04:11:42  [04:11:42] DMLOAD done id=7701698174334848278 total=0
+04:11:44  [04:11:44] MGR ready idx=19
+04:11:44  [04:11:44] ENGINE next -> index=18
+04:11:44  [04:11:44] MGR evict idx=15
+04:11:44  [04:11:44] MGR url idx=20 src=static age=53s
+04:11:44  [04:11:44] MGR acquire idx=20 total=5
+04:11:44  [04:11:44] FEEDCOLL scrollTo idx=18 y=19440.0 items=22
+04:11:44  [04:11:44] FEEDCOLL scrollTo idx=18 y=19440.0 items=22
+04:11:44  [04:11:44] DMLOAD id=7692636740992896262 dur=43
+04:11:44  [04:11:44] DANM get id=7692636740992896262 [0-0s] ttwid=127
+04:11:45  [04:11:44] DANM all-segments done id=7692636740992896262 total=0 retry=0
+04:11:45  [04:11:44] DMLOAD done id=7692636740992896262 total=0
+04:11:45  [04:11:45] MGR ready idx=20
+04:11:47  [04:11:46] ENGINE needMore (index=18 count=22)
+04:11:47  [04:11:46] ENGINE next -> index=19
+04:11:47  [04:11:46] MGR evict idx=16
+04:11:47  [04:11:46] MGR url idx=21 src=static age=35s
+04:11:47  [04:11:47] MGR acquire idx=21 total=5
+04:11:47  [04:11:47] FEEDCOLL scrollTo idx=19 y=20520.0 items=22
+04:11:47  [04:11:47] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:11:47  [04:11:47] FEEDCOLL scrollTo idx=19 y=20520.0 items=22
+04:11:47  [04:11:47] DMLOAD id=7708747510818278664 dur=853
+04:11:47  [04:11:47] DANM get id=7708747510818278664 [0-0s] ttwid=127
+04:11:47  [04:11:47] DANM all-segments done id=7708747510818278664 total=0 retry=0
+04:11:47  [04:11:47] DMLOAD done id=7708747510818278664 total=0
+04:11:48  [04:11:48] MGR ready idx=21
+04:11:48  [04:11:48] ENGINE next -> index=20
+04:11:48  [04:11:48] MGR evict idx=17
+04:11:48  [04:11:48] FEEDCOLL scrollTo idx=20 y=21600.0 items=22
+04:11:48  [04:11:48] DMLOAD id=7678357275525778718 dur=23
+04:11:49  [04:11:48] DANM get id=7678357275525778718 [0-0s] ttwid=127
+04:11:49  [04:11:49] DANM all-segments done id=7678357275525778718 total=0 retry=0
+04:11:49  [04:11:49] DMLOAD done id=7678357275525778718 total=0
+04:11:49  [04:11:49] TIKTOK drain[p169] got=1 total=23 hooked=true
+04:11:49  [04:11:49] TIKTOK merge ids=1 first=7686534768846048532
+04:11:49  [04:11:49] ENGINE merge total=23 index=20 replace=false auto=false redirect=0
+04:11:50  [04:11:50] TIKTOK status p=170 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:11:50  [04:11:50] TIKTOK cookie harvest n=28 len=2661
+04:11:51  [04:11:51] ENGINE next -> index=21
+04:11:51  [04:11:51] MGR evict idx=18
+04:11:51  [04:11:51] MGR url idx=22 src=static age=1s
+04:11:51  [04:11:51] MGR acquire idx=22 total=4
+04:11:51  [04:11:51] FEEDCOLL scrollTo idx=21 y=22680.0 items=23
+04:11:51  [04:11:51] DMLOAD id=7686881611912088853 dur=102
+04:11:51  [04:11:51] DANM get id=7686881611912088853 [0-0s] ttwid=127
+04:11:51  [04:11:51] DANM all-segments done id=7686881611912088853 total=0 retry=0
+04:11:51  [04:11:51] DMLOAD done id=7686881611912088853 total=0
+04:11:53  [04:11:52] MGR ready idx=22
+04:11:55  [04:11:55] ENGINE needMore (index=21 count=23)
+04:11:55  [04:11:55] ENGINE next -> index=22
+04:11:55  [04:11:55] MGR evict idx=19
+04:11:55  [04:11:55] FEEDCOLL scrollTo idx=22 y=23760.0 items=23
+04:11:55  [04:11:55] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:11:55  [04:11:55] DMLOAD id=7686534768846048532 dur=7
+04:11:56  [04:11:55] DANM get id=7686534768846048532 [0-0s] ttwid=127
+04:11:56  [04:11:56] DANM all-segments done id=7686534768846048532 total=0 retry=0
+04:11:56  [04:11:56] DMLOAD done id=7686534768846048532 total=0
+04:12:00  [04:12:00] TIKTOK status p=180 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:12:00  [04:12:00] TIKTOK page-shape p=180 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:12:06  [04:12:06] ENGINE prev -> index=21
+04:12:06  [04:12:06] ENGINE needMore (index=21 count=23)
+04:12:06  [04:12:06] MGR url idx=19 src=static age=76s
+04:12:06  [04:12:06] MGR acquire idx=19 total=4
+04:12:06  [04:12:06] FEEDCOLL scrollTo idx=21 y=22680.0 items=23
+04:12:06  [04:12:06] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:12:07  [04:12:07] ENGINE prev -> index=20
+04:12:07  [04:12:07] MGR url idx=18 src=static-stale-no-redirect age=99s
+04:12:07  [04:12:07] MGR acquire idx=18 total=5
+04:12:07  [04:12:07] FEEDCOLL scrollTo idx=20 y=21600.0 items=23
+04:12:08  [04:12:08] MGR ready idx=18
+04:12:08  [04:12:08] MGR ready idx=19
+04:12:10  [04:12:09] ENGINE next -> index=21
+04:12:10  [04:12:09] MGR evict idx=18
+04:12:10  [04:12:09] FEEDCOLL scrollTo idx=21 y=22680.0 items=23
+04:12:10  [04:12:10] TIKTOK status p=190 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:12:10  [04:12:10] TIKTOK cookie harvest n=28 len=2661
+04:12:11  [04:12:11] ENGINE needMore (index=21 count=23)
+04:12:12  [04:12:11] ENGINE next -> index=22
+04:12:12  [04:12:11] MGR evict idx=19
+04:12:12  [04:12:11] FEEDCOLL scrollTo idx=22 y=23760.0 items=23
+04:12:12  [04:12:11] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:12:15  [04:12:15] QUICK panel open (ok) mix=0
+04:12:16  [04:12:16] QUICK panel close
+04:12:17  [04:12:17] QUICK panel open (ok) mix=0
+04:12:17  [04:12:17] QUICK select home (待实施)
+04:12:20  [04:12:20] TIKTOK status p=200 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:12:21  [04:12:21] ENGINE prev -> index=21
+04:12:21  [04:12:21] ENGINE needMore (index=21 count=23)
+04:12:21  [04:12:21] MGR url idx=19 src=static-stale-no-redirect age=90s
+04:12:21  [04:12:21] MGR acquire idx=19 total=4
+04:12:21  [04:12:21] FEEDCOLL scrollTo idx=21 y=22680.0 items=23
+04:12:21  [04:12:21] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:12:22  [04:12:22] ENGINE next -> index=22
+04:12:22  [04:12:22] MGR evict idx=19
+04:12:22  [04:12:22] FEEDCOLL scrollTo idx=22 y=23760.0 items=23
+04:12:22  [04:12:22] FEEDCOLL scrollTo idx=22 y=23760.0 items=23
+04:12:30  [04:12:30] TIKTOK status p=210 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:12:30  [04:12:30] TIKTOK page-shape p=210 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:12:30  [04:12:30] TIKTOK cookie harvest n=28 len=2661
+04:12:40  [04:12:40] TIKTOK status p=220 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:12:47  [04:12:47] SETTINGS panel open (menu #1)
+04:12:47  [04:12:47] SETTINGS panel exit-app (menu #2)
+04:13:54  [04:13:54] DYTV v232 launched
+04:13:54  [04:13:54] SIGNER init start
+04:13:54  [04:13:54] LOGSRV ready on port 8765
+04:13:54  [04:13:54] LOGSRV advertising as DYTV-613
+04:13:54  [04:13:54] SIGNER load shim ok
+04:13:54  [04:13:54] SIGNER load abogus ok
+04:13:54  [04:13:54] SIGNER load sign ok
+04:13:54  [04:13:54] FEEDCOLL viewDidLoad
+04:13:54  [04:13:54] LAUNCH loading video play (muted loop)
+04:13:54  [04:13:54] ROOT auto-start v232
+04:13:55  [04:13:54] SIGNER load abogus_dy ok
+04:13:55  [04:13:54] SIGNER extras sign=true dy=true
+04:13:55  [04:13:54] SIGNER bdms=yes
+04:13:55  [04:13:54] SIGNER initABogus=true
+04:13:55  [04:13:54] SIGNER fns=AB (期望 AB)
+04:13:55  [04:13:54] SIGNER smoke={"ok":true,"value":"E6R0QQzgdidNvd6k512LfY3qVW33YsWd0SVkMDhezVfPV639HMTy9exERxTvEdWeF4/JIeWjy4hbO3xprQAj836UHWwEUdQ2mgukKl5Q5xSSs1feeLbQrsJx
+04:13:55  [04:13:54] SIGNER READY a_bogus len=180
+04:13:55  [04:13:54] FEED native pipeline armed (source=tiktok)
+04:13:55  [04:13:54] TIKTOK boot → tiktok.com/foryou (invisible pump webview)
+04:13:55  [04:13:55] LOGSRV Bonjour published: DYTV-613
+04:13:58  [04:13:58] TIKTOK cookie harvest n=28 len=2661
+04:14:00  [04:14:00] TIKTOK hooked=false → evaluateJavaScript 补装 hook (v226 fallback)
+04:14:01  [04:14:01] TIKTOK page-api https://mon.tiktokv.com/monitor_browser/collect/batch/?biz_id=webmssdk
+04:14:01  [04:14:01] TIKTOK page-api https://mcs-sg.tiktokv.com/v1/list
+04:14:02  [04:14:02] TIKTOK other-json https://mcs-sg.tiktokv.com/v1/list keys=["e","sc","tc"]
+04:14:02  [04:14:02] TIKTOK page-api https://mon-sg.tiktokv.com/monitor_browser/collect/batch/?biz_id=tiktok_webapp_mobile
+04:14:06  [04:14:06] TIKTOK page-api https://www.tiktok.com/tiktok/pns/privacy_headers?aid=1180
+04:14:06  [04:14:06] TIKTOK page-api https://mssdk-sg.tiktok.com/web/report
+04:14:07  [04:14:07] TIKTOK page-api https://mon.tiktokv.com/monitor_browser/collect/batch/?bid=tiktok_pns_web_runtime
+04:14:10  [04:14:09] ROOT launch video TIMEOUT dismiss (15s, first frame never ready)
+04:14:10  [04:14:10] TIKTOK scroll-diag p=15 {"found":1,"wy":120,"wy2":1080,"bt":888,"bt2":888,"bsh":1776,"bch":888}
+04:14:10  [04:14:10] TIKTOK proxy-fetch fire cursor=0 → fired cursor=0 tpl=captured
+04:14:11  [04:14:11] TIKTOK page-api https://www.tiktok.com/api/recommend/item_list/?aid=1988&count=12&cursor=0
+04:14:12  [04:14:12] TIKTOK raw-item-schema {"AIGCDescription":"","CategoryType":120,"IsHDBitrate":false,"ShowAIGC":false,"adAuthorization":true,"anchors":[{"description":"CapCut · Video Editor","extraInfo":{"subtype":""},"icon":{"urlList":["https://p16-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.image?dr=14566&x-expires=1795140000&x-signature=t95MWWDmaUi7vZS31LikH3H84XQ%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my","https://p19-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.image?dr=14566&x-expires=1795140000&x-signature=HBqoju69OUvo9vX3I0MWjjQHLRE%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my","https://p16-common-sign.tiktokcdn.com/tiktok-obj/capcut_logo_64px_bk.png~tplv-tiktokx-origin.jpeg?dr=14566&x-expires=1795140000&x-signature=9wKTO46YoYOgfqwNp3nYwy859rk%3D&t=4d5b0474&ps=13740610&shp=81f88b70&shcp=9b759fb9&idc=my"]},"id":"0","keyword":"CapCut · Try this template","logExtra":"{\"anchor_id\":0,\"anchor_name\":\"CapCut · Try this template\",\"anchor_name_type\":\"template_0\",\"anchor_title_detail\":\"None\",\"anchor_type\":\"TT_CAPCUT\",\"anchor_type_level1\":\"template\",\"anchor_type_level2\":\"template_video\",\"capabi
+04:14:12  [04:14:12] TIKTOK drain[p17] got=9 total=9 hooked=true
+04:14:12  [04:14:12] TIKTOK merge ids=9 first=7701696668852292871
+04:14:12  [04:14:12] ENGINE merge total=9 index=0 replace=false auto=true redirect=0
+04:14:12  [04:14:12] MGR url idx=0 src=static age=0s
+04:14:12  [04:14:12] MGR acquire idx=0 total=1
+04:14:12  [04:14:12] MGR cold-start defer neighbors=[1, 2]
+04:14:12  [04:14:12] FEEDCOLL scrollTo idx=0 y=0.0 items=9
+04:14:12  [04:14:12] DMLOAD id=7701696668852292871 dur=17
+04:14:12  [04:14:12] MGR ready idx=0
+04:14:12  [04:14:12] MGR url idx=1 src=static age=0s
+04:14:12  [04:14:12] MGR acquire idx=1 total=2
+04:14:12  [04:14:12] MGR url idx=2 src=static age=0s
+04:14:12  [04:14:12] MGR acquire idx=2 total=3
+04:14:12  [04:14:12] MGR cold-start neighbors acquired=[1, 2]
+04:14:12  [04:14:12] DANM get id=7701696668852292871 [0-0s] ttwid=127
+04:14:12  [04:14:12] MGR first frame ready (launch overlay dismiss)
+04:14:13  [04:14:12] DANM all-segments done id=7701696668852292871 total=0 retry=0
+04:14:13  [04:14:12] DMLOAD done id=7701696668852292871 total=0
+04:14:13  [04:14:13] MGR ready idx=2
+04:14:14  [04:14:14] MGR ready idx=1
+04:14:15  [04:14:15] TIKTOK status p=20 hooked=true rs=complete href=https://www.tiktok.com/foryou total=9
+04:14:15  [04:14:15] TIKTOK cookie harvest n=28 len=2661
+04:14:19  [04:14:19] ENGINE next -> index=1
+04:14:19  [04:14:19] MGR url idx=3 src=static age=7s
+04:14:19  [04:14:19] MGR acquire idx=3 total=4
+04:14:19  [04:14:19] FEEDCOLL scrollTo idx=1 y=1080.0 items=9
+04:14:19  [04:14:19] DMLOAD id=7700275922322148622 dur=317
+04:14:19  [04:14:19] DANM get id=7700275922322148622 [0-0s] ttwid=127
+04:14:19  [04:14:19] DANM all-segments done id=7700275922322148622 total=0 retry=0
+04:14:19  [04:14:19] DMLOAD done id=7700275922322148622 total=0
+04:14:20  [04:14:20] MGR ready idx=3
+04:14:21  [04:14:21] ENGINE next -> index=2
+04:14:21  [04:14:21] ENGINE needMore (index=2 count=9)
+04:14:21  [04:14:21] MGR url idx=4 src=static age=9s
+04:14:21  [04:14:21] MGR acquire idx=4 total=5
+04:14:21  [04:14:21] FEEDCOLL scrollTo idx=2 y=2160.0 items=9
+04:14:21  [04:14:21] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:14:21  [04:14:21] DMLOAD id=7687620713452260628 dur=9
+04:14:21  [04:14:21] DANM get id=7687620713452260628 [0-0s] ttwid=127
+04:14:22  [04:14:22] DANM all-segments done id=7687620713452260628 total=0 retry=0
+04:14:22  [04:14:22] DMLOAD done id=7687620713452260628 total=0
+04:14:22  [04:14:22] MGR ready idx=4
+04:14:23  [04:14:23] ENGINE next -> index=3
+04:14:23  [04:14:23] MGR evict idx=0
+04:14:23  [04:14:23] MGR url idx=5 src=static age=11s
+04:14:23  [04:14:23] MGR acquire idx=5 total=5
+04:14:23  [04:14:23] FEEDCOLL scrollTo idx=3 y=3240.0 items=9
+04:14:23  [04:14:23] DMLOAD id=7679501880652877086 dur=46
+04:14:23  [04:14:23] DANM get id=7679501880652877086 [0-0s] ttwid=127
+04:14:24  [04:14:24] TIKTOK drain[p29] got=5 total=14 hooked=true
+04:14:24  [04:14:24] TIKTOK merge ids=5 first=7686881611912088853
+04:14:24  [04:14:24] ENGINE merge total=14 index=3 replace=false auto=false redirect=0
+04:14:24  [04:14:24] DANM all-segments done id=7679501880652877086 total=0 retry=0
+04:14:24  [04:14:24] DMLOAD done id=7679501880652877086 total=0
+04:14:24  [04:14:24] MGR ready idx=5
+04:14:25  [04:14:24] ENGINE next -> index=4
+04:14:25  [04:14:24] MGR evict idx=1
+04:14:25  [04:14:24] MGR url idx=6 src=static age=12s
+04:14:25  [04:14:24] MGR acquire idx=6 total=5
+04:14:25  [04:14:24] FEEDCOLL scrollTo idx=4 y=4320.0 items=14
+04:14:25  [04:14:25] TIKTOK status p=30 hooked=true rs=complete href=https://www.tiktok.com/foryou total=14
+04:14:25  [04:14:25] TIKTOK page-shape p=30 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:14:25  [04:14:25] DMLOAD id=7686923587030174998 dur=17
+04:14:25  [04:14:25] DANM get id=7686923587030174998 [0-0s] ttwid=127
+04:14:25  [04:14:25] DANM all-segments done id=7686923587030174998 total=0 retry=0
+04:14:25  [04:14:25] DMLOAD done id=7686923587030174998 total=0
+04:14:25  [04:14:25] MGR ready idx=6
+04:14:26  [04:14:26] ENGINE next -> index=5
+04:14:26  [04:14:26] MGR evict idx=2
+04:14:26  [04:14:26] MGR url idx=7 src=static age=14s
+04:14:26  [04:14:26] MGR acquire idx=7 total=5
+04:14:26  [04:14:26] FEEDCOLL scrollTo idx=5 y=5400.0 items=14
+04:14:26  [04:14:26] DMLOAD id=7705862241333103894 dur=15
+04:14:26  [04:14:26] MGR ready idx=7
+04:14:26  [04:14:26] DANM get id=7705862241333103894 [0-0s] ttwid=127
+04:14:26  [04:14:26] DANM all-segments done id=7705862241333103894 total=0 retry=0
+04:14:26  [04:14:26] DMLOAD done id=7705862241333103894 total=0
+04:14:27  [04:14:27] ENGINE next -> index=6
+04:14:27  [04:14:27] MGR evict idx=3
+04:14:27  [04:14:27] MGR url idx=8 src=static age=15s
+04:14:27  [04:14:27] MGR acquire idx=8 total=5
+04:14:27  [04:14:27] FEEDCOLL scrollTo idx=6 y=6480.0 items=14
+04:14:27  [04:14:27] DMLOAD id=7686534768846048532 dur=7
+04:14:27  [04:14:27] DANM get id=7686534768846048532 [0-0s] ttwid=127
+04:14:27  [04:14:27] DANM all-segments done id=7686534768846048532 total=0 retry=0
+04:14:27  [04:14:27] DMLOAD done id=7686534768846048532 total=0
+04:14:28  [04:14:27] MGR ready idx=8
+04:14:28  [04:14:28] ENGINE next -> index=7
+04:14:28  [04:14:28] ENGINE needMore (index=7 count=14)
+04:14:28  [04:14:28] MGR evict idx=4
+04:14:28  [04:14:28] MGR url idx=9 src=static age=4s
+04:14:28  [04:14:28] MGR acquire idx=9 total=5
+04:14:28  [04:14:28] FEEDCOLL scrollTo idx=7 y=7560.0 items=14
+04:14:28  [04:14:28] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:14:29  [04:14:29] DMLOAD id=7678357275525778718 dur=23
+04:14:29  [04:14:29] DANM get id=7678357275525778718 [0-0s] ttwid=127
+04:14:29  [04:14:29] DANM all-segments done id=7678357275525778718 total=0 retry=0
+04:14:29  [04:14:29] DMLOAD done id=7678357275525778718 total=0
+04:14:30  [04:14:30] ENGINE next -> index=8
+04:14:30  [04:14:30] MGR evict idx=5
+04:14:30  [04:14:30] MGR url idx=10 src=static age=5s
+04:14:30  [04:14:30] MGR acquire idx=10 total=5
+04:14:30  [04:14:30] FEEDCOLL scrollTo idx=8 y=8640.0 items=14
+04:14:30  [04:14:30] DMLOAD id=7692636740992896262 dur=43
+04:14:30  [04:14:30] MGR ready idx=9
+04:14:30  [04:14:30] DANM get id=7692636740992896262 [0-0s] ttwid=127
+04:14:30  [04:14:30] DANM all-segments done id=7692636740992896262 total=0 retry=0
+04:14:30  [04:14:30] DMLOAD done id=7692636740992896262 total=0
+04:14:31  [04:14:31] TIKTOK drain[p36] got=8 total=22 hooked=true
+04:14:31  [04:14:31] TIKTOK merge ids=8 first=7678463282339990797
+04:14:31  [04:14:31] ENGINE merge total=22 index=8 replace=false auto=false redirect=0
+04:14:31  [04:14:31] MGR ready idx=10
+04:14:31  [04:14:31] ENGINE next -> index=9
+04:14:31  [04:14:31] MGR evict idx=6
+04:14:31  [04:14:31] MGR url idx=11 src=static age=7s
+04:14:31  [04:14:31] MGR acquire idx=11 total=5
+04:14:31  [04:14:31] FEEDCOLL scrollTo idx=9 y=9720.0 items=22
+04:14:32  [04:14:31] DMLOAD id=7686881611912088853 dur=102
+04:14:32  [04:14:32] DANM get id=7686881611912088853 [0-0s] ttwid=127
+04:14:32  [04:14:32] DANM all-segments done id=7686881611912088853 total=0 retry=0
+04:14:32  [04:14:32] DMLOAD done id=7686881611912088853 total=0
+04:14:32  [04:14:32] MGR ready idx=11
+04:14:33  [04:14:33] ENGINE next -> index=10
+04:14:33  [04:14:33] MGR evict idx=7
+04:14:33  [04:14:33] MGR url idx=12 src=static age=9s
+04:14:33  [04:14:33] MGR acquire idx=12 total=5
+04:14:33  [04:14:33] FEEDCOLL scrollTo idx=10 y=10800.0 items=22
+04:14:33  [04:14:33] DMLOAD id=7705028639561141534 dur=21
+04:14:33  [04:14:33] DANM get id=7705028639561141534 [0-0s] ttwid=127
+04:14:33  [04:14:33] DANM all-segments done id=7705028639561141534 total=0 retry=0
+04:14:33  [04:14:33] DMLOAD done id=7705028639561141534 total=0
+04:14:34  [04:14:34] MGR ready idx=12
+04:14:34  [04:14:34] ENGINE next -> index=11
+04:14:34  [04:14:34] MGR evict idx=8
+04:14:34  [04:14:34] MGR url idx=13 src=static age=10s
+04:14:34  [04:14:34] MGR acquire idx=13 total=5
+04:14:34  [04:14:34] FEEDCOLL scrollTo idx=11 y=11880.0 items=22
+04:14:34  [04:14:34] DMLOAD id=7692474314968337685 dur=7
+04:14:35  [04:14:34] DANM get id=7692474314968337685 [0-0s] ttwid=127
+04:14:35  [04:14:35] TIKTOK status p=40 hooked=true rs=complete href=https://www.tiktok.com/foryou total=22
+04:14:35  [04:14:35] TIKTOK cookie harvest n=28 len=2661
+04:14:35  [04:14:35] DANM all-segments done id=7692474314968337685 total=0 retry=0
+04:14:35  [04:14:35] DMLOAD done id=7692474314968337685 total=0
+04:14:35  [04:14:35] MGR ready idx=13
+04:14:45  [04:14:45] TIKTOK status p=50 hooked=true rs=complete href=https://www.tiktok.com/foryou total=22
+04:14:45  [04:14:45] TIKTOK cookie harvest n=28 len=2661
+04:14:45  [04:14:45] ENGINE next -> index=12
+04:14:45  [04:14:45] MGR evict idx=9
+04:14:45  [04:14:45] MGR url idx=14 src=static age=14s
+04:14:45  [04:14:45] MGR acquire idx=14 total=5
+04:14:45  [04:14:45] FEEDCOLL scrollTo idx=12 y=12960.0 items=22
+04:14:45  [04:14:45] DMLOAD id=7708632521327627540 dur=38
+04:14:45  [04:14:45] DANM get id=7708632521327627540 [0-0s] ttwid=127
+04:14:46  [04:14:45] MGR ready idx=14
+04:14:46  [04:14:46] DANM all-segments done id=7708632521327627540 total=0 retry=0
+04:14:46  [04:14:46] DMLOAD done id=7708632521327627540 total=0
+04:14:47  [04:14:47] ENGINE next -> index=13
+04:14:47  [04:14:47] MGR evict idx=10
+04:14:47  [04:14:47] MGR url idx=15 src=static age=15s
+04:14:47  [04:14:47] MGR acquire idx=15 total=5
+04:14:47  [04:14:47] FEEDCOLL scrollTo idx=13 y=14040.0 items=22
+04:14:47  [04:14:47] DMLOAD id=7701698174334848278 dur=7
+04:14:47  [04:14:47] DANM get id=7701698174334848278 [0-0s] ttwid=127
+04:14:47  [04:14:47] DANM all-segments done id=7701698174334848278 total=0 retry=0
+04:14:47  [04:14:47] DMLOAD done id=7701698174334848278 total=0
+04:14:48  [04:14:47] MGR ready idx=15
+04:14:48  [04:14:48] ENGINE next -> index=14
+04:14:48  [04:14:48] MGR evict idx=11
+04:14:48  [04:14:48] MGR url idx=16 src=static age=17s
+04:14:48  [04:14:48] MGR acquire idx=16 total=5
+04:14:48  [04:14:48] FEEDCOLL scrollTo idx=14 y=15120.0 items=22
+04:14:48  [04:14:48] DMLOAD id=7678463282339990797 dur=74
+04:14:48  [04:14:48] DANM get id=7678463282339990797 [0-0s] ttwid=127
+04:14:48  [04:14:48] DANM all-segments done id=7678463282339990797 total=0 retry=0
+04:14:49  [04:14:48] DMLOAD done id=7678463282339990797 total=0
+04:14:49  [04:14:48] MGR ready idx=16
+04:14:49  [04:14:49] ENGINE next -> index=15
+04:14:49  [04:14:49] ENGINE needMore (index=15 count=22)
+04:14:49  [04:14:49] MGR evict idx=12
+04:14:49  [04:14:49] MGR url idx=17 src=static age=18s
+04:14:49  [04:14:49] MGR acquire idx=17 total=5
+04:14:49  [04:14:49] FEEDCOLL scrollTo idx=15 y=16200.0 items=22
+04:14:50  [04:14:49] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:14:50  [04:14:50] DMLOAD id=7689016593673702663 dur=27
+04:14:50  [04:14:50] MGR ready idx=17
+04:14:50  [04:14:50] DANM get id=7689016593673702663 [0-0s] ttwid=127
+04:14:50  [04:14:50] DANM all-segments done id=7689016593673702663 total=0 retry=0
+04:14:50  [04:14:50] DMLOAD done id=7689016593673702663 total=0
+04:14:51  [04:14:51] ENGINE next -> index=16
+04:14:51  [04:14:51] MGR evict idx=13
+04:14:51  [04:14:51] MGR url idx=18 src=static age=20s
+04:14:51  [04:14:51] MGR acquire idx=18 total=5
+04:14:51  [04:14:51] FEEDCOLL scrollTo idx=16 y=17280.0 items=22
+04:14:51  [04:14:51] DMLOAD id=7703397329004465415 dur=9
+04:14:51  [04:14:51] DANM get id=7703397329004465415 [0-0s] ttwid=127
+04:14:51  [04:14:51] MGR ready idx=18
+04:14:52  [04:14:51] DANM all-segments done id=7703397329004465415 total=0 retry=0
+04:14:52  [04:14:51] DMLOAD done id=7703397329004465415 total=0
+04:14:53  [04:14:53] TIKTOK drain[p58] got=1 total=23 hooked=true
+04:14:53  [04:14:53] TIKTOK merge ids=1 first=7696437338980781326
+04:14:53  [04:14:53] ENGINE merge total=23 index=16 replace=false auto=false redirect=0
+04:14:53  [04:14:53] ENGINE next -> index=17
+04:14:53  [04:14:53] MGR evict idx=14
+04:14:53  [04:14:53] MGR url idx=19 src=static age=22s
+04:14:53  [04:14:53] MGR acquire idx=19 total=5
+04:14:53  [04:14:53] FEEDCOLL scrollTo idx=17 y=18360.0 items=23
+04:14:53  [04:14:53] FEEDCOLL scrollTo idx=17 y=18360.0 items=23
+04:14:53  [04:14:53] DMLOAD id=7682134636750834964 dur=16
+04:14:53  [04:14:53] MGR ready idx=19
+04:14:53  [04:14:53] DANM get id=7682134636750834964 [0-0s] ttwid=127
+04:14:53  [04:14:53] DANM all-segments done id=7682134636750834964 total=0 retry=0
+04:14:53  [04:14:53] DMLOAD done id=7682134636750834964 total=0
+04:14:55  [04:14:55] TIKTOK status p=60 hooked=true rs=complete href=https://www.tiktok.com/foryou total=23
+04:14:55  [04:14:55] TIKTOK page-shape p=60 {"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 3.2M 42.1K 662.2K Hansen Vendi Agus 🗿🗿🗿 suara asli - Hansen Vendi Agus suara asli - Hansen Vendi Agus suara asli"}
+04:14:55  [04:14:55] ENGINE needMore (index=17 count=23)
+04:14:55  [04:14:55] ENGINE next -> index=18
+04:14:55  [04:14:55] MGR evict idx=15
+04:14:55  [04:14:55] MGR url idx=20 src=static age=24s
+04:14:55  [04:14:55] MGR acquire idx=20 total=5
+04:14:55  [04:14:55] FEEDCOLL scrollTo idx=18 y=19440.0 items=23
+04:14:55  [04:14:55] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:14:55  [04:14:55] DMLOAD id=7683931850427059477 dur=20
+04:14:55  [04:14:55] MGR ready idx=20
+04:14:55  [04:14:55] DANM get id=7683931850427059477 [0-0s] ttwid=127
+04:14:55  [04:14:55] DANM all-segments done id=7683931850427059477 total=0 retry=0
+04:14:55  [04:14:55] DMLOAD done id=7683931850427059477 total=0
+04:14:56  [04:14:56] ENGINE next -> index=19
+04:14:56  [04:14:56] MGR evict idx=16
+04:14:56  [04:14:56] MGR url idx=21 src=static age=25s
+04:14:56  [04:14:56] MGR acquire idx=21 total=5
+04:14:56  [04:14:56] FEEDCOLL scrollTo idx=19 y=20520.0 items=23
+04:14:56  [04:14:56] DMLOAD id=7703791678636805398 dur=7
+04:14:56  [04:14:56] DANM get id=7703791678636805398 [0-0s] ttwid=127
+04:14:57  [04:14:57] TIKTOK drain[p62] got=1 total=24 hooked=true
+04:14:57  [04:14:57] TIKTOK merge ids=1 first=7701023718675369222
+04:14:57  [04:14:57] ENGINE merge total=24 index=19 replace=false auto=false redirect=0
+04:14:57  [04:14:57] DANM all-segments done id=7703791678636805398 total=0 retry=0
+04:14:57  [04:14:57] DMLOAD done id=7703791678636805398 total=0
+04:14:57  [04:14:57] ENGINE next -> index=20
+04:14:57  [04:14:57] MGR evict idx=17
+04:14:57  [04:14:57] MGR url idx=22 src=static age=4s
+04:14:57  [04:14:57] MGR acquire idx=22 total=5
+04:14:57  [04:14:57] FEEDCOLL scrollTo idx=20 y=21600.0 items=24
+04:14:57  [04:14:57] DMLOAD id=7706063060405898526 dur=20
+04:14:58  [04:14:57] MGR ready idx=21
+04:14:58  [04:14:57] DANM get id=7706063060405898526 [0-0s] ttwid=127
+04:14:58  [04:14:57] ENGINE next -> index=21
+04:14:58  [04:14:57] MGR evict idx=18
+04:14:58  [04:14:57] MGR url idx=23 src=static age=0s
+04:14:58  [04:14:57] MGR acquire idx=23 total=5
+04:14:58  [04:14:57] FEEDCOLL scrollTo idx=21 y=22680.0 items=24
+04:14:58  [04:14:58] DANM all-segments done id=7706063060405898526 total=0 retry=0
+04:14:58  [04:14:58] DMLOAD done id=7706063060405898526 total=0
+04:14:58  [04:14:58] DMLOAD id=7708747510818278664 dur=853
+04:14:58  [04:14:58] DANM get id=7708747510818278664 [0-0s] ttwid=127
+04:14:58  [04:14:58] DANM all-segments done id=7708747510818278664 total=0 retry=0
+04:14:58  [04:14:58] DMLOAD done id=7708747510818278664 total=0
+04:14:59  [04:14:59] ENGINE next -> index=22
+04:14:59  [04:14:59] MGR evict idx=19
+04:14:59  [04:14:59] FEEDCOLL scrollTo idx=22 y=23760.0 items=24
+04:14:59  [04:14:59] MGR ready idx=23
+04:15:01  [04:15:01] DMLOAD id=7696437338980781326 dur=411
+04:15:01  [04:15:01] MGR ready idx=22
+04:15:01  [04:15:01] DANM get id=7696437338980781326 [0-0s] ttwid=127
+04:15:01  [04:15:01] DANM all-segments done id=7696437338980781326 total=0 retry=0
+04:15:01  [04:15:01] DMLOAD done id=7696437338980781326 total=0
+04:15:03  [04:15:03] WATCH repair idx=22 reason=stall
+04:15:03  [04:15:03] MGR rebuild idx=22 (redirect)
+04:15:03  [04:15:03] MGR url idx=22 src=static age=10s
+04:15:03  [04:15:03] MGR acquire idx=22 total=4
+04:15:05  [04:15:05] TIKTOK status p=70 hooked=true rs=complete href=https://www.tiktok.com/foryou total=24
+04:15:05  [04:15:05] TIKTOK cookie harvest n=28 len=2661
+04:15:05  [04:15:05] MGR ready idx=22
+04:15:08  [04:15:08] ENGINE needMore (index=22 count=24)
+04:15:08  [04:15:08] ENGINE next -> index=23
+04:15:08  [04:15:08] MGR evict idx=20
+04:15:08  [04:15:08] FEEDCOLL scrollTo idx=23 y=24840.0 items=24
+04:15:08  [04:15:08] TIKTOK proxy-fetch cursor=0 → fired cursor=0 tpl=captured
+04:15:09  [04:15:09] DMLOAD id=7701023718675369222 dur=23
+04:15:09  [04:15:09] DANM get id=7701023718675369222 [0-0s] ttwid=127
+04:15:09  [04:15:09] DANM all-segments done id=7701023718675369222 total=0 retry=0
+04:15:09  [04:15:09] DMLOAD done id=7701023718675369222 total=0
+04:15:12  [04:15:12] SETTINGS panel open (menu #1)
+04:15:15  [04:15:15] TIKTOK status p=80 hooked=true rs=complete href=https://www.tiktok.com/foryou total=24
+04:15:15  [04:15:15] TIKTOK cookie harvest n=28 len=2661
+04:15:17  [04:15:17] FEED source switch tiktok -> web
+04:15:17  [04:15:17] FEEDPOOL pauseAll (live open)
+04:15:17  [04:15:17] ENGINE reset (source switch)
+04:15:17  [04:15:17] FEED web GET refresh_index=1 cold=1 bogus_len=180 ttwid=127
+04:15:17  [04:15:17] FEEDCOLL reset view (source switch)
+04:15:19  [04:15:19] FEED web page refresh_index=1: awemes=2 usable=2 filtered=0 total_seen=2
+04:15:19  [04:15:19] ENGINE merge total=2 index=0 replace=false auto=true redirect=0
+04:15:19  [04:15:19] ENGINE needMore (index=0 count=2)
+04:15:19  [04:15:19] FEED web GET refresh_index=2 cold=0 bogus_len=180 ttwid=127
+04:15:19  [04:15:19] MGR evict idx=22
+04:15:19  [04:15:19] MGR evict idx=23
+04:15:19  [04:15:19] MGR evict idx=21
+04:15:19  [04:15:19] MGR url idx=0 src=static age=0s
+04:15:19  [04:15:19] MGR acquire idx=0 total=1
+04:15:19  [04:15:19] MGR cold-start defer neighbors=[1]
+04:15:19  [04:15:19] FEEDCOLL scrollTo idx=0 y=0.0 items=2
+04:15:20  [04:15:20] DMLOAD id=7681626138511688625 dur=468719
+04:15:21  [04:15:20] MGR ready idx=0
+04:15:21  [04:15:20] MGR url idx=1 src=static age=1s
+04:15:21  [04:15:20] DANM get id=7681626138511688625 [0-20s] ttwid=127
+04:15:21  [04:15:20] MGR acquire idx=1 total=2
+04:15:21  [04:15:20] MGR cold-start neighbors acquired=[1]
+04:15:21  [04:15:21] FEED web page refresh_index=2: awemes=6 usable=6 filtered=0 total_seen=8
+04:15:21  [04:15:21] ENGINE merge total=8 index=0 replace=false auto=false redirect=0
+04:15:21  [04:15:21] DANM get id=7681626138511688625 [20-40s] ttwid=127
+04:15:21  [04:15:21] DANM get id=7681626138511688625 [40-60s] ttwid=127
+04:15:21  [04:15:21] DANM get id=7681626138511688625 [60-80s] ttwid=127
+04:15:22  [04:15:22] DANM get id=7681626138511688625 [80-100s] ttwid=127
+04:15:22  [04:15:22] MGR ready idx=1
+04:15:22  [04:15:22] DANM get id=7681626138511688625 [100-120s] ttwid=127
+04:15:22  [04:15:22] DANM get id=7681626138511688625 [120-140s] ttwid=127
+04:15:23  [04:15:22] DANM get id=7681626138511688625 [140-160s] ttwid=127
+04:15:23  [04:15:23] DANM get id=7681626138511688625 [160-180s] ttwid=127
+04:15:23  [04:15:23] DANM get id=7681626138511688625 [180-200s] ttwid=127
+04:15:23  [04:15:23] DANM get id=7681626138511688625 [200-220s] ttwid=127
+04:15:24  [04:15:24] DANM get id=7681626138511688625 [220-240s] ttwid=127
+04:15:24  [04:15:24] DANM get id=7681626138511688625 [240-260s] ttwid=127
+04:15:24  [04:15:24] DANM get id=7681626138511688625 [260-280s] ttwid=127
+04:15:24  [04:15:24] DMSYNC t=3s due=0 marked=2 items=263 stall=11
+04:15:25  [04:15:25] DANM get id=7681626138511688625 [280-300s] ttwid=127
+04:15:25  [04:15:25] DANM get id=7681626138511688625 [300-320s] ttwid=127
+04:15:25  [04:15:25] DANM get id=7681626138511688625 [320-340s] ttwid=127
+04:15:26  [04:15:25] DANM get id=7681626138511688625 [340-360s] ttwid=127
+04:15:26  [04:15:26] DANM get id=7681626138511688625 [360-380s] ttwid=127
+04:15:26  [04:15:26] DANM get id=7681626138511688625 [380-400s] ttwid=127
+04:15:26  [04:15:26] DANM get id=7681626138511688625 [400-420s] ttwid=127
+04:15:27  [04:15:27] DANM get id=7681626138511688625 [420-440s] ttwid=127
+04:15:27  [04:15:27] DANM get id=7681626138511688625 [440-460s] ttwid=127
+04:15:27  [04:15:27] DANM get id=7681626138511688625 [460-468s] ttwid=127
+04:15:28  [04:15:28] DANM all-segments done id=7681626138511688625 total=405 retry=0
+04:15:28  [04:15:28] DMLOAD done id=7681626138511688625 total=405
+04:15:28  [04:15:28] DMSYNC t=7s due=0 marked=2 items=405 stall=27
+04:15:32  [04:15:32] DMSYNC t=11s due=0 marked=2 items=405 stall=43
+04:15:36  [04:15:36] DMSYNC t=15s due=0 marked=11 items=405 stall=0
+04:15:40  [04:15:40] DMSYNC t=19s due=0 marked=17 items=405 stall=0
+04:15:44  [04:15:44] DMSYNC t=23s due=0 marked=21 items=405 stall=6
+04:15:48  [04:15:48] DMSYNC t=27s due=0 marked=24 items=405 stall=3
+04:15:52  [04:15:52] DMSYNC t=31s due=0 marked=27 items=405 stall=5
+04:15:56  [04:15:56] DMSYNC t=35s due=0 marked=30 items=405 stall=6
+04:16:00  [04:16:00] DMSYNC t=39s due=0 marked=35 items=405 stall=5
+04:16:04  [04:16:04] DMSYNC t=43s due=0 marked=35 items=405 stall=21
+04:16:08  [04:16:08] DMSYNC t=47s due=0 marked=35 items=405 stall=37
+04:16:12  [04:16:12] DMSYNC t=51s due=0 marked=41 items=405 stall=0
+04:16:16  [04:16:16] DMSYNC t=55s due=0 marked=48 items=405 stall=0
+04:16:20  [04:16:20] DMSYNC t=59s due=0 marked=54 items=405 stall=2
+04:16:24  [04:16:24] DMSYNC t=63s due=0 marked=63 items=405 stall=1
+04:16:28  [04:16:28] DMSYNC t=67s due=0 marked=66 items=405 stall=1
+04:16:32  [04:16:32] DMSYNC t=71s due=0 marked=71 items=405 stall=7
+04:16:36  [04:16:36] DMSYNC t=75s due=0 marked=73 items=405 stall=3
+04:16:40  [04:16:40] DMSYNC t=79s due=0 marked=78 items=405 stall=0
+04:16:44  [04:16:44] DMSYNC t=83s due=0 marked=78 items=405 stall=16
+04:16:48  [04:16:48] DMSYNC t=87s due=0 marked=79 items=405 stall=5
+04:16:52  [04:16:52] DMSYNC t=91s due=0 marked=84 items=405 stall=0
+04:16:56  [04:16:56] DMSYNC t=95s due=0 marked=87 items=405 stall=7
+04:17:00  [04:17:00] DMSYNC t=99s due=0 marked=88 items=405 stall=1
+04:17:04  [04:17:04] DMSYNC t=103s due=0 marked=89 items=405 stall=2
+04:17:08  [04:17:08] DMSYNC t=107s due=0 marked=95 items=405 stall=3
+04:17:12  [04:17:12] DMSYNC t=111s due=0 marked=99 items=405 stall=9
+04:17:16  [04:17:16] DMSYNC t=115s due=0 marked=107 items=405 stall=0
+04:17:20  [04:17:20] DMSYNC t=119s due=0 marked=113 items=405 stall=0
+04:17:24  [04:17:24] DMSYNC t=123s due=0 marked=116 items=405 stall=0
+04:17:28  [04:17:28] DMSYNC t=127s due=0 marked=119 items=405 stall=8
+04:17:32  [04:17:32] DMSYNC t=131s due=0 marked=120 items=405 stall=3
+04:17:36  [04:17:36] DMSYNC t=135s due=0 marked=121 items=405 stall=3
+04:17:40  [04:17:40] DMSYNC t=139s due=0 marked=123 items=405 stall=3
+04:17:44  [04:17:44] DMSYNC t=143s due=0 marked=126 items=405 stall=12
+04:17:48  [04:17:48] DMSYNC t=147s due=0 marked=127 items=405 stall=0
+04:17:52  [04:17:52] DMSYNC t=151s due=0 marked=130 items=405 stall=3
+04:17:56  [04:17:56] DMSYNC t=155s due=2 marked=139 items=405 stall=0
+04:18:00  [04:18:00] DMSYNC t=159s due=0 marked=151 items=405 stall=1
+04:18:04  [04:18:04] DMSYNC t=163s due=0 marked=160 items=405 stall=0
+04:18:08  [04:18:08] DMSYNC t=167s due=0 marked=166 items=405 stall=0
+04:18:12  [04:18:12] DMSYNC t=171s due=0 marked=175 items=405 stall=4
+04:18:16  [04:18:16] DMSYNC t=175s due=0 marked=183 items=405 stall=3
+04:18:20  [04:18:20] DMSYNC t=179s due=0 marked=188 items=405 stall=2
+04:18:24  [04:18:24] DMSYNC t=183s due=0 marked=188 items=405 stall=18
+04:18:28  [04:18:28] DMSYNC t=187s due=0 marked=189 items=405 stall=5
+04:18:32  [04:18:32] DMSYNC t=191s due=0 marked=191 items=405 stall=5
+04:18:36  [04:18:36] DMSYNC t=195s due=0 marked=193 items=405 stall=3
+04:18:40  [04:18:40] DMSYNC t=199s due=0 marked=193 items=405 stall=19
+04:18:44  [04:18:44] DMSYNC t=203s due=0 marked=198 items=405 stall=1
+04:18:48  [04:18:48] DMSYNC t=207s due=0 marked=201 items=405 stall=3
+04:18:52  [04:18:52] DMSYNC t=211s due=0 marked=207 items=405 stall=1
+04:18:56  [04:18:56] DMSYNC t=215s due=0 marked=212 items=405 stall=0
+04:19:00  [04:19:00] DMSYNC t=219s due=0 marked=216 items=405 stall=1
+04:19:04  [04:19:04] DMSYNC t=223s due=0 marked=216 items=405 stall=17
+04:19:08  [04:19:08] DMSYNC t=227s due=0 marked=218 items=405 stall=6
+04:19:12  [04:19:12] DMSYNC t=231s due=0 marked=220 items=405 stall=0
+04:19:16  [04:19:16] DMSYNC t=235s due=0 marked=223 items=405 stall=1

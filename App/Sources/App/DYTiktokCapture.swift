@@ -79,8 +79,10 @@ final class DYTiktokCapture: NSObject {
     private var raw2Logged = false          // v227 非 itemList JSON 透视只 log 一次
     private var rehookLogged = false        // v226 补装兜底首次告警只 log 一次
     private var proxyFetchLogged = false    // v232 代签 fetch 首次触发只 log 一次
-    /// v232 代签 fetch 当前游标（每发一批成功后按 count 前进翻页）
+    /// v232 代签 fetch 当前游标（v233 改由 drain 按到货条数推进）
     private var proxyCursor = 0
+    /// v233 上次发代签 fetch 时刻（节流 ≥1.5s，防 engine 触底连发重复请求）
+    private var lastProxyFireAt = Date.distantPast
 
     /// 重进 TikTok 源时清 id 去重（会话重建后新一批不应被旧 seenIds 吞掉）。切源时由 DYFeedClient 调。
     func seenIdsReset() {
@@ -91,7 +93,14 @@ final class DYTiktokCapture: NSObject {
         rehookLogged = false
         proxyFetchLogged = false
         proxyCursor = 0
+        lastProxyFireAt = Date.distantPast
         totalCap = 0
+    }
+
+    /// v233：从 drain tag 解析发出时代签 fetch 的游标（tag=proxy<cursor>）。非代签批（p<tick>/scroll/shape 等）返回 nil。
+    private func proxyCursorForTag(_ tag: String) -> Int? {
+        guard tag.hasPrefix("proxy") else { return nil }
+        return Int(tag.dropFirst("proxy".count))
     }
 
     // MARK: - 会话
@@ -149,23 +158,28 @@ final class DYTiktokCapture: NSObject {
 
     /// v232 plan B 核心：从页面上下文代签 fetch recommend。模板取 window.__ttRecTpl（页面自己发过的
     /// 完整 recommend URL，由 hookJS 的 see() 捕获；无则用内置兜底模板），只换 cursor 参数翻页。
-    /// 响应经 hookJS 的 grab() 落 __ttCap → drain 常规抽回（零新增解析）。成功后 cursor 按 count 前进。
+    /// 响应经 hookJS 的 grab() 落 __ttCap → drain 常规抽回（零新增解析）。
+    /// **v233 游标推进改到 drain 按实际到货条数推进**（v232 在 completion 里 `s.hasPrefix("ok")` 判据永假——
+    /// JS 返回 'fired…' 非 'ok…'，导致 proxyCursor 恒 0、每次重取首页=刷不动；真机 v232 实锤）。
+    /// 这里只负责发请求 + 节流（≥1.5s 一发，防滑动连发重复请求触发风控）；游标推进在 drain 到货后做。
     func fireProxyFetch() {
         ensureSession()
-        let js = Self.proxyFetchJS(cursor: proxyCursor)
-        evalJS(js, tag: "proxy\(proxyCursor)") { [weak self] r in
+        // v233 节流：距上次发代签 fetch <1.5s 则跳过（engine 触底可能连续 tick 调 requestMore）
+        let now = Date()
+        guard now.timeIntervalSince(lastProxyFireAt) >= 1.5 else { return }
+        lastProxyFireAt = now
+        let cur = proxyCursor
+        let js = Self.proxyFetchJS(cursor: cur)
+        evalJS(js, tag: "proxy\(cur)") { [weak self] r in
             guard let self else { return }
             let s = (r as? String) ?? ""
             if !self.proxyFetchLogged {
                 self.proxyFetchLogged = true
-                DYLog.shared.log("TIKTOK proxy-fetch fire cursor=\(self.proxyCursor) → \(s.prefix(160))")
+                DYLog.shared.log("TIKTOK proxy-fetch fire cursor=\(cur) → \(s.prefix(160))")
             } else {
-                DYLog.shared.log("TIKTOK proxy-fetch cursor=\(self.proxyCursor) → \(s.prefix(120))")
+                DYLog.shared.log("TIKTOK proxy-fetch cursor=\(cur) → \(s.prefix(120))")
             }
-            // 拿到 itemList 才前进游标（s 以 "ok" 开头=grab 已截获，items 交给 drain 解析）
-            if s.hasPrefix("ok") {
-                self.proxyCursor += 12   // item_list 默认 count，翻页步进
-            }
+            // v233：游标推进移到 drain（按到货条数），这里不再依赖返回前缀
         }
     }
 
@@ -232,9 +246,9 @@ final class DYTiktokCapture: NSObject {
             }
             // v232 plan B 代签 fetch 泵：v231 实锤 tvOS WebKit mse=undefined → 页面降级渲染无无限 feed、
             // 滚动永不触发 recommend → 唯一路线=页面上下文代签 fetch recommend URL（TikTok 自己的 fetch
-            // 包装器代签，响应被 hookJS grab 截获）。hooked 且还没截到货时每 5 tick 发一轮（与滚动泵并存，
-            // 谁先出数据都行；截到即 totalCap>0 双双停）。
-            if hooked, self.totalCap == 0, self.pollCount % 5 == 0 {
+            // 包装器代签，响应被 hookJS grab 截获）。**v233 门控收紧为只播种首批**（proxyCursor==0 时才泵），
+            // 一旦首批到货游标推进 >0，翻页全权交给 engine 触底 requestMore（避免泵与 requestMore 抢同一游标）。
+            if hooked, self.totalCap == 0, self.proxyCursor == 0, self.pollCount % 5 == 0 {
                 self.fireProxyFetch()
             }
             // v231：页面形态诊断（每 30 tick≈30s 一次）——设备页面只有 2 屏内容无 feed 列表（scroll-diag 实锤），
@@ -259,6 +273,18 @@ final class DYTiktokCapture: NSObject {
             if !items.isEmpty {
                 self.totalCap += items.count
                 DYLog.shared.log("TIKTOK drain[\(tag)] got=\(items.count) total=\(self.totalCap) hooked=\(hooked)")
+                // v233 游标推进：仅对**代签 fetch 批**（tag=proxy<cursor>）按本批条数推进 proxyCursor，
+                // 修 v232「游标恒 0 → 每次重取首页 → 刷不动」的墙。cur=本批发出时的游标（closure 捕获），
+                // 只前进不后退（max 防旧批次乱序到货把游标拉回），advance≥1 保证跳过本批已见 id。
+                // 首屏 pump 批（tag=p<tick>，cursor 也是 0）不推进——它只负责首次播种，翻页全走 requestMore。
+                if let capCur = self.proxyCursorForTag(tag) {
+                    let advance = max(items.count, 1)
+                    let next = max(capCur + advance, self.proxyCursor)
+                    if next > self.proxyCursor {
+                        self.proxyCursor = next
+                        DYLog.shared.log("TIKTOK proxy-cursor advance → \(self.proxyCursor) (batch cur=\(capCur) got=\(items.count))")
+                    }
+                }
                 DispatchQueue.main.async { self.onItems?(items) }
             }
         }

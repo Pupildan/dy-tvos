@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v232"
-    static let changes = "v232: TikTok源plan B页面代签fetch(v231实锤tvOS WebKit缺MSE→页面降级渲染无无限feed→滚动/预载判死,唯一可行=页面上下文代签fetch recommend)。hookJS see()捕获页面自己发过的完整recommend URL作模板,无则用兜底模板;只换cursor翻页;调用页面window.fetch(TikTok自己的签名包装器代签X-Argus/X-Gorgon/msToken)→响应流回我们的fetch包装器grab()截获(同DYWorksCapture已验证代签机制);hooked且totalCap==0时每5tick发一轮泵+requestMore也走代签fetch。响应经grab→__ttCap→drain常规抽回,零新增解析"
+    static let version = "v233"
+    static let changes = "v233: 修TikTok plan B翻页墙(真机v232画面出但刷不动)。根因=fireProxyFetch completion里 s.hasPrefix(\"ok\") 判据永假(JS返回 'fired…' 非 'ok…')→proxyCursor恒0→每次requestMore重取cursor=0→同批被seenIds去重→引擎零增长。修=游标推进移到drain按实际到货条数推进(只对proxy<N>批, max单调防乱序回退)+fireProxyFetch加≥1.5s节流防触底连发+pump门控收紧为只播种首批(totalCap==0&&proxyCursor==0)翻页全交engine requestMore"
 }
