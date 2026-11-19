@@ -54,6 +54,8 @@ final class DYLiveClient {
     /// 已累积直播间（feedCache 的只读快照；直播流屏数据源）
     var rooms: [DYLiveRoom] { feedCache }
     var isLoadingMore: Bool { feedInflight }
+    /// 是否还有更多页（供 UI 在冷门房过滤光整页时判断要不要链式续翻）
+    var hasMore: Bool { feedHasMore }
 
     // MARK: - 直播间列表（游标翻页，无限刷）
 

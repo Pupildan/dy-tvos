@@ -522,7 +522,7 @@ final class DYLiveFeedViewController: UIViewController {
             guard let self else { return }
             if !fresh.isEmpty {
                 self.collectionView.reloadData()
-            } else if DYLiveClient.shared.feedHasMore {
+            } else if DYLiveClient.shared.hasMore {
                 // 冷门房过滤后可能整页都被过滤光（fresh=0 但服务端还有更多）→
                 // 列表不增长就再触发不了"滑到倒数5个"→ 必须自动链式拉下一页，否则卡死。
                 // feedInflight 已在 fetchFeedInternal 回调开头清空，此处再 loadMore 无重入风险。
