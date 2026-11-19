@@ -193,7 +193,12 @@ final class DYTiktokCapture: NSObject {
             // 开发机已实测纯 scrollJS（无键盘）3 轮即触发 2 次 recommend + 截获 12 条。
             // hooked 且没截到货时每 5 tick 滚一轮；截到第一批后停（后续翻页走 engine needMore→requestMore）。
             if hooked, self.totalCap == 0, self.pollCount % 5 == 0 {
-                self.evalJS(Self.scrollJS, tag: "scrollpump\(self.pollCount)") { _ in }
+                let p = self.pollCount
+                self.evalJS(Self.scrollJS, tag: "scrollpump\(p)") { r in
+                    if let s = r as? String {
+                        DYLog.shared.log("TIKTOK scroll-diag p=\(p) \(s.prefix(220))")
+                    }
+                }
             }
             let cap = diag["cap"] as? [[String: Any]] ?? []
             guard !cap.isEmpty else { return }
@@ -261,11 +266,12 @@ final class DYTiktokCapture: NSObject {
     })();
     """
 
-    /// 滚动翻页 v227：一次 requestMore 连续滚 3 屏（间隔 700ms）——真机实锤单次 scrollBy 切不动几个视频、
-    /// TikTok FYP 预加载池没耗尽前页面根本不发新 recommend；window + 最大可滚动容器双通道都滚。
+    /// 滚动 v230：滚 window + 最大可滚动容器各一屏，**回传滚动诊断**（windowY 前后/容器 found/top/scrollHeight/
+    /// clientHeight 前后）——真机实锤设备上滚动后 recommend 仍不触发，需要看清设备页面到底有没有可滚容器、
+    /// scrollTop 有没有动。滚动本体仍是连续 3 步（间隔 700ms，与开发机验证过的节奏一致）。
     private static let scrollJS = """
     (function(){
-      var n=0;
+      var n=0, d={found:0, wy:0, wy2:0, bt:0, bt2:0, bsh:0, bch:0};
       function findBest(){
         var best=null,area=0;
         var els=document.querySelectorAll('div,main');
@@ -279,13 +285,17 @@ final class DYTiktokCapture: NSObject {
         return best;
       }
       function step(){
-        try{ window.scrollBy(0,window.innerHeight||900); }catch(e){}
-        try{ var b=findBest(); if(b){ b.scrollTop+=b.clientHeight; } }catch(e){}
+        try{ d.wy=window.scrollY; window.scrollBy(0,window.innerHeight||900); d.wy2=window.scrollY; }catch(e){}
+        try{
+          var b=findBest();
+          if(b){ d.found=1; d.bt=b.scrollTop; d.bsh=b.scrollHeight; d.bch=b.clientHeight;
+                 b.scrollTop+=b.clientHeight; d.bt2=b.scrollTop; }
+        }catch(e){}
         n++;
         if(n<3){ setTimeout(step,700); }
       }
       step();
-      return 'ok';
+      return JSON.stringify(d);
     })();
     """
 
