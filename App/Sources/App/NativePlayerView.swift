@@ -378,6 +378,10 @@ final class PlayerManager {
         case .tiktok:
             headers["User-Agent"] = DYTiktokCapture.tiktokUA
             headers["Referer"] = "https://www.tiktok.com/"
+            // v228：playAddr 直链绑定 WebView 会话（开发机验证门实测：页面内 206/裸请求 403）
+            // → 必须带泵 WebView 收割的完整 cookie 罐（含 HttpOnly，DYWebKitCookieHeader 私有收割）
+            let ck = DYTiktokCapture.currentCookieHeader()
+            if !ck.isEmpty { headers["Cookie"] = ck }
         case .mobile:
             headers["User-Agent"] = DYFeedClient.mobileUA
             if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {

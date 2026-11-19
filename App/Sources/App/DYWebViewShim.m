@@ -75,3 +75,35 @@ id DYCreateWebViewWithInject(CGRect frame, NSString * __nullable userAgent, NSSt
     if (!wv) return nil;
     return wv;
 }
+
+// v228：收割 WKWebView 默认数据存储的全量 cookie（含 HttpOnly——document.cookie 永远不可见），
+// 返回 "k=v; k=v" 串供 AVPlayer 播放请求头。
+// 依据：TikTok CDN playAddr 直链绑定浏览器会话——开发机实测页面内 fetch=206 video/mp4，
+// 脱离会话（裸 UA/+Referer/无 UA 三组）全部 403。和 HANDOVER §5.3⑤A 规划的 WKHTTPCookieStore
+// 私有收割同款。getAllCookies: 是异步完成回调，内部信号量等完成（回调在 WKHTTPCookieStore
+// 内部队列不占主队列；保险起见调用方放后台队列调）。
+NSString * _Nullable DYWebKitCookieHeader(void)
+{
+    if (!dlopen("/System/Library/Frameworks/WebKit.framework/WebKit", RTLD_LAZY)) return nil;
+    Class StoreCls = NSClassFromString(@"WKWebsiteDataStore");
+    if (!StoreCls) return nil;
+    SEL defaultSel = @selector(defaultDataStore);
+    if (![StoreCls respondsToSelector:defaultSel]) return nil;
+    id store = ((id(*)(id, SEL))objc_msgSend)(StoreCls, defaultSel);
+    if (!store || ![store respondsToSelector:@selector(httpCookieStore)]) return nil;
+    id ckStore = ((id(*)(id, SEL))objc_msgSend)(store, @selector(httpCookieStore));
+    if (!ckStore || ![ckStore respondsToSelector:@selector(getAllCookies:)]) return nil;
+
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    __block NSMutableString *out = [NSMutableString string];
+    void (^block)(NSArray *) = ^(NSArray *cookies) {
+        for (NSHTTPCookie *c in cookies) {
+            [out appendFormat:@"%@=%@; ", c.name, c.value];
+        }
+        dispatch_semaphore_signal(sem);
+    };
+    ((void(*)(id, SEL, id))objc_msgSend)(ckStore, @selector(getAllCookies:), block);
+    dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC));
+    if (out.length < 2) return nil;
+    return [out substringWithRange:NSMakeRange(0, out.length - 2)];   // 去尾 "; "
+}

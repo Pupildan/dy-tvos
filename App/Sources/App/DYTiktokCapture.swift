@@ -20,6 +20,35 @@ final class DYTiktokCapture: NSObject {
     /// TikTok web 桌面 UA（泵 WebView + 播放请求头共用；TikTok CDN 直链需配对 UA）。
     static let tiktokUA = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
 
+    // MARK: - Cookie 罐（v228）
+    // 开发机验证门实锤：playAddr 直链绑定 WebView 会话——页面内 fetch=206 video/mp4，
+    // 脱离会话（裸 UA/+Referer/无 UA 三组对照）全部 403 → AVPlayer 播放头必须带泵 WebView
+    // 的完整 cookie（含 HttpOnly，document.cookie 拿不到）→ shim DYWebKitCookieHeader 私有收割。
+    private static let jarLock = NSLock()
+    private static var cookieJar: String = ""
+    private static var lastHarvestAt = Date.distantPast
+
+    /// 收割 cookie 罐（后台队列调——shim 内部信号量等异步 getAllCookies）。节流 ≥10s 一次。
+    private static func harvestCookies() {
+        jarLock.lock()
+        let recent = Date().timeIntervalSince(lastHarvestAt) < 10
+        jarLock.unlock()
+        guard !recent else { return }
+        let header = DYWebKitCookieHeader() ?? ""
+        jarLock.lock()
+        lastHarvestAt = Date()
+        if !header.isEmpty { cookieJar = header }
+        jarLock.unlock()
+        DYLog.shared.log("TIKTOK cookie harvest n=\(header.components(separatedBy: "; ").count) len=\(header.count)")
+    }
+
+    /// 播放头用：当前 cookie 罐（"k=v; k=v" 串，空=还没收割到）。
+    static func currentCookieHeader() -> String {
+        jarLock.lock()
+        defer { jarLock.unlock() }
+        return cookieJar
+    }
+
     /// 一条 TikTok 推荐视频（JS 端 slim 预解析结果，字段名已防御性兜底）。
     struct TiktokItem {
         var id: String = ""
@@ -81,6 +110,8 @@ final class DYTiktokCapture: NSObject {
         DYLog.shared.log("TIKTOK boot → tiktok.com/foryou (invisible pump webview)")
         wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.tiktok.com/foryou")!))
         startPolling()
+        // v228：开会话 3s 后首割 cookie（页面 set-cookie 完成后尽早有播放头可用）
+        DispatchQueue.global().asyncAfter(deadline: .now() + 3) { Self.harvestCookies() }
     }
 
     private func startPolling() {
@@ -123,6 +154,8 @@ final class DYTiktokCapture: NSObject {
             // v224 周期状态日志（每 10 tick≈10s）：页面活没活/hook 装没装/URL——真机定位泵断点的关键证据
             if self.pollCount % 10 == 0 {
                 DYLog.shared.log("TIKTOK status p=\(self.pollCount) hooked=\(hooked) rs=\(rs) href=\(href) total=\(self.totalCap)")
+                // v228：周期收割 cookie 罐（播放头要用；后台队列——shim 内部信号量等待）
+                DispatchQueue.global().async { Self.harvestCookies() }
             }
             // 首版 schema 透视：log 一次原始 item JSON 供核对字段名（仅一次）
             if let raw = diag["raw"] as? String, !raw.isEmpty, !self.rawLogged {
