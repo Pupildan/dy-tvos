@@ -47,12 +47,14 @@ final class DYTiktokCapture: NSObject {
     private var seenIds: Set<String> = []   // 按 id 去重（FYP 相邻页有重叠）
     private var seenLogged: Set<String> = []   // 端点透视日志去重（页面实际调的 /api/ 端点）
     private var rawLogged = false           // 首版只 log 一次原始 schema 供核对
+    private var rehookLogged = false        // v226 补装兜底首次告警只 log 一次
 
     /// 重进 TikTok 源时清 id 去重（会话重建后新一批不应被旧 seenIds 吞掉）。切源时由 DYFeedClient 调。
     func seenIdsReset() {
         seenIds.removeAll()
         seenLogged.removeAll()
         rawLogged = false
+        rehookLogged = false
         totalCap = 0
     }
 
@@ -130,6 +132,20 @@ final class DYTiktokCapture: NSObject {
                 let key = String(s.prefix(120))
                 if self.seenLogged.insert(key).inserted {
                     DYLog.shared.log("TIKTOK page-api \(s.prefix(200))")
+                }
+            }
+            // v226：document-start 注入对 TikTok 页静默失败（真机实锤 hooked=false rs=complete 3 分钟+）→
+            // evaluateJavaScript 补装兜底（照抖音 v165 同款，DYWorksCapture 已验证的恢复路径）。
+            // hookJS 自带 __ttHooked 幂等护栏，重复补装安全；若 hookJS 在 tvOS WebKit 抛错，
+            // evalJS 会 log "TIKTOK[rehookN] js err" 直接暴露。每 15 tick 试一次直到 hooked=true。
+            if !hooked, self.pollCount % 15 == 0 {
+                if !self.rehookLogged {
+                    self.rehookLogged = true
+                    DYLog.shared.event("TIKTOK hooked=false → evaluateJavaScript 补装 hook (v226 fallback)")
+                }
+                self.evalJS(Self.hookJS, tag: "rehook\(self.pollCount)") { _ in
+                    // 补装后滚一下触发页面发 recommend（首屏那批已错过，靠滚动批次拿数据）
+                    self.evalJS(Self.scrollJS, tag: "rehook-scroll") { _ in }
                 }
             }
             let cap = diag["cap"] as? [[String: Any]] ?? []
