@@ -7,7 +7,8 @@ import UIKit
 final class DYLiveChatOverlay: UIView {
     /// 最多同时显示几条（抖音直播约 5-7 条）
     private let maxRows = 6
-    private let rowHeight: CGFloat = 44
+    /// 单行最小高度（v221：超长弹幕换行时行高按内容撑高，此为下限）
+    static let rowMinHeight: CGFloat = 44
     private let rowSpacing: CGFloat = 4
     private var chatRows: [ChatRow] = []
 
@@ -16,17 +17,28 @@ final class DYLiveChatOverlay: UIView {
         let label = UILabel()
         init() {
             super.init(frame: .zero)
-            label.numberOfLines = 1
+            // v221：超长弹幕要自动换行（v217 的 numberOfLines=1 把长弹幕截断了）
+            label.numberOfLines = 0
             label.font = .systemFont(ofSize: 22, weight: .medium)
             label.translatesAutoresizingMaskIntoConstraints = false
             addSubview(label)
             NSLayoutConstraint.activate([
                 label.leadingAnchor.constraint(equalTo: leadingAnchor),
                 label.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor),
-                label.centerYAnchor.constraint(equalTo: centerYAnchor),
+                // label 铺满行高（行高由 height(forWidth:) 按内容动态算，UILabel 默认垂直居中）
+                label.topAnchor.constraint(equalTo: topAnchor),
+                label.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
         }
         required init?(coder: NSCoder) { fatalError() }
+
+        /// v221：按可用宽度测本行需要的高度（单行=最小行高，超长换行则撑高）。
+        func height(forWidth w: CGFloat) -> CGFloat {
+            let attr = label.attributedText ?? NSAttributedString()
+            let b = attr.boundingRect(with: CGSize(width: w, height: .greatestFiniteMagnitude),
+                                      options: [.usesLineFragmentOrigin, .usesFontLeading], context: nil)
+            return max(DYLiveChatOverlay.rowMinHeight, ceil(b.height) + 10)   // +10 上下留白
+        }
 
         func configure(nickname: String, content: String, emojiImages: [String: UIImage]) {
             // v219：去掉 @ 符号（用户要求）。昵称高亮 + 内容白字 + 内联表情图片，均带阴影。
@@ -123,16 +135,22 @@ final class DYLiveChatOverlay: UIView {
         setNeedsLayout()
     }
 
-    /// frame 布局：行从底部往上堆叠（新消息在最底），行间距 rowSpacing
+    /// frame 布局：行从底部往上堆叠（新消息在最底），行间距 rowSpacing。
+    /// v221：每行高度按内容动态算（超长弹幕换行撑高），从最新(最底)往最旧(最上)排，超出顶部自然裁掉。
     override func layoutSubviews() {
         super.layoutSubviews()
         let total = chatRows.count
         guard total > 0 else { return }
-        for (i, row) in chatRows.enumerated() {
-            // i=0 最旧（最上），i=total-1 最新（最下）
-            let rowsFromBottom = total - i
-            let y = bounds.height - CGFloat(rowsFromBottom) * rowHeight - CGFloat(rowsFromBottom - 1) * rowSpacing
-            row.frame = CGRect(x: 0, y: y, width: bounds.width, height: rowHeight)
+        let availW = bounds.width
+        guard availW > 0 else { return }
+        var y = bounds.height
+        // 从最新(i=total-1，最底)往最旧(i=0，最上)排：每行先上移自身高度再定位，再扣间距
+        for i in stride(from: total - 1, through: 0, by: -1) {
+            let row = chatRows[i]
+            let h = row.height(forWidth: availW)
+            y -= h
+            row.frame = CGRect(x: 0, y: y, width: availW, height: h)
+            y -= rowSpacing
         }
     }
 }

@@ -137,6 +137,8 @@ final class DYLiveFeedViewController: UIViewController {
     private var videoRect: CGRect = .zero
     // v219：表情包图片（shortcode 含方括号 → UIImage），开直播屏时预加载
     private var emojiImages: [String: UIImage] = [:]
+    // v221：弹幕是否已随画面 reveal——画面出首帧(bufferFinished)前隐藏弹幕，避免"画面没出弹幕先出"
+    private var chatRevealed = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -199,6 +201,7 @@ final class DYLiveFeedViewController: UIViewController {
             y: UIScreen.main.bounds.height - 140 - chatH,
             width: chatW,
             height: chatH))
+        chatOverlay.isHidden = true   // v221：画面出首帧前隐藏弹幕（onChat 照常累积，reveal 后一并可见）
         view.addSubview(chatOverlay)
         // 弹幕 WS 回调：收到聊天 → 喂底部列表（带表情包图片内联渲染）
         danmakuSocket.onChat = { [weak self] msg in
@@ -377,6 +380,9 @@ final class DYLiveFeedViewController: UIViewController {
     /// v213：连直播弹幕 WS（roomId 从 enter 解析；userId/cookie 用匿名 ttwid，探针已验证）
     private func connectDanmaku(room: DYLiveRoom) {
         chatOverlay.clear()
+        // v221：切房重新隐藏弹幕，等新房画面出首帧再 reveal
+        chatRevealed = false
+        chatOverlay.isHidden = true
         let ttwid = DYDanmakuClient.shared.ttwidValue
         danmakuSocket.connect(room: room, ttwid: ttwid)
     }
@@ -414,6 +420,14 @@ final class DYLiveFeedViewController: UIViewController {
             case .bufferFinished:
                 // v219：首帧已渲染 → 重算视频显示区域（naturalSize 此时已知）+ 淡出封面占位
                 self.updateVideoRect()
+                // v221：画面出首帧了 → reveal 弹幕（此前隐藏但 onChat 照常累积，此刻一并淡入）
+                if !self.chatRevealed {
+                    self.chatRevealed = true
+                    self.chatOverlay.alpha = 0
+                    self.chatOverlay.isHidden = false
+                    UIView.animate(withDuration: 0.3) { self.chatOverlay.alpha = 1 }
+                    DYLog.shared.log("LIVE chat reveal webRid=\(self.playingWebRid)")
+                }
                 if !self.coverView.isHidden {
                     UIView.animate(withDuration: 0.35, animations: { self.coverView.alpha = 0 }) { _ in
                         self.coverView.isHidden = true

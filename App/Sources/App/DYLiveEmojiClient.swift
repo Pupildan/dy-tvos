@@ -85,7 +85,12 @@ final class DYLiveEmojiClient {
                 let eu = it["emoji_url"] as? [String: Any] ?? [:]
                 let urls = (eu["url_list"] as? [String]) ?? []
                 let u = urls.first(where: { $0.hasPrefix("http") }) ?? urls.first ?? ""
-                if !dn.isEmpty, !u.isEmpty { out["[\(dn)]"] = u }   // key 带方括号，匹配 content 里的 [捂脸]
+                if !dn.isEmpty, !u.isEmpty {
+                    // display_name API 已自带方括号（如 "[微笑]"，探针 emoji_map.json 实测 214/214 全带），
+                    // 不能再包一层否则成 "[[微笑]]" 永远匹配不到 content 里的 "[微笑]"。已带括号则原样用。
+                    let key = (dn.hasPrefix("[") && dn.hasSuffix("]")) ? dn : "[\(dn)]"
+                    out[key] = u
+                }
             }
         }.resume()
         sem.wait()
