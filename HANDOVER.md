@@ -1,10 +1,11 @@
-# DYTV 交接文档（v208 · 2026-11-18 更新）
+# DYTV 交接文档（v231 · 2026-11-20 更新）
 
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v223**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v231**。稳定回退点：**v222**（TikTok 源引入前）；更早回退 v122。
 > 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；⭐⭐**直播出画面已解决（v212 真机确认！）**：v185→v211 十几轮实锤 AVPlayer 这内核对抖音直播 HLS 卡 -16832 追边 stall 永解不出首帧（ffprobe 啃本地 TS 证实流/编码/清单/渲染层全好，唯独 AVPlayer 这内核的 live-edge 逻辑救不了；v210 暴力修法回归已 v211 回退），**v212 换播放内核 AVPlayer→KSPlayer(KSMEPlayer/FFmpeg 软解) 真机出画面**（铁律：只有直播内核能换，VOD/主feed/loading 不动；SPM 依赖 KSPlayer 2.3.4 拉 FFmpegKit 6.1.4，ipa 13.8→26.4MB；`KSOptions.firstPlayerType=KSMEPlayer.self` 锁 FFmpeg；`.bufferFinished`=画面渲染中信号；真机日志 `preparing→readyToPlay→buffering→bufferFinished` 时间稳定 5s 步进）。**⭐v215-v219 直播弹幕完整跑通（2026-11-19，待真机终验 v219）**：**v215 采集通**（sendJoinWhenConnected 等 open 再发 join + DispatchQueue 心跳，真机日志采到 32 条真实聊天 `@昵称:内容`，探针 `live_emoji_probe.js` 验证 `/aweme/v1/web/emoji/list` 返回 214 个 emoji shortcode→图片URL）；**v216-v217 渲染修**（v216 诊断 overlayFrame 高度塌缩到 2-10px，v217 ChatRow 显式高 52px 修塌缩）；**v218 彻底重写 chatOverlay 为 frame 布局**（去掉 UIStackView+autolayout，chatRows 数组+layoutSubviews 定位，消灭 autolayout 塌缩整类问题，一次性排除所有不显示可能——用户要求）；**v219 视频区自适应定位 + 去@ + 表情包图片**：①videoRect=AVMakeRect(aspectRatio:naturalSize, insideRect:ksContainer.bounds)，naturalSize 从 ksCoordinator.playerLayer?.player.naturalSize 取，竖屏居中窄条/横屏满宽自动适配，弹幕(chatOverlay)+标题(LivePlayerCell)按 videoRect 左下角定位（竖屏不再落黑边）②去 @ 符号 ③表情包 `DYLiveEmojiClient` 拉 `/aweme/v1/web/emoji/list`(214 个 shortcode→图片URL，探针 live_emoji_probe.js 验证)+NSCache，ChatRow 解析 content 里 `[捂脸]`→NSTextAttachment 内联图片。⚠️编译错教训（emoji client fetchEmojiList 返回非可选 [String:String] 却用 guard let→改直接赋值+isEmpty 判断，见 swift-push-strict-code-review 记忆）。**CI success，待真机终验 v219**；**app 图标 v195-v203 修复**；启动加载视频过渡 v195。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
+> **⭐v223-v231 TikTok 源诊断收官（2026-11-20，详见 §5.7）**：新增第三个视频源「TikTok 国际版」（离屏 WebView 数据泵，入口在设置面板抖音精选后）。**真机 v231 page-shape 实锤 tvOS 私有 WebKit `mse=undefined`（无 MediaSource）→ TikTok 检测后降级渲染（单条视频、2 屏高、无无限 feed）→ 钩子补装前唯一 recommend 已发完 → 截获恒 total=0 → 黑屏**。**页面滚动/预载路线判死**；下一步唯一可行=**plan B：钩子装好后页面上下文代签 fetch recommend**（详见 §5.7⑤）。开发机验证门已全链路跑通（端点/schema/playAddr 绑会话 cookie 全实锤，playAddr 需 cookie 罐→v228 已加私有 `DYWebKitCookieHeader` 收割，真机 `cookie harvest n=28` 实证）。**采集器换 Node v3（`_tools/dy_collector.js`）**——旧 PS 串行版僵尸连接堵死所有新连接（整晚零日志根因）+PS Task 版线程池无 runspace 零落盘。冷启动 loading.mp4 漏音、DYBuild.version 显示滞后 v220 等 cosmetic 待修。
 
 ---
 
@@ -22,7 +23,7 @@
 - **CI 失败**：`_tools/dy_fetch_errors.ps1 -RunId <id>` 抓错误行。
 - **CI 成功但下载抽风**（已知瞬态）：`_tools/dy_download.ps1 -ArtifactId <id> -IpaName "DYTV-tvos-unsigned-vXX.ipa"` 单独重下，**不要重跑整条 pipeline**（会双重 commit/push）。
 - git 在 `C:\Users\Admin\WorkBuddy\fndanmu-tvos\_tools\MinGit\cmd\git.exe`。
-- 日志：ATV 推送到开发机 `output/atv_push.log`（`dy_collector.ps1` 监听 :9988）。**采集器不会常驻**——读日志前 `netstat -ano | findstr :9988` 确认 LISTENING；ATV 只在新日志产生时重连（采集器起来后要操作一下 ATV 触发回灌）；ATV IP 从 9988 的 ESTABLISHED 远端拿。
+- 日志：ATV 推送到开发机 `output/atv_push.log`。**采集器 = Node `_tools/dy_collector.js`（v3，`node dy_collector.js` 常驻后台）**——⚠️旧 `dy_collector.ps1` 有两代致命 bug（v1 串行 accept 被僵尸连接堵死、v2 PS Task 线程池无 runspace 零落盘），**别再用**。读日志前 `netstat -ano | findstr :9988` 确认 LISTENING **且进程是 node**（PID 对得上）；采集器启动会重置日志文件；ATV 只在新日志产生时连接/回灌（采集器起来后要操作一下 ATV 触发回灌）；ATV IP 从 9988 的 ESTABLISHED 远端拿。本地链路自测：`_tmp/tcp_test.ps1` 发测试行看是否落盘。
 - 真机诊断：`curl http://<ATV-IP>:8765/stat`（计数器+事件环）/ `/log`。
 - **开发机验证门（重大流程，用户提议采纳）**：数据获取类改动先用 Node 复刻整条链验证（`_tmp/danmaku_probe.js` / `webfeed_probe.js` / `danmaku_hist_probe.js` / `comment_works_probe.js` 可复用：加载 Signer JS + protobuf 解码 + HTTP 矩阵），数据说话后再进真机——一轮脚本顶 3-4 轮 CI。
 
@@ -180,12 +181,44 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 - **第三版候选**：清晰度切换（复用 enter 的 hls_pull_url_map 多档）、FLV 低延迟路线（需本地转封装或换播放内核，成本高先缓）、直播关注流（/webcast/web/feed/follow/ 需登录态）、弹幕 WebSocket 断线重连优化（当前 ~12s 掉线重连一次，长时间挂机可能有间隙）。
 - 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，铁律限制"仅登录用"）——可解锁清晰度/收藏/关注流。
 
-### 5.7 TikTok（国际版）推荐流（v223 新增，⭐待真机终验 schema/直链）
+### 5.7 TikTok（国际版）推荐流（v223 实装 → v231 诊断收官，⚠️⏸️页面路线判死、转 plan B 待实施）
+
+**当前状态一句话（v231 更新，2026-11-20）**：数据泵架构正确、cookie 收割/hook 补装/端点透视全链路日志就绪；**真机 v231 page-shape 实锤 `mse=undefined`——tvOS 私有 WebKit 没有 MediaSource** → TikTok web 页面检测到无 MSE 后走**降级渲染（单条视频、"打开应用"横幅、页面仅 2 屏高、无无限 feed 列表）**，唯一的 recommend 请求在 evaluateJavaScript 补装钩子前就已发完，此后页面不再发任何 feed 请求 → 截获恒 `total=0` → 黑屏。**滚动/预载路线在 tvOS WebView 上判死（页面根本没有无限 feed 可滚）；下一步唯一可行=plan B：钩子装好后从页面上下文"代签" fetch recommend URL（页面 HTML+TikTok 自己的签名包装器还在，调用它们的 fetch 即由页面代签），不依赖页面滚动/播放。**
+
+#### ① 入口与架构（v223 实装）
 - **入口**：设置面板（Menu 返回键呼出）→ **抖音精选之后**「TikTok 国际版视频源」行（用户指定位置）。`DYFeedSource` 加 `.tiktok`，持久化同 web/mobile。
-- **为什么走 WebView 数据泵**：TikTok 签名（X-Argus/X-Gorgon，native .so 级）无法自算，且无 myDV 那样可照抄的反编译源码 → 走和抖音作品/合集（DYWorksCapture）完全同构的离屏 WebView 数据泵：让 TikTok 网页自己发签名请求，hook 截获 `/api/recommend/item_list` 响应、JS 端 slim 预解析、scroll 触发页面自己翻页。可行性已验证（探针 `C:/Nbeetok/_tmp/tiktok_reach_probe.js` + 浏览器实测）：TikTok web 对普通 HTTP 直接给真 HTML（无 jsvmp 挑战）、FYP 匿名出视频无登录墙；视频走 MSE/blob，真 CDN 直链在 recommend 响应 `video.playAddr` 里。
-- **新文件 `DYTiktokCapture.swift`**：复用 `DYCreateWebViewWithInject` shim（已封 v165 config 时序坑）建离屏 WebView（1920×1080、alpha 0.01、不可交互、insertSubview at:0）加载 `tiktok.com/foryou`；`hookJS`（document-start）hook fetch+XHR 只收 `recommend/item_list`，JS 端把 `itemList[]` 压成 slim（防御性多字段名兜底 `playAddr||play_addr||url_list`、`stats||statistics`），推进 `window.__ttCap`；**首响应原始 item JSON 存 `window.__ttRaw`，drain 取回 log 一次 `TIKTOK raw-item-schema`**（供核对真实 schema 字段名）；1s 轮询 drainJS splice 抽干 → dedupe → `onItems`（主线程）交付。`requestMore()` 注入 `window.scrollBy` 触发页面翻页（不自拼 URL）。切走 TikTok 源 `teardown()` 释放 WebView。
-- **改动 5 处**：①`PlaybackEngine.swift` DYFeedSource 加 `.tiktok` ②`DYFeedClient.swift` fetchPage 穷尽 switch 补 case + `setupTiktokHandler`（onItems→转 DYVideoInfo/URL→`PlaybackEngine.merge`，web 同款不传 raw/redirect）+ `fetchTiktokPage`（ensureSession + 引擎已有视频才 requestMore，首批靠页面自动发）+ setSource 切走时 teardown ③`NativePlayerView.swift` playbackHeaders if/else 改**显式三段 switch**（.tiktok 配 `DYTiktokCapture.tiktokUA` + Referer `tiktok.com`，否则误落 mobile else）④`DYSettingsModel.swift` PanelRow 加 tiktok + 面板抖音精选后插行 ⑤（selectSource 透传无需改）。
-- **⏸️待真机终验 v223**：①recommend 响应截获到（`TIKTOK drain got=N`）②log 出的真实 item schema 字段名（`TIKTOK raw-item-schema`）③第一条视频是否出画面（playAddr 直链 AVPlayer 能否直接播、需哪些头、时效）。schema/直链确认后 v224 精修（按确认 schema 精修解析、翻页无限刷调优、`generateCover` 当前写死 mobile UA 对 TikTok 可能取不到封面、错误兜底）。**回退点 v222**。
+- **为什么走 WebView 数据泵**：TikTok 签名（X-Argus/X-Gorgon，native .so 级）无法自算，且无 myDV 那样可照抄的反编译源码 → 走和抖音作品/合集（DYWorksCapture）同构的离屏 WebView 数据泵：让 TikTok 网页自己发签名请求，hook 截获 `/api/recommend/item_list` 响应、JS 端 slim 预解析、scroll 触发页面翻页。
+- **新文件 `DYTiktokCapture.swift`**：复用 `DYCreateWebViewWithInject` shim 建离屏 WebView（1920×1080、alpha 0.01、不可交互、insertSubview at:0）加载 `tiktok.com/foryou`；document-start `hookJS` 拦 fetch+XHR；1s 轮询 drainJS 抽干 `window.__ttCap` → slim → `onItems`（主线程）→ DYFeedClient 转 DYVideoInfo/URL → `PlaybackEngine.merge`。`requestMore()` 注入 scrollJS 触发页面翻页。切走 TikTok 源 `teardown()` 释放 WebView。
+- **改动 5 处**：①`PlaybackEngine.swift` DYFeedSource 加 `.tiktok`（**唯一穷尽 switch 在 `DYFeedClient.fetchPage`，加 case 必补**）②`DYFeedClient.swift` fetchPage 补 case + `setupTiktokHandler`（onItems→DYVideoInfo→merge）+ `fetchTiktokPage` + setSource 切走 teardown ③`NativePlayerView.swift` playbackHeaders 改**显式三段 switch**（.tiktok=UA+Referer+Cookie，否则误落 mobile else）④`DYSettingsModel.swift` PanelRow 加 tiktok + 面板行 ⑤selectSource 透传无需改。
+
+#### ② v224–v229 迭代修复（全部真机日志实证）
+- **v224 切源声音不停**：`PlaybackEngine.reset()` 只清数据结构不动 PlayerManager 池里的 AVPlayer → `setSource` 加 `PlayerManager.shared.pauseAll()`（照直播开屏同款，RootView.isLiveOpen→pauseAll）。**新源首批 merge 后 acquire 自然恢复播放**。真机 `FEEDPOOL pauseAll` 已实证。
+- **v225 卡加载界面**：TikTok 源被持久化→每次冷启动 fetchTiktokPage→截不到视频→引擎空→`firstFrameReady` 永不来→**启动加载视频永不退场**。修=RootView onAppear 加 **15s 超时兜底**（真机 `ROOT launch video TIMEOUT dismiss` 已实证生效）。⚠️闭包别写 `[weak engine]`（@ObservedObject 包装器是 struct，weak 编译错）。
+- **v226 hook 注入静默失败**：document-start WKUserScript 在 TikTok 页**从未执行**（真机 `hooked=false rs=complete` 3 分钟+实锤；同 shim 对抖音页正常——TikTok 页特有）。修=照抖音 v165 同款加 **evaluateJavaScript 补装兜底**（每 5 tick 重试直到 hooked=true，装上即滚一屏）。真机 `hooked=false → 补装 → hooked=true` 已实证。
+- **v227–v229 滚动探针**：v227 单次 scrollBy 滚不动；v229 加自举滚动泵（hooked 且 totalCap=0 时每 5 tick 滚一轮）。真机 `TIKTOK status total=0` 持续到 p=280 —— **滚动泵跑了但页面不响应**（见 ③ page-shape 实锤：页面根本没有可滚的无限列表）。
+
+#### ③ v230–v231 诊断收官（决定性）
+- **v230 scroll-diag**：每 5 tick 回传 window.scrollY 前后 + 最大可滚动容器 found/scrollTop/scrollHeight/clientHeight。真机实锤 `{"found":1,"wy":120→1080,"bt":888→888,"bsh":1776,"bch":888}` —— **设备页面总共只有 2 屏内容（1776px），没有 feed 无限列表**；window 能滚 960px 但那是降级页的高度。
+- **⭐v231 page-shape（一锤定音）**：`{"mse":"undefined","h264":"probably/probably","videos":1,"loginWall":0,"txt":"打开应用 518.7K 5485 分享 nazwa 😭😭 original sound - ..."}` ——
+  - **`mse=undefined` = tvOS 私有 WebKit 没有 MediaSource Extensions**（TikTok web 全靠 MSE 播视频；抖音页面走直链 `video.src` 不用 MSE，所以抖音泵从来没事）；
+  - 页面**非登录墙**、**有 1 个 video 元素**、文本是真实 FYP 内容（作者/赞数/音乐）→ TikTok 检测到无 MSE 后**走降级渲染：只渲染 1 条视频+"打开应用"横幅，页面 2 屏高，无无限 feed 列表，不再预取后续视频**；
+  - 唯一的 recommend 在补装钩子前（加载期）已发完 → 补装钩子看不到 → `total=0` 恒成立 → 黑屏无声。
+- **cookie 收割（v228，真机已实证可用）**：开发机验证门测出 **playAddr 直链绑定 WebView 会话**——页面内 fetch=206 video/mp4，脱离会话（裸 UA/+Referer/无 UA 三组对照）**全部 403** → AVPlayer 播放头必须带泵 WebView 的完整 cookie（含 HttpOnly）。shim 加 `DYWebKitCookieHeader()`（`WKWebsiteDataStore.defaultDataStore.httpCookieStore.getAllCookies` 经 objc_msgSend，异步完成回调+信号量等≤3s，**调用方放后台队列**），DYTiktokCapture 开会话 3s 首割+每 10 tick 周期收割（≥10s 节流，NSLock 护罐）；真机 `TIKTOK cookie harvest n=28 len=2661` 已实证收割成功。
+
+#### ④ 开发机验证门（agent 浏览器真 Chromium，2026-11-20 全链路跑通）
+- **端点确认**：`https://www.tiktok.com/api/recommend/item_list/?WebIdLastTime=...&aid=1988...`（v223 猜的端点名正确）。
+- **滚动触发成立**（真 Chromium 里）：真实键盘 ArrowDown 切 8 个视频 → 预载池耗尽 → 页面自己发新 recommend → 截获 **35 条 item**。
+- **schema 全对**：camelCase web JSON——`video.playAddr/downloadAddr/cover/duration`、`author.nickname/uniqueId/avatarLarger`、`stats.diggCount/commentCount/shareCount/collectCount`、`createTime`——slimItem 兜底全命中。
+- **⭐playAddr 直链绑定会话**：页面内 fetch=206 video/mp4；脱离会话三组对照全 403 → **cookie 罐是播放硬依赖**（v228 已实装收割）。
+- **⚠️agent 浏览器 evaluate 包表达式坑**：`tab.playwright.evaluate` 只收**表达式**——`(function(){...})();` 带尾分号 SyntaxError "Unexpected token ';'"，必须 `(() => {...})()` 无尾分号。
+- **⚠️采集器换 Node v3（重要 ops）**：v1 PowerShell **串行 accept 死锁**（僵尸连接堵死所有新连接，2026-11-20 整晚零日志根因）；v2 PS Task.Run 线程池无 runspace 静默失败（连接照收零落盘）；**v3=Node `_tools/dy_collector.js`**（自测通过，ATV 秒连秒回灌）。读日志前确认进程是 node 而非 powershell。
+- **⚠️DYBuild.version 显示串停在 v220**（v221+ 推送没 bump 常量），行为已是 v231，cosmetic 但别被误导。
+
+#### ⑤ plan B（v232 已实装，待真机验证）+ 路线判据
+- **plan B = 页面代签 fetch（v232）**：v231 判死滚动/预载后，v232 把泵的驱动从「滚页面」改成「页面上下文代签 fetch recommend」。机制（与 DYWorksCapture `fetch(u,{credentials:'include'})` 同款已验证代签）：①hookJS `see()` 捕获页面自己发过的完整 recommend URL 存 `window.__ttRecTpl`（模板）；②`proxyFetchJS(cursor:)` 从页面上下文调 `window.fetch(tpl,{credentials:'include'})`——**我们的 fetch 包装器包在 TikTok 自己的签名包装器外面，调用即由页面代签 X-Argus/X-Gorgon/msToken**，响应流回包装器 `grab()` 截获 → `__ttCap` → drain 常规抽回（零新增解析）；模板无则用内置兜底（端点/aid=1988 开发机已确认），只换 cursor 翻页；③泵=`hooked && totalCap==0` 每 5 tick 发一轮 + `requestMore()` 也改走代签 fetch（成功后 cursor+12）。**验收点（真机日志）**：`TIKTOK proxy-fetch fire cursor=0 …` → `TIKTOK drain[pN] got=12 total=12` → 首批视频出画面。**若 `proxy-fetch … nonjson/FETCHERR` 或 `other-json keys=[status_code]`（软拒空）= 代签被验签拒** → 退路=①TikTok 最新 APK 逆向 native 签名（成本最高）②社区签名库（常坏）③放弃 TikTok 源。
+- **⚠️别再试**：滚动触发（页面无无限列表，v231 判死）、document-start 注入修复（TikTok 页特有静默失败，补装已绕开且足够）。
+- **遗留小问题**：①冷启动 loading.mp4 音轨漏音（用户报告"进去出声音"）——查 LaunchVideoPlayerView muted 是否在 tvOS 生效 ②`generateCover` 写死 mobile UA 对 TikTok 取不到封面 ③DYBuild.version 显示滞后（v232 已 bump 到 v232，此前停在 v220）。
+- **回退点 v222**。
 
 ## 6. 踩过的坑全集（按类别，务必牢记）
 
@@ -358,3 +391,4 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
 6. **CI/日志/编译的坑先查 §6**，已知问题别再踩一遍。
 7. 每版交付后更新本文档 + 记忆文件；版本号 +1 禁止重复。
 8. **作品/合集攻坚（§5.3）接手须知**：签名链/引导/WebView 已全部就位，别重造；下一步=方向 A（私有收割 HttpOnly）或 B（myDV 真机抓包）；**这条链永远用最小头，禁加浏览器一致性头**；触摸悬停已判死别再碰。
+9. **TikTok 源（§5.7）接手须知**：采集链路（hook/cookie/端点）全就位，**别再试滚动/预载路线（tvOS WebKit mse=undefined 已判死）**；下一步唯一可行=**plan B 页面代签 fetch recommend**（钩子装好后页面上下文 fetch，参数模板需完整未截断的 recommend URL）；cookie 罐收割已就位（playAddr 绑会话）。采集器用 Node v3 别用旧 ps1。

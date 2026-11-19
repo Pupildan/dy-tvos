@@ -78,6 +78,9 @@ final class DYTiktokCapture: NSObject {
     private var rawLogged = false           // 首版只 log 一次原始 schema 供核对
     private var raw2Logged = false          // v227 非 itemList JSON 透视只 log 一次
     private var rehookLogged = false        // v226 补装兜底首次告警只 log 一次
+    private var proxyFetchLogged = false    // v232 代签 fetch 首次触发只 log 一次
+    /// v232 代签 fetch 当前游标（每发一批成功后按 count 前进翻页）
+    private var proxyCursor = 0
 
     /// 重进 TikTok 源时清 id 去重（会话重建后新一批不应被旧 seenIds 吞掉）。切源时由 DYFeedClient 调。
     func seenIdsReset() {
@@ -86,6 +89,8 @@ final class DYTiktokCapture: NSObject {
         rawLogged = false
         raw2Logged = false
         rehookLogged = false
+        proxyFetchLogged = false
+        proxyCursor = 0
         totalCap = 0
     }
 
@@ -134,9 +139,34 @@ final class DYTiktokCapture: NSObject {
 
     /// 翻页：滚动触发页面自己发下一批 recommend（页面自签名）。onNeedMore → fetchPage → 这里。
     /// v224：TikTok FYP 的滚动容器不一定是 window——通用找"最大可滚动 div"滚它，window.scrollBy 兜底。
+    /// v232：滚动/预载路线判死（v231 page-shape 实锤 tvOS WebKit mse=undefined → 页面降级渲染无无限 feed）→
+    /// 改走 **plan B 页面代签 fetch**：把 recommend URL 模板喂回页面上下文 fetch，由 TikTok 自己的
+    /// fetch 签名包装器代签（同 DYWorksCapture `fetch(u,{credentials:'include'})` 已验证机制），响应被现有 hook grab。
     func requestMore() {
         ensureSession()
-        evalJS(Self.scrollJS, tag: "scroll") { _ in }
+        fireProxyFetch()
+    }
+
+    /// v232 plan B 核心：从页面上下文代签 fetch recommend。模板取 window.__ttRecTpl（页面自己发过的
+    /// 完整 recommend URL，由 hookJS 的 see() 捕获；无则用内置兜底模板），只换 cursor 参数翻页。
+    /// 响应经 hookJS 的 grab() 落 __ttCap → drain 常规抽回（零新增解析）。成功后 cursor 按 count 前进。
+    func fireProxyFetch() {
+        ensureSession()
+        let js = Self.proxyFetchJS(cursor: proxyCursor)
+        evalJS(js, tag: "proxy\(proxyCursor)") { [weak self] r in
+            guard let self else { return }
+            let s = (r as? String) ?? ""
+            if !self.proxyFetchLogged {
+                self.proxyFetchLogged = true
+                DYLog.shared.log("TIKTOK proxy-fetch fire cursor=\(self.proxyCursor) → \(s.prefix(160))")
+            } else {
+                DYLog.shared.log("TIKTOK proxy-fetch cursor=\(self.proxyCursor) → \(s.prefix(120))")
+            }
+            // 拿到 itemList 才前进游标（s 以 "ok" 开头=grab 已截获，items 交给 drain 解析）
+            if s.hasPrefix("ok") {
+                self.proxyCursor += 12   // item_list 默认 count，翻页步进
+            }
+        }
     }
 
     // MARK: - 轮询 drain
@@ -199,6 +229,13 @@ final class DYTiktokCapture: NSObject {
                         DYLog.shared.log("TIKTOK scroll-diag p=\(p) \(s.prefix(220))")
                     }
                 }
+            }
+            // v232 plan B 代签 fetch 泵：v231 实锤 tvOS WebKit mse=undefined → 页面降级渲染无无限 feed、
+            // 滚动永不触发 recommend → 唯一路线=页面上下文代签 fetch recommend URL（TikTok 自己的 fetch
+            // 包装器代签，响应被 hookJS grab 截获）。hooked 且还没截到货时每 5 tick 发一轮（与滚动泵并存，
+            // 谁先出数据都行；截到即 totalCap>0 双双停）。
+            if hooked, self.totalCap == 0, self.pollCount % 5 == 0 {
+                self.fireProxyFetch()
             }
             // v231：页面形态诊断（每 30 tick≈30s 一次）——设备页面只有 2 屏内容无 feed 列表（scroll-diag 实锤），
             // 头号嫌疑=tvOS 私有 WebKit 缺 MSE（TikTok web 视频靠 MSE 播放，页面 JS 检测失败就降级渲染登录墙；
@@ -326,13 +363,37 @@ final class DYTiktokCapture: NSObject {
     })();
     """
 
+    /// v232 plan B：页面上下文代签 fetch recommend。模板优先用 hookJS see() 捕获的页面自己发过的完整
+    /// recommend URL（__ttRecTpl），无则用内置兜底模板（端点/aid 已开发机确认）；只替换 cursor 参数翻页。
+    /// **签名机制**：调用页面 window.fetch（TikTok 自己的签名包装器已包在外层）→ 代签 X-Argus/X-Gorgon/
+    /// msToken → 响应流回我们的 fetch 包装器 grab() 截获（与 DYWorksCapture `fetch(u,{credentials:'include'})`
+    /// 同款已验证代签机制）。credentials:'include' 带 cookie；响应经 grab→__ttCap→drain 常规抽回。
+    private static func proxyFetchJS(cursor: Int) -> String {
+        return """
+        (function(){
+          var tpl = window.__ttRecTpl || 'https://www.tiktok.com/api/recommend/item_list/?aid=1988&count=12&cursor=\(cursor)';
+          try{
+            var u = tpl.replace(/([?&])cursor=\\d+/i, '$1cursor=\(cursor)');
+            if(!/([?&])cursor=/i.test(u)) u += (u.indexOf('?')>=0 ? '&' : '?') + 'cursor=\(cursor)';
+            window.__ttRecBusy = true;
+            fetch(u, {credentials:'include'}).then(function(r){ return r.text(); }).then(function(t){
+              window.__ttRecBusy = false;
+              try{ if(String(t).length<10 || String(t).charAt(0)!=='{'){ window.__ttRecLast='nonjson len='+String(t).length; }else{ window.__ttRecLast='ok len='+String(t).length; } }catch(e){}
+            }).catch(function(e){ window.__ttRecBusy=false; window.__ttRecLast='FETCHERR:'+String(e); });
+            return 'fired cursor=\(cursor) tpl=' + (window.__ttRecTpl ? 'captured' : 'fallback');
+          }catch(e){ window.__ttRecBusy=false; return 'SYNERR:'+String(e); }
+        })()
+        """
+    }
+
     /// document-start 注入的拦截器（v227）：**不猜端点名**——记录页面调的所有非静态请求 URL 到 __ttSeen；
     /// 任何响应体（容许前导空白）解析出 itemList/aweme_list 数组就 slim 化存 __ttCap；
     /// 非 itemList 的 JSON 响应也把 url+顶层 keys 记进 __ttRaw2（诊断：页面到底在调什么端点）。
     private static let hookJS = """
     (function(){
       if(window.__ttHooked) return; window.__ttHooked=true; window.__ttCap=[]; window.__ttRaw=''; window.__ttRaw2=''; window.__ttSeen=[];
-      function see(u){ try{ var s=String(u); if(/\\.(js|css|png|jpe?g|webp|gif|mp4|m3u8|ts|woff2?|svg)(\\?|$)/i.test(s)) return; if(window.__ttSeen.length<80) window.__ttSeen.push(s.slice(0,180)); }catch(e){} }
+      function see(u){ try{ var s=String(u); if(/\\.(js|css|png|jpe?g|webp|gif|mp4|m3u8|ts|woff2?|svg)(\\?|$)/i.test(s)) return; if(window.__ttSeen.length<80) window.__ttSeen.push(s.slice(0,180));
+        if(/recommend\\/item_list/i.test(s) && !window.__ttRecTpl){ window.__ttRecTpl=s; } }catch(e){} }
       function slimItem(a){
         var v=a.video||{};
         var pu=v.playAddr||v.play_addr||'';

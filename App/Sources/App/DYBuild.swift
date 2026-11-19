@@ -4,6 +4,6 @@ import Foundation
 /// 每次交付 version 必须 +1，禁止重复版本号（一个版本号 = 一个唯一构建产物）。
 /// 用户可在设置面板核对当前版本。
 enum DYBuild {
-    static let version = "v220"
-    static let changes = "v220: 直播弹幕三处优化(真机截图反馈)。①表情包图片加载改并发(214张DispatchGroup并行几秒完成,原顺序下载20s+太慢→表情显示不出来); ②弹幕字体/行距减小(fontSize 26→22,行高52→44,间距6→4,表情图34→28,不影响观看); ③标题/简介移到视频区左上角(原左下角)+字体减小(昵称32→26/简介26→22, layoutSubviews改infoTop=vr.minY+24顶部对齐)。视频区videoRect自适应定位(v219)保留。铁律只动直播, VOD弹幕/main feed/loading不碰"
+    static let version = "v232"
+    static let changes = "v232: TikTok源plan B页面代签fetch(v231实锤tvOS WebKit缺MSE→页面降级渲染无无限feed→滚动/预载判死,唯一可行=页面上下文代签fetch recommend)。hookJS see()捕获页面自己发过的完整recommend URL作模板,无则用兜底模板;只换cursor翻页;调用页面window.fetch(TikTok自己的签名包装器代签X-Argus/X-Gorgon/msToken)→响应流回我们的fetch包装器grab()截获(同DYWorksCapture已验证代签机制);hooked且totalCap==0时每5tick发一轮泵+requestMore也走代签fetch。响应经grab→__ttCap→drain常规抽回,零新增解析"
 }
