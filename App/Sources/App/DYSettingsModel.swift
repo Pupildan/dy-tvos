@@ -106,7 +106,7 @@ struct SettingsPanelView: View {
     @FocusState private var focusedRow: PanelRow?
 
     enum PanelRow: Hashable {
-        case mobile, web, danmaku, live, login
+        case mobile, web, tiktok, danmaku, live, login
     }
 
     var body: some View {
@@ -145,6 +145,7 @@ struct SettingsPanelView: View {
 
             sourceRow(title: "移动端推荐", subtitle: "手机端视频源", target: .mobile, row: .mobile)
             sourceRow(title: "抖音精选", subtitle: "电脑端视频源", target: .web, row: .web)
+            sourceRow(title: "TikTok", subtitle: "国际版视频源", target: .tiktok, row: .tiktok)   // v223：抖音精选后
             danmakuRow
             liveRow
             placeholderRow(title: "登录", subtitle: "即将上线", row: .login)

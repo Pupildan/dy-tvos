@@ -1,10 +1,12 @@
 import Foundation
 import Combine
 
-/// 视频源（v135 设置面板切换）：mobile=移动端推荐(aweme.snssdk.com protobuf)；web=抖音精选(www.douyin.com tab/feed JSON)
+/// 视频源（v135 设置面板切换）：mobile=移动端推荐(aweme.snssdk.com protobuf)；web=抖音精选(www.douyin.com tab/feed JSON)；
+/// tiktok=国际版 TikTok(离屏 WebView 数据泵 hook recommend/item_list，v223)
 enum DYFeedSource: String {
     case mobile
     case web
+    case tiktok
 }
 
 /// 单条视频的展示信息（v143 PC 版 UI：右轨计数 + 左下作者/文案）。

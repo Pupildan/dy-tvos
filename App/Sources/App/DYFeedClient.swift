@@ -58,17 +58,73 @@ final class DYFeedClient {
         guard signerReady, !booted else { return }
         booted = true
         PlaybackEngine.shared.source = source   // 启动即同步持久化的源（v136 记忆用户选择）
+        setupTiktokHandler()                    // v223 TikTok 泵 onItems → merge 进引擎
         DYLog.shared.log("FEED native pipeline armed (source=\(source.rawValue))")
         fetchPage()
     }
 
+    /// v223 TikTok 推荐流接线：DYTiktokCapture 截获一批 item → 转 DYVideoInfo/URL → merge 进引擎。
+    /// onItems 已在主线程（drain 里 DispatchQueue.main.async 包裹）。autoPlay 只在引擎空（首批）时跳 index 0。
+    private func setupTiktokHandler() {
+        DYTiktokCapture.shared.onItems = { [weak self] items in
+            guard self?.source == .tiktok else { return }   // 已切走则丢弃
+            var ids: [String] = []
+            var urls: [URL] = []
+            var durations: [Int] = []
+            var infos: [DYVideoInfo] = []
+            for it in items {
+                guard let u = URL(string: it.playUrl) else { continue }
+                var info = DYVideoInfo()
+                info.nickname = it.nickname
+                info.avatarUrl = it.avatar
+                info.digg = it.digg
+                info.comment = it.comment
+                info.share = it.share
+                info.collect = it.collect
+                info.desc = it.desc
+                info.createTimeText = it.createTime > 0 ? Self.tiktokTimeText(it.createTime) : ""
+                infos.append(info)
+                ids.append(it.id)
+                urls.append(u)
+                durations.append(it.duration)
+            }
+            guard !ids.isEmpty else { return }
+            DYLog.shared.log("TIKTOK merge ids=\(ids.count) first=\(ids.first ?? "-")")
+            PlaybackEngine.shared.merge(ids: ids, urls: urls,
+                                        replaceExisting: false,
+                                        autoPlay: PlaybackEngine.shared.urls.isEmpty,
+                                        refresh: false,
+                                        allDurations: durations,
+                                        allInfos: infos)
+        }
+    }
+
+    /// TikTok 发布时间（unix 秒）→ 相对时间文本（照 web/mobile 风格简化）。
+    private static func tiktokTimeText(_ unixSec: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(unixSec))
+        let fmt = DateFormatter()
+        fmt.dateFormat = "yyyy-MM-dd"
+        return fmt.string(from: date)
+    }
+
+    /// 拉一页 TikTok 推荐：确保离屏 WebView 泵在跑；引擎已有视频才滚动触发下一批
+    /// （首批靠 FYP 页面 load 时自动发的 recommend，立即 scrollBy 会滚空跳过首屏）。
+    /// 数据经 setupTiktokHandler 的 onItems 异步回调 merge 进引擎（本方法本身不阻塞）。
+    private func fetchTiktokPage() {
+        DYTiktokCapture.shared.ensureSession()
+        if !PlaybackEngine.shared.urls.isEmpty {
+            DYTiktokCapture.shared.requestMore()
+        }
+    }
+
     // MARK: - 翻页
 
-    /// 拉一页当前源的推荐（移动端=protobuf；web=抖音精选 JSON）。
+    /// 拉一页当前源的推荐（移动端=protobuf；web=抖音精选 JSON；tiktok=国际版 WebView 泵）。
     func fetchPage() {
         switch source {
         case .mobile: fetchMobilePage()
         case .web: fetchWebPage()
+        case .tiktok: fetchTiktokPage()
         }
     }
 
@@ -84,6 +140,7 @@ final class DYFeedClient {
         webRefreshIndex = 1
         PlaybackEngine.shared.source = s
         PlaybackEngine.shared.reset()
+        if s != .tiktok { DYTiktokCapture.shared.teardown() }   // v223 切走 TikTok 释放离屏 WebView
         fetchPage()
     }
 

@@ -3,7 +3,7 @@
 > **维护规则（v148 起）**：新内容只更新对应章节（§5 未解决/§6 踩坑/§8 方向/§7 字段表），不再按版本堆叠新章节；版本细节以 git log + 记忆文件为准。
 
 > 本文档取代此前所有过时交接。所有结论均基于工具读取的实际代码与日志，非记忆。
-> **当前版本 v222**。稳定回退点：**v122**（git checkout 三文件）。
+> **当前版本 v223**。稳定回退点：**v122**（git checkout 三文件）。
 > 最新验收状态：播放线全收工（v128-v131）；双源/弹幕/倍速/评论全通（v135-v156）；作品翻页=服务端信任墙判死搁置（v175-v182）；⭐⭐**直播出画面已解决（v212 真机确认！）**：v185→v211 十几轮实锤 AVPlayer 这内核对抖音直播 HLS 卡 -16832 追边 stall 永解不出首帧（ffprobe 啃本地 TS 证实流/编码/清单/渲染层全好，唯独 AVPlayer 这内核的 live-edge 逻辑救不了；v210 暴力修法回归已 v211 回退），**v212 换播放内核 AVPlayer→KSPlayer(KSMEPlayer/FFmpeg 软解) 真机出画面**（铁律：只有直播内核能换，VOD/主feed/loading 不动；SPM 依赖 KSPlayer 2.3.4 拉 FFmpegKit 6.1.4，ipa 13.8→26.4MB；`KSOptions.firstPlayerType=KSMEPlayer.self` 锁 FFmpeg；`.bufferFinished`=画面渲染中信号；真机日志 `preparing→readyToPlay→buffering→bufferFinished` 时间稳定 5s 步进）。**⭐v215-v219 直播弹幕完整跑通（2026-11-19，待真机终验 v219）**：**v215 采集通**（sendJoinWhenConnected 等 open 再发 join + DispatchQueue 心跳，真机日志采到 32 条真实聊天 `@昵称:内容`，探针 `live_emoji_probe.js` 验证 `/aweme/v1/web/emoji/list` 返回 214 个 emoji shortcode→图片URL）；**v216-v217 渲染修**（v216 诊断 overlayFrame 高度塌缩到 2-10px，v217 ChatRow 显式高 52px 修塌缩）；**v218 彻底重写 chatOverlay 为 frame 布局**（去掉 UIStackView+autolayout，chatRows 数组+layoutSubviews 定位，消灭 autolayout 塌缩整类问题，一次性排除所有不显示可能——用户要求）；**v219 视频区自适应定位 + 去@ + 表情包图片**：①videoRect=AVMakeRect(aspectRatio:naturalSize, insideRect:ksContainer.bounds)，naturalSize 从 ksCoordinator.playerLayer?.player.naturalSize 取，竖屏居中窄条/横屏满宽自动适配，弹幕(chatOverlay)+标题(LivePlayerCell)按 videoRect 左下角定位（竖屏不再落黑边）②去 @ 符号 ③表情包 `DYLiveEmojiClient` 拉 `/aweme/v1/web/emoji/list`(214 个 shortcode→图片URL，探针 live_emoji_probe.js 验证)+NSCache，ChatRow 解析 content 里 `[捂脸]`→NSTextAttachment 内联图片。⚠️编译错教训（emoji client fetchEmojiList 返回非可选 [String:String] 却用 guard let→改直接赋值+isEmpty 判断，见 swift-push-strict-code-review 记忆）。**CI success，待真机终验 v219**；**app 图标 v195-v203 修复**；启动加载视频过渡 v195。复用文档：`docs/video-switch-playback.md` + `docs/tvos-app-icon-guide.md`。
 
 ---
@@ -179,6 +179,13 @@ KernelSU 临时 root + mitmproxy（CA bind-mount 进 Android16 apex+system cacer
   - **⚠️编译错教训（推送前严格自查，见 swift-push-strict-code-review 记忆）**：①emoji client `fetchEmojiList` 返回非可选 `[String:String]` 却用 `guard let` → 改直接赋值+isEmpty；②改心跳 Timer→DispatchWorkItem 时漏改属性声明类型（`Timer?`→`DispatchWorkItem?`）+ `.invalidate()`→`.cancel()`；③`preferredForwardBufferDuration` 在 `AVPlayerItem` 非 `AVPlayer`。Windows 无法编译 Swift，只能靠 CI 验证，推送前必逐项"心里编译"。
 - **第三版候选**：清晰度切换（复用 enter 的 hls_pull_url_map 多档）、FLV 低延迟路线（需本地转封装或换播放内核，成本高先缓）、直播关注流（/webcast/web/feed/follow/ 需登录态）、弹幕 WebSocket 断线重连优化（当前 ~12s 掉线重连一次，长时间挂机可能有间隙）。
 - 登录：扫码登录（网页套壳路线 v2-v8 已验证可行，铁律限制"仅登录用"）——可解锁清晰度/收藏/关注流。
+
+### 5.7 TikTok（国际版）推荐流（v223 新增，⭐待真机终验 schema/直链）
+- **入口**：设置面板（Menu 返回键呼出）→ **抖音精选之后**「TikTok 国际版视频源」行（用户指定位置）。`DYFeedSource` 加 `.tiktok`，持久化同 web/mobile。
+- **为什么走 WebView 数据泵**：TikTok 签名（X-Argus/X-Gorgon，native .so 级）无法自算，且无 myDV 那样可照抄的反编译源码 → 走和抖音作品/合集（DYWorksCapture）完全同构的离屏 WebView 数据泵：让 TikTok 网页自己发签名请求，hook 截获 `/api/recommend/item_list` 响应、JS 端 slim 预解析、scroll 触发页面自己翻页。可行性已验证（探针 `C:/Nbeetok/_tmp/tiktok_reach_probe.js` + 浏览器实测）：TikTok web 对普通 HTTP 直接给真 HTML（无 jsvmp 挑战）、FYP 匿名出视频无登录墙；视频走 MSE/blob，真 CDN 直链在 recommend 响应 `video.playAddr` 里。
+- **新文件 `DYTiktokCapture.swift`**：复用 `DYCreateWebViewWithInject` shim（已封 v165 config 时序坑）建离屏 WebView（1920×1080、alpha 0.01、不可交互、insertSubview at:0）加载 `tiktok.com/foryou`；`hookJS`（document-start）hook fetch+XHR 只收 `recommend/item_list`，JS 端把 `itemList[]` 压成 slim（防御性多字段名兜底 `playAddr||play_addr||url_list`、`stats||statistics`），推进 `window.__ttCap`；**首响应原始 item JSON 存 `window.__ttRaw`，drain 取回 log 一次 `TIKTOK raw-item-schema`**（供核对真实 schema 字段名）；1s 轮询 drainJS splice 抽干 → dedupe → `onItems`（主线程）交付。`requestMore()` 注入 `window.scrollBy` 触发页面翻页（不自拼 URL）。切走 TikTok 源 `teardown()` 释放 WebView。
+- **改动 5 处**：①`PlaybackEngine.swift` DYFeedSource 加 `.tiktok` ②`DYFeedClient.swift` fetchPage 穷尽 switch 补 case + `setupTiktokHandler`（onItems→转 DYVideoInfo/URL→`PlaybackEngine.merge`，web 同款不传 raw/redirect）+ `fetchTiktokPage`（ensureSession + 引擎已有视频才 requestMore，首批靠页面自动发）+ setSource 切走时 teardown ③`NativePlayerView.swift` playbackHeaders if/else 改**显式三段 switch**（.tiktok 配 `DYTiktokCapture.tiktokUA` + Referer `tiktok.com`，否则误落 mobile else）④`DYSettingsModel.swift` PanelRow 加 tiktok + 面板抖音精选后插行 ⑤（selectSource 透传无需改）。
+- **⏸️待真机终验 v223**：①recommend 响应截获到（`TIKTOK drain got=N`）②log 出的真实 item schema 字段名（`TIKTOK raw-item-schema`）③第一条视频是否出画面（playAddr 直链 AVPlayer 能否直接播、需哪些头、时效）。schema/直链确认后 v224 精修（按确认 schema 精修解析、翻页无限刷调优、`generateCover` 当前写死 mobile UA 对 TikTok 可能取不到封面、错误兜底）。**回退点 v222**。
 
 ## 6. 踩过的坑全集（按类别，务必牢记）
 

@@ -365,15 +365,20 @@ final class PlayerManager {
         }
     }
 
-    /// 播放请求头按源切换（v135）：mobile=移动端 UA/Cookie；web=Chrome UA+Referer+ttwid（web CDN 需要）
+    /// 播放请求头按源切换（v135，v223 加 .tiktok）：mobile=移动端 UA/Cookie；web=Chrome UA+Referer+ttwid；
+    /// tiktok=TikTok web UA+Referer（TikTok CDN 直链需配对 UA，否则可能 403/限速）。
     private func playbackHeaders() -> [String: String] {
         var headers: [String: String] = [:]
-        if PlaybackEngine.shared.source == .web {
+        switch PlaybackEngine.shared.source {
+        case .web:
             headers["User-Agent"] = DYDanmakuClient.webUA
             headers["Referer"] = "https://www.douyin.com/"
             let ttwid = DYDanmakuClient.shared.ttwidValue
             if !ttwid.isEmpty { headers["Cookie"] = "ttwid=\(ttwid)" }
-        } else {
+        case .tiktok:
+            headers["User-Agent"] = DYTiktokCapture.tiktokUA
+            headers["Referer"] = "https://www.tiktok.com/"
+        case .mobile:
             headers["User-Agent"] = DYFeedClient.mobileUA
             if let cookie = DYFeedClient.shared.cookieHeaderForPlayback(), !cookie.isEmpty {
                 headers["Cookie"] = cookie
