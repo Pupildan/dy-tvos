@@ -25,8 +25,9 @@ final class DYLiveEmojiClient {
                 DispatchQueue.main.async { completion(self.cachedSnapshot) }
                 return
             }
-            // 1) emoji list（同款 a_bogus 签名）
-            guard let list = self.fetchEmojiList(ttwid: ttwid) else {
+            // 1) emoji list（同款 a_bogus 签名）—— fetchEmojiList 返回非可选 [String:String]
+            let list = self.fetchEmojiList(ttwid: ttwid)
+            if list.isEmpty {
                 DispatchQueue.main.async { completion([:]) }
                 return
             }
