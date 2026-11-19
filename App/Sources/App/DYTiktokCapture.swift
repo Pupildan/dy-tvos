@@ -200,6 +200,16 @@ final class DYTiktokCapture: NSObject {
                     }
                 }
             }
+            // v231：页面形态诊断（每 30 tick≈30s 一次）——设备页面只有 2 屏内容无 feed 列表（scroll-diag 实锤），
+            // 头号嫌疑=tvOS 私有 WebKit 缺 MSE（TikTok web 视频靠 MSE 播放，页面 JS 检测失败就降级渲染登录墙；
+            // 抖音页面用直链 video src 不用 MSE 所以没事）。mse/canPlay/videos/bodyText 一锤定音。
+            if self.pollCount % 30 == 0 {
+                self.evalJS(Self.pageShapeJS, tag: "shape\(self.pollCount)") { r in
+                    if let s = r as? String {
+                        DYLog.shared.log("TIKTOK page-shape p=\(self.pollCount) \(s.prefix(320))")
+                    }
+                }
+            }
             let cap = diag["cap"] as? [[String: Any]] ?? []
             guard !cap.isEmpty else { return }
             var items: [TiktokItem] = []
@@ -250,6 +260,23 @@ final class DYTiktokCapture: NSObject {
         let block = unsafeBitCast(handler, to: AnyObject.self)
         wv.perform(NSSelectorFromString("evaluateJavaScript:completionHandler:"), with: js, with: block)
     }
+
+    /// 页面形态诊断（v231）：MSE/canPlayType/video 元素数/页面可见文本——判定设备页面是不是 MSE 缺失降级页
+    private static let pageShapeJS = """
+    (() => {
+      var d = {mse:'', h264:'', videos:0, loginWall:0, txt:''};
+      try{ d.mse = typeof MediaSource; }catch(e){ d.mse='err'; }
+      try{ var v=document.createElement('video');
+        d.h264 = v.canPlayType('video/mp4; codecs="avc1.64001f"') + '/' + v.canPlayType('video/mp4; codecs="hvc1"');
+      }catch(e){ d.h264='err'; }
+      try{ d.videos = document.querySelectorAll('video').length; }catch(e){}
+      try{ var s=document.body.innerText||'';
+        d.loginWall = /log in|Log in|登录|sign up|Sign up/i.test(s) ? 1 : 0;
+        d.txt = s.replace(/\\s+/g,' ').slice(0,120);
+      }catch(e){}
+      return JSON.stringify(d);
+    })()
+    """
 
     /// 抽回 __ttCap + 原始 schema + 端点透视
     private static let drainJS = """
