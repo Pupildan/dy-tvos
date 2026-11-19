@@ -47,6 +47,7 @@ final class DYTiktokCapture: NSObject {
     private var seenIds: Set<String> = []   // 按 id 去重（FYP 相邻页有重叠）
     private var seenLogged: Set<String> = []   // 端点透视日志去重（页面实际调的 /api/ 端点）
     private var rawLogged = false           // 首版只 log 一次原始 schema 供核对
+    private var raw2Logged = false          // v227 非 itemList JSON 透视只 log 一次
     private var rehookLogged = false        // v226 补装兜底首次告警只 log 一次
 
     /// 重进 TikTok 源时清 id 去重（会话重建后新一批不应被旧 seenIds 吞掉）。切源时由 DYFeedClient 调。
@@ -54,6 +55,7 @@ final class DYTiktokCapture: NSObject {
         seenIds.removeAll()
         seenLogged.removeAll()
         rawLogged = false
+        raw2Logged = false
         rehookLogged = false
         totalCap = 0
     }
@@ -127,6 +129,11 @@ final class DYTiktokCapture: NSObject {
                 self.rawLogged = true
                 DYLog.shared.log("TIKTOK raw-item-schema \(raw.prefix(1200))")
             }
+            // v227 非 itemList JSON 响应透视（页面调的端点长什么样，仅一次）
+            if let raw2 = diag["raw2"] as? String, !raw2.isEmpty, !self.raw2Logged {
+                self.raw2Logged = true
+                DYLog.shared.log("TIKTOK other-json \(raw2.prefix(300))")
+            }
             // v224 端点透视：页面实际调的 /api/ 端点（去重）——不猜端点名，数据说话
             for s in (diag["seen"] as? [String] ?? []) {
                 let key = String(s.prefix(120))
@@ -138,7 +145,7 @@ final class DYTiktokCapture: NSObject {
             // evaluateJavaScript 补装兜底（照抖音 v165 同款，DYWorksCapture 已验证的恢复路径）。
             // hookJS 自带 __ttHooked 幂等护栏，重复补装安全；若 hookJS 在 tvOS WebKit 抛错，
             // evalJS 会 log "TIKTOK[rehookN] js err" 直接暴露。每 15 tick 试一次直到 hooked=true。
-            if !hooked, self.pollCount % 15 == 0 {
+            if !hooked, self.pollCount % 5 == 0 {
                 if !self.rehookLogged {
                     self.rehookLogged = true
                     DYLog.shared.event("TIKTOK hooked=false → evaluateJavaScript 补装 hook (v226 fallback)")
@@ -204,8 +211,9 @@ final class DYTiktokCapture: NSObject {
     (function(){
       var cap=[]; try{ cap=window.__ttCap.splice(0); }catch(e){}
       var raw=''; try{ raw=window.__ttRaw||''; if(raw) window.__ttRaw=''; }catch(e){}
+      var raw2=''; try{ raw2=window.__ttRaw2||''; if(raw2) window.__ttRaw2=''; }catch(e){}
       var seen=[]; try{ seen=window.__ttSeen.splice(0); }catch(e){}
-      var diag={hooked:false,n:cap.length,cap:cap,raw:raw,seen:seen,rs:'',href:''};
+      var diag={hooked:false,n:cap.length,cap:cap,raw:raw,raw2:raw2,seen:seen,rs:'',href:''};
       try{ diag.hooked=!!window.__ttHooked; }catch(e){}
       try{ diag.rs=document.readyState; }catch(e){}
       try{ diag.href=String(location.href).slice(0,80); }catch(e){}
@@ -213,13 +221,14 @@ final class DYTiktokCapture: NSObject {
     })();
     """
 
-    /// 滚动翻页：优先滚"最大可滚动容器"（TikTok FYP 的 feed 列表常是内部 div 非 window），window 兜底
+    /// 滚动翻页 v227：一次 requestMore 连续滚 3 屏（间隔 700ms）——真机实锤单次 scrollBy 切不动几个视频、
+    /// TikTok FYP 预加载池没耗尽前页面根本不发新 recommend；window + 最大可滚动容器双通道都滚。
     private static let scrollJS = """
     (function(){
-      try{ window.scrollBy(0,800); }catch(e){}
-      try{
+      var n=0;
+      function findBest(){
         var best=null,area=0;
-        var els=document.querySelectorAll('div');
+        var els=document.querySelectorAll('div,main');
         for(var i=0;i<els.length;i++){
           var e=els[i];
           if(e.scrollHeight>e.clientHeight+100 && e.clientHeight>300){
@@ -227,18 +236,26 @@ final class DYTiktokCapture: NSObject {
             if(a>area){area=a;best=e;}
           }
         }
-        if(best){ best.scrollTop+=best.clientHeight; return 'ok-container'; }
-      }catch(e){}
-      return 'ok-window';
+        return best;
+      }
+      function step(){
+        try{ window.scrollBy(0,window.innerHeight||900); }catch(e){}
+        try{ var b=findBest(); if(b){ b.scrollTop+=b.clientHeight; } }catch(e){}
+        n++;
+        if(n<3){ setTimeout(step,700); }
+      }
+      step();
+      return 'ok';
     })();
     """
 
-    /// document-start 注入的拦截器（v224 数据驱动）：**不猜端点名**——记录页面调的所有 /api/ URL 到 __ttSeen；
-    /// 任何响应体解析出 itemList/aweme_list 数组就 slim 化存 __ttCap。首个原始 item 存 __ttRaw 供核对 schema。
+    /// document-start 注入的拦截器（v227）：**不猜端点名**——记录页面调的所有非静态请求 URL 到 __ttSeen；
+    /// 任何响应体（容许前导空白）解析出 itemList/aweme_list 数组就 slim 化存 __ttCap；
+    /// 非 itemList 的 JSON 响应也把 url+顶层 keys 记进 __ttRaw2（诊断：页面到底在调什么端点）。
     private static let hookJS = """
     (function(){
-      if(window.__ttHooked) return; window.__ttHooked=true; window.__ttCap=[]; window.__ttRaw=''; window.__ttSeen=[];
-      function see(u){ try{ if(String(u).indexOf('/api/')>=0 && window.__ttSeen.length<80) window.__ttSeen.push(String(u).slice(0,180)); }catch(e){} }
+      if(window.__ttHooked) return; window.__ttHooked=true; window.__ttCap=[]; window.__ttRaw=''; window.__ttRaw2=''; window.__ttSeen=[];
+      function see(u){ try{ var s=String(u); if(/\\.(js|css|png|jpe?g|webp|gif|mp4|m3u8|ts|woff2?|svg)(\\?|$)/i.test(s)) return; if(window.__ttSeen.length<80) window.__ttSeen.push(s.slice(0,180)); }catch(e){} }
       function slimItem(a){
         var v=a.video||{};
         var pu=v.playAddr||v.play_addr||'';
@@ -254,7 +271,7 @@ final class DYTiktokCapture: NSObject {
       }
       function grab(url, body){
         try{
-          var s=String(body||'');
+          var s=String(body||'').replace(/^\\s+/,'');
           if(s.length<10 || s.charAt(0)!=='{') return;
           var j=null; try{ j=JSON.parse(s); }catch(e){ return; }
           var list=j.itemList||j.aweme_list||null;
@@ -262,6 +279,8 @@ final class DYTiktokCapture: NSObject {
             var slim=[]; for(var i=0;i<list.length;i++){ slim.push(slimItem(list[i]||{})); }
             if(!window.__ttRaw){ try{ window.__ttRaw=JSON.stringify(list[0]).slice(0,1800); }catch(e){} }
             if(slim.length) window.__ttCap.push({u:String(url).slice(0,150), b:JSON.stringify({items:slim})});
+          } else if(!window.__ttRaw2){
+            try{ window.__ttRaw2=String(url).slice(0,120)+' keys='+JSON.stringify(Object.keys(j).slice(0,20)); }catch(e){}
           }
         }catch(e){}
       }
