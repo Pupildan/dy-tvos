@@ -44,9 +44,17 @@ final class DYTiktokCapture: NSObject {
     private var pollTimer: Timer?
     private var pollCount = 0
     private var totalCap = 0
-    private var lastActivityAt = Date()
     private var seenIds: Set<String> = []   // 按 id 去重（FYP 相邻页有重叠）
+    private var seenLogged: Set<String> = []   // 端点透视日志去重（页面实际调的 /api/ 端点）
     private var rawLogged = false           // 首版只 log 一次原始 schema 供核对
+
+    /// 重进 TikTok 源时清 id 去重（会话重建后新一批不应被旧 seenIds 吞掉）。切源时由 DYFeedClient 调。
+    func seenIdsReset() {
+        seenIds.removeAll()
+        seenLogged.removeAll()
+        rawLogged = false
+        totalCap = 0
+    }
 
     // MARK: - 会话
 
@@ -66,7 +74,6 @@ final class DYTiktokCapture: NSObject {
         }
         pollCount = 0
         totalCap = 0
-        lastActivityAt = Date()
         DYLog.shared.log("TIKTOK boot → tiktok.com/foryou (invisible pump webview)")
         wv.perform(NSSelectorFromString("loadRequest:"), with: NSURLRequest(url: URL(string: "https://www.tiktok.com/foryou")!))
         startPolling()
@@ -91,34 +98,42 @@ final class DYTiktokCapture: NSObject {
     }
 
     /// 翻页：滚动触发页面自己发下一批 recommend（页面自签名）。onNeedMore → fetchPage → 这里。
+    /// v224：TikTok FYP 的滚动容器不一定是 window——通用找"最大可滚动 div"滚它，window.scrollBy 兜底。
     func requestMore() {
         ensureSession()
-        evalJS("(function(){try{window.scrollBy(0,1400);}catch(e){}return 'ok';})();", tag: "scroll") { _ in }
+        evalJS(Self.scrollJS, tag: "scroll") { _ in }
     }
 
     // MARK: - 轮询 drain
 
     private func drain(tag: String) {
         guard webView != nil else { return }
-        // 空闲收摊（90s 无新响应）——避免幽灵层常驻；下次 ensureSession 重建
-        if Date().timeIntervalSince(lastActivityAt) > 90 {
-            DYLog.shared.log("TIKTOK idle teardown (90s) total=\(totalCap)")
-            teardown()
-            return
-        }
+        // v224：去掉空闲 teardown（会话生命周期由切源 teardown 兜底；过早收摊会丢还没到的首批响应）。
         evalJS(Self.drainJS, tag: tag) { [weak self] result in
             guard let self else { return }
             guard let json = result as? String, let data = json.data(using: .utf8),
                   let diag = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return }
             let hooked = diag["hooked"] as? Bool ?? false
+            let rs = diag["rs"] as? String ?? ""
+            let href = diag["href"] as? String ?? ""
+            // v224 周期状态日志（每 10 tick≈10s）：页面活没活/hook 装没装/URL——真机定位泵断点的关键证据
+            if self.pollCount % 10 == 0 {
+                DYLog.shared.log("TIKTOK status p=\(self.pollCount) hooked=\(hooked) rs=\(rs) href=\(href) total=\(self.totalCap)")
+            }
             // 首版 schema 透视：log 一次原始 item JSON 供核对字段名（仅一次）
             if let raw = diag["raw"] as? String, !raw.isEmpty, !self.rawLogged {
                 self.rawLogged = true
                 DYLog.shared.log("TIKTOK raw-item-schema \(raw.prefix(1200))")
             }
+            // v224 端点透视：页面实际调的 /api/ 端点（去重）——不猜端点名，数据说话
+            for s in (diag["seen"] as? [String] ?? []) {
+                let key = String(s.prefix(120))
+                if self.seenLogged.insert(key).inserted {
+                    DYLog.shared.log("TIKTOK page-api \(s.prefix(200))")
+                }
+            }
             let cap = diag["cap"] as? [[String: Any]] ?? []
             guard !cap.isEmpty else { return }
-            self.lastActivityAt = Date()
             var items: [TiktokItem] = []
             for entry in cap {
                 guard let b = entry["b"] as? String, let bdata = b.data(using: .utf8),
@@ -168,12 +183,13 @@ final class DYTiktokCapture: NSObject {
         wv.perform(NSSelectorFromString("evaluateJavaScript:completionHandler:"), with: js, with: block)
     }
 
-    /// 抽回 __ttCap + 原始 schema 透视
+    /// 抽回 __ttCap + 原始 schema + 端点透视
     private static let drainJS = """
     (function(){
       var cap=[]; try{ cap=window.__ttCap.splice(0); }catch(e){}
       var raw=''; try{ raw=window.__ttRaw||''; if(raw) window.__ttRaw=''; }catch(e){}
-      var diag={hooked:false,n:cap.length,cap:cap,raw:raw,rs:'',href:''};
+      var seen=[]; try{ seen=window.__ttSeen.splice(0); }catch(e){}
+      var diag={hooked:false,n:cap.length,cap:cap,raw:raw,seen:seen,rs:'',href:''};
       try{ diag.hooked=!!window.__ttHooked; }catch(e){}
       try{ diag.rs=document.readyState; }catch(e){}
       try{ diag.href=String(location.href).slice(0,80); }catch(e){}
@@ -181,47 +197,65 @@ final class DYTiktokCapture: NSObject {
     })();
     """
 
-    /// document-start 注入的拦截器：命中 /api/recommend/item_list 的响应体在 JS 端预解析成 slim 存 window.__ttCap。
-    /// 首个响应的原始 item JSON 存 window.__ttRaw（drain 取回 log 一次，供核对 TikTok web schema 字段名）。
+    /// 滚动翻页：优先滚"最大可滚动容器"（TikTok FYP 的 feed 列表常是内部 div 非 window），window 兜底
+    private static let scrollJS = """
+    (function(){
+      try{ window.scrollBy(0,800); }catch(e){}
+      try{
+        var best=null,area=0;
+        var els=document.querySelectorAll('div');
+        for(var i=0;i<els.length;i++){
+          var e=els[i];
+          if(e.scrollHeight>e.clientHeight+100 && e.clientHeight>300){
+            var a=e.clientHeight*(e.scrollHeight-e.clientHeight);
+            if(a>area){area=a;best=e;}
+          }
+        }
+        if(best){ best.scrollTop+=best.clientHeight; return 'ok-container'; }
+      }catch(e){}
+      return 'ok-window';
+    })();
+    """
+
+    /// document-start 注入的拦截器（v224 数据驱动）：**不猜端点名**——记录页面调的所有 /api/ URL 到 __ttSeen；
+    /// 任何响应体解析出 itemList/aweme_list 数组就 slim 化存 __ttCap。首个原始 item 存 __ttRaw 供核对 schema。
     private static let hookJS = """
     (function(){
-      if(window.__ttHooked) return; window.__ttHooked=true; window.__ttCap=[]; window.__ttRaw='';
+      if(window.__ttHooked) return; window.__ttHooked=true; window.__ttCap=[]; window.__ttRaw=''; window.__ttSeen=[];
+      function see(u){ try{ if(String(u).indexOf('/api/')>=0 && window.__ttSeen.length<80) window.__ttSeen.push(String(u).slice(0,180)); }catch(e){} }
+      function slimItem(a){
+        var v=a.video||{};
+        var pu=v.playAddr||v.play_addr||'';
+        if(!pu && v.play_addr && v.play_addr.url_list) pu=v.play_addr.url_list[0]||'';
+        if(!pu) pu=v.downloadAddr||v.download_addr||'';
+        var cov=v.cover||v.originCover||'';
+        if(cov && typeof cov!=='string') cov=(cov.url_list&&cov.url_list[0])||'';
+        var au=a.author||{}; var st=a.stats||a.statistics||{};
+        return {id:String(a.id||a.aweme_id||''), desc:String(a.desc||''), u:String(pu||''), cov:String(cov||''),
+          dur:v.duration||0, ct:a.createTime||a.create_time||0,
+          nick:au.nickname||'', uniq:au.uniqueId||'', av:au.avatarLarger||au.avatarMedium||'',
+          dg:st.diggCount||0, cm:st.commentCount||0, sh:st.shareCount||0, cl:st.collectCount||0};
+      }
       function grab(url, body){
         try{
-          if(String(url).indexOf('recommend/item_list')<0) return;
-          var j=null; try{ j=JSON.parse(body); }catch(e){}
-          if(!j){ return; }
-          var list = j.itemList || j.aweme_list || [];
-          if(!list || !list.length){
-            if(!window.__ttRaw){ try{ window.__ttRaw=JSON.stringify(j).slice(0,1500); }catch(e){} }
-            return;
+          var s=String(body||'');
+          if(s.length<10 || s.charAt(0)!=='{') return;
+          var j=null; try{ j=JSON.parse(s); }catch(e){ return; }
+          var list=j.itemList||j.aweme_list||null;
+          if(list && list.length){
+            var slim=[]; for(var i=0;i<list.length;i++){ slim.push(slimItem(list[i]||{})); }
+            if(!window.__ttRaw){ try{ window.__ttRaw=JSON.stringify(list[0]).slice(0,1800); }catch(e){} }
+            if(slim.length) window.__ttCap.push({u:String(url).slice(0,150), b:JSON.stringify({items:slim})});
           }
-          var slim=[];
-          for(var i=0;i<list.length;i++){
-            var a=list[i]||{}; var v=a.video||{};
-            var pu = v.playAddr || v.play_addr || '';
-            if(!pu && v.play_addr && v.play_addr.url_list) pu = v.play_addr.url_list[0]||'';
-            if(!pu) pu = v.downloadAddr || v.download_addr || '';
-            var cov = v.cover || v.originCover || '';
-            if(cov && typeof cov!=='string') cov = (cov.url_list&&cov.url_list[0])||'';
-            var au = a.author||{};
-            var st = a.stats || a.statistics || {};
-            slim.push({id:String(a.id||a.aweme_id||''), desc:String(a.desc||''), u:String(pu||''), cov:String(cov||''),
-              dur:v.duration||0, ct:a.createTime||a.create_time||0,
-              nick:au.nickname||'', uniq:au.uniqueId||'', av:au.avatarLarger||au.avatarMedium||'',
-              dg:st.diggCount||0, cm:st.commentCount||0, sh:st.shareCount||0, cl:st.collectCount||0});
-          }
-          if(!window.__ttRaw){ try{ window.__ttRaw=JSON.stringify(list[0]).slice(0,1800); }catch(e){} }
-          if(slim.length) window.__ttCap.push({ b: JSON.stringify({items:slim}) });
         }catch(e){}
       }
       var xo=XMLHttpRequest.prototype.open, xs=XMLHttpRequest.prototype.send;
-      XMLHttpRequest.prototype.open=function(m,u){ this.__u=u; return xo.apply(this,arguments); };
+      XMLHttpRequest.prototype.open=function(m,u){ this.__u=u; see(u); return xo.apply(this,arguments); };
       XMLHttpRequest.prototype.send=function(){ var x=this; this.__u=String(this.__u||'');
         this.addEventListener('readystatechange',function(){ if(x.readyState===4){ try{ var t=x.responseType; if(!t||t==='text'||t==='json'){ grab(x.__u,(t==='json')?x.response:x.responseText); } }catch(e){} } });
         return xs.apply(this,arguments); };
       var of=window.fetch;
-      if(of){ window.fetch=function(){ var a=arguments,u=(a[0]&&a[0].url)||a[0]; u=String(u);
+      if(of){ window.fetch=function(){ var a=arguments,u=(a[0]&&a[0].url)||a[0]; u=String(u); see(u);
         return of.apply(this,arguments).then(function(r){ try{ var c=r.clone(); c.text().then(function(t){ grab(u,t); }).catch(function(){}); }catch(e){} return r; }); }; }
     })();
     """

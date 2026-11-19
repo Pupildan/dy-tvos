@@ -138,9 +138,12 @@ final class DYFeedClient {
         isFirstPage = true
         consumedIds = []
         webRefreshIndex = 1
+        // v224：reset() 只清引擎数据结构不动 PlayerManager 池里的 AVPlayer（真机实锤切源后旧源声音继续播），
+        // 照直播开屏同款（RootView.isLiveOpen → pauseAll）先停全部播放器；新源首批 merge 后 acquire 自然恢复播放。
+        PlayerManager.shared.pauseAll()
         PlaybackEngine.shared.source = s
         PlaybackEngine.shared.reset()
-        if s != .tiktok { DYTiktokCapture.shared.teardown() }   // v223 切走 TikTok 释放离屏 WebView
+        if s != .tiktok { DYTiktokCapture.shared.teardown() } else { DYTiktokCapture.shared.seenIdsReset() }
         fetchPage()
     }
 
