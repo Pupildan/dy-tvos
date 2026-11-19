@@ -148,14 +148,19 @@ final class DYLiveClient {
             feedHasMore = (extra["has_more"] as? Bool) ?? true
             // 跨页去重追加（抖音混推相邻页有重叠）
             var fresh: [DYLiveRoom] = []
+            var filteredCold = 0
             for e in list {
-                if let room = Self.parseRoom(e), !seenWebRids.contains(room.webRid) {
-                    seenWebRids.insert(room.webRid)
-                    feedCache.append(room)
-                    fresh.append(room)
+                guard let room = Self.parseRoom(e), !seenWebRids.contains(room.webRid) else { continue }
+                seenWebRids.insert(room.webRid)
+                // 冷门房过滤：观看数 <500 的房不进滑动列表（用户拍板，去首页池长尾冷门房）
+                if Self.viewerCountValue(room.userCount) < Self.minViewerCount {
+                    filteredCold += 1
+                    continue
                 }
+                feedCache.append(room)
+                fresh.append(room)
             }
-            DYLog.shared.event("LIVE feed ok page maxtime=\(maxTime) got=\(list.count) fresh=\(fresh.count) total=\(feedCache.count) hasMore=\(feedHasMore ? 1 : 0)")
+            DYLog.shared.event("LIVE feed ok page maxtime=\(maxTime) got=\(list.count) fresh=\(fresh.count) coldFiltered=\(filteredCold) total=\(feedCache.count) hasMore=\(feedHasMore ? 1 : 0)")
             DispatchQueue.main.async { onDone(fresh) }
         }.resume()
     }
@@ -238,6 +243,22 @@ final class DYLiveClient {
     }
 
     // MARK: - 解析
+
+    /// 冷门房过滤阈值（用户拍板 2026-11-19：观看数 <500 的房不进滑动列表）。
+    /// 探针 live_pool_dist_probe.js 实锤首页池是爆款+长尾混合流，一半房 <1000 人、底部有 1~8 人极冷房；
+    /// <500 过滤掉最冷尾（26 房里留 ~62%），换 enter_source 池子走不通（其他值全 0 房），只能客户端过滤。
+    static let minViewerCount = 500
+
+    /// 观看数展示字符串转数值（"253493"→253493、"1.2万"→12000、"38"→38），供冷门房过滤比较。
+    static func viewerCountValue(_ s: String) -> Int {
+        let str = s.trimmingCharacters(in: .whitespaces)
+        if str.contains("万") {
+            let n = Double(str.replacingOccurrences(of: "万", with: "")) ?? 0
+            return Int(n * 10000)
+        }
+        let digits = str.filter { $0.isNumber }
+        return Int(digits) ?? 0
+    }
 
     /// 从 feed 项（{web_rid, data:LiveRoom}）或 enter room 对象解析。hls/flv 来自 stream_url。
     static func parseRoom(_ e: [String: Any], fallbackWebRid: String = "") -> DYLiveRoom? {
