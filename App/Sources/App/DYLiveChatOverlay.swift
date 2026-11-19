@@ -7,8 +7,8 @@ import UIKit
 final class DYLiveChatOverlay: UIView {
     /// 最多同时显示几条（抖音直播约 5-7 条）
     private let maxRows = 6
-    private let rowHeight: CGFloat = 52
-    private let rowSpacing: CGFloat = 6
+    private let rowHeight: CGFloat = 44
+    private let rowSpacing: CGFloat = 4
     private var chatRows: [ChatRow] = []
 
     /// 单条聊天行（纯展示，frame 布局：外部直接设 frame，内部 label 铺满）
@@ -17,7 +17,7 @@ final class DYLiveChatOverlay: UIView {
         init() {
             super.init(frame: .zero)
             label.numberOfLines = 1
-            label.font = .systemFont(ofSize: 26, weight: .medium)
+            label.font = .systemFont(ofSize: 22, weight: .medium)
             label.translatesAutoresizingMaskIntoConstraints = false
             addSubview(label)
             NSLayoutConstraint.activate([
@@ -34,10 +34,10 @@ final class DYLiveChatOverlay: UIView {
             let attr = NSMutableAttributedString()
             if !nick.isEmpty {
                 attr.append(NSAttributedString(string: nick, attributes: [
-                    .font: UIFont.systemFont(ofSize: 26, weight: .bold),
+                    .font: UIFont.systemFont(ofSize: 22, weight: .bold),
                     .foregroundColor: UIColor.white.withAlphaComponent(0.85),
                 ]))
-                attr.append(NSAttributedString(string: "：", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.85)]))
+                attr.append(NSAttributedString(string: "：", attributes: [.font: UIFont.systemFont(ofSize: 22), .foregroundColor: UIColor.white.withAlphaComponent(0.85)]))
             }
             // v219：内容里的 [表情] shortcode 渲染成内联图片（表情包），文字正常排
             attr.append(emojiAttributedContent(content, emojiImages: emojiImages))
@@ -77,13 +77,13 @@ final class DYLiveChatOverlay: UIView {
         }
 
         private var textAttrs: [NSAttributedString.Key: Any] {
-            [.font: UIFont.systemFont(ofSize: 26, weight: .medium), .foregroundColor: UIColor.white]
+            [.font: UIFont.systemFont(ofSize: 22, weight: .medium), .foregroundColor: UIColor.white]
         }
 
         /// 表情图片转 NSTextAttachment（按文字行高缩放）
         private func imageAttachment(_ img: UIImage) -> NSAttributedString {
             let att = NSTextAttachment()
-            let side: CGFloat = 34
+            let side: CGFloat = 28
             att.image = img
             att.bounds = CGRect(x: 0, y: -4, width: side, height: side)
             return NSAttributedString(attachment: att)

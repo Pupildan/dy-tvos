@@ -44,12 +44,12 @@ final class LivePlayerCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear   // 透明：让控制器级视频层透出
-        // 左下信息区（照 VOD PC 版：@主播·X观看 / 标题）
-        nicknameLabel.font = .boldSystemFont(ofSize: 32)
+        // 左上信息区（v220：移到视频区左上角 + 减小字体，不影响观看）
+        nicknameLabel.font = .boldSystemFont(ofSize: 26)
         nicknameLabel.textColor = .white
         nicknameLabel.shadowColor = .black
         nicknameLabel.shadowOffset = CGSize(width: 1, height: 1)
-        descLabel.font = .systemFont(ofSize: 26, weight: .medium)
+        descLabel.font = .systemFont(ofSize: 22, weight: .medium)
         descLabel.textColor = .white
         descLabel.shadowColor = .black
         descLabel.shadowOffset = CGSize(width: 1, height: 1)
@@ -71,14 +71,14 @@ final class LivePlayerCell: UICollectionViewCell {
     }()
     override func layoutSubviews() {
         super.layoutSubviews()
-        // v219：标题定位到视频区左下角（竖屏视频居中留黑边时，标题落在视频内而非黑边）
+        // v220：标题定位到视频区左上角（竖屏视频居中留黑边时，标题落在视频内上方；不影响观看）
         // videoRect 由 VC 算好传进来；为空/异常时回退到 cell bounds（旧行为）。
         let vr = videoRect.isEmpty ? contentView.bounds : videoRect
         let infoLeft: CGFloat = vr.minX + 24
-        let infoBottom: CGFloat = (contentView.bounds.height - vr.maxY) + 44
+        let infoTop: CGFloat = vr.minY + 24
         let infoW = vr.width - 48
-        descLabel.frame = CGRect(x: infoLeft, y: contentView.bounds.height - infoBottom - 62, width: infoW, height: 62)
-        nicknameLabel.frame = CGRect(x: infoLeft, y: contentView.bounds.height - infoBottom - 62 - 4 - 40, width: infoW, height: 40)
+        nicknameLabel.frame = CGRect(x: infoLeft, y: infoTop, width: infoW, height: 36)
+        descLabel.frame = CGRect(x: infoLeft, y: infoTop + 36 + 4, width: infoW, height: 52)
     }
 
     /// 填标题/观看数（照 VOD applyInfo 同行排版：@主播 · X观看 / 标题）
@@ -89,11 +89,11 @@ final class LivePlayerCell: UICollectionViewCell {
         } else {
             let s = NSMutableAttributedString()
             if !nick.isEmpty {
-                s.append(NSAttributedString(string: nick, attributes: [.font: UIFont.boldSystemFont(ofSize: 32), .foregroundColor: UIColor.white, .shadow: Self.textShadow]))
-                if !viewerText.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 26), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
+                s.append(NSAttributedString(string: nick, attributes: [.font: UIFont.boldSystemFont(ofSize: 26), .foregroundColor: UIColor.white, .shadow: Self.textShadow]))
+                if !viewerText.isEmpty { s.append(NSAttributedString(string: "  ·  ", attributes: [.font: UIFont.systemFont(ofSize: 22), .foregroundColor: UIColor.white.withAlphaComponent(0.7), .shadow: Self.textShadow])) }
             }
             if !viewerText.isEmpty {
-                s.append(NSAttributedString(string: viewerText, attributes: [.font: UIFont.systemFont(ofSize: 24), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
+                s.append(NSAttributedString(string: viewerText, attributes: [.font: UIFont.systemFont(ofSize: 22), .foregroundColor: UIColor.white.withAlphaComponent(0.75), .shadow: Self.textShadow]))
             }
             nicknameLabel.attributedText = s
         }

@@ -31,12 +31,20 @@ final class DYLiveEmojiClient {
                 DispatchQueue.main.async { completion([:]) }
                 return
             }
-            // 2) 下载全部表情图片 → NSCache
+            // 2) 并发下载全部表情图片（214 张并行几秒完成；原顺序下载 214 张要 20s+ 太慢）
             var images: [String: UIImage] = [:]
+            let lock = NSLock()
+            let group = DispatchGroup()
             for (shortcode, urlString) in list {
                 guard let url = URL(string: urlString) else { continue }
-                if let img = self.downloadSync(url: url, ttwid: ttwid) { images[shortcode] = img }
+                group.enter()
+                URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, _ in
+                    defer { group.leave() }
+                    guard let data, let img = UIImage(data: data) else { return }
+                    lock.lock(); images[shortcode] = img; lock.unlock()
+                }.resume()
             }
+            group.wait()   // 等全部并发下载完（后台队列，不卡主线程）
             self.loaded = true
             self.cachedSnapshot = images
             DispatchQueue.main.async { completion(images) }
